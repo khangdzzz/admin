@@ -1,0 +1,22 @@
+// BETTERER RESULTS V2.
+// 
+// If this file contains merge conflicts, use `betterer merge` to automatically resolve them:
+// https://phenomnomnominal.github.io/betterer/docs/results-file/#merge
+//
+exports[`Better Code Quality !`] = {
+  value: `{
+    "src/modules/auth/layouts/AuthLayout.vue:1500009099": [
+      [14, 6, 4, "\'flag\' is assigned a value but never used.", "2087600745"]
+    ],
+    "src/modules/auth/pages/LoginPage.vue:4134536842": [
+      [21, 6, 5, "\'login\' is assigned a value but never used.", "173246534"]
+    ],
+    "src/modules/base/App.vue:3192620675": [
+      [9, 0, 11, "Unexpected console statement.", "3870399096"]
+    ],
+    "src/routes/screen-layouts.ts:711028168": [
+      [1, 4, 14, "\'DEFAULT_LAYOUT\' is defined but never used.", "1367977899"],
+      [2, 4, 11, "\'AUTH_LAYOUT\' is defined but never used.", "1109065480"]
+    ]
+  }`
+};

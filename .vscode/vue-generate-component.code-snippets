@@ -1,0 +1,9 @@
+{
+  "Vue Component Setup function": {
+    "prefix": "vgc",
+    "body": [
+      "<template setup lang=\"ts\">\n\n</template>\n\n<script setup lang=\"ts\">\n//#region import\n//#endregion\n\n//#region props\n//#endregion\n\n//#region variables\n//#endregion\n\n//#region hooks\n//#endregion\n\n//#region function\n//#endregion\n\n//#region computed\n//#endregion\n\n//#region reactive\n//#endregion\n</script>\n\n<style lang=\"scss\" scoped>\n\n</style>"
+    ],
+    "description": "Vue Component Setup function"
+  }
+}
