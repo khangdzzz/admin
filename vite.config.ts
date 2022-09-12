@@ -15,6 +15,9 @@ export default defineConfig({
           "btn-border-radius-sm": "6px"
         },
         javascriptEnabled: true
+      },
+      scss: {
+        additionalData: `@import "@/styles/main.scss";`
       }
     }
   },
