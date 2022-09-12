@@ -1,0 +1,10 @@
+{
+	"Vue Component Setup function": {
+		"scope": "javascript,typescript",
+		"prefix": "vcsf",
+		"body": [
+			"//#region import\n//#endregion\n\n//#region props\n//#endregionn\n\n//#region variables\n//#endregion\n\n//#region hooks\n//#endregio\n\n//#region function\n//#endregion\n\n//#region computed\n//#endregion\n\n//#region reactive\n//#endregion"
+		],
+		"description": "Vue Component Setup function"
+	}
+}

@@ -1,0 +1,16 @@
+{
+  "ignoreUnresolved": [],
+  "ignoreUnused": [
+    "antd-css-utilities",
+    "vue"
+  ],
+  "ignoreUnimported": [
+    "src/modules/auth/components/LoginForm.vue",
+    "src/modules/auth/models/auth.model.ts",
+    "src/modules/auth/models/index.ts",
+    "src/modules/base/components/DemoComponent.vue",
+    "src/stores/common.store.ts",
+    "src/stores/index.ts",
+    "src/stores/store-ids.ts"
+  ]
+}
