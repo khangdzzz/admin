@@ -1,4 +1,9 @@
 {
-    "hello": "Hello World!",
-    "hello_btn_change_language": "Change Language"
+  "hello": "Hello World!",
+  "hello_btn_change_language": "Change Language",
+  "current_language": "日本語",
+  "login_enter_email": "Enter Email address",
+  "login_enter_password": "Enter Password",
+  "login_btn_submit": "Log in",
+  "login_forgot_password": "Forgot password"
 }

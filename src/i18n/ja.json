@@ -1,4 +1,9 @@
 {
-    "hello": "こんにちは、世界!",
-    "hello_btn_change_language": "言語を変更"
+  "hello": "こんにちは、世界!",
+  "hello_btn_change_language": "言語を変更",
+  "current_language": "ENGLISH",
+  "login_enter_email": "メールアドレス を入力",
+  "login_enter_password": "パスワードを入力",
+  "login_btn_submit": "ログイン",
+  "login_forgot_password": "パスワードを忘れた方はこちら"
 }
