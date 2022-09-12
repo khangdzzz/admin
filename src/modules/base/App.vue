@@ -1,12 +1,14 @@
 <script setup lang="ts">
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
-import { ScreenLayout } from '@/routes/screen-layouts';
-import { computed } from 'vue';
-import { useRoute } from 'vue-router';
-document.title = import.meta.env.VITE_APP_NAME
+import { ScreenLayout } from "@/routes/screen-layouts";
+import { computed } from "vue";
+import { useRoute } from "vue-router";
+document.title = import.meta.env.VITE_APP_NAME;
 const $route = useRoute();
-const layout = computed(() => $route.meta.layout || ScreenLayout.DEFAULT_LAYOUT);
+const layout = computed(
+  () => $route.meta.layout || ScreenLayout.DEFAULT_LAYOUT
+);
 </script>
 
 <template>

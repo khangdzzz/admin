@@ -1,0 +1,88 @@
+.d-flex {
+  display: flex;
+}
+
+.fill-height {
+  height: 100%;
+}
+
+.fill-width {
+  width: 100%;
+}
+
+// variables scss
+$flexDirections: ("row", "row-reverse", "column", "column-reverse");
+
+@each $direction in $flexDirections {
+  .flex-#{$direction} {
+    flex-direction: #{$direction};
+  }
+}
+
+$alignItems: ("stretch", "center", "flex-start", "flex-end", "baseline");
+
+@each $align in $alignItems {
+  .justify-#{$align} {
+    align-items: #{$align};
+  }
+}
+
+$justifyContents: ("center", "space-around", "space-between", "space-evenly");
+
+@each $justify in $justifyContents {
+  .justify-#{$justify} {
+    justify-content: #{$justify};
+  }
+}
+
+$gaps: (0, 4, 8, 10, 12, 15, 16, 20, 24);
+
+@each $gap in $gaps {
+  .gap-#{$gap} {
+    gap: #{$gap}px;
+  }
+}
+
+$amounts: (0, 4, 8, 12, 14, 15, 16, 20, 24);
+$directions: (top, bottom, left, right, x, y);
+@each $amount in $amounts {
+  @each $direction in $directions {
+    @if $direction == y {
+      .my-#{$amount} {
+        margin-top: #{$amount}px !important;
+        margin-bottom: #{$amount}px !important;
+      }
+
+      .py-#{$amount} {
+        padding-top: #{$amount}px !important;
+        padding-bottom: #{$amount}px !important;
+      }
+    } @else if $direction == x {
+      .mx-#{$amount} {
+        margin-right: #{$amount}px !important;
+        margin-left: #{$amount}px !important;
+      }
+
+      .px-#{$amount} {
+        padding-right: #{$amount}px !important;
+        padding-left: #{$amount}px !important;
+      }
+    } @else {
+      .m#{str-slice($direction, 0, 1)}-#{$amount} {
+        margin-#{$direction}: #{$amount}px !important;
+      }
+
+      .p#{str-slice($direction, 0, 1)}-#{$amount} {
+        padding-#{$direction}: #{$amount}px !important;
+      }
+
+      .m-#{$amount} {
+        margin: #{$amount}px !important;
+      }
+
+      .p-#{$amount} {
+        padding: #{$amount}px !important;
+      }
+    }
+  }
+}
