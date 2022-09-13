@@ -5,14 +5,17 @@
 //
 exports[`Better Code Quality !`] = {
   value: `{
-    "src/modules/auth/layouts/AuthLayout.vue:1500009099": [
-      [14, 6, 4, "\'flag\' is assigned a value but never used.", "2087600745"]
-    ],
-    "src/modules/auth/pages/LoginPage.vue:4134536842": [
-      [21, 6, 5, "\'login\' is assigned a value but never used.", "173246534"]
-    ],
-    "src/modules/base/App.vue:3192620675": [
-      [9, 0, 11, "Unexpected console statement.", "3870399096"]
+    "src/modules/base/components/CustomForm.vue:4138368861": [
+      [67, 3, 11, "\'e\' is defined but never used.", "374814012"],
+      [67, 16, 21, "\'value\' is defined but never used.", "550014865"],
+      [68, 3, 11, "\'e\' is defined but never used.", "1676887250"],
+      [68, 16, 21, "\'value\' is defined but never used.", "550014865"],
+      [69, 3, 15, "\'e\' is defined but never used.", "4284617589"],
+      [71, 4, 11, "\'e\' is defined but never used.", "88113650"],
+      [72, 4, 31, "\'value\' is defined but never used.", "1666401727"],
+      [73, 4, 30, "\'index\' is defined but never used.", "362655707"],
+      [75, 3, 12, "\'e\' is defined but never used.", "3049782583"],
+      [75, 17, 31, "\'index\' is defined but never used.", "3601791242"]
     ],
     "src/routes/screen-layouts.ts:711028168": [
       [1, 4, 14, "\'DEFAULT_LAYOUT\' is defined but never used.", "1367977899"],
