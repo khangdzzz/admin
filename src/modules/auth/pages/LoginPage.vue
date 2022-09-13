@@ -35,7 +35,7 @@
               </a-input-password>
             </a-form-item>
             <a-form-item>
-              <a-button type="primary" class="btn-login">{{
+              <a-button type="primary" class="btn-login" @click="login">{{
                 $t("login_btn_submit")
               }}</a-button>
             </a-form-item>

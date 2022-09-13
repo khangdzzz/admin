@@ -7,7 +7,6 @@ import { useRoute } from 'vue-router';
 document.title = import.meta.env.VITE_APP_NAME
 const $route = useRoute();
 const layout = computed(() => $route.meta.layout || ScreenLayout.DEFAULT_LAYOUT);
-console.log($route.meta);
 </script>
 
 <template>
