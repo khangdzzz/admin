@@ -2,8 +2,12 @@
   "hello": "こんにちは、世界!",
   "hello_btn_change_language": "言語を変更",
   "current_language": "ENGLISH",
+  "login_email_address": "メールアドレス ",
   "login_enter_email": "メールアドレス を入力",
+  "login_password": "パスワード",
   "login_enter_password": "パスワードを入力",
   "login_btn_submit": "ログイン",
-  "login_forgot_password": "パスワードを忘れた方はこちら"
+  "login_forgot_password": "パスワードを忘れた方はこちら",
+  "login_fail_to_login": "ログインに失敗しました",
+  "login_confirm_account": "アカウント情報をご確認ください"
 }

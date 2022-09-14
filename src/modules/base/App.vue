@@ -4,6 +4,7 @@
 import { ScreenLayout } from "@/routes/screen-layouts";
 import { computed } from "vue";
 import { useRoute } from "vue-router";
+import NotifyModal from "./components/NotifyModal.vue";
 document.title = import.meta.env.VITE_APP_NAME;
 const $route = useRoute();
 const layout = computed(
@@ -16,6 +17,7 @@ const layout = computed(
     <component :is="layout">
       <router-view :key="$route.path" />
     </component>
+    <notify-modal></notify-modal>
   </div>
 </template>
 

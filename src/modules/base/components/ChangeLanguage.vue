@@ -19,7 +19,7 @@ import { onMounted, ref } from "vue";
 
 //#region variables
 const currentLanguage = ref<string | null>();
-const logoUrl = ref<string>("");
+const logoUrl = ref<string>("src/assets/images/im_japan_flag.png");
 
 //#endregion
 
@@ -39,10 +39,10 @@ const setLogoUrl = (): void => {
   currentLanguage.value = service.localStorage.getItem(
     localStorageKeys.currentLanguage
   );
-  if (currentLanguage.value === "en") {
-    logoUrl.value = "src/assets/images/im_japan_flag.png";
-  } else {
+  if (currentLanguage.value === "ja") {
     logoUrl.value = "src/assets/images/im_england_flag.png";
+  } else {
+    logoUrl.value = "src/assets/images/im_japan_flag.png";
   }
 };
 
@@ -58,23 +58,28 @@ const setLogoUrl = (): void => {
 
 <style lang="scss" scoped>
 .language-container {
-  float: right;
-  margin-top: 20px;
   display: flex;
   align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 2%;
+  right: 0;
 }
 .img-flag {
   width: 30px;
-  margin-right: 5px;
+  margin-right: 12px;
 }
 .title-flag {
   color: $white;
   display: inline-block;
   width: 60px;
+  margin-right: 40px;
   background: transparent;
-  margin-right: 30px;
   cursor: pointer;
-  font-size: 18px;
+  font-family: "Roboto";
+  font-style: normal;
   font-weight: 600;
+  font-size: 18px;
+  line-height: 100%;
 }
 </style>

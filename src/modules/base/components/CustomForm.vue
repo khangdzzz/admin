@@ -22,11 +22,11 @@
     >
       <!-- //region slot input  -->
       <template #prefix v-if="item.icon">
-        <component :is="item.icon" />
+        <component :is="item.icon" :color="item.iconColor" />
       </template>
       <template #suffix>
         <a-tooltip title="Extra information">
-          <component :is="item.icon" />
+          <component :is="item.suffixIcon" :color="item.iconColor" />
         </a-tooltip>
       </template>
       <!-- endregion -->
@@ -63,6 +63,7 @@
 <script setup lang="ts">
 //#region import
 //#endregion
+
 //*===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍Emits
 const emit = defineEmits<{
   (e: "change", value: string | Event): void;
@@ -92,21 +93,22 @@ const styleContent = {
   minHeight: "50px",
   padding: "17px 20px 17px 15px"
 };
+//const colorIcon = ref<string>("#999999");
 //#region hooks
 //#endregion
 
 //#region function
-const handleChange = (value: string | Event) : void => emit("change", value);
+const handleChange = (value: string | Event): void => emit("change", value);
 
-const onSelect = (value: string | Event) : void => emit("select", value);
+const onSelect = (value: string | Event): void => emit("select", value);
 
-const onPressEnter = () : void => emit("pressEnter");
+const onPressEnter = (): void => emit("pressEnter");
 
-const onBlur = (value: number | boolean | Event, index: number) : void => {
+const onBlur = (value: number | boolean | Event, index: number): void => {
   emit("onBlur", value, index);
 };
 
-const onFocus = (index: number) : void => {
+const onFocus = (index: number): void => {
   emit("onFocus", index);
 };
 
@@ -180,7 +182,7 @@ const onFocus = (index: number) : void => {
 
 .has-icon-input {
   .ant-input {
-    padding-left: 12px !important;
+    padding-left: 10px !important;
     padding-top: 10px !important;
   }
 }

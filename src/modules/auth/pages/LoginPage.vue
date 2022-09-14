@@ -7,37 +7,25 @@
       <a-row class="login-input" type="flex" justify="center" align="middle">
         <a-col>
           <a-form
-            :model="formState"
+            :model="dynamicValidateForm"
             name="basic"
             autocomplete="off"
             @finish="onFinish"
             @finishFailed="onFinishFailed"
           >
+            <CustomForm
+              :formData="dynamicValidateForm.formData"
+              @onBlur="handleOnBlur"
+              @onFocus="handleOnFocus"
+            ></CustomForm>
             <a-form-item>
-              <a-input
-                v-model:value="formState.username"
-                :placeholder="$t('login_enter_email')"
-                class="input-item"
-              >
-                <template #prefix>
-                  <img src="@/assets/icons/ic_user.png" class="form-icon" />
-                </template>
-              </a-input>
-            </a-form-item>
-            <a-form-item>
-              <a-input-password
-                v-model:value="formState.password"
-                :placeholder="$t('login_enter_password')"
-                class="input-item"
-                ><template #prefix>
-                  <img src="@/assets/icons/ic_password.png" class="form-icon" />
-                </template>
-              </a-input-password>
-            </a-form-item>
-            <a-form-item>
-              <a-button type="primary" class="btn-login" @click="login">{{
-                $t("login_btn_submit")
-              }}</a-button>
+              <a-button
+                type="primary"
+                html-type="submit"
+                class="btn-login"
+                :disabled="!isValidated"
+                >{{ $t("login_btn_submit") }}
+              </a-button>
             </a-form-item>
           </a-form>
         </a-col>
@@ -49,40 +37,125 @@
 
 <script setup lang="ts">
 //#region import
+
 import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
-import { reactive } from "vue";
+import { inject, reactive, ref, watch } from "vue";
+import Ic_user from "@/assets/icons/IcUser.vue";
+import Ic_pass from "@/assets/icons/IcPass.vue";
+import Ic_view from "../../../assets/icons/IcView.vue";
+import CustomForm from "../../base/components/CustomForm.vue";
+import { message } from "ant-design-vue";
+import { i18n } from "@/i18n";
+
 //#endregion
 
 //#region props
 //#endregion
 
 //#region variables
-const formState = reactive({
-  username: "",
-  password: ""
+const emitter = inject("emitter");
+const isValidated = ref<boolean>(false);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const dynamicValidateForm = reactive<{ formData: any[] }>({
+  formData: [
+    {
+      inputType: "AInput",
+      value: "",
+      placeHolder: i18n.global.t("login_enter_email"),
+      label: i18n.global.t("login_email_address"),
+      icon: Ic_user,
+      iconColor: "#999999",
+      name: "email",
+      disabled: false,
+      required: false,
+      key: 1,
+      isFocus: false
+    },
+    {
+      inputType: "AInputPassword",
+      value: "",
+      placeHolder: i18n.global.t("login_enter_password"),
+      label: i18n.global.t("login_password"),
+      icon: Ic_pass,
+      iconColor: "#999999",
+      suffixIcon: Ic_view,
+      name: "password",
+      disabled: false,
+      required: false,
+      key: 2,
+      isFocus: false
+    }
+  ]
 });
 //#endregion
 
 //#region hooks
-
 //#endregion
 
 //#region function
-const onFinish = (): void => {};
-
-const onFinishFailed = (): void => {};
-const login = (): void => {
-  service.localStorage.setAccessToken("Nghia");
-  router.push({ name: routeNames.home });
+const onFinish = (): void => {
+  handleLogin();
 };
+
+const handleOnBlur = (
+  value: number | boolean | Event,
+  index: string | number | Event
+): void => {
+  index = Number(index);
+  if (!value) dynamicValidateForm.formData[index].isFocus = false;
+  dynamicValidateForm.formData[index].iconColor = "#999999";
+};
+
+const handleOnFocus = (index: number | boolean | Event): void => {
+  index = Number(index);
+  dynamicValidateForm.formData[index].isFocus = true;
+  dynamicValidateForm.formData[index].iconColor = "#07a0b8";
+};
+const onFinishFailed = (): void => {
+  message.error("Error");
+};
+const handleLogin = async (): Promise<void> => {
+  const formState = {
+    username: dynamicValidateForm.formData[0]?.value,
+    password: dynamicValidateForm.formData[1]?.value
+  };
+  const response = await service.auth.login(formState);
+  if (response) {
+    //service.localStorage.setAccessToken(response);
+    router.push({ name: routeNames.home });
+  } else {
+    const error = {
+      icon: "src/assets/icons/ic_error.png",
+      title: i18n.global.t("login_fail_to_login"),
+      message: i18n.global.t("login_confirm_account")
+    };
+
+    emitter.emit("ShowModal", error);
+  }
+};
+
 //#endregion
 
 //#region computed
 //#endregion
 
 //#region reactive
+watch(
+  dynamicValidateForm,
+  () => {
+    if (
+      dynamicValidateForm.formData[0].value &&
+      dynamicValidateForm.formData[1].value
+    ) {
+      isValidated.value = true;
+    } else {
+      isValidated.value = false;
+    }
+  },
+  { deep: true }
+);
 //#endregion
 </script>
 
@@ -111,10 +184,22 @@ const login = (): void => {
   .btn-login {
     width: 360px;
     height: 48px;
+    font-family: "Roboto" !important;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 100%;
   }
   .forgot-password {
     margin-bottom: 30px;
+    font-family: "Roboto";
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 22px;
     color: $primary;
+  }
+  .forgot-password:hover {
+    text-decoration: underline;
   }
   .form-icon {
     width: 20px;
@@ -130,6 +215,9 @@ const login = (): void => {
   }
   .ant-form-item {
     margin-bottom: 25px;
+  }
+  .ant-btn span {
+    font-family: "Roboto";
   }
 }
 </style>
