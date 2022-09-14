@@ -40,8 +40,7 @@ defineProps({
     default: "24"
   },
   color: {
-    type: String,
-    default: "#999999"
+    type: String
   }
 });
 </script>

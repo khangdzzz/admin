@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { MenuItem } from "../model/nav-menu-item.model";
 
 import Logo from "@/assets/images/ImLogo.vue";
 import SuitCase from "@/assets/images/ImSuitCase.vue";
@@ -72,20 +71,8 @@ const menuItems = [
   }
 ];
 
-const isSubMenuActive = (key: string, items: MenuItem[] | null): boolean => {
-  const parsedSelectedKeys = JSON.parse(JSON.stringify(selectedKeys.value));
-
-  if (items) {
-    return items.some((item) => parsedSelectedKeys.includes(item.title));
-  }
-
-  return parsedSelectedKeys.includes(key);
-};
-
-const isSubMenuOpen = (key: string): boolean => {
-  const parsedOpenKeys = JSON.parse(JSON.stringify(openKeys.value));
-
-  return parsedOpenKeys.includes(key);
+const onOpenChange = (keys: string[]): void => {
+  openKeys.value = [keys[keys.length - 1]];
 };
 </script>
 
@@ -105,6 +92,7 @@ const isSubMenuOpen = (key: string): boolean => {
             mode="inline"
             v-model:openKeys="openKeys"
             v-model:selectedKeys="selectedKeys"
+            @openChange="onOpenChange"
           >
             <span
               v-for="(subMenu, idx) in menuItems"
@@ -118,11 +106,6 @@ const isSubMenuOpen = (key: string): boolean => {
                 <template #icon>
                   <component
                     :is="subMenu.icon"
-                    :color="
-                      isSubMenuActive(subMenu.title, subMenu.items)
-                        ? '#07A0B8'
-                        : ''
-                    "
                     class="default-layout__icon"
                   ></component>
                 </template>
@@ -132,13 +115,7 @@ const isSubMenuOpen = (key: string): boolean => {
                   </span>
                 </template>
                 <template #expandIcon>
-                  <span
-                    :class="
-                      isSubMenuOpen(subMenu.key)
-                        ? 'default-layout__expand-icon__expanded'
-                        : 'default-layout__expand-icon'
-                    "
-                  >
+                  <span class="default-layout__arrow-icon">
                     <ArrowUp />
                   </span>
                 </template>
@@ -153,13 +130,12 @@ const isSubMenuOpen = (key: string): boolean => {
               </a-sub-menu>
               <a-menu-item v-else :key="subMenu.key">
                 <template #icon>
-                  <component
-                    :is="subMenu.icon"
-                    :color="
-                      isSubMenuActive(subMenu.title, null) ? '#07A0B8' : ''
-                    "
-                    class="default-layout__icon"
-                  ></component>
+                  <div class="d-flex align-center">
+                    <component
+                      :is="subMenu.icon"
+                      class="default-layout__icon"
+                    ></component>
+                  </div>
                 </template>
                 <span class="default-layout__menu-title">
                   {{ subMenu.title }}
@@ -211,7 +187,7 @@ const isSubMenuOpen = (key: string): boolean => {
   }
 
   &__menu-wrapper {
-    height: calc(100% - 90px - 48px);
+    height: calc(100% - 90px - 48px - 1px);
   }
 
   &__menu {
@@ -292,50 +268,121 @@ const isSubMenuOpen = (key: string): boolean => {
       }
     }
 
+    &-sub {
+      .ant-menu {
+        &-item-selected {
+          border-left: 3px solid transparent;
+          background-color: #fff;
+
+          .ant-menu {
+            &-title-content {
+              background: #f7f7f7;
+              border-radius: 8px;
+            }
+          }
+        }
+
+        &-title-content {
+          padding-left: 34px;
+        }
+      }
+    }
+
     &-item {
       height: 48px !important;
       border-left: 3px solid transparent;
-    }
-
-    &-item-selected {
-      border-left: 3px solid #07a0b8;
+      padding-left: 12px !important;
+      line-height: 20px !important;
+      white-space: normal;
 
       &::after {
-        border-right: none !important;
+        transition: background 0.3s !important;
       }
 
-      .default-layout {
-        &__menu-title {
-          font-style: normal;
-          font-weight: 600;
-          font-size: 16px;
-          line-height: 20px;
-          color: #07a0b8;
+      &-selected {
+        border-left: 3px solid #07a0b8;
+
+        &::after {
+          border-right: none !important;
         }
 
-        &__sub-menu-title {
-          font-style: normal;
-          font-weight: 600;
-          font-size: 16px;
-          line-height: 20px;
-          color: #07a0b8;
+        .default-layout {
+          &__menu-title {
+            font-style: normal;
+            font-weight: 600;
+            font-size: 16px;
+            line-height: 20px;
+            color: #07a0b8;
+          }
+
+          &__sub-menu-title {
+            font-style: normal;
+            font-weight: 600;
+            font-size: 16px;
+            line-height: 20px;
+            color: #07a0b8;
+          }
+
+          &__icon {
+            color: #07a0b8;
+          }
         }
       }
     }
 
     &-submenu {
-      .ant-menu-sub {
-        background-color: #fff;
-      }
-    }
+      .ant-menu {
+        &-sub {
+          background-color: #fff;
+        }
 
-    &-submenu-selected {
-      .default-layout__menu-title {
-        font-style: normal;
-        font-weight: 600;
-        font-size: 16px;
-        line-height: 20px;
-        color: #07a0b8;
+        &-title-content {
+          height: 48px;
+          display: flex;
+          align-items: center;
+        }
+      }
+
+      .default-layout__arrow-icon {
+        display: flex;
+        align-items: center;
+        svg {
+          transition: transform 0.3s;
+          transform: rotate(180deg);
+        }
+      }
+
+      &-open {
+        .default-layout__arrow-icon {
+          svg {
+            transition: transform 0.3s;
+            transform: rotate(0deg);
+          }
+        }
+      }
+
+      &-title {
+        transition: background 0.3s !important;
+        border-left: 3px solid transparent;
+        padding-left: 12px !important;
+        height: 48px;
+        white-space: normal;
+      }
+
+      &-selected {
+        .default-layout {
+          &__menu-title {
+            font-style: normal;
+            font-weight: 600;
+            font-size: 16px;
+            line-height: 20px;
+            color: #07a0b8;
+          }
+
+          &__icon {
+            color: #07a0b8;
+          }
+        }
       }
     }
   }
