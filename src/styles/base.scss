@@ -1,8 +1,13 @@
 @font-face {
-  font-family: "Yu-Gothic";
-  src: url("@/assets/fonts/yugothib.ttf");
+  font-family: "Roboto";
+  src: url("@/assets/fonts/Roboto-Regular.ttf");
+}
+
+@font-face {
+  font-family: "Roboto-Bold";
+  src: url("@/assets/fonts/Roboto-Bold.ttf");
 }
 
 * {
-  font-family: "Yu-Gothic";
+  font-family: "Roboto";
 }
