@@ -13,6 +13,7 @@ import Container from "@/assets/images/ImContainer.vue";
 import Setting from "@/assets/images/ImSetting.vue";
 import DoorArrowRight from "@/assets/images/ImDoorArrowRight.vue";
 import ArrowUp from "@/assets/images/ImArrowUp.vue";
+import { routeNames } from "@/routes/route-names";
 
 const user = ref<string>("username");
 const selectedKeys = ref<string[]>(["Collection business"]);
@@ -22,22 +23,26 @@ const menuItems = [
   {
     key: "Collection business",
     icon: SuitCase,
-    title: "Collection business"
+    title: "Collection business",
+    pathName: routeNames.collectionBusiness
   },
   {
     key: "Product manufacture",
     icon: Manufacture,
-    title: "Product manufacture"
+    title: "Product manufacture",
+    pathName: routeNames.productManufacture
   },
   {
     key: "Traceability",
     icon: Trace,
-    title: "Traceability"
+    title: "Traceability",
+    pathName: routeNames.traceability
   },
   {
     key: "Customer management",
     icon: GroupOfPeople,
-    title: "Customer management"
+    title: "Customer management",
+    pathName: routeNames.customerManagement
   },
   {
     key: "Vehicle management",
@@ -45,30 +50,36 @@ const menuItems = [
     title: "Vehicle management",
     items: [
       {
-        title: "Real-time dynamics"
+        title: "Real-time dynamics",
+        pathName: routeNames.realTimeDynamics
       },
       {
-        title: "Vehicle"
+        title: "Vehicle",
+        pathName: routeNames.vehicle
       },
       {
-        title: "Vehicle type"
+        title: "Vehicle type",
+        pathName: routeNames.vehicleType
       }
     ]
   },
   {
     key: "Collection base/ Staff management",
     icon: Location,
-    title: "Collection base/ Staff management"
+    title: "Collection base/ Staff management",
+    pathName: routeNames.staffManagement
   },
   {
     key: "Container/ Working place management",
     icon: Container,
-    title: "Container/ Working place management"
+    title: "Container/ Working place management",
+    pathName: routeNames.container
   },
   {
     key: "Setting",
     icon: Setting,
-    title: "Setting"
+    title: "Setting",
+    pathName: routeNames.setting
   }
 ];
 
@@ -146,9 +157,11 @@ const isSubMenuOpen = (key: string): boolean => {
                   v-for="subMenuItem in subMenu.items"
                   :key="subMenuItem.title"
                 >
-                  <span class="default-layout__sub-menu-title">
-                    {{ subMenuItem.title }}
-                  </span>
+                  <router-link :to="{ name: subMenuItem.pathName }">
+                    <span class="default-layout__sub-menu-title">
+                      {{ subMenuItem.title }}
+                    </span>
+                  </router-link>
                 </a-menu-item>
               </a-sub-menu>
               <a-menu-item v-else :key="subMenu.key">
@@ -161,9 +174,11 @@ const isSubMenuOpen = (key: string): boolean => {
                     class="default-layout__icon"
                   ></component>
                 </template>
-                <span class="default-layout__menu-title">
-                  {{ subMenu.title }}
-                </span>
+                <router-link :to="{ name: subMenu.pathName }">
+                  <span class="default-layout__menu-title">
+                    {{ subMenu.title }}
+                  </span>
+                </router-link>
               </a-menu-item>
             </span>
           </a-menu>
@@ -182,7 +197,7 @@ const isSubMenuOpen = (key: string): boolean => {
       </div>
     </div>
     <div class="default-layout__content-wrapper fill-width fill-height">
-      <v-slot></v-slot>
+      <router-view/>
     </div>
   </div>
 </template>
