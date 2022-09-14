@@ -6,25 +6,13 @@
       </a-row>
       <a-row class="login-input" type="flex" justify="center" align="middle">
         <a-col>
-          <a-form
-            :model="dynamicValidateForm"
-            name="basic"
-            autocomplete="off"
-            @finish="onFinish"
-            @finishFailed="onFinishFailed"
-          >
-            <CustomForm
-              :formData="dynamicValidateForm.formData"
-              @onBlur="handleOnBlur"
-              @onFocus="handleOnFocus"
-            ></CustomForm>
+          <a-form :model="dynamicValidateForm" name="basic" autocomplete="off" @finish="onFinish"
+            @finishFailed="onFinishFailed">
+            <CustomForm :formData="dynamicValidateForm.formData" @onBlur="handleOnBlur" @onFocus="handleOnFocus">
+            </CustomForm>
             <a-form-item>
-              <a-button
-                type="primary"
-                html-type="submit"
-                class="btn-login"
-                :disabled="!isValidated"
-                >{{ $t("login_btn_submit") }}
+              <a-button type="primary" html-type="submit" class="btn-login" :disabled="!isValidated">{{
+              $t("login_btn_submit") }}
               </a-button>
             </a-form-item>
           </a-form>
@@ -48,6 +36,7 @@ import Ic_view from "../../../assets/icons/IcView.vue";
 import CustomForm from "../../base/components/CustomForm.vue";
 import { message } from "ant-design-vue";
 import { i18n } from "@/i18n";
+import { CognitoUserPool, AuthenticationDetails, CognitoUser } from 'amazon-cognito-identity-js';
 
 //#endregion
 
@@ -117,25 +106,40 @@ const onFinishFailed = (): void => {
   message.error("Error");
 };
 const handleLogin = async (): Promise<void> => {
-  const formState = {
-    username: dynamicValidateForm.formData[0]?.value,
-    password: dynamicValidateForm.formData[1]?.value
+  const poolData = {
+    UserPoolId: import.meta.env.VITE_COGNITO_USER_POOL_ID,
+    ClientId: import.meta.env.VITE_COGNITO_CLIENT_ID
   };
-  const response = await service.auth.login(formState);
-  if (response) {
-    //service.localStorage.setAccessToken(response);
-    router.push({ name: routeNames.home });
-  } else {
-    const error = {
-      icon: "src/assets/icons/ic_error.png",
-      title: i18n.global.t("login_fail_to_login"),
-      message: i18n.global.t("login_confirm_account")
-    };
 
-    emitter.emit("ShowModal", error);
-  }
+  const userPool = new CognitoUserPool(poolData);
+
+  const authenticationDetails = new AuthenticationDetails({
+    Username: dynamicValidateForm.formData[0]?.value,
+    Password: dynamicValidateForm.formData[1]?.value
+  });
+
+  const cognitoUser = new CognitoUser({
+    Username: dynamicValidateForm.formData[0]?.value,
+    Pool: userPool
+  });
+
+  cognitoUser.authenticateUser(authenticationDetails, {
+    onSuccess: (rs) => {
+      service.localStorage.setAccessToken(rs.getAccessToken().getJwtToken());
+      message.success(`Login successfully: ${rs.getAccessToken().payload.username}`);
+      router.push({ name: routeNames.home });
+    },
+    onFailure: (err) => {
+      const error = {
+        icon: "src/assets/icons/ic_error.png",
+        title: i18n.global.t("login_fail_to_login"),
+        message: i18n.global.t("login_confirm_account")
+      };
+      message.error(err);
+      emitter.emit("ShowModal", error);
+    }
+  });
 };
-
 //#endregion
 
 //#region computed
@@ -169,9 +173,11 @@ watch(
     background-color: $white;
     border-radius: 20px;
   }
+
   .login-logo {
     margin: 30px 0;
   }
+
   .input-item {
     width: 360px;
     height: 60px;
@@ -181,6 +187,7 @@ watch(
     padding: 0px 12px 0px 12px;
     background: $grey-2;
   }
+
   .btn-login {
     width: 360px;
     height: 48px;
@@ -190,6 +197,7 @@ watch(
     font-size: 18px;
     line-height: 100%;
   }
+
   .forgot-password {
     margin-bottom: 30px;
     font-family: "Roboto";
@@ -198,24 +206,30 @@ watch(
     line-height: 22px;
     color: $primary;
   }
+
   .forgot-password:hover {
     text-decoration: underline;
   }
+
   .form-icon {
     width: 20px;
     height: 20px;
   }
 }
+
 :deep() {
   .ant-input {
     background: transparent;
   }
+
   .ant-input:placeholder-shown {
     margin-left: 10px;
   }
+
   .ant-form-item {
     margin-bottom: 25px;
   }
+
   .ant-btn span {
     font-family: "Roboto";
   }

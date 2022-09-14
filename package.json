@@ -11,6 +11,7 @@
     "betterer": "betterer"
   },
   "dependencies": {
+    "amazon-cognito-identity-js": "^5.2.10",
     "ant-design-vue": "^3.2.12",
     "antd-css-utilities": "^1.0.3",
     "axios": "^0.27.2",
