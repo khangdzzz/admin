@@ -2,8 +2,12 @@
   "hello": "Hello World!",
   "hello_btn_change_language": "Change Language",
   "current_language": "日本語",
+  "login_email_address": "Email address",
   "login_enter_email": "Enter Email address",
+  "login_password": "Password",
   "login_enter_password": "Enter Password",
   "login_btn_submit": "Log in",
-  "login_forgot_password": "Forgot password"
+  "login_forgot_password": "Forgot password",
+  "login_fail_to_login": "Fail to login",
+  "login_confirm_account": "Please confirm your account again"
 }

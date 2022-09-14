@@ -1,7 +1,6 @@
 <script setup lang="ts">
-//#region import
-
 import ChangeLanguage from "@/modules/base/components/ChangeLanguage.vue";
+//#region import
 //#endregion
 
 //#region props
