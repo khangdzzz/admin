@@ -5,39 +5,28 @@
     </h3>
     <ImMainForgotPassword class="fgpw-form__main-img" />
     <a-form-item>
-      <a-input
-        class="fgpw-form__input-email"
-        v-model:value="email"
-        @focus="onFocusInputEmail"
-        @blur="onBlurInputEmail"
-      >
+      <a-input class="fgpw-form__input-email" v-model:value="email" @focus="onFocusInputEmail" @blur="onBlurInputEmail">
         <template #prefix>
           <IcUser class="mr-3 fgpw-icon-input" :color="getIconUserColor" />
         </template>
       </a-input>
-      <label :class="['label', isFocus && 'as-label', 'has-icon']"
-        >{{
-          isFocus
-            ? $t("forgot_password_email_address")
-            : $t("forgot_password_text_enter_email_address")
-        }}
+      <label :class="['label', isFocus && 'as-label', 'has-icon']">{{
+      isFocus
+      ? $t("forgot_password_email_address")
+      : $t("forgot_password_text_enter_email_address")
+      }}
       </label>
     </a-form-item>
     <div class="fgpw-form__action-wrap">
-      <a-button
-        class="fgpw-form__action-wrap--cancel"
-        @click="redirectToLogin"
-        >{{ $t("forgot_password_btn_cancel") }}</a-button
-      >
-      <a-button
-        :disabled="!emailIsValid"
-        :class="[
-          'fgpw-form__action-wrap--confirm',
-          emailIsValid ? 'active-btn' : ''
-        ]"
-        @click="$emit('handleConfirm', email)"
-        >{{ $t("forgot_password_btn_confirm") }}</a-button
-      >
+      <a-button class="fgpw-form__action-wrap--cancel" @click="redirectToLogin" :disabled="isLoading">
+        {{ $t("forgot_password_btn_cancel") }}
+      </a-button>
+      <a-button :disabled="!emailIsValid || isLoading" :class="[
+        'fgpw-form__action-wrap--confirm',
+        emailIsValid ? 'active-btn' : ''
+      ]" @click="$emit('handleConfirm', email)" :loading="isLoading">
+        {{ $t("forgot_password_btn_confirm") }}
+      </a-button>
     </div>
   </div>
 </template>
@@ -53,6 +42,12 @@ import ImMainForgotPassword from "@/assets/images/ImMainForgotPassword.vue";
 //#endregion
 
 //#region props
+defineProps({
+  isLoading: {
+    type: Boolean,
+    default: false
+  }
+});
 //#endregion
 
 //#region variables
@@ -70,10 +65,10 @@ watch(email, () => {
 //#endregion
 
 //#region function
-const onFocusInputEmail = ():void => {
+const onFocusInputEmail = (): void => {
   isFocus.value = true;
 };
-const onBlurInputEmail = () :void => {
+const onBlurInputEmail = (): void => {
   if (email.value) {
     isFocus.value = true;
   } else {
@@ -119,6 +114,7 @@ const getIconUserColor = computed((): string => {
   top: 50%;
   transform: translateY(-50%);
   border-radius: 20px;
+
   &__title {
     text-align: center;
     font-weight: 600;
@@ -126,6 +122,7 @@ const getIconUserColor = computed((): string => {
     line-height: 28px;
     font-family: "Roboto" !important;
   }
+
   &__action-wrap {
     display: flex;
     flex-direction: row;
@@ -134,6 +131,7 @@ const getIconUserColor = computed((): string => {
     font-size: 18px;
     line-height: 100%;
     justify-content: space-between;
+
     &--cancel,
     &--confirm {
       width: 175px !important;
@@ -146,11 +144,13 @@ const getIconUserColor = computed((): string => {
       line-height: 100%;
       padding: 15px;
     }
+
     &--cancel {
       color: $primary-400;
       border-color: $primary-400;
     }
   }
+
   &__input-email {
     display: flex;
     align-items: center;
@@ -171,6 +171,7 @@ const getIconUserColor = computed((): string => {
     margin-top: 25px;
     margin-bottom: 25px;
   }
+
   .float-label {
     position: relative;
   }
@@ -185,10 +186,12 @@ const getIconUserColor = computed((): string => {
     z-index: 1000;
     color: #999999;
   }
+
   .as-label {
     top: 10px;
     font-size: 14px !important;
   }
+
   .has-icon {
     left: 44px !important;
   }
@@ -203,24 +206,30 @@ const getIconUserColor = computed((): string => {
     font-weight: 400;
     color: $neutral-800;
   }
+
   .fgpw-icon-input {
     margin-right: 12px;
   }
+
   .ant-input-prefix {
     margin-right: 0;
   }
-  .ant-input-affix-wrapper > input.ant-input {
+
+  .ant-input-affix-wrapper>input.ant-input {
     top: 8px;
   }
+
   .ant-btn[disabled] {
     color: $neutral-0;
     background-color: $neutral-200;
     border-style: none;
     border-color: transparent;
   }
+
   .fgpw-form__action-wrap {
     margin-top: 25px;
   }
+
   .fgpw-form__action-wrap--confirm.active-btn {
     background: $primary;
     color: $neutral-0;
