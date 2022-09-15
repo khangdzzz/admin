@@ -20,5 +20,9 @@
   "forgot_password_text_enter_code":"Enter code",
   "forgot_password_resend_code":"Resend code",
   "forgot_password_enter_new_pass":"Enter new password",
-  "forgot_password_enter_new_confirm_pass":"Enter confirm new password"
+  "forgot_password_enter_new_confirm_pass":"Enter confirm new password",
+  "forgot_password_email_address":"Email address",
+  "forgot_password_new_password":"New password",
+  "forgot_password_confirm_new_password":"Confirm new password"
+
 }

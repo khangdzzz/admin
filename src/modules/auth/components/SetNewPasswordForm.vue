@@ -41,9 +41,10 @@
       <a-form-item>
         <a-input-password
           v-model:value="formState.password"
-          :placeholder="$t('forgot_password_enter_new_pass')"
           class="set-password-form__input-password"
           :class="setColorIconInputPassword"
+          @focus="onFocusInputPassword"
+          @blur="onBlurInputPassword"
           ><template #prefix>
             <IcPass
               class="form-icon form-icon-prefix"
@@ -51,13 +52,21 @@
             ></IcPass>
           </template>
         </a-input-password>
+        <label :class="['label', isFocusPassword && 'as-label', 'has-icon']"
+          >{{
+            isFocusPassword
+              ? $t("forgot_password_new_password")
+              : $t("forgot_password_enter_new_pass")
+          }}
+        </label>
       </a-form-item>
       <a-form-item>
         <a-input-password
           v-model:value="formState.confirmPassword"
-          :placeholder="$t('forgot_password_enter_new_confirm_pass')"
           class="set-password-form__input-confirm-password"
           :class="setColorIconInputConfirmPassword"
+          @focus="onFocusInputConfirmPassword"
+          @blur="onBlurInputConfirmPassword"
           ><template #prefix>
             <IcPass
               class="form-icon form-icon-prefix"
@@ -65,6 +74,14 @@
             ></IcPass>
           </template>
         </a-input-password>
+        <label
+          :class="['label', isFocusConfirmPassword && 'as-label', , 'has-icon']"
+          >{{
+            isFocusConfirmPassword
+              ? $t("forgot_password_confirm_new_password")
+              : $t("forgot_password_enter_new_confirm_pass")
+          }}
+        </label>
       </a-form-item>
       <div class="set-password-form__action-wrap">
         <a-button
@@ -118,12 +135,34 @@ const deadline = reactive({
 const router = useRouter();
 const activeResendCode = ref<string>("");
 const activeSaveButtonStyle = ref<string>("");
+const isFocusPassword = ref<boolean>(false);
+const isFocusConfirmPassword = ref<boolean>(false);
 
 //#endregion
 
 //#region hooks
 //#endregion
 //#region function
+const onFocusInputPassword = (): void => {
+  isFocusPassword.value = true;
+};
+const onFocusInputConfirmPassword = (): void => {
+  isFocusConfirmPassword.value = true;
+};
+const onBlurInputPassword = (): void => {
+  if (formState.password) {
+    isFocusPassword.value = true;
+  } else {
+    isFocusPassword.value = false;
+  }
+};
+const onBlurInputConfirmPassword = (): void => {
+  if (formState.confirmPassword) {
+    isFocusConfirmPassword.value = true;
+  } else {
+    isFocusConfirmPassword.value = false;
+  }
+};
 const redirectToLogin = (): void => {
   router.push({ name: routeNames.login });
 };
@@ -239,11 +278,33 @@ const setColorIconInputConfirmPassword = computed((): string => {
   &__input-code {
     margin-bottom: 10px;
   }
+  .float-label {
+    position: relative;
+  }
+
+  .label {
+    font-weight: normal;
+    position: absolute;
+    pointer-events: none;
+    left: 46px;
+    top: 20px;
+    transition: 0.2s ease all;
+    z-index: 1000;
+    color: #999999;
+  }
+  .as-label {
+    top: 10px;
+    font-size: 14px !important;
+  }
+  .has-icon {
+    left: 44px !important;
+  }
+  .wrap-countdown {
+    display: flex;
+    justify-content: center;
+  }
 }
-.wrap-countdown {
-  display: flex;
-  justify-content: center;
-}
+
 :deep() {
   .ant-input {
     background: transparent;
@@ -315,6 +376,9 @@ const setColorIconInputConfirmPassword = computed((): string => {
   .set-password-form__input-password.active .ant-input-password-icon,
   .set-password-form__input-confirm-password.active .ant-input-password-icon {
     color: $primary-400;
+  }
+  .ant-input-affix-wrapper > input.ant-input {
+    top: 8px;
   }
 }
 </style>
