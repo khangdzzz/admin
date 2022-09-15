@@ -52,8 +52,8 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
     {
       inputType: "AInput",
       value: "",
-      placeHolder: i18n.global.t("login_enter_email"),
-      label: i18n.global.t("login_email_address"),
+      placeHolder: "login_enter_email",
+      label: "login_email_address",
       icon: Ic_user,
       iconColor: "#999999",
       name: "email",
@@ -65,8 +65,8 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
     {
       inputType: "AInputPassword",
       value: "",
-      placeHolder: i18n.global.t("login_enter_password"),
-      label: i18n.global.t("login_password"),
+      placeHolder: "login_enter_password",
+      label: "login_password",
       icon: Ic_pass,
       iconColor: "#999999",
       suffixIcon: Ic_view,

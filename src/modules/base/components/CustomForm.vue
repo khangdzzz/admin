@@ -55,7 +55,7 @@
 
     <label
       :class="['label', item.isFocus && 'as-label', item.icon && 'has-icon']"
-      >{{ item.label }}
+      >{{ item.isFocus ? $t(item.label) : $t(item.placeHolder) }}
     </label>
   </a-form-item>
 </template>
