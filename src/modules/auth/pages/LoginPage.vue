@@ -6,18 +6,33 @@
       </a-row>
       <a-row class="login-input" type="flex" justify="center" align="middle">
         <a-col>
-          <a-form :model="dynamicValidateForm" name="basic" autocomplete="off" @finish="onFinish"
-            @finishFailed="onFinishFailed">
-            <CustomForm :formData="dynamicValidateForm.formData" @onBlur="handleOnBlur" @onFocus="handleOnFocus">
+          <a-form
+            :model="dynamicValidateForm"
+            name="basic"
+            autocomplete="off"
+            @finish="onFinish"
+            @finishFailed="onFinishFailed"
+          >
+            <CustomForm
+              :formData="dynamicValidateForm.formData"
+              @onBlur="handleOnBlur"
+              @onFocus="handleOnFocus"
+            >
             </CustomForm>
             <a-form-item>
-              <a-button type="primary" html-type="submit" class="btn-login" :disabled="!isValidated">{{
-              $t("login_btn_submit") }}
+              <a-button
+                type="primary"
+                html-type="submit"
+                class="btn-login"
+                :disabled="!isValidated"
+                >{{ $t("login_btn_submit") }}
               </a-button>
             </a-form-item>
           </a-form>
         </a-col>
-        <span class="forgot-password">{{ $t("login_forgot_password") }}</span>
+        <span @click="redirectToForgotPasswordPage" class="forgot-password">{{
+          $t("login_forgot_password")
+        }}</span>
       </a-row>
     </a-col>
   </a-row>
@@ -36,7 +51,11 @@ import Ic_view from "../../../assets/icons/IcView.vue";
 import CustomForm from "../../base/components/CustomForm.vue";
 import { message } from "ant-design-vue";
 import { i18n } from "@/i18n";
-import { CognitoUserPool, AuthenticationDetails, CognitoUser } from 'amazon-cognito-identity-js';
+import {
+  CognitoUserPool,
+  AuthenticationDetails,
+  CognitoUser
+} from "amazon-cognito-identity-js";
 
 //#endregion
 
@@ -126,7 +145,9 @@ const handleLogin = async (): Promise<void> => {
   cognitoUser.authenticateUser(authenticationDetails, {
     onSuccess: (rs) => {
       service.localStorage.setAccessToken(rs.getAccessToken().getJwtToken());
-      message.success(`Login successfully: ${rs.getAccessToken().payload.username}`);
+      message.success(
+        `Login successfully: ${rs.getAccessToken().payload.username}`
+      );
       router.push({ name: routeNames.home });
     },
     onFailure: (err) => {
@@ -139,6 +160,9 @@ const handleLogin = async (): Promise<void> => {
       emitter.emit("ShowModal", error);
     }
   });
+};
+const redirectToForgotPasswordPage = (): void => {
+  router.push({ name: routeNames.forgotPassword });
 };
 //#endregion
 

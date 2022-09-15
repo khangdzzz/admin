@@ -9,5 +9,16 @@
   "login_btn_submit": "Log in",
   "login_forgot_password": "Forgot password",
   "login_fail_to_login": "Fail to login",
-  "login_confirm_account": "Please confirm your account again"
+  "login_confirm_account": "Please confirm your account again",
+  "forgot_password_text_forgot_password":"Forgot password",
+  "forgot_password_text_enter_email_address":"Enter Email address",
+  "forgot_password_btn_cancel":"Cancel",
+  "forgot_password_btn_confirm":"Confirm",
+  "forgot_password_btn_save":"Save",
+  "forgot_password_text_set_new_password":"Set new password",
+  "forgot_password_text_input_code_description":"A verification code has been sent to your e-mail. Allow to input maximum 6 numbers",
+  "forgot_password_text_enter_code":"Enter code",
+  "forgot_password_resend_code":"Resend code",
+  "forgot_password_enter_new_pass":"Enter new password",
+  "forgot_password_enter_new_confirm_pass":"Enter confirm new password"
 }
