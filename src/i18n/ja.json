@@ -20,5 +20,8 @@
   "forgot_password_text_input_code_description":"確認コードがメールアドレスに送信されました。.６数字以内で入力してください",
   "forgot_password_resend_code":"コード再送信",
   "forgot_password_enter_new_pass":"新しいパスワードを入力",
-  "forgot_password_enter_new_confirm_pass":"新しいパスワードを再入力"
+  "forgot_password_enter_new_confirm_pass":"新しいパスワードを再入力",
+  "forgot_password_email_address":"メールアドレス",
+  "forgot_password_new_password":"新しいパスワード",
+  "forgot_password_confirm_new_password":"新しいパスワード（再入力）"
 }
