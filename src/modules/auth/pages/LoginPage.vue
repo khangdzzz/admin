@@ -15,6 +15,7 @@
           >
             <CustomForm
               :formData="dynamicValidateForm.formData"
+              @change="handleOnChange"
               @onBlur="handleOnBlur"
               @onFocus="handleOnFocus"
             >
@@ -56,6 +57,7 @@ import {
   AuthenticationDetails,
   CognitoUser
 } from "amazon-cognito-identity-js";
+import { Emitter, EventType } from "mitt";
 
 //#endregion
 
@@ -63,7 +65,8 @@ import {
 //#endregion
 
 //#region variables
-const emitter = inject("emitter");
+const emitter: Emitter<Record<EventType, unknown>> | undefined =
+  inject("emitter");
 const isValidated = ref<boolean>(false);
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const dynamicValidateForm = reactive<{ formData: any[] }>({
@@ -107,19 +110,28 @@ const onFinish = (): void => {
   handleLogin();
 };
 
+const handleOnChange = (value: string, index: number): void => {
+  if ((value || "").length) {
+    dynamicValidateForm.formData[index].iconColor = "#07a0b8";
+  } else {
+    dynamicValidateForm.formData[index].iconColor = "#999999";
+  }
+};
 const handleOnBlur = (
   value: number | boolean | Event,
   index: string | number | Event
 ): void => {
   index = Number(index);
-  if (!value) dynamicValidateForm.formData[index].isFocus = false;
+  dynamicValidateForm.formData[index].isFocus = false;
   dynamicValidateForm.formData[index].iconColor = "#999999";
 };
 
 const handleOnFocus = (index: number | boolean | Event): void => {
   index = Number(index);
   dynamicValidateForm.formData[index].isFocus = true;
-  dynamicValidateForm.formData[index].iconColor = "#07a0b8";
+  if (dynamicValidateForm.formData[index].value) {
+    dynamicValidateForm.formData[index].iconColor = "#07a0b8";
+  }
 };
 const onFinishFailed = (): void => {
   message.error("Error");
@@ -157,7 +169,7 @@ const handleLogin = async (): Promise<void> => {
         message: i18n.global.t("login_confirm_account")
       };
       message.error(err);
-      emitter.emit("ShowModal", error);
+      emitter?.emit("ShowModal", error);
     }
   });
 };

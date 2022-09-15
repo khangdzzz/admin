@@ -82,7 +82,7 @@ const routes: RouteRecordRaw[] = [
           import("@/modules/vehicle-management/pages/TheVehicle.vue")
       },
       {
-        path: "real-time-dynamic",
+        path: "vehicle-type",
         name: routeNames.vehicleType,
         component: () =>
           import("@/modules/vehicle-management/pages/VehicleType.vue")

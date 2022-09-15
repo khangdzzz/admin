@@ -6,14 +6,14 @@ import vue from "@vitejs/plugin-vue";
 export default defineConfig({
   plugins: [vue()],
   define: {
-    "global": {}, // this line to fix aws cognito issue. refference to: https://github.com/aws-amplify/amplify-js/issues/678
+    global: {} // this line to fix aws cognito issue. refference to: https://github.com/aws-amplify/amplify-js/issues/678
   },
   css: {
     preprocessorOptions: {
       less: {
         modifyVars: {
           // ref https://github.com/vueComponent/ant-design-vue/blob/main/components/style/themes/default.less
-          "primary-color": "#0E879E",
+          "primary-color": "#07A0B8",
           "btn-border-radius-base": "10px",
           "btn-border-radius-sm": "6px"
         },
