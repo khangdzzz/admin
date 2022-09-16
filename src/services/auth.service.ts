@@ -1,4 +1,5 @@
 import { AuthModel } from "@/modules/auth/models";
+import { commonStore } from "@/stores/common.store";
 import { transformRequest } from "./base.service";
 
 export async function login(
@@ -16,4 +17,7 @@ export async function login(
 
 export function logout(): void {
   localStorage.clear();
+  sessionStorage.clear();
+  const store = commonStore();
+  store.$reset;
 }

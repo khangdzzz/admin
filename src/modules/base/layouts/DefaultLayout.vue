@@ -13,6 +13,8 @@ import Setting from "@/assets/images/ImSetting.vue";
 import DoorArrowRight from "@/assets/images/ImDoorArrowRight.vue";
 import ArrowUp from "@/assets/images/ImArrowUp.vue";
 import { routeNames } from "@/routes/route-names";
+import { router } from "@/routes";
+import { service } from "@/services";
 
 const user = ref<string>("username");
 const selectedKeys = ref<string[]>(["Collection business"]);
@@ -84,6 +86,11 @@ const menuItems = [
 
 const onOpenChange = (keys: string[]): void => {
   openKeys.value = [keys[keys.length - 1]];
+};
+
+const onLogout = () => {
+  service.auth.logout();
+  router.push({ name: routeNames.login });
 };
 </script>
 
@@ -163,6 +170,7 @@ const onOpenChange = (keys: string[]): void => {
           <a-button
             type="text"
             class="default-layout__logout-btn d-flex align-center gap-10"
+            @click="onLogout"
           >
             <template #icon>
               <DoorArrowRight />
@@ -173,7 +181,7 @@ const onOpenChange = (keys: string[]): void => {
       </div>
     </div>
     <div class="default-layout__content-wrapper fill-width fill-height">
-      <router-view/>
+      <router-view />
     </div>
   </div>
 </template>

@@ -9,9 +9,10 @@
 
 <script setup lang="ts">
 //#region import
+
 import { service } from "@/services";
 import { localStorageKeys } from "@/services/local-storage-keys";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 //#endregion
 
 //#region props
@@ -19,15 +20,19 @@ import { ref } from "vue";
 
 //#region variables
 const currentLanguage = ref<string | null>();
-const logoUrl = ref<string>("src/assets/images/im_japan_flag.png");
+const logoUrl = ref<string>("");
 
 //#endregion
 
 //#region hooks
+onMounted(() => {
+  setLogoUrl();
+});
 
 //#endregion
 
 //#region function
+
 const changeLanguage = (): void => {
   service.language.changeLanguage();
   setLogoUrl();
