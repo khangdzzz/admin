@@ -1,19 +1,10 @@
 <template>
-  <a-modal
-    v-model:visible="visible"
-    width="420px"
-    :closable="false"
-    class="custom-modal"
-    centered
-    :footer="null"
-  >
+  <a-modal v-model:visible="visible" width="420px" :closable="false" class="custom-modal" centered :footer="null">
     <div class="modal-content">
       <img :src="modalIcon" class="modal-icon" />
-      <h3 class="modal-title">{{ modalTitle }}</h3>
-      <p class="modal-message">{{ modalMessage }}</p>
-      <a-button type="primary" class="btn-ok" @click="visible = false"
-        >OK</a-button
-      >
+      <h3 class="modal-title">{{ $t(modalTitle) }}</h3>
+      <p class="modal-message">{{ $t(modalMessage) }}</p>
+      <a-button type="primary" class="btn-ok" @click="visible = false">OK</a-button>
     </div>
   </a-modal>
 </template>
@@ -80,6 +71,7 @@ const onShowModal = ({ icon, title, message }: Modal): void => {
   .modal-icon {
     margin-bottom: 24px;
   }
+
   .modal-title {
     margin: 0;
     font-family: "Roboto";
@@ -88,6 +80,7 @@ const onShowModal = ({ icon, title, message }: Modal): void => {
     font-size: 22px;
     line-height: 28px;
   }
+
   .modal-message {
     color: $text-1;
     margin-top: 10px;
@@ -96,12 +89,15 @@ const onShowModal = ({ icon, title, message }: Modal): void => {
     font-weight: 400;
     font-size: 18px;
     line-height: 22px;
+    text-align: center;
   }
+
   .btn-ok {
     width: 360px;
     height: 48px;
   }
 }
+
 .custom-modal .ant-modal-content {
   border-radius: 20px !important;
 }
