@@ -4,30 +4,29 @@
       {{ $t("forgot_password_text_forgot_password") }}
     </h3>
     <ImMainForgotPassword class="fgpw-form__main-img" />
-    <a-input
-      class="fgpw-form__input-email"
-      v-model:value="email"
-      :placeholder="$t('forgot_password_text_enter_email_address')"
-    >
-      <template #prefix>
-        <IcUser class="mr-3 fgpw-icon-input" :color="getIconUserColor" />
-      </template>
-    </a-input>
+    <a-form-item>
+      <a-input class="fgpw-form__input-email" v-model:value="email" @focus="onFocusInputEmail" @blur="onBlurInputEmail">
+        <template #prefix>
+          <IcUser class="mr-3 fgpw-icon-input" :color="getIconUserColor" />
+        </template>
+      </a-input>
+      <label :class="['label', isFocus && 'as-label', 'has-icon']">{{
+      isFocus
+      ? $t("forgot_password_email_address")
+      : $t("forgot_password_text_enter_email_address")
+      }}
+      </label>
+    </a-form-item>
     <div class="fgpw-form__action-wrap">
-      <a-button
-        class="fgpw-form__action-wrap--cancel"
-        @click="redirectToLogin"
-        >{{ $t("forgot_password_btn_cancel") }}</a-button
-      >
-      <a-button
-        :disabled="!emailIsValid"
-        :class="[
-          'fgpw-form__action-wrap--confirm',
-          emailIsValid ? 'active-btn' : ''
-        ]"
-        @click="$emit('handleConfirm', email)"
-        >{{ $t("forgot_password_btn_confirm") }}</a-button
-      >
+      <a-button class="fgpw-form__action-wrap--cancel" @click="redirectToLogin" :disabled="isLoading">
+        {{ $t("forgot_password_btn_cancel") }}
+      </a-button>
+      <a-button :disabled="!emailIsValid || isLoading" :class="[
+        'fgpw-form__action-wrap--confirm',
+        emailIsValid ? 'active-btn' : ''
+      ]" @click="$emit('handleConfirm', email)" :loading="isLoading">
+        {{ $t("forgot_password_btn_confirm") }}
+      </a-button>
     </div>
   </div>
 </template>
@@ -43,6 +42,12 @@ import ImMainForgotPassword from "@/assets/images/ImMainForgotPassword.vue";
 //#endregion
 
 //#region props
+defineProps({
+  isLoading: {
+    type: Boolean,
+    default: false
+  }
+});
 //#endregion
 
 //#region variables
@@ -50,7 +55,7 @@ const email = ref<string>("");
 const emailIsChange = ref<boolean>(false);
 const emailIsValid = ref<boolean>(false);
 const router = useRouter();
-
+const isFocus = ref<boolean>(false);
 watch(email, () => {
   onEmailChange();
 });
@@ -60,6 +65,16 @@ watch(email, () => {
 //#endregion
 
 //#region function
+const onFocusInputEmail = (): void => {
+  isFocus.value = true;
+};
+const onBlurInputEmail = (): void => {
+  if (email.value) {
+    isFocus.value = true;
+  } else {
+    isFocus.value = false;
+  }
+};
 const redirectToLogin = (): void => {
   router.push({ name: routeNames.login });
 };
@@ -99,6 +114,7 @@ const getIconUserColor = computed((): string => {
   top: 50%;
   transform: translateY(-50%);
   border-radius: 20px;
+
   &__title {
     text-align: center;
     font-weight: 600;
@@ -106,6 +122,7 @@ const getIconUserColor = computed((): string => {
     line-height: 28px;
     font-family: "Roboto" !important;
   }
+
   &__action-wrap {
     display: flex;
     flex-direction: row;
@@ -114,6 +131,7 @@ const getIconUserColor = computed((): string => {
     font-size: 18px;
     line-height: 100%;
     justify-content: space-between;
+
     &--cancel,
     &--confirm {
       width: 175px !important;
@@ -126,11 +144,13 @@ const getIconUserColor = computed((): string => {
       line-height: 100%;
       padding: 15px;
     }
+
     &--cancel {
       color: $primary-400;
       border-color: $primary-400;
     }
   }
+
   &__input-email {
     display: flex;
     align-items: center;
@@ -151,21 +171,52 @@ const getIconUserColor = computed((): string => {
     margin-top: 25px;
     margin-bottom: 25px;
   }
+
+  .float-label {
+    position: relative;
+  }
+
+  .label {
+    font-weight: normal;
+    position: absolute;
+    pointer-events: none;
+    left: 46px;
+    top: 20px;
+    transition: 0.2s ease all;
+    z-index: 1000;
+    color: #999999;
+  }
+
+  .as-label {
+    top: 10px;
+    font-size: 14px !important;
+  }
+
+  .has-icon {
+    left: 44px !important;
+  }
 }
+
 :deep() {
   .ant-input {
     background: transparent;
     font-size: 16px;
-    height: 16px;
+    height: 20px;
     line-height: 100%;
     font-weight: 400;
     color: $neutral-800;
   }
+
   .fgpw-icon-input {
     margin-right: 12px;
   }
+
   .ant-input-prefix {
     margin-right: 0;
+  }
+
+  .ant-input-affix-wrapper>input.ant-input {
+    top: 8px;
   }
 
   .ant-btn[disabled] {
@@ -174,6 +225,11 @@ const getIconUserColor = computed((): string => {
     border-style: none;
     border-color: transparent;
   }
+
+  .fgpw-form__action-wrap {
+    margin-top: 25px;
+  }
+
   .fgpw-form__action-wrap--confirm.active-btn {
     background: $primary;
     color: $neutral-0;

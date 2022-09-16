@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
+import { loginGuard } from "./guards/login-guard";
 import { requireLoginGuard } from "./guards/require-login.guard";
 import { routeNames } from "./route-names";
 import { ScreenLayout } from "./screen-layouts";
@@ -17,6 +18,7 @@ const routes: RouteRecordRaw[] = [
     path: "/login",
     name: routeNames.login,
     component: () => import("@/modules/auth/pages/LoginPage.vue"),
+    beforeEnter: loginGuard,
     meta: {
       layout: ScreenLayout.AUTH_LAYOUT
     }
@@ -25,6 +27,7 @@ const routes: RouteRecordRaw[] = [
     path: "/forgot-password",
     name: routeNames.forgotPassword,
     component: () => import("@/modules/auth/pages/ForgotPasswordPage.vue"),
+    beforeEnter: loginGuard,
     meta: {
       layout: ScreenLayout.AUTH_LAYOUT
     }

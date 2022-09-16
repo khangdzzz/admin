@@ -26,7 +26,9 @@
                 html-type="submit"
                 class="btn-login"
                 :disabled="!isValidated"
-                >{{ $t("login_btn_submit") }}
+                :loading="isLoading"
+              >
+                {{ $t("login_btn_submit") }}
               </a-button>
             </a-form-item>
           </a-form>
@@ -42,22 +44,21 @@
 <script setup lang="ts">
 //#region import
 
+import Ic_pass from "@/assets/icons/IcPass.vue";
+import Ic_user from "@/assets/icons/IcUser.vue";
 import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
+import {
+  AuthenticationDetails,
+  CognitoUser,
+  CognitoUserPool
+} from "amazon-cognito-identity-js";
+import { message } from "ant-design-vue";
+import { Emitter, EventType } from "mitt";
 import { inject, reactive, ref, watch } from "vue";
-import Ic_user from "@/assets/icons/IcUser.vue";
-import Ic_pass from "@/assets/icons/IcPass.vue";
 import Ic_view from "../../../assets/icons/IcView.vue";
 import CustomForm from "../../base/components/CustomForm.vue";
-import { message } from "ant-design-vue";
-import { i18n } from "@/i18n";
-import {
-  CognitoUserPool,
-  AuthenticationDetails,
-  CognitoUser
-} from "amazon-cognito-identity-js";
-import { Emitter, EventType } from "mitt";
 
 //#endregion
 
@@ -68,6 +69,7 @@ import { Emitter, EventType } from "mitt";
 const emitter: Emitter<Record<EventType, unknown>> | undefined =
   inject("emitter");
 const isValidated = ref<boolean>(false);
+const isLoading = ref<boolean>(false);
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const dynamicValidateForm = reactive<{ formData: any[] }>({
   formData: [
@@ -154,8 +156,10 @@ const handleLogin = async (): Promise<void> => {
     Pool: userPool
   });
 
+  isLoading.value = true;
   cognitoUser.authenticateUser(authenticationDetails, {
     onSuccess: (rs) => {
+      isLoading.value = false;
       service.localStorage.setAccessToken(rs.getAccessToken().getJwtToken());
       message.success(
         `Login successfully: ${rs.getAccessToken().payload.username}`
@@ -163,12 +167,13 @@ const handleLogin = async (): Promise<void> => {
       router.push({ name: routeNames.home });
     },
     onFailure: (err) => {
+      err;
+      isLoading.value = false;
       const error = {
         icon: "src/assets/icons/ic_error.png",
-        title: i18n.global.t("login_fail_to_login"),
-        message: i18n.global.t("login_confirm_account")
+        title: "login_fail_to_login",
+        message: "login_confirm_account"
       };
-      message.error(err);
       emitter?.emit("ShowModal", error);
     }
   });

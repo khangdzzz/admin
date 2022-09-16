@@ -21,5 +21,11 @@
   "forgot_password_resend_code": "コード再送信",
   "forgot_password_enter_new_pass": "新しいパスワードを入力",
   "forgot_password_enter_new_confirm_pass": "新しいパスワードを再入力",
+  "forgot_password_email_address": "メールアドレス",
+  "forgot_password_new_password": "新しいパスワード",
+  "forgot_password_confirm_new_password": "新しいパスワード（再入力）",
+  "forgot_password_error_popup_lbl_title": "パスワード変更に失敗しました",
+  "forgot_password_error_popup_lbl_message": "確認コード、またメールアドレスを正しく入力してください",
+  "forgot_password_message_reset_successfully": "パスワードを正常に再設定できる",
   "vehicle_type": "車両分類"
 }
