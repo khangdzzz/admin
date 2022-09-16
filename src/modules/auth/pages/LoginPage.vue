@@ -153,7 +153,7 @@ const handleLogin = async (): Promise<void> => {
       err;
       isLoading.value = false;
       const error = {
-        icon: "src/assets/icons/ic_error.png",
+        icon: "../../../assets/icons/ic_error.png",
         title: "login_fail_to_login",
         message: "login_confirm_account"
       };

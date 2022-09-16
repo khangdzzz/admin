@@ -88,7 +88,7 @@ const onOpenChange = (keys: string[]): void => {
   openKeys.value = [keys[keys.length - 1]];
 };
 
-const onLogout = () => {
+const onLogout = (): void => {
   service.auth.logout();
   router.push({ name: routeNames.login });
 };

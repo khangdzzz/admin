@@ -81,7 +81,7 @@ const onSetNewPassword = (data: { code: string, password: string }): void => {
       err
       isLoading.value = false;
       const error = {
-        icon: "src/assets/icons/ic_error.png",
+        icon: "../../../assets/icons/ic_error.png",
         title: "forgot_password_error_popup_lbl_title",
         message: "forgot_password_error_popup_lbl_message"
       };

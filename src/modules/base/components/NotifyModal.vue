@@ -13,6 +13,7 @@
 //#region import
 //#endregion
 
+import { Emitter, EventType } from "mitt";
 import { inject, onMounted, ref } from "vue";
 
 type Modal = {
@@ -21,17 +22,11 @@ type Modal = {
   message: string;
 };
 //#region props
-// const props = defineProps<{
-//   visible: boolean;
-//   icon: string;
-//   title: string;
-//   message: string;
-// }>();
 //#endregion
 
 //#region variables
 
-const emitter = inject("emitter");
+const emitter: Emitter<Record<EventType, unknown>> | undefined = inject("emitter");
 const visible = ref<boolean>(false);
 const modalIcon = ref<string>("");
 const modalTitle = ref<string>("");
@@ -40,16 +35,19 @@ const modalMessage = ref<string>("");
 
 //#region hooks
 onMounted(() => {
-  emitter.on("ShowModal", (value: Modal) => onShowModal(value));
+  if (emitter) {
+    emitter.on("ShowModal", (value) => onShowModal(value as Modal));
+  }
 });
 
 //#endregion
 
 //#region function
 const onShowModal = ({ icon, title, message }: Modal): void => {
+  icon;
   visible.value = true;
   modalMessage.value = message;
-  modalIcon.value = icon;
+  modalIcon.value = new URL('../../../assets/icons/ic_error.png', import.meta.url).href;
   modalTitle.value = title;
 };
 //#endregion
