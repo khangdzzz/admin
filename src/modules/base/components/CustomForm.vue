@@ -1,21 +1,34 @@
 <template>
-  <a-form-item v-for="(item, index) in formData" :key="item.key" :name="['formData', index, 'value']"
-    :rules="item.rules">
-    <component :is="item.inputType" v-model:value="item.value" :disabled="item.disabled" :options="item.options"
-      :style="item.style" :dropdownClassName="item.dropdownClassName" @change="handleChange(item.value, index)"
-      @select="onSelect" @pressEnter="onPressEnter" @focus="onFocus(index)" @blur="onBlur(item.value, index)"
-      class="input-item float-label" :class="[
+  <a-form-item
+    v-for="(item, index) in formData"
+    :key="item.key"
+    :name="['formData', index, 'value']"
+    :rules="item.rules"
+  >
+    <component
+      :is="item.inputType"
+      v-model:value="item.value"
+      :disabled="item.disabled"
+      :options="item.options"
+      :style="item.style"
+      :dropdownClassName="item.dropdownClassName"
+      @change="handleChange(item.value, index)"
+      @select="onSelect"
+      @pressEnter="onPressEnter"
+      @focus="onFocus(index)"
+      @blur="onBlur(item.value, index)"
+      class="input-item float-label"
+      :class="[
         !item.icon ? 'not-has-icon' : 'has-icon-input',
         isPasswordItem(item) ? 'password-item' : ''
-      ]">
+      ]"
+    >
       <!-- //region slot input  -->
       <template #prefix v-if="item.icon">
         <component :is="item.icon" :color="item.iconColor" />
       </template>
       <template #suffix>
-        <a-tooltip title="Extra information">
-          <component :is="item.suffixIcon" :color="item.iconColor" />
-        </a-tooltip>
+        <component :is="item.suffixIcon" :color="item.iconColor" />
       </template>
       <!-- endregion -->
 
@@ -31,16 +44,23 @@
 
       <!-- //region slot select  -->
       <template #suffixIcon>
-        <img src="@/assets/icons/ic_dropdown.svg" width="20" height="20" style="padding: 4px" />
+        <img
+          src="@/assets/icons/ic_dropdown.svg"
+          width="20"
+          height="20"
+          style="padding: 4px"
+        />
       </template>
       <!-- endregion -->
     </component>
 
-    <label :class="[
-      'label',
-      item.isFocus || item.value ? 'as-label' : '',
-      item.icon && 'has-icon'
-    ]">{{ item.isFocus || item.value ? $t(item.label) : $t(item.placeHolder) }}
+    <label
+      :class="[
+        'label',
+        item.isFocus || item.value ? 'as-label' : '',
+        item.icon && 'has-icon'
+      ]"
+      >{{ item.isFocus || item.value ? $t(item.label) : $t(item.placeHolder) }}
     </label>
   </a-form-item>
 </template>
@@ -79,6 +99,7 @@ const styleContent = {
   minHeight: "50px",
   padding: "17px 20px 17px 15px"
 };
+
 //#region hooks
 //#endregion
 
@@ -101,7 +122,10 @@ const onFocus = (index: number): void => {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const isPasswordItem = (item: any): boolean => {
-  if (item.isFocus && item.name === "password" && item.value.length > 0) {
+  if (
+    (item.isFocus && item.name === "password" && item.value.length > 0) ||
+    item.value.length > 0
+  ) {
     return true;
   }
   return false;
@@ -219,7 +243,7 @@ const isPasswordItem = (item: any): boolean => {
 
 .as-label {
   top: 4px;
-  font-size: 12px !important;
+  font-size: 14px !important;
 }
 
 .has-icon {
