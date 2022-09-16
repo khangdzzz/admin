@@ -12,13 +12,16 @@
       :options="item.options"
       :style="item.style"
       :dropdownClassName="item.dropdownClassName"
-      @change="handleChange"
+      @change="handleChange(item.value, index)"
       @select="onSelect"
       @pressEnter="onPressEnter"
       @focus="onFocus(index)"
       @blur="onBlur(item.value, index)"
       class="input-item float-label"
-      :class="[!item.icon ? 'not-has-icon' : 'has-icon-input']"
+      :class="[
+        !item.icon ? 'not-has-icon' : 'has-icon-input',
+        isPasswordItem(item) ? 'password-item' : ''
+      ]"
     >
       <!-- //region slot input  -->
       <template #prefix v-if="item.icon">
@@ -54,8 +57,12 @@
     </component>
 
     <label
-      :class="['label', item.isFocus && 'as-label', item.icon && 'has-icon']"
-      >{{ item.isFocus ? $t(item.label) : $t(item.placeHolder) }}
+      :class="[
+        'label',
+        item.isFocus || item.value ? 'as-label' : '',
+        item.icon && 'has-icon'
+      ]"
+      >{{ item.isFocus || item.value ? $t(item.label) : $t(item.placeHolder) }}
     </label>
   </a-form-item>
 </template>
@@ -66,7 +73,7 @@
 
 //*===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍Emits
 const emit = defineEmits<{
-  (e: "change", value: string | Event): void;
+  (e: "change", value: any, index: number): void;
   (e: "select", value: string | Event): void;
   (e: "pressEnter"): void;
   (
@@ -93,12 +100,12 @@ const styleContent = {
   minHeight: "50px",
   padding: "17px 20px 17px 15px"
 };
-//const colorIcon = ref<string>("#999999");
 //#region hooks
 //#endregion
 
 //#region function
-const handleChange = (value: string | Event): void => emit("change", value);
+const handleChange = (value: any, index: number): void =>
+  emit("change", value, index);
 
 const onSelect = (value: string | Event): void => emit("select", value);
 
@@ -110,6 +117,15 @@ const onBlur = (value: number | boolean | Event, index: number): void => {
 
 const onFocus = (index: number): void => {
   emit("onFocus", index);
+};
+
+const isPasswordItem = (item: any) => {
+  if (item.isFocus) {
+    if (item.name === "password" && item.value.length > 0) {
+      return true;
+    }
+    return false;
+  }
 };
 
 //#endregion
@@ -155,6 +171,20 @@ const onFocus = (index: number): void => {
         top: 18px;
       }
     }
+    .anticon-eye-invisible {
+      color: $text-1 !important;
+    }
+    .anticon-eye {
+      color: $text-1 !important;
+    }
+  }
+  .password-item {
+    .anticon-eye-invisible {
+      color: $primary !important;
+    }
+    .anticon-eye {
+      color: $primary !important;
+    }
   }
 }
 </style>
@@ -182,7 +212,7 @@ const onFocus = (index: number): void => {
 
 .has-icon-input {
   .ant-input {
-    padding-left: 10px !important;
+    padding-left: 8px !important;
     padding-top: 10px !important;
   }
 }

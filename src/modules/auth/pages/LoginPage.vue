@@ -6,20 +6,35 @@
       </a-row>
       <a-row class="login-input" type="flex" justify="center" align="middle">
         <a-col>
-          <a-form :model="dynamicValidateForm" name="basic" autocomplete="off" @finish="onFinish"
-            @finishFailed="onFinishFailed">
-            <CustomForm :formData="dynamicValidateForm.formData" @onBlur="handleOnBlur" @onFocus="handleOnFocus">
+          <a-form
+            :model="dynamicValidateForm"
+            name="basic"
+            autocomplete="off"
+            @finish="onFinish"
+            @finishFailed="onFinishFailed"
+          >
+            <CustomForm
+              :formData="dynamicValidateForm.formData"
+              @change="handleOnChange"
+              @onBlur="handleOnBlur"
+              @onFocus="handleOnFocus"
+            >
             </CustomForm>
             <a-form-item>
-              <a-button type="primary" html-type="submit" class="btn-login" :disabled="!isValidated"
-                :loading="isLoading">
-                {{$t("login_btn_submit") }}
+              <a-button
+                type="primary"
+                html-type="submit"
+                class="btn-login"
+                :disabled="!isValidated"
+                :loading="isLoading"
+              >
+                {{ $t("login_btn_submit") }}
               </a-button>
             </a-form-item>
           </a-form>
         </a-col>
         <span @click="redirectToForgotPasswordPage" class="forgot-password">{{
-        $t("login_forgot_password")
+          $t("login_forgot_password")
         }}</span>
       </a-row>
     </a-col>
@@ -36,7 +51,8 @@ import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
 import {
   AuthenticationDetails,
-  CognitoUser, CognitoUserPool
+  CognitoUser,
+  CognitoUserPool
 } from "amazon-cognito-identity-js";
 import { message } from "ant-design-vue";
 import { Emitter, EventType } from "mitt";
@@ -50,7 +66,8 @@ import CustomForm from "../../base/components/CustomForm.vue";
 //#endregion
 
 //#region variables
-const emitter: Emitter<Record<EventType, unknown>> | undefined = inject("emitter");
+const emitter: Emitter<Record<EventType, unknown>> | undefined =
+  inject("emitter");
 const isValidated = ref<boolean>(false);
 const isLoading = ref<boolean>(false);
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -95,19 +112,28 @@ const onFinish = (): void => {
   handleLogin();
 };
 
+const handleOnChange = (value: string, index: number): void => {
+  if ((value || "").length) {
+    dynamicValidateForm.formData[index].iconColor = "#07a0b8";
+  } else {
+    dynamicValidateForm.formData[index].iconColor = "#999999";
+  }
+};
 const handleOnBlur = (
   value: number | boolean | Event,
   index: string | number | Event
 ): void => {
   index = Number(index);
-  if (!value) dynamicValidateForm.formData[index].isFocus = false;
+  dynamicValidateForm.formData[index].isFocus = false;
   dynamicValidateForm.formData[index].iconColor = "#999999";
 };
 
 const handleOnFocus = (index: number | boolean | Event): void => {
   index = Number(index);
   dynamicValidateForm.formData[index].isFocus = true;
-  dynamicValidateForm.formData[index].iconColor = "#07a0b8";
+  if (dynamicValidateForm.formData[index].value) {
+    dynamicValidateForm.formData[index].iconColor = "#07a0b8";
+  }
 };
 const onFinishFailed = (): void => {
   message.error("Error");

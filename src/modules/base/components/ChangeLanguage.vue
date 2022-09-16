@@ -11,7 +11,7 @@
 //#region import
 import { service } from "@/services";
 import { localStorageKeys } from "@/services/local-storage-keys";
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 //#endregion
 
 //#region props
@@ -24,9 +24,6 @@ const logoUrl = ref<string>("src/assets/images/im_japan_flag.png");
 //#endregion
 
 //#region hooks
-onMounted(() => {
-  setLogoUrl();
-});
 
 //#endregion
 
