@@ -1,28 +1,13 @@
 <template>
-  <a-form-item
-    v-for="(item, index) in formData"
-    :key="item.key"
-    :name="['formData', index, 'value']"
-    :rules="item.rules"
-  >
-    <component
-      :is="item.inputType"
-      v-model:value="item.value"
-      :disabled="item.disabled"
-      :options="item.options"
-      :style="item.style"
-      :dropdownClassName="item.dropdownClassName"
-      @change="handleChange(item.value, index)"
-      @select="onSelect"
-      @pressEnter="onPressEnter"
-      @focus="onFocus(index)"
-      @blur="onBlur(item.value, index)"
-      class="input-item float-label"
-      :class="[
+  <a-form-item v-for="(item, index) in formData" :key="item.key" :name="['formData', index, 'value']"
+    :rules="item.rules">
+    <component :is="item.inputType" v-model:value="item.value" :disabled="item.disabled" :options="item.options"
+      :style="item.style" :dropdownClassName="item.dropdownClassName" @change="handleChange(item.value, index)"
+      @select="onSelect" @pressEnter="onPressEnter" @focus="onFocus(index)" @blur="onBlur(item.value, index)"
+      class="input-item float-label" :class="[
         !item.icon ? 'not-has-icon' : 'has-icon-input',
         isPasswordItem(item) ? 'password-item' : ''
-      ]"
-    >
+      ]">
       <!-- //region slot input  -->
       <template #prefix v-if="item.icon">
         <component :is="item.icon" :color="item.iconColor" />
@@ -46,23 +31,16 @@
 
       <!-- //region slot select  -->
       <template #suffixIcon>
-        <img
-          src="@/assets/icons/ic_dropdown.svg"
-          width="20"
-          height="20"
-          style="padding: 4px"
-        />
+        <img src="@/assets/icons/ic_dropdown.svg" width="20" height="20" style="padding: 4px" />
       </template>
       <!-- endregion -->
     </component>
 
-    <label
-      :class="[
-        'label',
-        item.isFocus || item.value ? 'as-label' : '',
-        item.icon && 'has-icon'
-      ]"
-      >{{ item.isFocus || item.value ? $t(item.label) : $t(item.placeHolder) }}
+    <label :class="[
+      'label',
+      item.isFocus || item.value ? 'as-label' : '',
+      item.icon && 'has-icon'
+    ]">{{ item.isFocus || item.value ? $t(item.label) : $t(item.placeHolder) }}
     </label>
   </a-form-item>
 </template>
@@ -73,6 +51,7 @@
 
 //*===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍Emits
 const emit = defineEmits<{
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (e: "change", value: any, index: number): void;
   (e: "select", value: string | Event): void;
   (e: "pressEnter"): void;
@@ -104,6 +83,7 @@ const styleContent = {
 //#endregion
 
 //#region function
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const handleChange = (value: any, index: number): void =>
   emit("change", value, index);
 
@@ -119,13 +99,12 @@ const onFocus = (index: number): void => {
   emit("onFocus", index);
 };
 
-const isPasswordItem = (item: any) => {
-  if (item.isFocus) {
-    if (item.name === "password" && item.value.length > 0) {
-      return true;
-    }
-    return false;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const isPasswordItem = (item: any): boolean => {
+  if (item.isFocus && item.name === "password" && item.value.length > 0) {
+    return true;
   }
+  return false;
 };
 
 //#endregion
@@ -164,24 +143,30 @@ const isPasswordItem = (item: any) => {
       height: 100%;
       background-color: transparent;
       border-radius: 10px !important;
+
       .ant-select-selection-item {
         top: 18px;
       }
+
       .ant-select-selection-search {
         top: 18px;
       }
     }
+
     .anticon-eye-invisible {
       color: $text-1 !important;
     }
+
     .anticon-eye {
       color: $text-1 !important;
     }
   }
+
   .password-item {
     .anticon-eye-invisible {
       color: $primary !important;
     }
+
     .anticon-eye {
       color: $primary !important;
     }
@@ -216,6 +201,7 @@ const isPasswordItem = (item: any) => {
     padding-top: 10px !important;
   }
 }
+
 .float-label {
   position: relative;
 }
@@ -230,6 +216,7 @@ const isPasswordItem = (item: any) => {
   z-index: 1000;
   color: #999999;
 }
+
 .as-label {
   top: 4px;
   font-size: 12px !important;

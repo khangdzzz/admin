@@ -27,5 +27,18 @@
   "forgot_password_error_popup_lbl_title": "パスワード変更に失敗しました",
   "forgot_password_error_popup_lbl_message": "確認コード、またメールアドレスを正しく入力してください",
   "forgot_password_message_reset_successfully": "パスワードを正常に再設定できる",
-  "vehicle_type": "車両分類"
+  "vehicle_type": "車両分類",
+  "menu_lbl_hello": "こんにちは, {name}",
+  "menu_lbl_collection_business": "回収業務",
+  "menu_lbl_product_manufacture": "生産業務",
+  "menu_lbl_traceability": "トレース",
+  "menu_lbl_customer_management": "取引先管理",
+  "menu_lbl_vehicle_management": "リアルタイム動態",
+  "menu_lbl_vehicle_management_item_realtime_dynamics": "リアルタイム動態",
+  "menu_lbl_vehicle_management_item_vehicle": "車両",
+  "menu_lbl_vehicle_management_item_vehicle_type": "車両分類",
+  "menu_lbl_collection_base_and_staff_management": "回収拠点・スタッフの管理",
+  "menu_lbl_container_and_working_place_management": "風袋・作業場所の管理",
+  "menu_lbl_setting": "設定",
+  "menu_lbl_logout": "ログアウト"
 }

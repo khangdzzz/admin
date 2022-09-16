@@ -6,35 +6,21 @@
       </a-row>
       <a-row class="login-input" type="flex" justify="center" align="middle">
         <a-col>
-          <a-form
-            :model="dynamicValidateForm"
-            name="basic"
-            autocomplete="off"
-            @finish="onFinish"
-            @finishFailed="onFinishFailed"
-          >
-            <CustomForm
-              :formData="dynamicValidateForm.formData"
-              @change="handleOnChange"
-              @onBlur="handleOnBlur"
-              @onFocus="handleOnFocus"
-            >
+          <a-form :model="dynamicValidateForm" name="basic" autocomplete="off" @finish="onFinish"
+            @finishFailed="onFinishFailed">
+            <CustomForm :formData="dynamicValidateForm.formData" @change="handleOnChange" @onBlur="handleOnBlur"
+              @onFocus="handleOnFocus">
             </CustomForm>
             <a-form-item>
-              <a-button
-                type="primary"
-                html-type="submit"
-                class="btn-login"
-                :disabled="!isValidated"
-                :loading="isLoading"
-              >
+              <a-button type="primary" html-type="submit" class="btn-login" :disabled="!isValidated"
+                :loading="isLoading">
                 {{ $t("login_btn_submit") }}
               </a-button>
             </a-form-item>
           </a-form>
         </a-col>
         <span @click="redirectToForgotPasswordPage" class="forgot-password">{{
-          $t("login_forgot_password")
+        $t("login_forgot_password")
         }}</span>
       </a-row>
     </a-col>
@@ -161,10 +147,7 @@ const handleLogin = async (): Promise<void> => {
     onSuccess: (rs) => {
       isLoading.value = false;
       service.localStorage.setAccessToken(rs.getAccessToken().getJwtToken());
-      message.success(
-        `Login successfully: ${rs.getAccessToken().payload.username}`
-      );
-      router.push({ name: routeNames.home });
+      router.push({ name: routeNames.collectionBusiness });
     },
     onFailure: (err) => {
       err;
