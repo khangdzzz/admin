@@ -5,9 +5,9 @@ import vue from "@vitejs/plugin-vue";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [vue()],
-  define: {
-    global: {} // this line to fix aws cognito issue. refference to: https://github.com/aws-amplify/amplify-js/issues/678
-  },
+  // define: {
+  //   global: {} // this line to fix aws cognito issue. refference to: https://github.com/aws-amplify/amplify-js/issues/678
+  // },
   css: {
     preprocessorOptions: {
       less: {
