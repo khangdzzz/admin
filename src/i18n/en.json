@@ -27,5 +27,18 @@
   "forgot_password_error_popup_lbl_title": "Unable to change password",
   "forgot_password_error_popup_lbl_message": "Invalid verification code or email address provided, please try again.",
   "forgot_password_message_reset_successfully": "Reset Password  successfully",
-  "vehicle_type": "Vehicle type"
+  "vehicle_type": "Vehicle type",
+  "menu_lbl_hello": "Hello, {name}",
+  "menu_lbl_collection_business": "Collection business",
+  "menu_lbl_product_manufacture": "Product manufature",
+  "menu_lbl_traceability": "Traceability",
+  "menu_lbl_customer_management": "Customer management",
+  "menu_lbl_vehicle_management": "Vehicle management",
+  "menu_lbl_vehicle_management_item_realtime_dynamics": "Real-time dynamics",
+  "menu_lbl_vehicle_management_item_vehicle": "Vehicle",
+  "menu_lbl_vehicle_management_item_vehicle_type": "Vehicle type",
+  "menu_lbl_collection_base_and_staff_management": "Collection base/ Staff management",
+  "menu_lbl_container_and_working_place_management": "Collection base/ Staff management",
+  "menu_lbl_setting": "Setting",
+  "menu_lbl_logout": "Log out"
 }

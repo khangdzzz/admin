@@ -8,11 +8,8 @@ const routes: RouteRecordRaw[] = [
     path: "/",
     name: routeNames.default,
     redirect: {
-      name: routeNames.home
+      name: routeNames.collectionBusiness
     },
-    meta: {
-      layout: ScreenLayout.DEFAULT_LAYOUT
-    }
   },
   {
     path: "/login",
@@ -33,44 +30,50 @@ const routes: RouteRecordRaw[] = [
     }
   },
   {
-    path: "/home",
-    name: routeNames.home,
-    component: () => import("@/modules/auth/pages/HelloWorldPage.vue"),
+    path: "/collection-business",
+    name: routeNames.collectionBusiness,
+    component: () =>
+      import("@/modules/collection-business/pages/CollectionBusiness.vue"),
     beforeEnter: requireLoginGuard,
     meta: {
       layout: ScreenLayout.DEFAULT_LAYOUT
     }
   },
   {
-    path: "/collection-business",
-    name: routeNames.collectionBusiness,
-    component: () =>
-      import("@/modules/collection-business/pages/CollectionBusiness.vue"),
-    beforeEnter: requireLoginGuard
-  },
-  {
     path: "/product-manufacture",
     name: routeNames.productManufacture,
     component: () =>
       import("@/modules/product-manufacture/pages/productManufacture.vue"),
-    beforeEnter: requireLoginGuard
+    beforeEnter: requireLoginGuard,
+    meta: {
+      layout: ScreenLayout.DEFAULT_LAYOUT
+    }
   },
   {
     path: "/traceability",
     name: routeNames.traceability,
     component: () => import("@/modules/traceability/pages/TheTraceability.vue"),
-    beforeEnter: requireLoginGuard
+    beforeEnter: requireLoginGuard,
+    meta: {
+      layout: ScreenLayout.DEFAULT_LAYOUT
+    }
   },
   {
     path: "/customer-management",
     name: routeNames.customerManagement,
     component: () =>
       import("@/modules/customer-management/pages/CustomerManagement.vue"),
-    beforeEnter: requireLoginGuard
+    beforeEnter: requireLoginGuard,
+    meta: {
+      layout: ScreenLayout.DEFAULT_LAYOUT
+    }
   },
   {
     path: "/verhicle-management",
     beforeEnter: requireLoginGuard,
+    meta: {
+      layout: ScreenLayout.DEFAULT_LAYOUT
+    },
     children: [
       {
         path: "real-time-dynamic",
@@ -97,19 +100,28 @@ const routes: RouteRecordRaw[] = [
     name: routeNames.staffManagement,
     component: () =>
       import("@/modules/staff-management/pages/StaffManagement.vue"),
-    beforeEnter: requireLoginGuard
+    beforeEnter: requireLoginGuard,
+    meta: {
+      layout: ScreenLayout.DEFAULT_LAYOUT
+    }
   },
   {
     path: "/container",
     name: routeNames.container,
     component: () => import("@/modules/container/pages/TheContainer.vue"),
-    beforeEnter: requireLoginGuard
+    beforeEnter: requireLoginGuard,
+    meta: {
+      layout: ScreenLayout.DEFAULT_LAYOUT
+    }
   },
   {
     path: "/setting",
     name: routeNames.setting,
     component: () => import("@/modules/setting/pages/TheSetting.vue"),
-    beforeEnter: requireLoginGuard
+    beforeEnter: requireLoginGuard,
+    meta: {
+      layout: ScreenLayout.DEFAULT_LAYOUT
+    }
   }
 ];
 export const router = createRouter({

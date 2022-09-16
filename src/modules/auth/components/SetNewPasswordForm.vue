@@ -88,6 +88,14 @@ defineProps({
   }
 });
 //#endregion
+//#region emits
+const emit = defineEmits<{
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (e: "resend"): void;
+  (e: 'submit', data: { code: string, password: string }): void;
+}>();
+//#endregion
+
 
 //#region variables
 const formState: FormState = reactive({
@@ -136,6 +144,7 @@ const onFinishCountdown = (): void => {
   activeResendCode.value = "active";
 };
 const resendCode = (): void => {
+  emit("resend");
   activeResendCode.value = "";
   deadline.time = Date.now() + 1000 * import.meta.env.VITE_TIME_RESEND_CODE;
 };

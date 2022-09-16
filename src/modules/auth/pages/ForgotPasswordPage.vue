@@ -1,6 +1,7 @@
 <template>
   <ForgotPasswordForm v-if="activeForgotPasswordForm" @handle-confirm="onHandleConfirm" :is-loading="isLoading" />
-  <SetNewPasswordForm v-else :email="email" :is-loading="isLoading" @submit="onSetNewPassword" />
+  <SetNewPasswordForm v-else :email="email" :is-loading="isLoading" @submit="onSetNewPassword"
+    @resend="onHandleConfirm(email)" />
 </template>
 
 <script setup lang="ts">

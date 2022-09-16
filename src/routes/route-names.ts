@@ -3,7 +3,6 @@ export const routeNames = {
   notFound: "PAGE_NOT_FOUND",
   login: "AUTH_LOGIN",
   forgotPassword: "FORGOT_PASSWORD",
-  home: "HOME",
   collectionBusiness: "COLLECTION_BUSINESS",
   productManufacture: "PRODUCT_MANUFACTURE",
   traceability: "TRACEABILITY",

@@ -16,7 +16,7 @@ import { routeNames } from "@/routes/route-names";
 import { router } from "@/routes";
 import { service } from "@/services";
 
-const user = ref<string>("username");
+const user = ref<string>("");
 const selectedKeys = ref<string[]>(["Collection business"]);
 const openKeys = ref<string[]>([""]);
 
@@ -24,42 +24,42 @@ const menuItems = [
   {
     key: "Collection business",
     icon: SuitCase,
-    title: "Collection business",
+    title: "menu_lbl_collection_business",
     pathName: routeNames.collectionBusiness
   },
   {
     key: "Product manufacture",
     icon: Manufacture,
-    title: "Product manufacture",
+    title: "menu_lbl_product_manufacture",
     pathName: routeNames.productManufacture
   },
   {
     key: "Traceability",
     icon: Trace,
-    title: "Traceability",
+    title: "menu_lbl_traceability",
     pathName: routeNames.traceability
   },
   {
     key: "Customer management",
     icon: GroupOfPeople,
-    title: "Customer management",
+    title: "menu_lbl_customer_management",
     pathName: routeNames.customerManagement
   },
   {
     key: "Vehicle management",
     icon: Truck,
-    title: "Vehicle management",
+    title: "menu_lbl_vehicle_management",
     items: [
       {
-        title: "Real-time dynamics",
+        title: "menu_lbl_vehicle_management_item_realtime_dynamics",
         pathName: routeNames.realTimeDynamics
       },
       {
-        title: "Vehicle",
+        title: "menu_lbl_vehicle_management_item_vehicle",
         pathName: routeNames.vehicle
       },
       {
-        title: "Vehicle type",
+        title: "menu_lbl_vehicle_management_item_vehicle_type",
         pathName: routeNames.vehicleType
       }
     ]
@@ -67,19 +67,19 @@ const menuItems = [
   {
     key: "Collection base/ Staff management",
     icon: Location,
-    title: "Collection base/ Staff management",
+    title: "menu_lbl_collection_base_and_staff_management",
     pathName: routeNames.staffManagement
   },
   {
     key: "Container/ Working place management",
     icon: Container,
-    title: "Container/ Working place management",
+    title: "menu_lbl_container_and_working_place_management",
     pathName: routeNames.container
   },
   {
     key: "Setting",
     icon: Setting,
-    title: "Setting",
+    title: "menu_lbl_setting",
     pathName: routeNames.setting
   }
 ];
@@ -92,44 +92,33 @@ const onLogout = () => {
   service.auth.logout();
   router.push({ name: routeNames.login });
 };
+
+const goHome = (): void => {
+  router.push({ name: routeNames.collectionBusiness });
+}
 </script>
 
 <template>
   <div class="default-layout fill-height d-flex">
     <div class="default-layout__lhs-wrapper">
-      <div class="default-layout__logo d-flex justify-center align-center">
+      <div class="default-layout__logo d-flex justify-center align-center" @click="goHome">
         <Logo />
       </div>
       <a-divider class="m-0" />
-      <div class="default-layout__greeting p-15">Hello, {{ user }}</div>
-      <div
-        class="default-layout__menu-wrapper d-flex flex-column justify-space-between"
-      >
+      <div class="default-layout__greeting p-15">{{ $t('menu_lbl_hello', {name: user}) }}</div>
+      <div class="default-layout__menu-wrapper d-flex flex-column justify-space-between">
         <div class="default-layout__menu fill-height">
-          <a-menu
-            mode="inline"
-            v-model:openKeys="openKeys"
-            v-model:selectedKeys="selectedKeys"
-            @openChange="onOpenChange"
-          >
-            <span
-              v-for="(subMenu, idx) in menuItems"
-              :key="subMenu.title + idx"
-              class="default-layout__menu-item-wrapper"
-            >
-              <a-sub-menu
-                v-if="subMenu.items && subMenu.items.length > 0"
-                :key="subMenu.title"
-              >
+          <a-menu mode="inline" v-model:openKeys="openKeys" v-model:selectedKeys="selectedKeys"
+            @openChange="onOpenChange">
+            <span v-for="(subMenu, idx) in menuItems" :key="subMenu.title + idx"
+              class="default-layout__menu-item-wrapper">
+              <a-sub-menu v-if="subMenu.items && subMenu.items.length > 0" :key="subMenu.title">
                 <template #icon>
-                  <component
-                    :is="subMenu.icon"
-                    class="default-layout__icon"
-                  ></component>
+                  <component :is="subMenu.icon" class="default-layout__icon"></component>
                 </template>
                 <template #title>
                   <span class="default-layout__menu-title">
-                    {{ subMenu.title }}
+                    {{ $t(subMenu.title) }}
                   </span>
                 </template>
                 <template #expandIcon>
@@ -137,13 +126,10 @@ const onLogout = () => {
                     <ArrowUp />
                   </span>
                 </template>
-                <a-menu-item
-                  v-for="subMenuItem in subMenu.items"
-                  :key="subMenuItem.title"
-                >
+                <a-menu-item v-for="subMenuItem in subMenu.items" :key="subMenuItem.title">
                   <router-link :to="{ name: subMenuItem.pathName }">
                     <span class="default-layout__sub-menu-title">
-                      {{ subMenuItem.title }}
+                      {{ $t(subMenuItem.title) }}
                     </span>
                   </router-link>
                 </a-menu-item>
@@ -151,15 +137,12 @@ const onLogout = () => {
               <a-menu-item v-else :key="subMenu.key">
                 <template #icon>
                   <div class="d-flex align-center">
-                    <component
-                      :is="subMenu.icon"
-                      class="default-layout__icon"
-                    ></component>
+                    <component :is="subMenu.icon" class="default-layout__icon"></component>
                   </div>
                 </template>
                 <router-link :to="{ name: subMenu.pathName }">
                   <span class="default-layout__menu-title">
-                    {{ subMenu.title }}
+                    {{ $t(subMenu.title) }}
                   </span>
                 </router-link>
               </a-menu-item>
@@ -167,15 +150,11 @@ const onLogout = () => {
           </a-menu>
         </div>
         <div class="d-flex justify-center align-center mb-20">
-          <a-button
-            type="text"
-            class="default-layout__logout-btn d-flex align-center gap-10"
-            @click="onLogout"
-          >
+          <a-button type="text" class="default-layout__logout-btn d-flex align-center gap-10" @click="onLogout">
             <template #icon>
               <DoorArrowRight />
             </template>
-            Log out
+            {{ $t('menu_lbl_logout') }}
           </a-button>
         </div>
       </div>
@@ -198,6 +177,7 @@ const onLogout = () => {
 
   &__logo {
     height: 90px;
+    cursor: pointer;
   }
 
   &__greeting {
@@ -256,6 +236,7 @@ const onLogout = () => {
       transition: transform 0.3s;
       transform: rotate(180deg);
     }
+
     &__expanded {
       svg {
         transition: transform 0.3s;
@@ -369,6 +350,7 @@ const onLogout = () => {
       .default-layout__arrow-icon {
         display: flex;
         align-items: center;
+
         svg {
           transition: transform 0.3s;
           transform: rotate(180deg);

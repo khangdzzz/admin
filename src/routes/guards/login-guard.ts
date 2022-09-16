@@ -7,7 +7,7 @@ export function loginGuard(
     from: RouteLocationNormalized,
     next: NavigationGuardNext): void {
     if (service.localStorage.getAccessToken()) {
-        next({ name: routeNames.home });
+        next({ name: routeNames.collectionBusiness });
     } else {
         next();
     }
