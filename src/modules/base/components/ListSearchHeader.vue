@@ -7,7 +7,7 @@
       <a-row type="flex" align="middle" justify="end">
         <a-input
           v-model:value="searchValue"
-          placeholder="Search"
+          :placeholder="$t('search_input')"
           class="search-input"
           @change="$emit('onChange', searchValue)"
           ><template #prefix>
