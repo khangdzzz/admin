@@ -7,11 +7,12 @@ export default {
       "no-await-in-loop": "error",
       "no-debugger": "error",
       "no-duplicate-imports": "error",
-      "no-unused-vars": "error",
+      "no-unused-vars": "off",
       complexity: ["error", 18],
       "max-lines-per-function": ["error", 50],
       "@typescript-eslint/explicit-function-return-type": "error",
       "@typescript-eslint/no-explicit-any": "error",
-      "@typescript-eslint/array-type": "error"
+      "@typescript-eslint/array-type": "error",
+      "@typescript-eslint/no-unused-vars": "error"
     }).include("./src/**/*.vue", "./src/**/*.ts", "./src/**/*.js")
 };
