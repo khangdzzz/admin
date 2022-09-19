@@ -6,35 +6,21 @@
       </a-row>
       <a-row class="login-input" type="flex" justify="center" align="middle">
         <a-col>
-          <a-form
-            :model="dynamicValidateForm"
-            name="basic"
-            autocomplete="off"
-            @finish="onFinish"
-            @finishFailed="onFinishFailed"
-          >
-            <CustomForm
-              :formData="dynamicValidateForm.formData"
-              @change="handleOnChange"
-              @onBlur="handleOnBlur"
-              @onFocus="handleOnFocus"
-            >
+          <a-form :model="dynamicValidateForm" name="basic" autocomplete="off" @finish="onFinish"
+            @finishFailed="onFinishFailed">
+            <CustomForm :formData="dynamicValidateForm.formData" @change="handleOnChange" @onBlur="handleOnBlur"
+              @onFocus="handleOnFocus">
             </CustomForm>
             <a-form-item>
-              <a-button
-                type="primary"
-                html-type="submit"
-                class="btn-login"
-                :disabled="!isValidated"
-                :loading="isLoading"
-              >
+              <a-button type="primary" html-type="submit" class="btn-login" :disabled="!isValidated"
+                :loading="isLoading">
                 {{ $t("login_btn_submit") }}
               </a-button>
             </a-form-item>
           </a-form>
         </a-col>
         <span @click="redirectToForgotPasswordPage" class="forgot-password">{{
-          $t("login_forgot_password")
+        $t("login_forgot_password")
         }}</span>
       </a-row>
     </a-col>
@@ -46,6 +32,7 @@
 
 import Ic_pass from "@/assets/icons/IcPass.vue";
 import Ic_user from "@/assets/icons/IcUser.vue";
+import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
@@ -55,7 +42,6 @@ import {
   CognitoUserPool
 } from "amazon-cognito-identity-js";
 import { message } from "ant-design-vue";
-import { Emitter, EventType } from "mitt";
 import { inject, reactive, ref, watch } from "vue";
 import Ic_view from "../../../assets/icons/IcView.vue";
 import CustomForm from "../../base/components/CustomForm.vue";
@@ -66,8 +52,8 @@ import CustomForm from "../../base/components/CustomForm.vue";
 //#endregion
 
 //#region variables
-const emitter: Emitter<Record<EventType, unknown>> | undefined =
-  inject("emitter");
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+const messenger: (title: string, message: string, type: MessengerType) => void = inject("messenger")!;
 const isValidated = ref<boolean>(false);
 const isLoading = ref<boolean>(false);
 
@@ -170,12 +156,7 @@ const handleLogin = async (): Promise<void> => {
     onFailure: (err) => {
       err;
       isLoading.value = false;
-      const error = {
-        icon: "../../../assets/icons/ic_error.png",
-        title: "login_fail_to_login",
-        message: "login_confirm_account"
-      };
-      emitter?.emit("ShowModal", error);
+      messenger('login_fail_to_login', 'login_confirm_account', MessengerType.Error);
     }
   });
 };
@@ -239,10 +220,12 @@ watch(
     font-size: 18px;
     line-height: 100%;
   }
+
   .btn-login:disabled {
     background-color: $neutral-200;
     color: $white;
   }
+
   .forgot-password {
     margin-bottom: 30px;
     font-family: "Roboto";

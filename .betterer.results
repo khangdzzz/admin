@@ -3,29 +3,3 @@
 // If this file contains merge conflicts, use `betterer merge` to automatically resolve them:
 // https://phenomnomnominal.github.io/betterer/docs/results-file/#merge
 //
-exports[`Better Code Quality !`] = {
-  value: `{
-    "src/modules/auth/components/SetNewPasswordForm.vue:739389357": [
-      [93, 3, 11, "\'e\' is defined but never used.", "3149651473"],
-      [94, 3, 11, "\'e\' is defined but never used.", "1779852462"],
-      [94, 16, 40, "\'data\' is defined but never used.", "3488264855"]
-    ],
-    "src/modules/base/components/CustomForm.vue:3407717170": [
-      [54, 3, 11, "\'e\' is defined but never used.", "374814012"],
-      [54, 16, 10, "\'value\' is defined but never used.", "4083471778"],
-      [54, 28, 13, "\'index\' is defined but never used.", "2727396706"],
-      [55, 3, 11, "\'e\' is defined but never used.", "1676887250"],
-      [55, 16, 21, "\'value\' is defined but never used.", "550014865"],
-      [56, 3, 15, "\'e\' is defined but never used.", "4284617589"],
-      [58, 4, 11, "\'e\' is defined but never used.", "88113650"],
-      [59, 4, 31, "\'value\' is defined but never used.", "1666401727"],
-      [60, 4, 30, "\'index\' is defined but never used.", "362655707"],
-      [62, 3, 12, "\'e\' is defined but never used.", "3049782583"],
-      [62, 17, 31, "\'index\' is defined but never used.", "3601791242"]
-    ],
-    "src/routes/screen-layouts.ts:711028168": [
-      [1, 4, 14, "\'DEFAULT_LAYOUT\' is defined but never used.", "1367977899"],
-      [2, 4, 11, "\'AUTH_LAYOUT\' is defined but never used.", "1109065480"]
-    ]
-  }`
-};
