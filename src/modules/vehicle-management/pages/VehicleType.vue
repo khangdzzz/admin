@@ -1,12 +1,7 @@
 <template>
   <ListSearchHeader :title="$t('vehicle_type')">
     <template #action>
-      <a-button
-        class="btn"
-        type="primary"
-        ghost
-        v-if="selectedRowKeys.length > 0"
-      >
+      <a-button class="btn" type="primary" ghost v-if="selectedRowKeys.length > 0">
         <template #icon>
           <img src="@/assets/icons/ic_delete.svg" class="btn-icon" />
         </template>
@@ -21,20 +16,16 @@
     </template>
   </ListSearchHeader>
   <div class="table-container">
-    <a-table
-      :row-selection="{
-        selectedRowKeys: selectedRowKeys,
-        onChange: onSelectChange
-      }"
-      :columns="columns"
-      :data-source="data"
-    >
+    <a-table :row-selection="{
+      selectedRowKeys: selectedRowKeys,
+      onChange: onSelectChange
+    }" :columns="columns" :data-source="data">
       <template #bodyCell="{ column, record, index }">
         <template v-if="column.key === 'index'">
           <span>{{ index + 1 }}</span>
         </template>
         <template v-if="column.key === 'action'">
-          <img src="@/assets/icons/ic_btn_edit.svg" class="action-icon" />
+          <img src="@/assets/icons/ic_btn_edit.svg" class="action-icon" @click="editVehicleType" />
           <img src="@/assets/icons/ic_btn_delete.svg" class="action-icon" />
         </template>
       </template>
@@ -44,12 +35,14 @@
 
 <script setup lang="ts">
 //#region import
-import { message } from "ant-design-vue";
-import { onMounted, ref } from "vue";
-import ListSearchHeader from "@/modules/base/components/ListSearchHeader.vue";
-import { service } from "@/services";
-import { VehicleType } from "../models/vehicle.model";
 import { i18n } from "@/i18n";
+import ListSearchHeader from "@/modules/base/components/ListSearchHeader.vue";
+import { router } from "@/routes";
+import { routeNames } from "@/routes/route-names";
+import { service } from "@/services";
+import { onMounted, ref } from "vue";
+import { VehicleType } from "../models/vehicle.model";
+
 //#endregion
 
 //#region props
@@ -94,8 +87,11 @@ const onSelectChange = (rowSelect: Key[]): void => {
   selectedRowKeys.value = rowSelect;
 };
 const onCreate = (): void => {
-  message.info("onCreateAction");
+  router.push({ name: routeNames.createVehicleType });
 };
+const editVehicleType = () => {
+  // router.push({ name: routeNames.editVehicleType });
+}
 //#endregion
 
 //#region computed
@@ -130,6 +126,7 @@ const onCreate = (): void => {
 
 .action-icon {
   margin-left: 20px;
+  cursor: pointer;
 }
 
 :deep() {
@@ -146,46 +143,50 @@ const onCreate = (): void => {
   .ant-table-selection-column {
     padding: 0 18px;
   }
+
   .ant-checkbox-indeterminate .ant-checkbox-inner::after {
     background: $white;
   }
+
   .ant-table-row-selected .ant-table-cell {
     background-color: $neutral-50;
   }
 
-  .ant-table-container table > thead > tr:first-child th {
+  .ant-table-container table>thead>tr:first-child th {
     color: $text-1;
   }
 
-  .ant-table-container table > thead > tr:first-child th:first-child {
+  .ant-table-container table>thead>tr:first-child th:first-child {
     border-top-left-radius: 20px;
   }
 
-  .ant-table-container table > thead > tr:first-child th:last-child {
+  .ant-table-container table>thead>tr:first-child th:last-child {
     border-top-right-radius: 20px;
   }
 
-  .ant-table-container table > tbody > tr:last-child td:first-child {
+  .ant-table-container table>tbody>tr:last-child td:first-child {
     border-bottom-left-radius: 20px;
   }
 
-  .ant-table-container table > tbody > tr:last-child td:last-child {
+  .ant-table-container table>tbody>tr:last-child td:last-child {
     border-bottom-right-radius: 20px;
   }
+
   .ant-pagination-item-active {
     background-color: $primary;
     color: $white;
   }
+
   .ant-pagination-item {
     font-weight: 700;
     font-size: 14px;
   }
+
   .ant-pagination-item-active a {
     color: $white;
   }
-  .ant-table-thead
-    > tr
-    > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
+
+  .ant-table-thead>tr>th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
     height: 0;
   }
 }
