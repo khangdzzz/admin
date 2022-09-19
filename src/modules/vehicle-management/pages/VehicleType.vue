@@ -10,13 +10,13 @@
         <template #icon>
           <img src="@/assets/icons/ic_delete.svg" class="btn-icon" />
         </template>
-        Delete
+        {{$t('delete_btn')}}
       </a-button>
       <a-button type="primary" class="btn btn-add-new" @click="onCreate">
         <template #icon>
           <img src="@/assets/icons/ic_plus.svg" class="btn-icon" />
         </template>
-        Add new type
+        {{$t('add_new_type_btn')}}
       </a-button>
     </template>
   </ListSearchHeader>
