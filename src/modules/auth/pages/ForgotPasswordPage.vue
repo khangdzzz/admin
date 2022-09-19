@@ -10,20 +10,19 @@ import ForgotPasswordForm from "@/modules/auth/components/ForgotPasswordForm.vue
 import { inject, ref } from "vue";
 import SetNewPasswordForm from "../components/SetNewPasswordForm.vue";
 
+import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import { routeNames, router } from "@/routes";
 import {
   CognitoUser, CognitoUserPool
 } from "amazon-cognito-identity-js";
-import { Emitter, EventType } from "mitt";
-import { message } from "ant-design-vue";
-import { i18n } from "@/i18n";
 //#endregion
 
 //#region props
 //#endregion
 
 //#region variables
-const emitter: Emitter<Record<EventType, unknown>> | undefined = inject("emitter");
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+const messenger: (title: string, message: string, type: MessengerType, callback: (() => void) | undefined) => void = inject("messenger")!;
 const poolData = {
   UserPoolId: import.meta.env.VITE_COGNITO_USER_POOL_ID,
   ClientId: import.meta.env.VITE_COGNITO_CLIENT_ID
@@ -74,18 +73,14 @@ const onSetNewPassword = (data: { code: string, password: string }): void => {
         return;
       }
       isLoading.value = false;
-      message.success(i18n.global.t('forgot_password_message_reset_successfully'))
-      router.push({ name: routeNames.routeNames.login })
+      messenger("forgot_password_reset_successfully_lbl_title", "forgot_password_reset_successfully_lbl_message", MessengerType.Success, () => {
+        router.push({ name: routeNames.routeNames.login })
+      })
     },
     onFailure: (err): void => {
       err
       isLoading.value = false;
-      const error = {
-        icon: "../../../assets/icons/ic_error.png",
-        title: "forgot_password_error_popup_lbl_title",
-        message: "forgot_password_error_popup_lbl_message"
-      };
-      emitter?.emit('ShowModal', error)
+      messenger("forgot_password_error_popup_lbl_title", "forgot_password_error_popup_lbl_message", MessengerType.Error, undefined)
     },
   })
 }

@@ -19,7 +19,7 @@
   },
   "include": [
     "src/**/*.ts",
-    "src/**/*.d.ts",
+    "src/**/*.enum.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
     "src/i18n/index.ts"
