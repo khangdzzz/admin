@@ -1,5 +1,13 @@
 <template>
-  <a-modal v-model:visible="visible" width="420px" :closable="false" class="custom-modal" centered :footer="null">
+  <a-modal
+    v-model:visible="visible"
+    width="420px"
+    :closable="false"
+    class="custom-modal"
+    centered
+    :footer="null"
+    :maskClosable="false"
+  >
     <div class="modal-content">
       <img :src="modalIcon" class="modal-icon" />
       <h3 class="modal-title">{{ $t(modalTitle) }}</h3>
@@ -15,7 +23,7 @@
 
 import { Emitter, EventType } from "mitt";
 import { inject, onMounted, ref } from "vue";
-import { MessengerType } from '@/modules/base/models/messenger-type.enum'
+import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 
 type Modal = {
   type: MessengerType;
@@ -28,7 +36,8 @@ type Modal = {
 
 //#region variables
 
-const emitter: Emitter<Record<EventType, unknown>> | undefined = inject("emitter");
+const emitter: Emitter<Record<EventType, unknown>> | undefined =
+  inject("emitter");
 const visible = ref<boolean>(false);
 const modalIcon = ref<string>("");
 const modalTitle = ref<string>("");
@@ -47,21 +56,27 @@ onMounted(() => {
 
 //#region function
 const onShowModal = ({ type, title, message, callback }: Modal): void => {
-  const errorIcon = new URL('../../../assets/icons/ic_error.png', import.meta.url).href
-  const successIcon = new URL('../../../assets/icons/ic_success.png', import.meta.url).href
+  const errorIcon = new URL(
+    "../../../assets/icons/ic_error.png",
+    import.meta.url
+  ).href;
+  const successIcon = new URL(
+    "../../../assets/icons/ic_success.png",
+    import.meta.url
+  ).href;
   visible.value = true;
   modalMessage.value = message;
-  modalIcon.value = type === MessengerType.Error ? errorIcon : successIcon
+  modalIcon.value = type === MessengerType.Error ? errorIcon : successIcon;
   modalTitle.value = title;
   action.value = callback;
 };
 
 const onOKClick = (): void => {
   if (action.value) {
-    action.value()
+    action.value();
   }
-  visible.value = false
-}
+  visible.value = false;
+};
 //#endregion
 
 //#region computed

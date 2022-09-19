@@ -20,7 +20,8 @@
       class="input-item float-label"
       :class="[
         !item.icon ? 'not-has-icon' : 'has-icon-input',
-        isPasswordItem(item) ? 'password-item' : ''
+        isActivePasswordIcon(item) ? 'password-item' : '',
+        !item.label ? 'not-has-label' : 'has-label'
       ]"
     >
       <!-- //region slot input  -->
@@ -61,6 +62,7 @@
         item.icon && 'has-icon'
       ]"
       >{{ item.isFocus || item.value ? $t(item.label) : $t(item.placeHolder) }}
+      <span class="require" v-if="item.required">*</span>
     </label>
   </a-form-item>
 </template>
@@ -121,14 +123,8 @@ const onFocus = (index: number): void => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const isPasswordItem = (item: any): boolean => {
-  if (
-    (item.isFocus && item.name === "password" && item.value.length > 0) ||
-    item.value.length > 0
-  ) {
-    return true;
-  }
-  return false;
+const isActivePasswordIcon = (item: any): boolean => {
+  return item.name === "password" && item?.value?.length;
 };
 
 //#endregion
@@ -144,12 +140,17 @@ const isPasswordItem = (item: any): boolean => {
 .ant-select-item {
   padding: 0px;
 }
-
+.require {
+  color: $red-1;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 100%;
+}
 :deep() {
   .input-item {
     min-width: 360px;
     height: 60px;
-    border: 1px solid #eaeaea;
+    border: 1px solid $grey-1;
     outline: none;
     border-radius: 10px;
     padding: 0px 12px 0px 12px;
@@ -158,7 +159,15 @@ const isPasswordItem = (item: any): boolean => {
     .ant-input {
       background: transparent;
     }
-
+    .not-has-label {
+      input[type="text"] {
+        font-size: 16px !important;
+      }
+    }
+    input[type="text"] {
+      font-size: 16px !important;
+      margin-top: 8px;
+    }
     .ant-input-number {
       background: transparent;
     }
@@ -167,13 +176,14 @@ const isPasswordItem = (item: any): boolean => {
       height: 100%;
       background-color: transparent;
       border-radius: 10px !important;
+      border: 1px solid $grey-1;
 
       .ant-select-selection-item {
-        top: 18px;
+        top: 22px;
       }
 
       .ant-select-selection-search {
-        top: 18px;
+        top: 22px;
       }
     }
 
@@ -216,6 +226,7 @@ const isPasswordItem = (item: any): boolean => {
   .ant-input {
     position: relative;
     left: 0px !important;
+    padding-top: 8px !important;
   }
 }
 
@@ -235,7 +246,7 @@ const isPasswordItem = (item: any): boolean => {
   position: absolute;
   pointer-events: none;
   left: 12px;
-  top: 23px;
+  top: 22px;
   transition: 0.2s ease all;
   z-index: 1000;
   color: #999999;
@@ -243,9 +254,7 @@ const isPasswordItem = (item: any): boolean => {
   font-size: 16px !important;
   line-height: 100%;
 }
-input[type="text"] {
-  font-size: 16px !important;
-}
+
 .as-label {
   top: 10px;
   font-size: 14px !important;
