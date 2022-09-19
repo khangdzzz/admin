@@ -239,7 +239,10 @@ watch(
     font-size: 18px;
     line-height: 100%;
   }
-
+  .btn-login:disabled {
+    background-color: $neutral-200;
+    color: $white;
+  }
   .forgot-password {
     margin-bottom: 30px;
     font-family: "Roboto";

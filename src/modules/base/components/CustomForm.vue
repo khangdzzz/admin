@@ -235,14 +235,19 @@ const isPasswordItem = (item: any): boolean => {
   position: absolute;
   pointer-events: none;
   left: 12px;
-  top: 20px;
+  top: 23px;
   transition: 0.2s ease all;
   z-index: 1000;
   color: #999999;
+  font-weight: 400;
+  font-size: 16px !important;
+  line-height: 100%;
 }
-
+input[type="text"] {
+  font-size: 16px !important;
+}
 .as-label {
-  top: 4px;
+  top: 10px;
   font-size: 14px !important;
 }
 
