@@ -1,10 +1,15 @@
 import { Rule } from "ant-design-vue/lib/form";
+import { i18n } from "@/i18n";
+
 
 const validator = {
   validateEmail: (rule: Rule, value: string): Promise<void> => {
-    const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/gm;
+    const emailRegex = /^([^@]{1,64}|\".{0,62}\")@[^@]{1,255}$/;
+
     if (value && !emailRegex.test(value)) {
-      return Promise.reject("Not a valid email!");
+      return Promise.reject(
+        i18n.global.t("forgot_password_msg_err_email_invalid")
+      );
     } else {
       return Promise.resolve();
     }
@@ -19,6 +24,28 @@ const validator = {
       } else {
         return Promise.resolve();
       }
+    }
+  },
+  validatePassword: (rule: Rule, value: string): Promise<void> => {
+    const passwordRegex = /^[\S]{6,32}$/i;
+
+    if (value && !passwordRegex.test(value)) {
+      return Promise.reject(
+        i18n.global.t("forgot_password_msg_err_password_invalid")
+      );
+    } else {
+      return Promise.resolve();
+    }
+  },
+  validateCode: (rule: Rule, value: string): Promise<void> => {
+    const codeRegex = /^[0-9]{6}$/i;
+
+    if (value && !codeRegex.test(value)) {
+      return Promise.reject(
+        i18n.global.t("forgot_password_msg_err_code_invalid")
+      );
+    } else {
+      return Promise.resolve();
     }
   }
 };
