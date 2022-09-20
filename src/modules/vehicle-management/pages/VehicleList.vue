@@ -1,10 +1,9 @@
 <template>
-  <ListSearchHeader :title="$t('vehicle')">
+  <ListSearchHeader :title="$t('vehicle')" :colTitle="3" :colAction="21">
     <template #action>
       <a-button
         :class="[vehicleList.btn]"
         type="primary"
-        ghost
         v-if="selectedKeys.length > 0"
       >
         <template #icon>
@@ -15,7 +14,7 @@
         </template>
         {{ $t("delete_btn") }}
       </a-button>
-      <a-button :class="[vehicleList.btn]" type="primary" ghost>
+      <a-button :class="[vehicleList.btn]" type="primary">
         <template #icon>
           <img
             src="@/assets/icons/ic_import.svg"
@@ -24,7 +23,7 @@
         </template>
         {{ $t("import_btn") }}
       </a-button>
-      <a-button :class="[vehicleList.btn]" type="primary" ghost>
+      <a-button :class="[vehicleList.btn]" type="primary">
         <template #icon>
           <img
             src="@/assets/icons/ic_export.svg"
@@ -53,27 +52,73 @@
       :row-selection="rowSelection"
       :columns="columns"
       :data-source="data"
+      :pagination="false"
     >
       <template #bodyCell="{ column, record }">
         <template v-if="column.dataIndex === 'type'">
           <span>{{ record.type }}</span>
         </template>
         <template v-if="column.dataIndex === 'action'">
-          <img
-            src="@/assets/icons/ic_btn_edit.svg"
-            :class="[vehicleList.actionIcon]"
-          />
-          <img
-            src="@/assets/icons/ic_btn_delete.svg"
-            :class="[vehicleList.actionIcon]"
-          />
-          <img
-            src="@/assets/icons/icon_cell_table.svg"
-            :class="[vehicleList.actionIcon]"
-          />
+          <center>
+            <img
+              src="@/assets/icons/ic_btn_edit.svg"
+              :class="[vehicleList.actionIcon]"
+            />
+            <img
+              src="@/assets/icons/ic_btn_delete.svg"
+              :class="[vehicleList.actionIcon]"
+            />
+            <img
+              src="@/assets/icons/icon_cell_table.svg"
+              :class="[vehicleList.actionIcon]"
+            />
+          </center>
         </template>
       </template>
     </a-table>
+    <div :class="vehicleList.pagination" v-if="data.length > 50">
+      <a-pagination
+        v-model:current="currentPage"
+        :total="data.length"
+        class="ant-pagination"
+      >
+        <template #itemRender="{ type, originalElement }">
+          <a-button
+            :class="[vehicleList.btnPagination]"
+            type="primary"
+            ghost
+            v-if="type === 'prev'"
+          >
+            <template #icon>
+              <img
+                src="@/assets/icons/ic_prev.svg"
+                :class="[vehicleList.btnIconPrev]"
+              />
+              <span :class="[vehicleList.action]">Previous</span>
+            </template>
+          </a-button>
+          <a-button
+            :class="[vehicleList.btnPagination]"
+            type="primary"
+            ghost
+            v-else-if="type === 'next'"
+          >
+            <template #icon>
+              <span :class="[vehicleList.action]">Next</span>
+              <img
+                src="@/assets/icons/ic_next.svg"
+                :class="[vehicleList.btnIconNext]"
+              />
+            </template>
+          </a-button>
+          <component :is="originalElement" v-else></component>
+        </template>
+
+        <template #buildOptionText="{ value }">
+          {{ value }}
+        </template>
+      </a-pagination>
+    </div>
   </div>
 </template>
 
@@ -102,6 +147,8 @@ type Key = string | number;
 //#===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎Variables
 const selectedKeys = ref<DataType[]>([]);
 
+const currentPage = ref<number>(2);
+
 const columns: TableColumnType<DataType>[] = [
   {
     title: i18n.global.t("vehicle_type"),
@@ -116,9 +163,8 @@ const columns: TableColumnType<DataType>[] = [
     dataIndex: "numberPlate"
   },
   {
-    title: "",
     dataIndex: "action",
-    width: "10%"
+    width: "20%"
   }
 ];
 const data = ref<DataType[]>([]);
@@ -158,32 +204,149 @@ const onCreate = (): void => {
 //#endregion===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀
 </script>
 
-<style scoped lang="scss" module="vehicleList">
+<style lang="scss" module="vehicleList">
+@mixin size-btn($width, $height) {
+  min-width: $width;
+  height: $height;
+}
+
+@mixin text($fontWeight, $fontSize, $lineHeight) {
+  font-weight: $fontWeight;
+  font-size: $fontSize;
+  line-height: $lineHeight;
+}
+
 .tableContainer {
   margin: 30px;
 
   .actionIcon {
     margin-left: 20px;
   }
+
+  .ant-table-cell {
+    text-align: center;
+  }
+
+  .pagination {
+    text-align: end;
+    padding: 10px 0;
+    background-color: #fff;
+
+    .btnPagination {
+      @include size-btn(108px, 40px);
+      padding: 0px 15px;
+      background-color: #fff;
+
+      .btnIconPrev {
+        margin-right: 8px;
+      }
+
+      .btnIconNext {
+        margin-left: 8px;
+      }
+    }
+
+    .action {
+      @include text(700, 14px, 18px);
+      text-align: center;
+      color: #3c3c3c;
+    }
+  }
 }
 
 .btnAddNew {
-  width: 170px;
-  height: 48px;
+  @include size-btn(170px, 48px);
   margin-left: 15px;
-  padding: 0 15px 0 15px;
+  padding: 0px 15px;
 }
 
 .btn {
-  font-weight: 600;
-  font-size: 18px;
-  min-width: 120px;
-  height: 48px;
+  @include size-btn(108px, 40px);
+  @include text(600, 18px, 100%);
   margin-left: 15px;
-  padding: 0 15px 0 15px;
+  padding: 0px 15px;
+  background-color: #fff;
+  color: #07a0b8;
 
   .btnIcon {
     margin-right: 10px;
+  }
+}
+</style>
+
+<style scoped lang="scss">
+.border {
+  border: 1px solid #eaeaea;
+  border-radius: 6px;
+}
+
+@mixin size-btn($width, $height) {
+  min-width: $width;
+  height: $height;
+}
+
+@mixin pagination-item($color) {
+  background-color: $color;
+  @extend .border;
+}
+
+@mixin text($fontWeight, $fontSize, $lineHeight) {
+  font-weight: $fontWeight;
+  font-size: $fontSize;
+  line-height: $lineHeight;
+}
+
+//extend
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:deep() {
+  .ant-table-tbody > tr.ant-table-row-selected > td {
+    background: #f7f7f7;
+    border-color: rgba(0, 0, 0, 0.03);
+  }
+  .ant-pagination {
+    .ant-pagination-options {
+      float: left;
+      @include size-btn(60px, 30px);
+      @extend .flex-center;
+      .ant-select {
+        .ant-select-selector {
+          @extend .border;
+        }
+      }
+    }
+    .ant-pagination-prev {
+      height: 40px;
+    }
+
+    .ant-pagination-next {
+      height: 40px;
+    }
+
+    .ant-pagination-item {
+      @include size-btn(40px, 40px);
+      @include pagination-item(#ffffff);
+      padding: 0px;
+
+      a {
+        @extend .flex-center;
+        height: 100%;
+        @include pagination-item(#ffffff);
+        @include text(700, 14px, 18px);
+      }
+    }
+
+    .ant-pagination-item-active {
+      a {
+        color: #ffffff;
+        @include pagination-item(#07a0b8);
+        @include text(700, 14px, 18px);
+      }
+    }
   }
 }
 </style>

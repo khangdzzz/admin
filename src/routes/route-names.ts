@@ -15,5 +15,6 @@ export const routeNames = {
   createVehicleType: "CREATE_VEHICLE_TYPE",
   staffManagement: "STAFF_MANAGEMENT",
   container: "CONTAINER",
+  containerType: "CONTAINER_TYPE",
   setting: "SETTING"
 };
