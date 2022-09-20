@@ -89,7 +89,7 @@ const onSelectChange = (rowSelect: Key[]): void => {
 const onCreate = (): void => {
   router.push({ name: routeNames.createVehicleType });
 };
-const editVehicleType = () => {
+const editVehicleType = (): void => {
   // router.push({ name: routeNames.editVehicleType });
 }
 //#endregion
