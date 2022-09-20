@@ -9,7 +9,7 @@ const routes: RouteRecordRaw[] = [
     name: routeNames.default,
     redirect: {
       name: routeNames.collectionBusiness
-    },
+    }
   },
   {
     path: "/login",
@@ -86,6 +86,12 @@ const routes: RouteRecordRaw[] = [
         name: routeNames.vehicle,
         component: () =>
           import("@/modules/vehicle-management/pages/VehicleList.vue")
+      },
+      {
+        path: "create-vehicle",
+        name: routeNames.createVehicle,
+        component: () =>
+          import("@/modules/vehicle-management/pages/CreateVehicle.vue")
       },
       {
         path: "vehicle-type",

@@ -33,7 +33,11 @@
         </template>
         {{ $t("export_btn") }}
       </a-button>
-      <a-button type="primary" :class="[vehicleList.btnAddNew]">
+      <a-button
+        type="primary"
+        :class="[vehicleList.btnAddNew]"
+        @click="onCreate"
+      >
         <template #icon>
           <img
             src="@/assets/icons/ic_plus.svg"
@@ -80,6 +84,8 @@ import type { TableProps, TableColumnType } from "ant-design-vue";
 import ListSearchHeader from "@/modules/base/components/ListSearchHeader.vue";
 import { i18n } from "@/i18n";
 import { service } from "@/services";
+import { router } from "@/routes";
+import { routeNames } from "@/routes/route-names";
 
 interface DataType {
   key: string;
@@ -132,11 +138,14 @@ const rowSelection: TableProps["rowSelection"] = {
   }
 };
 
-const fetchVehicleList = () :void =>  {
+const fetchVehicleList = (): void => {
   const res = service.vehicle.getListVehicle();
   data.value = [...res];
 };
 
+const onCreate = (): void => {
+  router.push({ name: routeNames.createVehicle });
+};
 //#endregion===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊
 
 //#===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏Computed

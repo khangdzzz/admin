@@ -1,0 +1,270 @@
+<template>
+  <a-row
+    type="flex"
+    justify="center"
+    align="middle"
+    class="create-vehicle-container"
+  >
+    <div class="create-vehicle-content">
+      <h2 class="title">{{ $t("vehicle_add_new") }}</h2>
+      <div class="create-form">
+        <CustomForm
+          :formData="dynamicValidateForm.formData"
+          @change="handleOnChange"
+          @onBlur="handleOnBlur"
+          @onFocus="handleOnFocus"
+        ></CustomForm>
+      </div>
+      <a-row
+        type="flex"
+        justify="space-between"
+        align="middle"
+        class="check-permision"
+      >
+        <a-col :span="20">
+          <h3>{{ $t("vehicle_industrial_waste") }}</h3>
+        </a-col>
+        <a-col :span="4">
+          <a-checkbox v-model:checked="checkPermission">
+            {{ $t("vehicle_permission") }}
+          </a-checkbox>
+        </a-col>
+      </a-row>
+      <a-row type="flex" justify="center" align="middle" gutter="20">
+        <a-col :span="12">
+          <a-button type="primary" ghost class="btn">{{
+            $t("btn_cancel")
+          }}</a-button>
+        </a-col>
+        <a-col :span="12">
+          <a-button
+            type="primary"
+            class="btn"
+            :disabled="!isValidated"
+            @click="onCreate"
+            >{{ $t("btn_submit") }}</a-button
+          >
+        </a-col>
+      </a-row>
+    </div>
+  </a-row>
+</template>
+
+<script setup lang="ts">
+//#region import
+import CustomForm from "@/modules/base/components/CustomForm.vue";
+import { service } from "@/services";
+import { message } from "ant-design-vue";
+import { onMounted, reactive, ref, watch } from "vue";
+import { VehicleSelection } from "../models/vehicle.model";
+
+//#endregion
+
+//#region props
+//#endregion
+
+//#region variables
+const vehicleTypes = ref<VehicleSelection[]>([]);
+const isValidated = ref<boolean>(false);
+const checkPermission = ref<boolean>(false);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const dynamicValidateForm = reactive<{ formData: any[] }>({
+  formData: [
+    {
+      inputType: "ASelect",
+      value: undefined,
+      placeHolder: "vehicle_type",
+      label: "vehicle_type",
+      name: "vehicletype",
+      required: true,
+      isFocus: false,
+      options: vehicleTypes,
+      //rules: [{ required: true, message: "Please input your age!" }],
+      dropdownClassName: "form-option-content",
+      style: {
+        padding: "0px",
+        width: "620px",
+        border: "none"
+      },
+      key: 0
+    },
+    {
+      inputType: "AInput",
+      value: "",
+      placeHolder: "vehicle_name",
+      label: "vehicle_name",
+      name: "vehicleName",
+      disabled: false,
+      required: true,
+      key: 1,
+      isFocus: false
+    },
+    {
+      inputType: "AInput",
+      value: "",
+      placeHolder: "vehicle_number_plate",
+      label: "vehicle_number_plate",
+      name: "vehiclePlate",
+      disabled: false,
+      required: true,
+      key: 2,
+      isFocus: false
+    },
+    {
+      inputType: "AInput",
+      value: "",
+      placeHolder: "vehicle_max_loading_weight",
+      label: "vehicle_max_loading_weight",
+      name: "maxWeight",
+      disabled: false,
+      required: false,
+      key: 3,
+      isFocus: false
+    },
+    {
+      inputType: "AInput",
+      value: "",
+      placeHolder: "vehicle_code",
+      label: "vehicle_code",
+      name: "code",
+      disabled: false,
+      required: false,
+      key: 4,
+      isFocus: false
+    }
+  ]
+});
+//#endregion
+
+//#region hooks
+onMounted(() => {
+  fetchVehicleType();
+});
+//#endregion
+
+//#region function
+const fetchVehicleType = (): void => {
+  const res = service.vehicle.getVehicleTypes();
+  vehicleTypes.value = res.map((item) => ({
+    value: item.id,
+    label: item.name
+  }));
+};
+const handleOnChange = (): void => {};
+const handleOnBlur = (
+  value: number | boolean | Event,
+  index: string | number | Event
+): void => {
+  index = Number(index);
+  dynamicValidateForm.formData[index].isFocus = false;
+};
+
+const handleOnFocus = (index: number | boolean | Event): void => {
+  index = Number(index);
+  dynamicValidateForm.formData[index].isFocus = true;
+};
+const onCreate = async (): Promise<void> => {
+  const vehicleInfo = {
+    id: undefined,
+    vehicleType: dynamicValidateForm.formData[0].value,
+    vehicleName: dynamicValidateForm.formData[1].value,
+    vehiclePlate: dynamicValidateForm.formData[2].value,
+    maxWeight: dynamicValidateForm.formData[3].value,
+    code: dynamicValidateForm.formData[4].value
+  };
+  const res = await service.vehicle.createVehicle(vehicleInfo);
+  if (res) {
+    message.success("create");
+  } else {
+    message.error("error");
+  }
+};
+//#endregion
+
+//#region computed
+//#endregion
+
+//#region reactive
+watch(
+  dynamicValidateForm,
+  () => {
+    if (
+      dynamicValidateForm.formData[0].value &&
+      dynamicValidateForm.formData[1].value &&
+      dynamicValidateForm.formData[2].value
+    ) {
+      isValidated.value = true;
+    } else {
+      isValidated.value = false;
+    }
+  },
+  { deep: true }
+);
+//#endregion
+</script>
+
+<style lang="scss" scoped>
+.create-vehicle-container {
+  height: 100%;
+}
+.create-vehicle-content {
+  width: 660px;
+  height: auto;
+  background-color: $white;
+  padding: 30px 20px;
+  box-shadow: 4px 2px 8px rgba(0, 0, 0, 0.02);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .title {
+    font-weight: 600;
+    font-size: 22px;
+    line-height: 28px;
+    color: $neutral-600;
+    margin-bottom: 30px;
+  }
+  .check-permision {
+    width: 100%;
+
+    h3 {
+      font-weight: 600;
+      font-size: 16px;
+      line-height: 20px;
+      margin: 0;
+    }
+  }
+  .btn {
+    padding: 0px 15px;
+    margin-top: 30px;
+    width: 180px;
+    height: 48px;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 100%;
+  }
+  .btn:disabled {
+    background-color: $neutral-200;
+    color: $white;
+  }
+}
+:deep() {
+  .ant-checkbox-wrapper {
+    align-items: center;
+    span {
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 20px;
+    }
+    .ant-checkbox {
+      margin-bottom: 5px;
+    }
+
+    .ant-checkbox-inner {
+      width: 22px;
+      height: 22px;
+    }
+  }
+}
+</style>

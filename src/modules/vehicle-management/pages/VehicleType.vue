@@ -10,13 +10,13 @@
         <template #icon>
           <img src="@/assets/icons/ic_delete.svg" class="btn-icon" />
         </template>
-        {{$t('delete_btn')}}
+        {{ $t("delete_btn") }}
       </a-button>
       <a-button type="primary" class="btn btn-add-new" @click="onCreate">
         <template #icon>
           <img src="@/assets/icons/ic_plus.svg" class="btn-icon" />
         </template>
-        {{$t('add_new_type_btn')}}
+        {{ $t("add_new_type_btn") }}
       </a-button>
     </template>
   </ListSearchHeader>
@@ -48,7 +48,8 @@ import { message } from "ant-design-vue";
 import { onMounted, ref } from "vue";
 import ListSearchHeader from "@/modules/base/components/ListSearchHeader.vue";
 import { service } from "@/services";
-import { VehicleType } from "../models/vehicleType.model";
+import { VehicleType } from "../models/vehicle.model";
+import { i18n } from "@/i18n";
 //#endregion
 
 //#region props
@@ -57,13 +58,13 @@ type Key = string | number;
 //#region variables
 const columns = [
   {
-    title: "No. ",
+    title: i18n.global.t("vehicle_column_no"),
     dataIndex: "index",
     key: "index",
     width: "5%"
   },
   {
-    title: "Name",
+    title: i18n.global.t("vehicle_column_name"),
     dataIndex: "name",
     key: "name"
   },
@@ -84,7 +85,7 @@ const selectedRowKeys = ref<Key[]>([]);
 
 //#region hooks
 onMounted(() => {
-  data.value = service.vehicleType.getVehicleTypes();
+  data.value = service.vehicle.getVehicleTypes();
 });
 //#endregion
 
@@ -171,7 +172,17 @@ const onCreate = (): void => {
   .ant-table-container table > tbody > tr:last-child td:last-child {
     border-bottom-right-radius: 20px;
   }
-
+  .ant-pagination-item-active {
+    background-color: $primary;
+    color: $white;
+  }
+  .ant-pagination-item {
+    font-weight: 700;
+    font-size: 14px;
+  }
+  .ant-pagination-item-active a {
+    color: $white;
+  }
   .ant-table-thead
     > tr
     > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
