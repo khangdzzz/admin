@@ -15,7 +15,7 @@ const routes: RouteRecordRaw[] = [
     path: "/login",
     name: routeNames.login,
     component: () => import("@/modules/auth/pages/LoginPage.vue"),
-    beforeEnter: loginGuard,
+    // beforeEnter: loginGuard,
     meta: {
       layout: ScreenLayout.AUTH_LAYOUT
     }
@@ -120,20 +120,28 @@ const routes: RouteRecordRaw[] = [
   {
     path: "/container",
     name: routeNames.container,
-    component: () => import("@/modules/container/pages/ContainerList.vue"),
     beforeEnter: requireLoginGuard,
     meta: {
       layout: ScreenLayout.DEFAULT_LAYOUT
-    }
-  },
-  {
-    path: "/container-type",
-    name: routeNames.container,
-    component: () => import("@/modules/container/pages/ContainerTypeList.vue"),
-    beforeEnter: requireLoginGuard,
-    meta: {
-      layout: ScreenLayout.DEFAULT_LAYOUT
-    }
+    },
+    children: [
+      {
+        name: routeNames.containerChild,
+        path: "container",
+        component: () => import("@/modules/container/pages/TheContainer.vue")
+      },
+      {
+        name: routeNames.containerType,
+        path: "container-type",
+        component: () =>
+          import("@/modules/container/pages/ContainerTypeList.vue")
+      },
+      {
+        name: routeNames.workingPlace,
+        path: "working-place",
+        component: () => import("@/modules/container/pages/WorkingPlace.vue")
+      }
+    ]
   },
   {
     path: "/setting",
