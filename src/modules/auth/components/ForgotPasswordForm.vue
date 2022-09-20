@@ -4,39 +4,62 @@
       {{ $t("forgot_password_text_forgot_password") }}
     </h3>
     <ImMainForgotPassword class="fgpw-form__main-img" />
-    <a-form :model="formState" :label-col="{ span: 8 }" :wrapper-col="{ span: 16 }" autocomplete="off">
-      <a-form-item class="field-email" name="email" :rules="[
-        {
-          required: true,
-          message: $t('forgot_password_msg_err_email_required'),
-          trigger: ['change', 'blur']
-        },
-        {
-          validator: validator.validateEmail,
-          trigger: ['change', 'blur']
-        }
-      ]">
-        <a-input class="fgpw-form__input-email" v-model:value="formState.email" @focus="onFocusInputEmail"
-          @blur="onBlurInputEmail">
+    <a-form
+      :model="formState"
+      :label-col="{ span: 8 }"
+      :wrapper-col="{ span: 16 }"
+      autocomplete="off"
+    >
+      <a-form-item
+        class="field-email"
+        name="email"
+        :rules="[
+          {
+            required: true,
+            message: $t('forgot_password_msg_err_email_required'),
+            trigger: ['change', 'blur']
+          },
+          {
+            validator: validator.validateEmail,
+            trigger: ['change', 'blur']
+          }
+        ]"
+      >
+        <a-input
+          class="fgpw-form__input-email"
+          v-model:value="formState.email"
+          @focus="onFocusInputEmail"
+          @blur="onBlurInputEmail"
+        >
           <template #prefix>
             <IcUser class="mr-3 fgpw-icon-input" :color="getIconUserColor" />
           </template>
         </a-input>
-        <label :class="['label', isFocus && 'as-label', 'has-icon']">{{
-        isFocus
-        ? $t("forgot_password_email_address")
-        : $t("forgot_password_text_enter_email_address")
-        }}
+        <label :class="['label', isFocus && 'as-label', 'has-icon']"
+          >{{
+            isFocus
+              ? $t("forgot_password_email_address")
+              : $t("forgot_password_text_enter_email_address")
+          }}
         </label>
       </a-form-item>
       <div class="fgpw-form__action-wrap">
-        <a-button class="fgpw-form__action-wrap--cancel" @click="redirectToLogin" :disabled="isLoading">
+        <a-button
+          class="fgpw-form__action-wrap--cancel"
+          @click="redirectToLogin"
+          :disabled="isLoading"
+        >
           {{ $t("forgot_password_btn_cancel") }}
         </a-button>
-        <a-button :disabled="!emailIsValid || isLoading" :class="[
-          'fgpw-form__action-wrap--confirm',
-          emailIsValid ? 'active-btn' : ''
-        ]" @click="$emit('handleConfirm', formState.email)" :loading="isLoading">
+        <a-button
+          :disabled="!emailIsValid || isLoading"
+          :class="[
+            'fgpw-form__action-wrap--confirm',
+            emailIsValid ? 'active-btn' : ''
+          ]"
+          @click="$emit('handleConfirm', formState.email)"
+          :loading="isLoading"
+        >
           {{ $t("forgot_password_btn_confirm") }}
         </a-button>
       </div>
@@ -99,7 +122,8 @@ const redirectToLogin = (): void => {
 };
 const onEmailChange = (): void => {
   // eslint-disable-next-line no-control-regex
-  const regExpEmail = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
+  const regExpEmail =
+    /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
   emailIsChange.value = true;
   if (regExpEmail.test(formState.email)) {
     emailIsValid.value = true;
@@ -240,7 +264,7 @@ const getIconUserColor = computed((): string => {
     margin-bottom: 8px;
   }
 
-  .ant-input-affix-wrapper>input.ant-input {
+  .ant-input-affix-wrapper > input.ant-input {
     top: 8px;
   }
 
@@ -268,7 +292,8 @@ const getIconUserColor = computed((): string => {
     min-height: 14px;
   }
 
-  .ant-form-item-explain.ant-form-item-explain-connected .ant-form-item-explain-error {
+  .ant-form-item-explain.ant-form-item-explain-connected
+    .ant-form-item-explain-error {
     font-family: "Roboto";
     font-style: normal;
     font-weight: 400;
@@ -277,7 +302,8 @@ const getIconUserColor = computed((): string => {
     color: $red-500;
   }
 
-  .ant-form-item-has-error :not(.ant-input-affix-wrapper-disabled):not(.ant-input-affix-wrapper-borderless).ant-input-affix-wrapper {
+  .ant-form-item-has-error
+    :not(.ant-input-affix-wrapper-disabled):not(.ant-input-affix-wrapper-borderless).ant-input-affix-wrapper {
     border: 1px solid $red-500;
   }
 }
