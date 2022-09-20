@@ -1,7 +1,16 @@
 <template>
-  <ForgotPasswordForm v-if="activeForgotPasswordForm" @handle-confirm="onHandleConfirm" :is-loading="isLoading" />
-  <SetNewPasswordForm v-else :email="email" :is-loading="isLoading" @submit="onSetNewPassword"
-    @resend="onHandleConfirm(email)" />
+  <ForgotPasswordForm
+    v-if="activeForgotPasswordForm"
+    @handle-confirm="onHandleConfirm"
+    :is-loading="isLoading"
+  />
+  <SetNewPasswordForm
+    v-else
+    :email="email"
+    :is-loading="isLoading"
+    @submit="onSetNewPassword"
+    @resend="onHandleConfirm(email)"
+  />
 </template>
 
 <script setup lang="ts">
@@ -60,9 +69,9 @@ const onHandleConfirm = (value: string): void => {
   });
 };
 
-const onSetNewPassword = (data: { code: string, password: string }): void => {
+const onSetNewPassword = (data: { code: string; password: string }): void => {
   isLoading.value = true;
-  const { code, password } = data
+  const { code, password } = data;
   const cognitoUser = new CognitoUser({
     Username: email.value,
     Pool: userPool
@@ -78,7 +87,7 @@ const onSetNewPassword = (data: { code: string, password: string }): void => {
       })
     },
     onFailure: (err): void => {
-      err
+      err;
       isLoading.value = false;
       messenger("forgot_password_error_popup_lbl_title", "forgot_password_error_popup_lbl_message", MessengerType.Error, undefined)
     },
@@ -93,6 +102,4 @@ const onSetNewPassword = (data: { code: string, password: string }): void => {
 //#endregion
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

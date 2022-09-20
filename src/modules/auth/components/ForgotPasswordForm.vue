@@ -4,40 +4,78 @@
       {{ $t("forgot_password_text_forgot_password") }}
     </h3>
     <ImMainForgotPassword class="fgpw-form__main-img" />
-    <a-form-item>
-      <a-input class="fgpw-form__input-email" v-model:value="email" @focus="onFocusInputEmail" @blur="onBlurInputEmail">
-        <template #prefix>
-          <IcUser class="mr-3 fgpw-icon-input" :color="getIconUserColor" />
-        </template>
-      </a-input>
-      <label :class="['label', isFocus && 'as-label', 'has-icon']">{{
-      isFocus
-      ? $t("forgot_password_email_address")
-      : $t("forgot_password_text_enter_email_address")
-      }}
-      </label>
-    </a-form-item>
-    <div class="fgpw-form__action-wrap">
-      <a-button class="fgpw-form__action-wrap--cancel" @click="redirectToLogin" :disabled="isLoading">
-        {{ $t("forgot_password_btn_cancel") }}
-      </a-button>
-      <a-button :disabled="!emailIsValid || isLoading" :class="[
-        'fgpw-form__action-wrap--confirm',
-        emailIsValid ? 'active-btn' : ''
-      ]" @click="$emit('handleConfirm', email)" :loading="isLoading">
-        {{ $t("forgot_password_btn_confirm") }}
-      </a-button>
-    </div>
+    <a-form
+      :model="formState"
+      :label-col="{ span: 8 }"
+      :wrapper-col="{ span: 16 }"
+      autocomplete="off"
+    >
+      <a-form-item
+        class="field-email"
+        name="email"
+        :rules="[
+          {
+            required: true,
+            message: $t('forgot_password_msg_err_email_required'),
+            trigger: ['change', 'blur']
+          },
+          {
+            validator: validator.validateEmail,
+            trigger: ['change', 'blur']
+          }
+        ]"
+      >
+        <a-input
+          class="fgpw-form__input-email"
+          v-model:value="formState.email"
+          @focus="onFocusInputEmail"
+          @blur="onBlurInputEmail"
+        >
+          <template #prefix>
+            <IcUser class="mr-3 fgpw-icon-input" :color="getIconUserColor" />
+          </template>
+        </a-input>
+        <label :class="['label', isFocus && 'as-label', 'has-icon']"
+          >{{
+            isFocus
+              ? $t("forgot_password_email_address")
+              : $t("forgot_password_text_enter_email_address")
+          }}
+        </label>
+      </a-form-item>
+      <div class="fgpw-form__action-wrap">
+        <a-button
+          class="fgpw-form__action-wrap--cancel"
+          @click="redirectToLogin"
+          :disabled="isLoading"
+        >
+          {{ $t("forgot_password_btn_cancel") }}
+        </a-button>
+        <a-button
+          :disabled="!emailIsValid || isLoading"
+          :class="[
+            'fgpw-form__action-wrap--confirm',
+            emailIsValid ? 'active-btn' : ''
+          ]"
+          @click="$emit('handleConfirm', formState.email)"
+          :loading="isLoading"
+        >
+          {{ $t("forgot_password_btn_confirm") }}
+        </a-button>
+      </div>
+    </a-form>
   </div>
 </template>
 
 <script setup lang="ts">
 //#region import
-import { ref, watch, computed } from "vue";
+import { ref, watch, computed, reactive } from "vue";
 import { useRouter } from "vue-router";
 import { routeNames } from "@/routes/route-names";
 import IcUser from "@/assets/icons/IcUser.vue";
 import ImMainForgotPassword from "@/assets/images/ImMainForgotPassword.vue";
+import validator from "@/modules/base/components/validator/validator";
+import { message } from "ant-design-vue";
 
 //#endregion
 
@@ -49,14 +87,19 @@ defineProps({
   }
 });
 //#endregion
-
+interface FormState {
+  email: string;
+}
 //#region variables
-const email = ref<string>("");
+const formState = reactive<FormState>({
+  email: ""
+});
+// const email = ref<string>("");
 const emailIsChange = ref<boolean>(false);
 const emailIsValid = ref<boolean>(false);
 const router = useRouter();
 const isFocus = ref<boolean>(false);
-watch(email, () => {
+watch(formState, () => {
   onEmailChange();
 });
 //#endregion
@@ -69,7 +112,7 @@ const onFocusInputEmail = (): void => {
   isFocus.value = true;
 };
 const onBlurInputEmail = (): void => {
-  if (email.value) {
+  if (formState.email) {
     isFocus.value = true;
   } else {
     isFocus.value = false;
@@ -79,10 +122,9 @@ const redirectToLogin = (): void => {
   router.push({ name: routeNames.login });
 };
 const onEmailChange = (): void => {
-  const regExpEmail =
-    /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+  const regExpEmail = /^([^@]{1,64}|\".{0,62}\")@[^@]{1,255}$/;
   emailIsChange.value = true;
-  if (regExpEmail.test(email.value)) {
+  if (regExpEmail.test(formState.email)) {
     emailIsValid.value = true;
   } else {
     emailIsValid.value = false;
@@ -92,7 +134,7 @@ const onEmailChange = (): void => {
 
 //#region computed
 const getIconUserColor = computed((): string => {
-  return email.value ? "#07A0B8" : "#999999";
+  return formState.email ? "#07A0B8" : "#999999";
 });
 
 //#endregion
@@ -121,6 +163,7 @@ const getIconUserColor = computed((): string => {
     font-size: 22px;
     line-height: 28px;
     font-family: "Roboto" !important;
+    color: $neutral-600;
   }
 
   &__action-wrap {
@@ -154,7 +197,7 @@ const getIconUserColor = computed((): string => {
   &__input-email {
     display: flex;
     align-items: center;
-    margin-bottom: 25px;
+    margin-bottom: 10px;
     padding: 22px 12px;
     height: 60px;
     background: $neutral-50;
@@ -185,6 +228,7 @@ const getIconUserColor = computed((): string => {
     transition: 0.2s ease all;
     z-index: 1000;
     color: #999999;
+    font-size: 16px !important;
   }
 
   .as-label {
@@ -214,8 +258,11 @@ const getIconUserColor = computed((): string => {
   .ant-input-prefix {
     margin-right: 0;
   }
+  .ant-input-affix-wrapper {
+    margin-bottom: 8px;
+  }
 
-  .ant-input-affix-wrapper>input.ant-input {
+  .ant-input-affix-wrapper > input.ant-input {
     top: 8px;
   }
 
@@ -233,6 +280,25 @@ const getIconUserColor = computed((): string => {
   .fgpw-form__action-wrap--confirm.active-btn {
     background: $primary;
     color: $neutral-0;
+  }
+  .field-email .ant-form-item-control-input {
+    width: 360px !important;
+  }
+  .ant-form-item-explain.ant-form-item-explain-connected {
+    min-height: 14px;
+  }
+  .ant-form-item-explain.ant-form-item-explain-connected
+    .ant-form-item-explain-error {
+    font-family: "Roboto";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 14px;
+    color: $red-500;
+  }
+  .ant-form-item-has-error
+    :not(.ant-input-affix-wrapper-disabled):not(.ant-input-affix-wrapper-borderless).ant-input-affix-wrapper {
+    border: 1px solid $red-500;
   }
 }
 </style>
