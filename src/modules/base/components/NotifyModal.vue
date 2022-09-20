@@ -47,12 +47,11 @@ onMounted(() => {
 
 //#region function
 const onShowModal = ({ type, title, message, callback }: Modal): void => {
-  const icon = type === MessengerType.Success ? '../../../assets/icons/ic_success.png' :
-    type === MessengerType.Error ? '../../../assets/icons/ic_error.png' :
-      '../../../assets/icons/ic_success.png'
+  const errorIcon = new URL('../../../assets/icons/ic_error.png', import.meta.url).href
+  const successIcon = new URL('../../../assets/icons/ic_success.png', import.meta.url).href
   visible.value = true;
   modalMessage.value = message;
-  modalIcon.value = new URL(icon, import.meta.url).href;
+  modalIcon.value = type === MessengerType.Error ? errorIcon : successIcon
   modalTitle.value = title;
   action.value = callback;
 };
@@ -88,8 +87,9 @@ const onOKClick = (): void => {
     font-family: "Roboto";
     font-style: normal;
     font-weight: 600;
-    font-size: 22px;
-    line-height: 28px;
+    font-size: 18px;
+    line-height: 22px;
+    text-align: center;
   }
 
   .modal-message {
@@ -98,18 +98,23 @@ const onOKClick = (): void => {
     font-family: "Roboto";
     font-style: normal;
     font-weight: 400;
-    font-size: 18px;
-    line-height: 22px;
+    font-size: 16px;
+    line-height: 20px;
     text-align: center;
   }
 
   .btn-ok {
+    font-family: "Roboto";
+    font-style: normal;
     width: 360px;
     height: 48px;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 18px;
   }
 }
 
 .custom-modal .ant-modal-content {
-  border-radius: 20px !important;
+  border-radius: 30px !important;
 }
 </style>
