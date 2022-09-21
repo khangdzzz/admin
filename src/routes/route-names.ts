@@ -17,6 +17,7 @@ export const routeNames = {
   staffManagement: "STAFF_MANAGEMENT",
   container: "CONTAINER",
   containerChild: "CONTAINER_CHILD",
+  createNewContainer: "CREATE_NEW_CONTAINER",
   containerType: "CONTAINER_TYPE",
   workingPlace: "WORKING_PLACE",
   setting: "SETTING"

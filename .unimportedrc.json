@@ -8,6 +8,8 @@
     "src/modules/auth/models/auth.model.ts",
     "src/modules/auth/models/index.ts",
     "src/modules/base/components/validator/validator.ts",
+    "src/modules/container/pages/ContainerList.vue",
+    "src/modules/container/pages/ContainerType.vue",
     "src/stores/common.store.ts",
     "src/stores/index.ts",
     "src/stores/store-ids.ts"

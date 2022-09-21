@@ -13,7 +13,10 @@
         </template>
         {{ $t("export_btn") }}
       </a-button>
-      <a-button type="primary" class="btn btn-add-new">
+      <a-button
+        type="primary"
+        class="btn btn-add-new"
+        @click="handleAddContainer">
         <template #icon>
           <img src="@/assets/icons/ic_plus.svg" class="btn-icon" />
         </template>
@@ -28,8 +31,7 @@
         onChange: onSelectChange
       }"
       :columns="columns"
-      :data-source="data"
-    >
+      :data-source="data">
       <template #bodyCell="{ column, index }">
         <template v-if="column.key === 'index'">
           <span>{{ index + 1 }}</span>
@@ -46,11 +48,11 @@
 
 <script setup lang="ts">
 //#region import
-import ListSearchHeader from "@/modules/base/components/ListSearchHeader.vue";
-import { ref } from "vue";
-import { message } from "ant-design-vue";
 import { i18n } from "@/i18n";
+import ListSearchHeader from "@/modules/base/components/ListSearchHeader.vue";
 import { Container } from "@/modules/container/models/index";
+import { routeNames, router } from "@/routes";
+import { ref } from "vue";
 type Key = string | number;
 
 //#endregion
@@ -98,6 +100,10 @@ for (let i = 0; i < 20; i++) {
 //#region function
 const onSelectChange = (rowSelect: Key[]): void => {
   selectedRowKeys.value = rowSelect;
+};
+
+const handleAddContainer = (): void => {
+  router.push({ name: routeNames.createNewContainer });
 };
 //#endregion
 
