@@ -254,7 +254,7 @@ const onCreate = (): void => {
     .action {
       @include text(700, 14px, 18px);
       text-align: center;
-      color: #3c3c3c;
+      color: $neutral-600;
     }
   }
 }

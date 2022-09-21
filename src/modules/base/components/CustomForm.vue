@@ -37,7 +37,7 @@
       <template #option="{ label }">
         <div :style="styleContent">
           <span class="text-content">
-            {{ label }}
+            {{ label }} 
           </span>
         </div>
       </template>
@@ -214,7 +214,7 @@ const isActivePasswordIcon = (item: any): boolean => {
     padding: 0px !important;
 
     .text-content {
-      color: #3c3c3c;
+      color: $neutral-600;
       font-size: 16px;
       font-weight: 400;
       line-height: 100%;

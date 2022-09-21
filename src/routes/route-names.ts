@@ -19,6 +19,7 @@ export const routeNames = {
   container: "CONTAINER",
   containerChild: "CONTAINER_CHILD",
   containerType: "CONTAINER_TYPE",
+  createContainerType:"CREATE_CONTAINER_TYPE",
   workingPlace: "WORKING_PLACE",
   setting: "SETTING"
 };
