@@ -138,6 +138,12 @@ const routes: RouteRecordRaw[] = [
     },
     children: [
       {
+        name: routeNames.createNewContainer,
+        path: "container/create-new",
+        component: () =>
+          import("@/modules/container/pages/CreateNewContainer.vue")
+      },
+      {
         name: routeNames.containerChild,
         path: "container",
         component: () => import("@/modules/container/pages/TheContainer.vue")

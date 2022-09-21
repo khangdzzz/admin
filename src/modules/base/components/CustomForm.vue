@@ -3,8 +3,7 @@
     v-for="(item, index) in formData"
     :key="item.key"
     :name="['formData', index, 'value']"
-    :rules="item.rules"
-  >
+    :rules="item.rules">
     <component
       :is="item.inputType"
       v-model:value="item.value"
@@ -12,6 +11,7 @@
       :options="item.options"
       :style="item.style"
       :dropdownClassName="item.dropdownClassName"
+      autocomplete="new-password"
       @change="handleChange(item.value, index)"
       @select="onSelect"
       @pressEnter="onPressEnter"
@@ -22,8 +22,7 @@
         !item.icon ? 'not-has-icon' : 'has-icon-input',
         isActivePasswordIcon(item) ? 'password-item' : '',
         !item.label ? 'not-has-label' : 'has-label'
-      ]"
-    >
+      ]">
       <!-- //region slot input  -->
       <template #prefix v-if="item.icon">
         <component :is="item.icon" :color="item.iconColor" />
@@ -49,8 +48,7 @@
           src="@/assets/icons/ic_dropdown.svg"
           width="20"
           height="20"
-          style="padding: 4px"
-        />
+          style="padding: 4px" />
       </template>
       <!-- endregion -->
     </component>
@@ -61,7 +59,13 @@
         item.isFocus || item.value ? 'as-label' : '',
         item.icon && 'has-icon'
       ]"
-      >{{ item.isFocus || item.value ? $t(item.label) : $t(item.placeHolder) }}
+      >{{
+        item.isFocus || item.value
+          ? $t(item.label)
+          : item.placeHolder
+          ? $t(item.placeHolder)
+          : $t(item.label)
+      }}
       <span class="require" v-if="item.required">*</span>
     </label>
   </a-form-item>
