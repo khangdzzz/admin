@@ -59,10 +59,17 @@
           <span>{{ record.type }}</span>
         </template>
         <template v-if="column.dataIndex === 'action'">
-          <img
-            src="@/assets/icons/ic_btn_edit.svg"
-            :class="[vehicleList.actionIcon]"
-          />
+          <router-link
+            :to="{
+              name: routeNames.editVehicle,
+              params: { id: record.key }
+            }"
+          >
+            <img
+              src="@/assets/icons/ic_btn_edit.svg"
+              :class="[vehicleList.actionIcon]"
+            />
+          </router-link>
           <img
             src="@/assets/icons/ic_btn_delete.svg"
             :class="[vehicleList.actionIcon]"
@@ -184,7 +191,7 @@ const rowSelection: TableProps["rowSelection"] = {
 
 const fetchVehicleList = (): void => {
   const res = service.vehicle.getListVehicle();
-  data.value = res
+  data.value = res;
 };
 
 const onCreate = (): void => {

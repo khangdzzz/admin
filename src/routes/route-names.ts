@@ -11,6 +11,7 @@ export const routeNames = {
   realTimeDynamics: "REAL_TIME_DYNAMICS",
   vehicle: "VEHICLE",
   createVehicle: "CREATE_VEHICLE",
+  editVehicle: "EDIT_VEHICLE",
   vehicleType: "VEHICLE_TYPE",
   createVehicleType: "CREATE_VEHICLE_TYPE",
   staffManagement: "STAFF_MANAGEMENT",

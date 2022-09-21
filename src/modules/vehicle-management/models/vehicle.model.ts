@@ -13,10 +13,10 @@ export interface VehicleType {
   name: string;
 }
 export interface Vehicle {
-  id: number | undefined;
+  id: string | undefined;
   vehicleType: number | string;
   vehicleName: string;
   vehiclePlate: string;
-  maxWeight: number;
-  code: string;
+  maxWeight?: number;
+  code?: string;
 }
