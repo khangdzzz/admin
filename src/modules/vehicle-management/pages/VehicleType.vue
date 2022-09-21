@@ -25,7 +25,7 @@
           <span>{{ index + 1 }}</span>
         </template>
         <template v-if="column.key === 'action'">
-          <img src="@/assets/icons/ic_btn_edit.svg" class="action-icon" @click="editVehicleType" />
+          <img src="@/assets/icons/ic_btn_edit.svg" class="action-icon" @click="editVehicleType(record.id)" />
           <img src="@/assets/icons/ic_btn_delete.svg" class="action-icon" />
         </template>
       </template>
@@ -89,8 +89,8 @@ const onSelectChange = (rowSelect: Key[]): void => {
 const onCreate = (): void => {
   router.push({ name: routeNames.createVehicleType });
 };
-const editVehicleType = (): void => {
-  // router.push({ name: routeNames.editVehicleType });
+const editVehicleType = (id: string): void => {
+  router.push(`edit-vehicle-type/${id}`);
 }
 //#endregion
 
