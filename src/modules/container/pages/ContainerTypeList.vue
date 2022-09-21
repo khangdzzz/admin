@@ -101,11 +101,8 @@ import ListSearchHeader from "@/modules/base/components/ListSearchHeader.vue";
 import { i18n } from "@/i18n";
 import { service } from "@/services";
 import { routeNames } from "@/routes/route-names";
+import { ContainerType } from "../models/container-type.models";
 
-interface DataType {
-  key: string;
-  name: string;
-}
 type Key = string | number;
 //#endregion===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆
 
@@ -113,11 +110,11 @@ type Key = string | number;
 //#endregion===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜Props
 
 //#===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎Variables
-const selectedKeys = ref<DataType[]>([]);
+const selectedKeys = ref<ContainerType[]>([]);
 
 const currentPage = ref<number>(1);
 
-const columns: TableColumnType<DataType>[] = [
+const columns: TableColumnType<ContainerType>[] = [
   {
     title: i18n.global.t("name"),
     dataIndex: "name"
@@ -127,7 +124,7 @@ const columns: TableColumnType<DataType>[] = [
     width: "20%"
   }
 ];
-const data = ref<DataType[]>([]);
+const data = ref<ContainerType[]>([]);
 //#endregion===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎
 
 //#===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌Hooks
@@ -138,7 +135,7 @@ onMounted(() => {
 
 //#===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊Methods
 const rowSelection: TableProps["rowSelection"] = {
-  onChange: (selectedRowKeys: Key[], selectedRows: DataType[]): void => {
+  onChange: (selectedRowKeys: Key[], selectedRows: ContainerType[]): void => {
     selectedRowKeys;
     selectedKeys.value = [...selectedRows];
   }
@@ -215,8 +212,8 @@ const fetchListContainerType = (): void => {
   @include size-btn(170px, 48px);
   margin-left: 15px;
   padding: 0px 15px;
-  a{
-    color: $white
+  a {
+    color: $white;
   }
 }
 
