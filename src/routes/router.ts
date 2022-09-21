@@ -94,6 +94,12 @@ const routes: RouteRecordRaw[] = [
           import("@/modules/vehicle-management/pages/CreateVehicle.vue")
       },
       {
+        path: "edit-vehicle/:id",
+        name: routeNames.editVehicle,
+        component: () =>
+          import("@/modules/vehicle-management/pages/EditVehicle.vue")
+      },
+      {
         path: "vehicle-type",
         name: routeNames.vehicleType,
         component: () =>

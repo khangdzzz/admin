@@ -88,3 +88,26 @@ export async function createVehicle(
   if (error) return undefined;
   return res;
 }
+
+export async function updateVehicle(
+  vehicleInfo: Vehicle
+): Promise<Vehicle | unknown> {
+  const { vehicleType, vehicleName, vehiclePlate, maxWeight, code,id } =
+    vehicleInfo;
+  const [error, res] = await transformRequest({
+    url: `update-vehicle/${id}`,
+    method: "patch",
+    params:{
+
+    },
+    data: { vehicleType, vehicleName, vehiclePlate, maxWeight, code }
+  });
+  if (error) return undefined;
+  return res;
+}
+
+export function getVehicleById(id:string): DataType | undefined {
+  const vehicle = data.find((item) => item.key === id) || undefined
+
+  return vehicle
+}
