@@ -1,5 +1,6 @@
 import {
   Vehicle,
+  VehicleSelection,
   VehicleType
 } from "@/modules/vehicle-management/models/vehicle.model";
 import { transformRequest } from "./base.service";
@@ -39,6 +40,21 @@ const data: DataType[] = [
 
 export function getListVehicle(): DataType[] {
   return data;
+}
+export function getMockCollectionBase(): VehicleSelection[] {
+  const res: VehicleSelection[] = [
+    { value: 1, label: "Collection Base 1" },
+    { value: 2, label: "Collection Base 2" }
+  ];
+  return res;
+}
+
+export function getMockPartner(): VehicleSelection[] {
+  const res: VehicleSelection[] = [
+    { value: 1, label: "Partner 1" },
+    { value: 2, label: "Partner 2" }
+  ];
+  return res;
 }
 
 export function getVehicleTypes(): VehicleType[] {

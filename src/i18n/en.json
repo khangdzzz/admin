@@ -76,8 +76,13 @@
   "vehicle_add_new": "Add new Vehicle",
   "vehicle_industrial_waste": "Industrial waste loading permission",
   "vehicle_permission": "Permission",
+  "vehicle_owner_type": "Owner type",
+  "collection_base": "Collection Base",
+  "partner": "Partner",
+  "owner": "Owner",
   "btn_cancel": "Cancel",
   "btn_submit": "Submit",
   "please_enter_input": "Please enter {fieldName}",
-  "max_length_input": "Input max length is {maxLength} characters"
+  "max_length_input": "Input max length is {maxLength} characters",
+  "allow_input_number": "This field allows number input only"
 }
