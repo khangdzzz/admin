@@ -9,7 +9,10 @@
       <div class="create-form">
         <a-form :model="dynamicValidateForm" name="basic" autocomplete="off">
           <a-form-item name="formData0value" :validateFirst="false">
-            <a-radio-group v-model:value="ownerType" class="radio-group">
+            <a-radio-group
+              v-model:value="ownerType"
+              class="radio-group"
+              :disabled="isLoading">
               <label class="label-radio"
                 >{{ $t("vehicle_owner_type") }}<span> *</span></label
               >
@@ -35,21 +38,27 @@
           <h3>{{ $t("vehicle_industrial_waste") }}</h3>
         </a-col>
         <a-col :span="4">
-          <a-checkbox v-model:checked="checkPermission">
+          <a-checkbox v-model:checked="checkPermission" :disabled="isLoading">
             {{ $t("vehicle_permission") }}
           </a-checkbox>
         </a-col>
       </a-row>
-      <a-row type="flex" justify="center" align="middle" gutter="20">
+      <a-row type="flex" justify="center" align="middle" :gutter="20">
         <a-col :span="12">
-          <a-button type="primary" @click="onCancel" ghost class="btn">{{
-            $t("btn_cancel")
-          }}</a-button>
+          <a-button
+            type="primary"
+            @click="onCancel"
+            :disabled="isLoading"
+            ghost
+            class="btn"
+            >{{ $t("btn_cancel") }}</a-button
+          >
         </a-col>
         <a-col :span="12">
           <a-button
             type="primary"
             class="btn"
+            :loading="isLoading"
             :disabled="!isValidated"
             @click="onCreate"
             >{{ $t("btn_submit") }}</a-button
@@ -66,19 +75,23 @@ import { i18n } from "@/i18n";
 import CustomForm from "@/modules/base/components/CustomForm.vue";
 import { service } from "@/services";
 import { message } from "ant-design-vue";
-import { onMounted, reactive, ref, watch } from "vue";
+import { inject, onMounted, reactive, ref, watch } from "vue";
 import { VehicleSelection } from "../models/vehicle.model";
 import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
+import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 //#endregion
 
 //#region props
 //#endregion
 
 //#region variables
+const messenger: (title: string, message: string, type: MessengerType) => void =
+  inject("messenger")!;
 const vehicleTypes = ref<VehicleSelection[]>([]);
 const isValidated = ref<boolean>(false);
 const checkPermission = ref<boolean>(false);
+const isLoading = ref<boolean>(false);
 const ownerType = ref<string>("collectionBase");
 const mockPartner = ref<VehicleSelection[]>([{ value: "", label: "" }]);
 const mockCollectionBase = ref<VehicleSelection[]>();
@@ -93,6 +106,7 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
       name: "owner",
       required: true,
       isFocus: false,
+      disabled: isLoading,
       options: mockCollectionBase,
       rules: [
         {
@@ -118,6 +132,7 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
       name: "vehicletype",
       required: true,
       isFocus: false,
+      disabled: isLoading,
       options: vehicleTypes,
       rules: [
         {
@@ -141,7 +156,7 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
       placeHolder: "vehicle_name",
       label: "vehicle_name",
       name: "vehicleName",
-      disabled: false,
+      disabled: isLoading,
       rules: [
         {
           required: true,
@@ -164,7 +179,7 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
       placeHolder: "vehicle_number_plate",
       label: "vehicle_number_plate",
       name: "vehiclePlate",
-      disabled: false,
+      disabled: isLoading,
       required: true,
       rules: [
         {
@@ -187,7 +202,7 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
       placeHolder: "vehicle_max_loading_weight",
       label: "vehicle_max_loading_weight",
       name: "maxWeight",
-      disabled: false,
+      disabled: isLoading,
       rules: [
         {
           max: 10,
@@ -208,7 +223,7 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
       placeHolder: "vehicle_code",
       label: "vehicle_code",
       name: "code",
-      disabled: false,
+      disabled: isLoading,
       rules: [
         {
           max: 50,
@@ -274,20 +289,25 @@ const onCancel = (): void => {
   router.push({ name: routeNames.vehicle });
 };
 const onCreate = async (): Promise<void> => {
+  isLoading.value = true;
   const vehicleInfo = {
     id: undefined,
-    vehicleType: dynamicValidateForm.formData[0].value,
-    vehicleName: dynamicValidateForm.formData[1].value,
-    vehiclePlate: dynamicValidateForm.formData[2].value,
-    maxWeight: dynamicValidateForm.formData[3].value,
-    code: dynamicValidateForm.formData[4].value
+    ownerId: dynamicValidateForm.formData[0].value,
+    vehicleType: dynamicValidateForm.formData[1].value,
+    vehicleName: dynamicValidateForm.formData[2].value,
+    vehiclePlate: dynamicValidateForm.formData[3].value,
+    maxWeight: dynamicValidateForm.formData[4].value,
+    code: dynamicValidateForm.formData[5].value,
+    isHasPermission: checkPermission.value
   };
   const res = await service.vehicle.createVehicle(vehicleInfo);
+
   if (res) {
-    message.success("create");
+    messenger("vehicle_create_success", "", MessengerType.Success);
   } else {
-    message.error("error");
+    messenger("create_failed", "please_try_again", MessengerType.Error);
   }
+  isLoading.value = false;
 };
 //#endregion
 

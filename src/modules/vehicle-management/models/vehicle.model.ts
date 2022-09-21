@@ -14,11 +14,13 @@ export interface VehicleType {
 }
 export interface Vehicle {
   id: string | undefined;
+  ownerId: string | undefined;
   vehicleType: number | string;
   vehicleName: string;
   vehiclePlate: string;
   maxWeight?: number;
   code?: string;
+  isHasPermission: boolean;
 }
 
 export interface VehicleDetail {
