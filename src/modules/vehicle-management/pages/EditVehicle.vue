@@ -67,13 +67,13 @@
 //#region import
 import { i18n } from "@/i18n";
 import CustomForm from "@/modules/base/components/CustomForm.vue";
+import { router } from "@/routes";
+import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
 import { message } from "ant-design-vue";
 import { onMounted, reactive, ref, watch } from "vue";
-import { VehicleSelection, Vehicle } from "../models/vehicle.model";
-import { router } from "@/routes";
-import { routeNames } from "@/routes/route-names";
 import { useRoute } from "vue-router";
+import { VehicleSelection } from "../models/vehicle.model";
 
 //#endregion
 

@@ -155,6 +155,12 @@ const routes: RouteRecordRaw[] = [
           import("@/modules/container/pages/ContainerTypeList.vue")
       },
       {
+        name: routeNames.createContainerType,
+        path: "create-new-container-type",
+        component: () =>
+          import("@/modules/container/pages/CreateNewContainerType.vue")
+      },
+      {
         name: routeNames.workingPlace,
         path: "working-place",
         component: () => import("@/modules/container/pages/WorkingPlace.vue")
