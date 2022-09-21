@@ -106,7 +106,7 @@
   //#===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎Variables
   const selectedKeys = ref<DataType[]>([]);
   
-  const currentPage = ref<number>(2);
+  const currentPage = ref<number>(1);
   
   const columns: TableColumnType<DataType>[] = [
     {
@@ -123,7 +123,7 @@
   
   //#===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌Hooks
   onMounted(() => {
-    fetchVehicleList();
+    fetchListContainerType();
   });
   //#endregion===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌
   
@@ -135,9 +135,9 @@
     }
   };
   
-  const fetchVehicleList = (): void => {
+  const fetchListContainerType = (): void => {
     const res = service.container.getListContainerType();
-    data.value = [...res];
+    data.value = res;
   };
   
   //#endregion===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊

@@ -147,7 +147,7 @@ type Key = string | number;
 //#===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎Variables
 const selectedKeys = ref<DataType[]>([]);
 
-const currentPage = ref<number>(2);
+const currentPage = ref<number>(1);
 
 const columns: TableColumnType<DataType>[] = [
   {
@@ -186,7 +186,7 @@ const rowSelection: TableProps["rowSelection"] = {
 
 const fetchVehicleList = (): void => {
   const res = service.vehicle.getListVehicle();
-  data.value = [...res];
+  data.value = res
 };
 
 const onCreate = (): void => {
