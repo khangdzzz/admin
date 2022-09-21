@@ -1,9 +1,9 @@
 <template>
   <a-row type="flex" align="middle" justify="center" class="header">
-    <a-col :span="6">
+    <a-col :span="colTitle">
       <h2 class="header-title">{{ title }}</h2>
     </a-col>
-    <a-col :span="18">
+    <a-col :span="colAction">
       <a-row type="flex" align="middle" justify="end">
         <a-input
           v-model:value="searchValue"
@@ -31,6 +31,14 @@ defineProps({
   title: {
     type: String,
     default: ""
+  },
+  colTitle: {
+    type: Number,
+    default: 6
+  },
+  colAction: {
+    type: Number,
+    default: 18
   }
 });
 //#endregion

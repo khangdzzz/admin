@@ -120,7 +120,16 @@ const routes: RouteRecordRaw[] = [
   {
     path: "/container",
     name: routeNames.container,
-    component: () => import("@/modules/container/pages/TheContainer.vue"),
+    component: () => import("@/modules/container/pages/ContainerList.vue"),
+    beforeEnter: requireLoginGuard,
+    meta: {
+      layout: ScreenLayout.DEFAULT_LAYOUT
+    }
+  },
+  {
+    path: "/container-type",
+    name: routeNames.container,
+    component: () => import("@/modules/container/pages/ContainerTypeList.vue"),
     beforeEnter: requireLoginGuard,
     meta: {
       layout: ScreenLayout.DEFAULT_LAYOUT
