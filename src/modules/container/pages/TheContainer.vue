@@ -13,7 +13,7 @@
         </template>
         {{ $t("export_btn") }}
       </a-button>
-      <a-button type="primary" class="btn btn-add-new" @click="onCreate">
+      <a-button type="primary" class="btn btn-add-new">
         <template #icon>
           <img src="@/assets/icons/ic_plus.svg" class="btn-icon" />
         </template>
@@ -98,9 +98,6 @@ for (let i = 0; i < 20; i++) {
 //#region function
 const onSelectChange = (rowSelect: Key[]): void => {
   selectedRowKeys.value = rowSelect;
-};
-const onCreate = (): void => {
-  message.info("abcc");
 };
 //#endregion
 

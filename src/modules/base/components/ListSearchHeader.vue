@@ -71,6 +71,9 @@ const searchValue = ref<string>("");
     font-size: 28px;
     line-height: 36px;
   }
+  .ant-input {
+    font-size: 20px;
+  }
 }
 
 .search-input {

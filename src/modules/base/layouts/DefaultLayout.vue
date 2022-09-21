@@ -74,7 +74,20 @@ const menuItems = [
     key: "Container/ Working place management",
     icon: Container,
     title: "menu_lbl_container_and_working_place_management",
-    pathName: routeNames.container
+    items: [
+      {
+        title: "container_container",
+        pathName: routeNames.containerChild
+      },
+      {
+        title: "container_container_type",
+        pathName: routeNames.containerType
+      },
+      {
+        title: "container_working_place",
+        pathName: routeNames.workingPlace
+      }
+    ]
   },
   {
     key: "Setting",

@@ -59,20 +59,18 @@
           <span>{{ record.type }}</span>
         </template>
         <template v-if="column.dataIndex === 'action'">
-          <center>
-            <img
-              src="@/assets/icons/ic_btn_edit.svg"
-              :class="[vehicleList.actionIcon]"
-            />
-            <img
-              src="@/assets/icons/ic_btn_delete.svg"
-              :class="[vehicleList.actionIcon]"
-            />
-            <img
-              src="@/assets/icons/icon_cell_table.svg"
-              :class="[vehicleList.actionIcon]"
-            />
-          </center>
+          <img
+            src="@/assets/icons/ic_btn_edit.svg"
+            :class="[vehicleList.actionIcon]"
+          />
+          <img
+            src="@/assets/icons/ic_btn_delete.svg"
+            :class="[vehicleList.actionIcon]"
+          />
+          <img
+            src="@/assets/icons/ic_btn_qrcode.svg"
+            :class="[vehicleList.actionIcon]"
+          />
         </template>
       </template>
     </a-table>

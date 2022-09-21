@@ -318,6 +318,7 @@ const setColorIconInputConfirmPassword = computed((): string => {
     left: 46px;
     top: 20px;
     transition: 0.2s ease all;
+    font-size: 16px;
     z-index: 1000;
     color: #999999;
     font-size: 16px !important;
