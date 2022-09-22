@@ -161,6 +161,12 @@ const routes: RouteRecordRaw[] = [
           import("@/modules/container/pages/CreateNewContainerType.vue")
       },
       {
+        name: routeNames.editContainerType,
+        path: "edit-container-type/:id",
+        component: () =>
+          import("@/modules/container/pages/EditContainerType.vue")
+      },
+      {
         name: routeNames.workingPlace,
         path: "working-place",
         component: () => import("@/modules/container/pages/WorkingPlace.vue")
