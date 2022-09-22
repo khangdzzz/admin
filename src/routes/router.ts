@@ -88,7 +88,7 @@ const routes: RouteRecordRaw[] = [
           import("@/modules/vehicle-management/pages/VehicleList.vue")
       },
       {
-        path: "create-vehicle",
+        path: "create-vehicle/",
         name: routeNames.createVehicle,
         component: () =>
           import("@/modules/vehicle-management/pages/CreateVehicle.vue")
@@ -147,6 +147,11 @@ const routes: RouteRecordRaw[] = [
         name: routeNames.containerChild,
         path: "container",
         component: () => import("@/modules/container/pages/TheContainer.vue")
+      },
+      {
+        name: routeNames.editContainer,
+        path: "edit-container/:id",
+        component: () => import("@/modules/container/pages/EditContainer.vue")
       },
       {
         name: routeNames.containerType,

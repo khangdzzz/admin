@@ -19,6 +19,7 @@
       @blur="onBlur(item.value, index)"
       class="input-item float-label"
       :class="[
+        item.class,
         !item.icon ? 'not-has-icon' : 'has-icon-input',
         isActivePasswordIcon(item) ? 'password-item' : '',
         !item.label ? 'not-has-label' : 'has-label'
@@ -36,7 +37,7 @@
       <template #option="{ label }">
         <div :style="styleContent">
           <span class="text-content">
-            {{ label }} 
+            {{ label }}
           </span>
         </div>
       </template>

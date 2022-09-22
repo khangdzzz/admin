@@ -87,10 +87,6 @@ const menuItems = [
       {
         title: "container_container_type",
         pathName: routeNames.containerType
-      },
-      {
-        title: "container_working_place",
-        pathName: routeNames.workingPlace
       }
     ]
   },

@@ -1,2 +1,6 @@
-import { Container } from "./container.model";
-export type { Container };
+import {
+  Container,
+  ContainerSelection,
+  ContainerType
+} from "./container.model";
+export type { Container, ContainerSelection, ContainerType };
