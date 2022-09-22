@@ -18,6 +18,7 @@
     "axios": "^0.27.2",
     "mitt": "^3.0.0",
     "pinia": "^2.0.22",
+    "qrcode": "^1.5.1",
     "vue": "^3.2.37",
     "vue-i18n": "^9.2.2",
     "vue-router": "^4.1.5"
@@ -26,6 +27,7 @@
     "@betterer/cli": "^5.4.0",
     "@betterer/eslint": "^5.4.0",
     "@types/node": "^18.7.15",
+    "@types/qrcode": "^1.5.0",
     "@typescript-eslint/eslint-plugin": "^5.36.2",
     "@typescript-eslint/parser": "^5.36.2",
     "@vitejs/plugin-vue": "^3.1.0",
