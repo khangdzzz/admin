@@ -1,44 +1,51 @@
 import {
   Vehicle,
   VehicleSelection,
-  VehicleType
+  VehicleType,
+  VehicleDetail
 } from "@/modules/vehicle-management/models/vehicle.model";
 import { transformRequest } from "./base.service";
-interface DataType {
-  key: string;
-  type: string;
-  name: string;
-  numberPlate: string;
-}
 
-const data: DataType[] = [
+const data: VehicleDetail[] = [
   {
     key: "1",
     type: "2T Truck",
     name: "2T Car 1",
-    numberPlate: "Kagoshima 100Ah 11-11"
+    numberPlate: "Kagoshima 100Ah 11-11",
+    maxWeight:4,
+    code:'XD1234',
+    industrial:true
   },
   {
     key: "2",
     type: "3T Truck",
     name: "2T Car 1",
-    numberPlate: "Kagoshima 100Ah 11-11"
+    numberPlate: "Kagoshima 100Ah 11-11",
+    maxWeight:4,
+    code:'XD1235',
+    industrial:true
   },
   {
     key: "3",
     type: "4T Truck",
     name: "2T Car 1",
-    numberPlate: "Kagoshima 100Ah 11-11"
+    numberPlate: "Kagoshima 100Ah 11-11",
+    maxWeight:4,
+    code:'XD1236',
+    industrial:true
   },
   {
     key: "4",
     type: "5T Truck",
     name: "2T Car 1",
-    numberPlate: "Kagoshima 100Ah 11-11"
+    numberPlate: "Kagoshima 100Ah 11-11",
+    maxWeight:4,
+    code:'XD1237',
+    industrial:true
   }
 ];
 
-export function getListVehicle(): DataType[] {
+export function getListVehicle(): VehicleDetail[] {
   return data;
 }
 export function getMockCollectionBase(): VehicleSelection[] {
@@ -106,7 +113,7 @@ export async function updateVehicle(
   return res;
 }
 
-export function getVehicleById(id:string): DataType | undefined {
+export function getVehicleById(id:string): VehicleDetail | undefined {
   const vehicle = data.find((item) => item.key === id) || undefined
 
   return vehicle

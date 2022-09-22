@@ -22,7 +22,7 @@ $flexDirections: ("row", "row-reverse", "column", "column-reverse");
 $alignItems: ("stretch", "center", "flex-start", "flex-end", "baseline");
 
 @each $align in $alignItems {
-  .justify-#{$align} {
+  .align-#{$align} {
     align-items: #{$align};
   }
 }

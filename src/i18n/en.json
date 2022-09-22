@@ -42,6 +42,7 @@
   "delete_btn": "Delete",
   "import_btn": "Import",
   "export_btn": "Export",
+  "download_btn":"Download",
   "container_type": "Container type",
   "add_container_type": "Add Container type",
   "name": "Name",

@@ -20,3 +20,14 @@ export interface Vehicle {
   maxWeight?: number;
   code?: string;
 }
+
+export interface VehicleDetail {
+  key: string;
+  type: string;
+  name: string;
+  numberPlate: string;
+  maxWeight:number | null
+  code:string | null
+  industrial:boolean
+}
+

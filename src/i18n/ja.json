@@ -42,6 +42,7 @@
   "add_container_type":"新種別追加",
   "container_weight":"重量(kg)",
   "container_capacity":"容量(m3)",
+  "download_btn":"ダウンロード",
   "add_new_container_type":"風袋新規種別の追加",
   "name":"名称",
   "delete_btn": "削除",
