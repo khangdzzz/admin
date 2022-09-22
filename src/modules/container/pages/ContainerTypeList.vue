@@ -5,14 +5,12 @@
         <template #icon>
           <img
             src="@/assets/icons/ic_plus.svg"
-            :class="[containerTypeList.btnIcon]"
-          />
+            :class="[containerTypeList.btnIcon]" />
         </template>
         <router-link
           :to="{
             name: routeNames.createContainerType
-          }"
-        >
+          }">
           {{ $t("add_container_type") }}
         </router-link>
       </a-button>
@@ -23,22 +21,27 @@
       :row-selection="rowSelection"
       :columns="columns"
       :data-source="data"
-      :pagination="false"
-    >
+      :pagination="false">
       <template #bodyCell="{ column, record }">
         <template v-if="column.dataIndex === 'type'">
           <span>{{ record.type }}</span>
         </template>
         <template v-if="column.dataIndex === 'action'">
           <center>
-            <img
-              src="@/assets/icons/ic_btn_edit.svg"
-              :class="[containerTypeList.actionIcon]"
-            />
+            <router-link
+              :to="{
+                name: routeNames.editContainerType,
+                params: {
+                  id: record.key
+                }
+              }">
+              <img
+                src="@/assets/icons/ic_btn_edit.svg"
+                :class="[containerTypeList.actionIcon]" />
+            </router-link>
             <img
               src="@/assets/icons/ic_btn_delete.svg"
-              :class="[containerTypeList.actionIcon]"
-            />
+              :class="[containerTypeList.actionIcon]" />
           </center>
         </template>
       </template>
@@ -47,20 +50,17 @@
       <a-pagination
         v-model:current="currentPage"
         :total="data.length"
-        class="ant-pagination"
-      >
+        class="ant-pagination">
         <template #itemRender="{ type, originalElement }">
           <a-button
             :class="[containerTypeList.btnPagination]"
             type="primary"
             ghost
-            v-if="type === 'prev'"
-          >
+            v-if="type === 'prev'">
             <template #icon>
               <img
                 src="@/assets/icons/ic_prev.svg"
-                :class="[containerTypeList.btnIconPrev]"
-              />
+                :class="[containerTypeList.btnIconPrev]" />
               <span :class="[containerTypeList.action]">{{
                 $t("previous_btn")
               }}</span>
@@ -70,16 +70,14 @@
             :class="[containerTypeList.btnPagination]"
             type="primary"
             ghost
-            v-else-if="type === 'next'"
-          >
+            v-else-if="type === 'next'">
             <template #icon>
               <span :class="[containerTypeList.action]">{{
                 $t("next_btn")
               }}</span>
               <img
                 src="@/assets/icons/ic_next.svg"
-                :class="[containerTypeList.btnIconNext]"
-              />
+                :class="[containerTypeList.btnIconNext]" />
             </template>
           </a-button>
           <component :is="originalElement" v-else></component>

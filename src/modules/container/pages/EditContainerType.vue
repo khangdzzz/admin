@@ -1,32 +1,20 @@
 <template>
-  <div class="create-new-container-type-form">
+  <div class="edit-container-type-form">
     <a-card :bordered="false">
-      <h3 class="create-new-container-type-form__title">
-        {{ $t("add_new_container_type") }}
+      <h3 class="edit-container-type-form__title">
+        {{ $t("edit_container_type") }}
       </h3>
       <a-form :model="dynamicValidateForm" name="basic" autocomplete="off">
-        <CustomForm
-          :formData="dynamicValidateForm.formData"
-          @change="handleOnChange"
-          @onBlur="handleOnBlur"
-          @onFocus="handleOnFocus"
-        >
+        <CustomForm :formData="dynamicValidateForm.formData" @change="handleOnChange" @onBlur="handleOnBlur"
+          @onFocus="handleOnFocus">
         </CustomForm>
-        <div class="create-new-container-type-form__action">
-          <a-button
-            class="create-new-container-type-form__action--cancel"
-            :disabled="isLoading"
-            @click="redirectToContainerType"
-          >
+        <div class="edit-container-type-form__action">
+          <a-button class="edit-container-type-form__action--cancel" :disabled="isLoading"
+            @click="redirectToContainerType">
             {{ $t("btn_cancel") }}
           </a-button>
-          <a-button
-            type="primary"
-            class="create-new-container-type-form__action--submit"
-            html-type="submit"
-            :disabled="!isDisabled"
-            :loading="isLoading"
-          >
+          <a-button type="primary" class="edit-container-type-form__action--submit" html-type="submit"
+            :disabled="!isDisabled" :loading="isLoading">
             {{ $t("btn_submit") }}
           </a-button>
         </div>
@@ -40,8 +28,10 @@
 import { i18n } from "@/i18n";
 import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
-import { reactive, ref } from "vue";
-import CustomForm from "../../base/components/CustomForm.vue";
+import { service } from "@/services";
+import { onMounted, reactive, ref, watch } from "vue";
+import { useRoute } from "vue-router";
+import CustomForm from "@/modules/base/components/CustomForm.vue";
 
 //#endregion===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆
 
@@ -49,6 +39,9 @@ import CustomForm from "../../base/components/CustomForm.vue";
 //#endregion===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜Props
 
 //#===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎Variables
+const route = useRoute();
+
+const { id } = route.params;
 const isDisabled = ref<boolean>(false);
 const isLoading = ref<boolean>(false);
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -131,9 +124,19 @@ const redirectToContainerType = (): void => {
 //#endregion===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎
 
 //#===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌Hooks
+onMounted(() => {
+  fetchContainerTypeById();
+});
 //#endregion===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌
 
 //#===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊Methods
+const fetchContainerTypeById = async (): Promise<void> => {
+  const data = await service.container.getContainerTypeById(id.toString());
+  const toArrayRes = Object.values(data);
+  dynamicValidateForm.formData.forEach((item, index) => {
+    dynamicValidateForm.formData[index].value = toArrayRes[index];
+  });
+};
 //#endregion===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊
 
 //#===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏Computed
@@ -143,11 +146,14 @@ const redirectToContainerType = (): void => {
 //#endregion===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍
 
 //===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀Watchers
+watch(dynamicValidateForm, () => {
+  handleOnChange
+});
 //#endregion===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀
 </script>
 
 <style lang="scss" scoped>
-.create-new-container-type-form {
+.edit-container-type-form {
   font-family: "Roboto" !important;
   font-style: normal;
   width: 660px;
@@ -199,7 +205,7 @@ const redirectToContainerType = (): void => {
   }
 }
 
-.create-new-container-type-form__action--save.active {
+.edit-container-type-form__action--save.active {
   background: $primary;
   color: $neutral-0;
 }

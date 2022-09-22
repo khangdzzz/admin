@@ -21,6 +21,7 @@ export const routeNames = {
   createNewContainer: "CREATE_NEW_CONTAINER",
   containerType: "CONTAINER_TYPE",
   createContainerType:"CREATE_CONTAINER_TYPE",
+  editContainerType:"EDIT_CONTAINER_TYPE",
   workingPlace: "WORKING_PLACE",
   setting: "SETTING"
 };
