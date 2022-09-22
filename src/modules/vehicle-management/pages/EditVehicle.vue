@@ -3,8 +3,7 @@
     type="flex"
     justify="center"
     align="middle"
-    class="edit-vehicle-container"
-  >
+    class="edit-vehicle-container">
     <div class="edit-vehicle-content">
       <h2 class="title">{{ $t("vehicle_edit") }}</h2>
       <div class="create-form">
@@ -24,16 +23,14 @@
             :formData="dynamicValidateForm.formData"
             @change="handleOnChange"
             @onBlur="handleOnBlur"
-            @onFocus="handleOnFocus"
-          ></CustomForm>
+            @onFocus="handleOnFocus"></CustomForm>
         </a-form>
       </div>
       <a-row
         type="flex"
         justify="space-between"
         align="middle"
-        class="check-permision"
-      >
+        class="check-permision">
         <a-col :span="20">
           <h3>{{ $t("vehicle_industrial_waste") }}</h3>
         </a-col>
@@ -73,7 +70,7 @@ import { service } from "@/services";
 import { message } from "ant-design-vue";
 import { onMounted, reactive, ref, watch } from "vue";
 import { useRoute } from "vue-router";
-import { VehicleSelection } from "../models/vehicle.model";
+import { Vehicle, VehicleSelection } from "../models/vehicle.model";
 
 //#endregion
 
@@ -259,7 +256,7 @@ const fetchVehicleType = (): void => {
   }));
 };
 
-const fetchMockData = () => {
+const fetchMockData = (): void => {
   mockCollectionBase.value = service.vehicle.getMockCollectionBase();
   mockPartner.value = service.vehicle.getMockPartner();
 };
@@ -268,7 +265,7 @@ const handleValidateFields = (
   value: string,
   maxLength: number,
   isRequire: boolean
-) => {
+): boolean => {
   const valueLength = value?.length || 0;
   if (valueLength > maxLength) {
     return false;
@@ -276,7 +273,9 @@ const handleValidateFields = (
   return isRequire ? valueLength > 0 : true;
 };
 
-const handleOnChange = (): void => {};
+const handleOnChange = (): void => {
+  //Todo: need to implement for this function
+};
 const handleOnBlur = (
   value: number | boolean | Event,
   index: string | number | Event
@@ -290,11 +289,11 @@ const handleOnFocus = (index: number | boolean | Event): void => {
   dynamicValidateForm.formData[index].isFocus = true;
 };
 
-const onCancel = () => {
+const onCancel = (): void => {
   router.push({ name: routeNames.vehicle });
 };
 const onCreate = async (): Promise<void> => {
-  const vehicleInfo = {
+  const vehicleInfo: Vehicle = {
     id: id.toString(),
     vehicleType: dynamicValidateForm.formData[0].value,
     vehicleName: dynamicValidateForm.formData[1].value,

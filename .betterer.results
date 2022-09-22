@@ -3,12 +3,3 @@
 // If this file contains merge conflicts, use `betterer merge` to automatically resolve them:
 // https://phenomnomnominal.github.io/betterer/docs/results-file/#merge
 //
-exports[`Better Code Quality !`] = {
-  value: `{
-    "src/modules/vehicle-management/pages/EditVehicle.vue:643988388": [
-      [261, 22, 5, "Missing return type on function.", "104251143"],
-      [266, 29, 65, "Missing return type on function.", "3418109083"],
-      [292, 17, 5, "Missing return type on function.", "104251143"]
-    ]
-  }`
-};

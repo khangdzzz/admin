@@ -7,20 +7,15 @@ export interface VehicleSelection {
   value: string | number;
   label: string;
 }
-export interface VehicleType {
-  id: number | string;
-  key: number;
-  name: string;
-}
 export interface Vehicle {
   id: string | undefined;
-  ownerId: string | undefined;
+  ownerId?: string;
   vehicleType: number | string;
   vehicleName: string;
   vehiclePlate: string;
   maxWeight?: number;
   code?: string;
-  isHasPermission: boolean;
+  isHasPermission?: boolean;
 }
 
 export interface VehicleDetail {
@@ -28,8 +23,7 @@ export interface VehicleDetail {
   type: string;
   name: string;
   numberPlate: string;
-  maxWeight:number | null
-  code:string | null
-  industrial:boolean
+  maxWeight: number | null;
+  code: string | null;
+  industrial: boolean;
 }
-

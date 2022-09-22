@@ -74,7 +74,6 @@
 import { i18n } from "@/i18n";
 import CustomForm from "@/modules/base/components/CustomForm.vue";
 import { service } from "@/services";
-import { message } from "ant-design-vue";
 import { inject, onMounted, reactive, ref, watch } from "vue";
 import { VehicleSelection } from "../models/vehicle.model";
 import { router } from "@/routes";
@@ -87,6 +86,7 @@ import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 
 //#region variables
 const messenger: (title: string, message: string, type: MessengerType) => void =
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   inject("messenger")!;
 const vehicleTypes = ref<VehicleSelection[]>([]);
 const isValidated = ref<boolean>(false);
@@ -271,7 +271,9 @@ const handleValidateFields = (
   return isRequire ? valueLength > 0 : true;
 };
 
-const handleOnChange = (): void => {};
+const handleOnChange = (): void => {
+  //Todo: Need to implement for this function
+};
 const handleOnBlur = (
   value: number | boolean | Event,
   index: string | number | Event

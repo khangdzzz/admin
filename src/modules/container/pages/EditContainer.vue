@@ -51,13 +51,13 @@
 //#region import
 import { i18n } from "@/i18n";
 import CustomForm from "@/modules/base/components/CustomForm.vue";
+import { router } from "@/routes";
+import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
 import { message } from "ant-design-vue";
 import { onMounted, reactive, ref, watch } from "vue";
-import { ContainerSelection } from "../models/container.model";
-import { router } from "@/routes";
-import { routeNames } from "@/routes/route-names";
 import { useRoute } from "vue-router";
+import { ContainerSelection } from "../models/container.model";
 
 const route = useRoute();
 
@@ -165,7 +165,7 @@ onMounted(() => {
 const fetchContainerType = (): void => {
   const res = service.container.getContainerTypes();
   containerTypes.value = res.map((item) => ({
-    value: item.id,
+    value: item.id || "",
     label: item.name
   }));
 };
@@ -187,7 +187,7 @@ const handleValidateFields = (
   value: string,
   maxLength: number,
   isRequire: boolean
-) => {
+): boolean => {
   const valueLength = value?.length || 0;
   if (valueLength > maxLength) {
     return false;

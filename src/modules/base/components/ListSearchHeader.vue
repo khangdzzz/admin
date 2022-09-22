@@ -22,9 +22,8 @@
 
 <script setup lang="ts">
 //#region import
-//#endregion
-
 import { ref } from "vue";
+//#endregion
 
 //#region props
 defineProps({

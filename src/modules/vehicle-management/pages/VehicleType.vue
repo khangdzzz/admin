@@ -1,7 +1,7 @@
 <template>
   <ListSearchHeader :title="$t('vehicle_type')">
     <template #action>
-      <a-button class="btn" type="primary" ghost v-if="selectedRowKeys.length > 0">
+      <a-button class="btn" type="primary" ghost v-if="selectedKeys.length > 0">
         <template #icon>
           <img src="@/assets/icons/ic_delete.svg" class="btn-icon" />
         </template>
@@ -16,16 +16,31 @@
     </template>
   </ListSearchHeader>
   <div class="table-container">
-    <a-table :row-selection="{
-      selectedRowKeys: selectedRowKeys,
-      onChange: onSelectChange
-    }" :columns="columns" :data-source="data">
+    <a-table
+      :row-selection="rowSelection"
+      :columns="columns"
+      :data-source="data"
+      :pagination="false">
+      <template #headerCell="{ column }">
+        <template v-if="column.key === 'index'">
+          <span>{{ $t(column.title) }}</span>
+        </template>
+        <template v-if="column.key === 'name'">
+          <div @click="softName">
+            <span>{{ $t(column.title) }}</span>
+            <SortView class="mx-12" :sort="sort" />
+          </div>
+        </template>
+      </template>
       <template #bodyCell="{ column, record, index }">
         <template v-if="column.key === 'index'">
           <span>{{ index + 1 }}</span>
         </template>
         <template v-if="column.key === 'action'">
-          <img src="@/assets/icons/ic_btn_edit.svg" class="action-icon" @click="editVehicleType(record.id)" />
+          <img
+            src="@/assets/icons/ic_btn_edit.svg"
+            class="action-icon"
+            @click="editVehicleType(record.id)" />
           <img src="@/assets/icons/ic_btn_delete.svg" class="action-icon" />
         </template>
       </template>
@@ -35,29 +50,31 @@
 
 <script setup lang="ts">
 //#region import
-import { i18n } from "@/i18n";
 import ListSearchHeader from "@/modules/base/components/ListSearchHeader.vue";
+import SortView from "@/modules/common/components/SortView.vue";
+import { Sort } from "@/modules/common/models/sort.enum";
 import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
+import { TableProps } from "ant-design-vue";
+import { Key } from "ant-design-vue/lib/table/interface";
 import { onMounted, ref } from "vue";
-import { VehicleType } from "../models/vehicle.model";
+import { VehicleTypeModel } from "../models";
 
 //#endregion
 
 //#region props
 //#endregion
-type Key = string | number;
 //#region variables
 const columns = [
   {
-    title: i18n.global.t("vehicle_column_no"),
+    title: "vehicle_column_no",
     dataIndex: "index",
     key: "index",
     width: "5%"
   },
   {
-    title: i18n.global.t("vehicle_column_name"),
+    title: "vehicle_column_name",
     dataIndex: "name",
     key: "name"
   },
@@ -65,33 +82,63 @@ const columns = [
     title: "",
     dataIndex: "action",
     key: "action",
-    width: "8%"
+    width: "120px"
   }
 ];
 
 // todo: handle any here
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-
-const data = ref<VehicleType[]>([]);
-const selectedRowKeys = ref<Key[]>([]);
+let sourceData: VehicleTypeModel[] = [];
+const data = ref<VehicleTypeModel[]>([]);
+const selectedKeys = ref<VehicleTypeModel[]>([]);
+const sort = ref<Sort>(Sort.None);
 //#endregion
 
 //#region hooks
-onMounted(() => {
-  data.value = service.vehicle.getVehicleTypes();
+onMounted(async () => {
+  const result = await service.vehicleType.fetchListVehicleType(1, 10);
+  sourceData = (result?.results || []).map((item, index) => {
+    return { ...item, key: index + 1 };
+  });
+  data.value = [...sourceData];
 });
 //#endregion
 
 //#region function
-const onSelectChange = (rowSelect: Key[]): void => {
-  selectedRowKeys.value = rowSelect;
+const rowSelection: TableProps["rowSelection"] = {
+  onChange: (
+    selectedRowKeys: Key[],
+    selectedRows: VehicleTypeModel[]
+  ): void => {
+    selectedRowKeys;
+    selectedKeys.value = [...selectedRows];
+  }
 };
 const onCreate = (): void => {
   router.push({ name: routeNames.createVehicleType });
 };
 const editVehicleType = (id: string): void => {
   router.push(`edit-vehicle-type/${id}`);
-}
+};
+const softName = (): void => {
+  switch (sort.value) {
+    case Sort.Asc:
+      sort.value = Sort.Desc;
+      data.value = [...sourceData].sort((firtVehicleType, secondVehicleType) =>
+        firtVehicleType.name.localeCompare(secondVehicleType.name)
+      );
+      break;
+    case Sort.Desc:
+      sort.value = Sort.None;
+      data.value = [...sourceData];
+      break;
+    default:
+      sort.value = Sort.Asc;
+      data.value = [...sourceData].sort((firtVehicleType, secondVehicleType) =>
+        secondVehicleType.name.localeCompare(firtVehicleType.name)
+      );
+  }
+};
 //#endregion
 
 //#region computed
@@ -152,24 +199,24 @@ const editVehicleType = (id: string): void => {
     background-color: $neutral-50;
   }
 
-  .ant-table-container table>thead>tr:first-child th {
+  .ant-table-container table > thead > tr:first-child th {
     color: $text-1;
   }
 
-  .ant-table-container table>thead>tr:first-child th:first-child {
-    border-top-left-radius: 20px;
+  .ant-table-container table > thead > tr:first-child th:first-child {
+    border-top-left-radius: 10px;
   }
 
-  .ant-table-container table>thead>tr:first-child th:last-child {
-    border-top-right-radius: 20px;
+  .ant-table-container table > thead > tr:first-child th:last-child {
+    border-top-right-radius: 10px;
   }
 
-  .ant-table-container table>tbody>tr:last-child td:first-child {
-    border-bottom-left-radius: 20px;
+  .ant-table-container table > tbody > tr:last-child td:first-child {
+    border-bottom-left-radius: 10px;
   }
 
-  .ant-table-container table>tbody>tr:last-child td:last-child {
-    border-bottom-right-radius: 20px;
+  .ant-table-container table > tbody > tr:last-child td:last-child {
+    border-bottom-right-radius: 10px;
   }
 
   .ant-pagination-item-active {
@@ -186,7 +233,9 @@ const editVehicleType = (id: string): void => {
     color: $white;
   }
 
-  .ant-table-thead>tr>th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
+  .ant-table-thead
+    > tr
+    > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
     height: 0;
   }
 }

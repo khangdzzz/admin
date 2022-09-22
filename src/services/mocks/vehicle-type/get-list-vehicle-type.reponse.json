@@ -1,0 +1,71 @@
+{
+    "total": 2,
+    "current_page": 1,
+    "total_page": 1,
+    "page_size": 10,
+    "results": [
+        {
+            "created_at": "2022-09-21T16:11:20",
+            "updated_at": "2022-09-19T14:43:34",
+            "id": 1,
+            "tenant_id": 1,
+            "name": "Motobike"
+        },
+        {
+            "created_at": "2022-09-21T16:11:20",
+            "updated_at": "2022-09-19T14:43:34",
+            "id": 2,
+            "tenant_id": 1,
+            "name": "Micro"
+        },
+        {
+            "created_at": "2022-09-21T16:11:20",
+            "updated_at": "2022-09-19T14:43:34",
+            "id": 3,
+            "tenant_id": 1,
+            "name": "Sedan"
+        },
+        {
+            "created_at": "2022-09-21T16:11:20",
+            "updated_at": "2022-09-19T14:43:34",
+            "id": 4,
+            "tenant_id": 1,
+            "name": "Cuv"
+        },
+        {
+            "created_at": "2022-09-21T16:11:20",
+            "updated_at": "2022-09-19T14:43:34",
+            "id": 5,
+            "tenant_id": 1,
+            "name": "Suv"
+        },
+        {
+            "created_at": "2022-09-21T16:11:20",
+            "updated_at": "2022-09-19T14:43:34",
+            "id": 6,
+            "tenant_id": 1,
+            "name": "Van"
+        },
+        {
+            "created_at": "2022-09-21T16:11:20",
+            "updated_at": "2022-09-19T14:43:34",
+            "id": 7,
+            "tenant_id": 1,
+            "name": "Mini Truck"
+        },
+        {
+            "created_at": "2022-09-21T16:11:20",
+            "updated_at": "2022-09-19T14:43:34",
+            "id": 8,
+            "tenant_id": 1,
+            "name": "Truck"
+        },
+        {
+            "created_at": "2022-09-21T16:11:20",
+            "updated_at": "2022-09-19T14:43:34",
+            "id": 9,
+            "tenant_id": 1,
+            "name": "Big Truck"
+        }
+    ]
+}

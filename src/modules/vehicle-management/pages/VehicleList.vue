@@ -111,22 +111,23 @@
     </div>
   </div>
 
-  <VehicleDetailModal v-if="!!vehicleId" :currentVehicle="getVehicleById" @close="vehicleId = ''"/>
-  
+  <VehicleDetailModal
+    v-if="!!vehicleId"
+    :currentVehicle="getVehicleById"
+    @close="vehicleId = ''" />
 </template>
 
 <script setup lang="ts">
 //#===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆import
-import { onMounted, ref } from "vue";
-import type { TableProps, TableColumnType } from "ant-design-vue";
-import ListSearchHeader from "@/modules/base/components/ListSearchHeader.vue";
 import { i18n } from "@/i18n";
-import { service } from "@/services";
+import ListSearchHeader from "@/modules/base/components/ListSearchHeader.vue";
 import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
+import { service } from "@/services";
+import type { TableColumnType, TableProps } from "ant-design-vue";
+import { computed, onMounted, ref } from "vue";
+import { VehicleDetail } from "../models/vehicle.model";
 import VehicleDetailModal from "./VehicleDetailModal.vue";
-import { computed } from "@vue/reactivity";
-import {VehicleDetail} from "../models/vehicle.model"
 
 type Key = string | number;
 //#endregion===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆
@@ -169,12 +170,15 @@ onMounted(() => {
 //#endregion===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌
 
 //#===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊Methods
-const setVehicleId = (id: string) => (vehicleId.value = id);
+const setVehicleId = (id: string): void => {
+  vehicleId.value = id;
+};
 
 const rowSelection: TableProps["rowSelection"] = {
   onChange: (selectedRowKeys: Key[], selectedRows: VehicleDetail[]): void => {
     selectedRowKeys;
-    selectedKeys.value = [...selectedRows];
+    selectedRows;
+    // selectedKeys.value = [...selectedRows];
   }
 };
 

@@ -5,16 +5,25 @@
         {{ $t("edit_container_type") }}
       </h3>
       <a-form :model="dynamicValidateForm" name="basic" autocomplete="off">
-        <CustomForm :formData="dynamicValidateForm.formData" @change="handleOnChange" @onBlur="handleOnBlur"
+        <CustomForm
+          :formData="dynamicValidateForm.formData"
+          @change="handleOnChange"
+          @onBlur="handleOnBlur"
           @onFocus="handleOnFocus">
         </CustomForm>
         <div class="edit-container-type-form__action">
-          <a-button class="edit-container-type-form__action--cancel" :disabled="isLoading"
+          <a-button
+            class="edit-container-type-form__action--cancel"
+            :disabled="isLoading"
             @click="redirectToContainerType">
             {{ $t("btn_cancel") }}
           </a-button>
-          <a-button type="primary" class="edit-container-type-form__action--submit" html-type="submit"
-            :disabled="!isDisabled" :loading="isLoading">
+          <a-button
+            type="primary"
+            class="edit-container-type-form__action--submit"
+            html-type="submit"
+            :disabled="!isDisabled"
+            :loading="isLoading">
             {{ $t("btn_submit") }}
           </a-button>
         </div>
@@ -26,12 +35,12 @@
 <script setup lang="ts">
 //#===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆import
 import { i18n } from "@/i18n";
+import CustomForm from "@/modules/base/components/CustomForm.vue";
 import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
 import { onMounted, reactive, ref, watch } from "vue";
 import { useRoute } from "vue-router";
-import CustomForm from "@/modules/base/components/CustomForm.vue";
 
 //#endregion===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆
 
@@ -105,6 +114,8 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
   ]
 });
 const handleOnChange = (value: string, index: number): void => {
+  value;
+  index;
   isDisabled.value = dynamicValidateForm.formData[0].value.length > 0;
 };
 const handleOnBlur = (
@@ -147,7 +158,7 @@ const fetchContainerTypeById = async (): Promise<void> => {
 
 //===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀Watchers
 watch(dynamicValidateForm, () => {
-  handleOnChange
+  handleOnChange;
 });
 //#endregion===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀
 </script>
