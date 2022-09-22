@@ -6,16 +6,16 @@ import { useRoute } from "vue-router";
 import NotifyModal from "./components/NotifyModal.vue";
 document.title = import.meta.env.VITE_APP_NAME;
 const $route = useRoute();
-const layout = computed(
-  () => $route.meta.layout || undefined
-);
+const layout = computed(() => $route.meta.layout || undefined);
 </script>
 
 <template>
   <div class="app-layout-base" v-if="layout">
-    <component :is="layout" v0>
-      <router-view :key="$route.path" />
-    </component>
+    <suspense>
+      <component :is="layout" v0>
+        <router-view :key="$route.path" />
+      </component>
+    </suspense>
     <notify-modal></notify-modal>
   </div>
 </template>

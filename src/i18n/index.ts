@@ -14,7 +14,7 @@ const currentLanguage = service.localStorage.getItem(
 );
 
 export const i18n = createI18n({
-  locale: currentLanguage || "en", // default language: en: English, ja: Japanese
+  locale: currentLanguage || "ja", // default language: en: English, ja: Japanese
   fallbackLocale: "en",
   messages: translations
 });

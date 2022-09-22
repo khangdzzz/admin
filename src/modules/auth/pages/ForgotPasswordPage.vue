@@ -1,13 +1,6 @@
 <template>
-  <ForgotPasswordForm
-    v-if="activeForgotPasswordForm"
-    @handle-confirm="onHandleConfirm"
-    :is-loading="isLoading" />
-  <SetNewPasswordForm
-    v-else
-    :email="email"
-    :is-loading="isLoading"
-    @submit="onSetNewPassword"
+  <ForgotPasswordForm v-if="activeForgotPasswordForm" @handle-confirm="onHandleConfirm" :is-loading="isLoading" />
+  <SetNewPasswordForm v-else :email="email" :is-loading="isLoading" @submit="onSetNewPassword"
     @resend="onHandleConfirm(email)" />
 </template>
 
@@ -26,12 +19,12 @@ import { CognitoUser, CognitoUserPool } from "amazon-cognito-identity-js";
 //#endregion
 
 //#region variables
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const messenger: (
   title: string,
   message: string,
   type: MessengerType,
   callback: (() => void) | undefined
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 ) => void = inject("messenger")!;
 const poolData = {
   UserPoolId: import.meta.env.VITE_COGNITO_USER_POOL_ID,
@@ -113,4 +106,6 @@ const onSetNewPassword = (data: { code: string; password: string }): void => {
 //#endregion
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+
+</style>

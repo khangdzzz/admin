@@ -1,18 +1,30 @@
-import { AuthModel } from "@/modules/auth/models";
+import { UserInfo } from "@/modules/auth/models";
 import { commonStore } from "@/stores/common.store";
-import { transformRequest } from "./base.service";
+import UserInfomationDto from "./dtos/auth/user-information.dto";
+import * as mockGetMe from "./mocks/auth/get-me.response.json";
 
-export async function login(
-  userInfo: AuthModel
-): Promise<string | undefined | unknown> {
-  const { username, password } = userInfo;
-  const [error, res] = await transformRequest({
-    url: "auth-admin/login",
-    method: "post",
-    data: { username, password }
-  });
-  if (error) return undefined;
-  return res;
+export async function getCurrentUserInformation(): Promise<
+  UserInfo | undefined
+> {
+  // const [error, res] = await transformRequest<UserInfomationDto>({
+  //   url: "auth/me",
+  //   method: "post"
+  // });
+  // if (error || !res) {
+  //   return undefined;
+  // }
+  const res: UserInfomationDto = mockGetMe;
+  const { id, email, full_name: fullName, tenant_id: tenantId } = res;
+
+  const userInfo = {
+    id,
+    email,
+    fullName,
+    tenantId
+  };
+  const userStore = commonStore();
+  userStore.user = userInfo;
+  return userInfo;
 }
 
 export function logout(): void {

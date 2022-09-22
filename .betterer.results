@@ -5,8 +5,7 @@
 //
 exports[`Better Code Quality !`] = {
   value: `{
-    "src/modules/vehicle-management/pages/EditVehicle.vue:1419373456": [
-      [72, 27, 7, "\'Vehicle\' is defined but never used.", "772552445"],
+    "src/modules/vehicle-management/pages/EditVehicle.vue:643988388": [
       [261, 22, 5, "Missing return type on function.", "104251143"],
       [266, 29, 65, "Missing return type on function.", "3418109083"],
       [292, 17, 5, "Missing return type on function.", "104251143"]
