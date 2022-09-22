@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
-import { loginGuard } from "./guards/login-guard";
+import { loginGuard } from "./guards/login.guard";
 import { requireLoginGuard } from "./guards/require-login.guard";
 import { routeNames } from "./route-names";
 import { ScreenLayout } from "./screen-layouts";

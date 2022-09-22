@@ -6,13 +6,24 @@
       </a-row>
       <a-row class="login-input" type="flex" justify="center" align="middle">
         <a-col>
-          <a-form :model="dynamicValidateForm" name="basic" autocomplete="off" @finish="onFinish"
+          <a-form
+            :model="dynamicValidateForm"
+            name="basic"
+            autocomplete="off"
+            @finish="onFinish"
             @finishFailed="onFinishFailed">
-            <CustomForm :formData="dynamicValidateForm.formData" @change="handleOnChange" @onBlur="handleOnBlur"
+            <CustomForm
+              :formData="dynamicValidateForm.formData"
+              @change="handleOnChange"
+              @onBlur="handleOnBlur"
               @onFocus="handleOnFocus">
             </CustomForm>
             <a-form-item>
-              <a-button type="primary" html-type="submit" class="btn-login" :disabled="!isValidated"
+              <a-button
+                type="primary"
+                html-type="submit"
+                class="btn-login"
+                :disabled="!isValidated"
                 :loading="isLoading">
                 {{ $t("login_btn_submit") }}
               </a-button>
@@ -20,7 +31,7 @@
           </a-form>
         </a-col>
         <span @click="redirectToForgotPasswordPage" class="forgot-password">{{
-        $t("login_forgot_password")
+          $t("login_forgot_password")
         }}</span>
       </a-row>
     </a-col>
@@ -52,8 +63,9 @@ import CustomForm from "../../base/components/CustomForm.vue";
 //#endregion
 
 //#region variables
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-const messenger: (title: string, message: string, type: MessengerType) => void = inject("messenger")!;
+const messenger: (title: string, message: string, type: MessengerType) => void =
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  inject("messenger")!;
 const isValidated = ref<boolean>(false);
 const isLoading = ref<boolean>(false);
 
@@ -151,17 +163,27 @@ const handleLogin = async (): Promise<void> => {
     onSuccess: (rs) => {
       isLoading.value = false;
       service.localStorage.setAccessToken(rs.getAccessToken().getJwtToken());
-      router.push({ name: routeNames.collectionBusiness });
+      onLoginSuccessfully();
     },
     onFailure: (err) => {
       err;
       isLoading.value = false;
-      messenger('login_fail_to_login', 'login_confirm_account', MessengerType.Error);
+      messenger(
+        "login_fail_to_login",
+        "login_confirm_account",
+        MessengerType.Error
+      );
     }
   });
 };
 const redirectToForgotPasswordPage = (): void => {
   router.push({ name: routeNames.forgotPassword });
+};
+const onLoginSuccessfully = async (): Promise<void> => {
+  const userInfo = await service.auth.getCurrentUserInformation();
+  if (userInfo) {
+    router.push({ name: routeNames.collectionBusiness });
+  }
 };
 //#endregion
 

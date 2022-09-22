@@ -1,2 +1,3 @@
-import { AuthModel } from './auth.model'
-export type { AuthModel }
+import { AuthModel } from "./auth.model";
+import { UserInfo } from "./user-info.model";
+export type { AuthModel, UserInfo };

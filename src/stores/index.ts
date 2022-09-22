@@ -1,3 +1,3 @@
-import * as commonStore from './common.store'
+import { commonStore } from "./common.store";
 
-export { commonStore }
+export { commonStore };
