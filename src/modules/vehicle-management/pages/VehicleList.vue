@@ -4,13 +4,11 @@
       <a-button
         :class="[vehicleList.btn]"
         type="primary"
-        v-if="selectedKeys.length > 0"
-      >
+        v-if="selectedKeys.length > 0">
         <template #icon>
           <img
             src="@/assets/icons/ic_delete.svg"
-            :class="[vehicleList.btnIcon]"
-          />
+            :class="[vehicleList.btnIcon]" />
         </template>
         {{ $t("delete_btn") }}
       </a-button>
@@ -18,8 +16,7 @@
         <template #icon>
           <img
             src="@/assets/icons/ic_import.svg"
-            :class="[vehicleList.btnIcon]"
-          />
+            :class="[vehicleList.btnIcon]" />
         </template>
         {{ $t("import_btn") }}
       </a-button>
@@ -27,21 +24,18 @@
         <template #icon>
           <img
             src="@/assets/icons/ic_export.svg"
-            :class="[vehicleList.btnIcon]"
-          />
+            :class="[vehicleList.btnIcon]" />
         </template>
         {{ $t("export_btn") }}
       </a-button>
       <a-button
         type="primary"
         :class="[vehicleList.btnAddNew]"
-        @click="onCreate"
-      >
+        @click="onCreate">
         <template #icon>
           <img
             src="@/assets/icons/ic_plus.svg"
-            :class="[vehicleList.btnIcon]"
-          />
+            :class="[vehicleList.btnIcon]" />
         </template>
         {{ $t("add_new_type_btn") }}
       </a-button>
@@ -52,8 +46,7 @@
       :row-selection="rowSelection"
       :columns="columns"
       :data-source="data"
-      :pagination="false"
-    >
+      :pagination="false">
       <template #bodyCell="{ column, record }">
         <template v-if="column.dataIndex === 'type'">
           <span>{{ record.type }}</span>
@@ -63,21 +56,18 @@
             :to="{
               name: routeNames.editVehicle,
               params: { id: record.key }
-            }"
-          >
+            }">
             <img
               src="@/assets/icons/ic_btn_edit.svg"
-              :class="[vehicleList.actionIcon]"
-            />
+              :class="[vehicleList.actionIcon]" />
           </router-link>
           <img
             src="@/assets/icons/ic_btn_delete.svg"
-            :class="[vehicleList.actionIcon]"
-          />
+            :class="[vehicleList.actionIcon]" />
           <img
             src="@/assets/icons/ic_btn_qrcode.svg"
             :class="[vehicleList.actionIcon]"
-          />
+            @click="setVehicleId(record.key)" />
         </template>
       </template>
     </a-table>
@@ -85,20 +75,17 @@
       <a-pagination
         v-model:current="currentPage"
         :total="data.length"
-        class="ant-pagination"
-      >
+        class="ant-pagination">
         <template #itemRender="{ type, originalElement }">
           <a-button
             :class="[vehicleList.btnPagination]"
             type="primary"
             ghost
-            v-if="type === 'prev'"
-          >
+            v-if="type === 'prev'">
             <template #icon>
               <img
                 src="@/assets/icons/ic_prev.svg"
-                :class="[vehicleList.btnIconPrev]"
-              />
+                :class="[vehicleList.btnIconPrev]" />
               <span :class="[vehicleList.action]">Previous</span>
             </template>
           </a-button>
@@ -106,14 +93,12 @@
             :class="[vehicleList.btnPagination]"
             type="primary"
             ghost
-            v-else-if="type === 'next'"
-          >
+            v-else-if="type === 'next'">
             <template #icon>
               <span :class="[vehicleList.action]">Next</span>
               <img
                 src="@/assets/icons/ic_next.svg"
-                :class="[vehicleList.btnIconNext]"
-              />
+                :class="[vehicleList.btnIconNext]" />
             </template>
           </a-button>
           <component :is="originalElement" v-else></component>
@@ -125,6 +110,9 @@
       </a-pagination>
     </div>
   </div>
+
+  <VehicleDetailModal v-if="!!vehicleId" :currentVehicle="getVehicleById" @close="vehicleId = ''"/>
+  
 </template>
 
 <script setup lang="ts">
@@ -136,13 +124,10 @@ import { i18n } from "@/i18n";
 import { service } from "@/services";
 import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
+import VehicleDetailModal from "./VehicleDetailModal.vue";
+import { computed } from "@vue/reactivity";
+import {VehicleDetail} from "../models/vehicle.model"
 
-interface DataType {
-  key: string;
-  type: string;
-  name: string;
-  numberPlate: string;
-}
 type Key = string | number;
 //#endregion===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆
 
@@ -150,11 +135,13 @@ type Key = string | number;
 //#endregion===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜Props
 
 //#===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎Variables
-const selectedKeys = ref<DataType[]>([]);
+const selectedKeys = ref<VehicleDetail[]>([]);
 
 const currentPage = ref<number>(1);
 
-const columns: TableColumnType<DataType>[] = [
+const vehicleId = ref<string | undefined>(undefined);
+
+const columns: TableColumnType<VehicleDetail>[] = [
   {
     title: i18n.global.t("vehicle_type"),
     dataIndex: "type"
@@ -172,7 +159,7 @@ const columns: TableColumnType<DataType>[] = [
     width: "20%"
   }
 ];
-const data = ref<DataType[]>([]);
+const data = ref<VehicleDetail[]>([]);
 //#endregion===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎
 
 //#===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌Hooks
@@ -182,8 +169,10 @@ onMounted(() => {
 //#endregion===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌
 
 //#===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊Methods
+const setVehicleId = (id: string) => (vehicleId.value = id);
+
 const rowSelection: TableProps["rowSelection"] = {
-  onChange: (selectedRowKeys: Key[], selectedRows: DataType[]): void => {
+  onChange: (selectedRowKeys: Key[], selectedRows: VehicleDetail[]): void => {
     selectedRowKeys;
     selectedKeys.value = [...selectedRows];
   }
@@ -197,9 +186,13 @@ const fetchVehicleList = (): void => {
 const onCreate = (): void => {
   router.push({ name: routeNames.createVehicle });
 };
+
 //#endregion===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊
 
 //#===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏Computed
+const getVehicleById = computed(() =>
+  data.value.find((vehicle) => vehicle.key === vehicleId.value)
+);
 //#endregion===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏
 
 //#===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍Emits
@@ -226,6 +219,7 @@ const onCreate = (): void => {
 
   .actionIcon {
     margin-left: 20px;
+    cursor: pointer;
   }
 
   .ant-table-cell {
