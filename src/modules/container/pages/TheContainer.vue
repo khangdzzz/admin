@@ -32,12 +32,14 @@
       }"
       :columns="columns"
       :data-source="data">
-      <template #bodyCell="{ column, index }">
+      <template #bodyCell="{ column, record, index }">
         <template v-if="column.key === 'index'">
           <span>{{ index + 1 }}</span>
         </template>
         <template v-if="column.key === 'action'">
-          <img src="@/assets/icons/ic_btn_edit.svg" class="action-icon" />
+          <a @click="onEditContainer(record.key)">
+            <img src="@/assets/icons/ic_btn_edit.svg" class="action-icon" />
+          </a>
           <img src="@/assets/icons/ic_btn_delete.svg" class="action-icon" />
           <img src="@/assets/icons/ic_btn_qrcode.svg" class="action-icon" />
         </template>
@@ -50,9 +52,9 @@
 //#region import
 import { i18n } from "@/i18n";
 import ListSearchHeader from "@/modules/base/components/ListSearchHeader.vue";
-import { Container } from "@/modules/container/models/index";
 import { routeNames, router } from "@/routes";
 import { ref } from "vue";
+import { Container } from "@/modules/container/models";
 type Key = string | number;
 
 //#endregion
@@ -104,6 +106,9 @@ const onSelectChange = (rowSelect: Key[]): void => {
 
 const handleAddContainer = (): void => {
   router.push({ name: routeNames.createNewContainer });
+};
+const onEditContainer = (id: string): void => {
+  router.push({ name: routeNames.editContainer, params: { id: id } });
 };
 //#endregion
 
