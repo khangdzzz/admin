@@ -6,8 +6,7 @@
     class="custom-modal"
     centered
     :footer="null"
-    :maskClosable="false"
-  >
+    :maskClosable="false">
     <div class="modal-content">
       <img :src="modalIcon" class="modal-icon" />
       <h3 class="modal-title">{{ $t(modalTitle) }}</h3>
@@ -105,6 +104,7 @@ const onOKClick = (): void => {
     font-size: 18px;
     line-height: 22px;
     text-align: center;
+    color: $neutral-600;
   }
 
   .modal-message {

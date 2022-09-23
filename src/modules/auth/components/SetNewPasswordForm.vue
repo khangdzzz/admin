@@ -5,100 +5,146 @@
     </h3>
 
     <a-form :model="formState" class="new-password-form">
-      <a-form-item class="field-code" name="code" :rules="[
-        {
-          required: true,
-          message: $t('forgot_password_msg_err_code_required'),
-          trigger: ['change', 'blur']
-        },
-        {
-          validator: validator.validateCode,
-          trigger: ['change', 'blur']
-        }
-      ]">
+      <a-form-item
+        class="field-code"
+        name="code"
+        :rules="[
+          {
+            required: true,
+            message: $t('forgot_password_msg_err_code_required'),
+            trigger: ['change', 'blur']
+          },
+          {
+            validator: validator.validateCode,
+            trigger: ['change', 'blur']
+          }
+        ]">
         <p class="set-password-form__input-code-description">
           {{ $t("forgot_password_text_input_code_description") }}
         </p>
-        <a-input :maxlength="6" class="set-password-form__input-code" v-model:value="formState.code"
+        <a-input
+          :maxlength="6"
+          @keypress="NumbersOnly"
+          class="set-password-form__input-code"
+          v-model:value="formState.code"
           :placeholder="$t('forgot_password_text_enter_code')">
         </a-input>
       </a-form-item>
-      <a-button type="text" :disabled="!activeResendCode" class="wrap-countdown" @click="resendCode"
-        :class="activeResendCode" href="#">
+      <a-button
+        type="text"
+        :disabled="!activeResendCode"
+        class="wrap-countdown"
+        @click="resendCode"
+        :class="activeResendCode"
+        href="#">
         <a-row>
-          <span class="set-password-form__input-code-resend-code">{{ $t("forgot_password_resend_code") }} (
+          <span class="set-password-form__input-code-resend-code"
+            >{{ $t("forgot_password_resend_code") }} (
           </span>
-          <a-statistic-countdown class="set-password-form__input-code-countdown" :value="deadline.time" format="mm:ss"
+          <a-statistic-countdown
+            class="set-password-form__input-code-countdown"
+            :value="deadline.time"
+            format="mm:ss"
             @finish="onFinishCountdown" />
           <span class="set-password-form__input-code-resend-code">)</span>
         </a-row>
       </a-button>
-      <a-form-item name="password" :rules="[
-        {
-          required: true,
-          message: $t('forgot_password_msg_err_password_required'),
-          trigger: ['change', 'blur']
-        },
-        {
-          validator: validator.validatePassword,
-          trigger: ['change', 'blur']
-        }
-      ]">
-        <a-input-password v-model:value="formState.password" class="set-password-form__input-password"
-          :class="setColorIconInputPassword" @focus="onFocusInputPassword" @blur="onBlurInputPassword"><template
-            #prefix>
-            <IcPass class="form-icon form-icon-prefix" :color="setColorIconInputPassword ? '#07A0B8' : '#999999'">
+      <a-form-item
+        name="password"
+        :rules="[
+          {
+            required: true,
+            message: $t('forgot_password_msg_err_password_required'),
+            trigger: ['change', 'blur']
+          },
+          {
+            validator: validator.validatePassword,
+            trigger: ['change', 'blur']
+          }
+        ]">
+        <a-input-password
+          v-model:value="formState.password"
+          class="set-password-form__input-password"
+          :class="setColorIconInputPassword"
+          @focus="onFocusInputPassword"
+          @blur="onBlurInputPassword"
+          ><template #prefix>
+            <IcPass
+              class="form-icon form-icon-prefix"
+              :color="setColorIconInputPassword ? '#07A0B8' : '#999999'">
             </IcPass>
           </template>
         </a-input-password>
-        <label :class="['label', isFocusPassword && 'as-label', 'has-icon']">{{
-        isFocusPassword
-        ? $t("forgot_password_new_password")
-        : $t("forgot_password_enter_new_pass")
-        }}
+        <label :class="['label', isFocusPassword && 'as-label', 'has-icon']"
+          >{{
+            isFocusPassword
+              ? $t("forgot_password_new_password")
+              : $t("forgot_password_enter_new_pass")
+          }}
         </label>
       </a-form-item>
-      <a-form-item name="confirmPassword" :rules="[
-        {
-          required: true,
-          message: $t('forgot_password_msg_err_confirm_password_required'),
-          trigger: ['change', 'blur']
-        },
-        {
-          validator: validator.validatePassword,
-          trigger: ['change', 'blur']
-        },
-        {
-          validator: validateConfirmPass,
-          trigger: ['blur']
-        }
-      ]">
-        <a-input-password v-model:value="formState.confirmPassword" class="set-password-form__input-confirm-password"
-          :class="setColorIconInputConfirmPassword" @focus="onFocusInputConfirmPassword"
-          @blur="onBlurInputConfirmPassword"><template #prefix>
-            <IcPass class="form-icon form-icon-prefix"
-              :color="setColorIconInputConfirmPassword ? '#07A0B8' : '#999999'"></IcPass>
+      <a-form-item
+        name="confirmPassword"
+        :rules="[
+          {
+            required: true,
+            message: $t('forgot_password_msg_err_confirm_password_required'),
+            trigger: ['change', 'blur']
+          },
+          {
+            validator: validator.validatePassword,
+            trigger: ['change', 'blur']
+          },
+          {
+            validator: validateConfirmPass,
+            trigger: ['change', 'blur']
+          }
+        ]">
+        <a-input-password
+          v-model:value="formState.confirmPassword"
+          class="set-password-form__input-confirm-password"
+          :class="setColorIconInputConfirmPassword"
+          @focus="onFocusInputConfirmPassword"
+          @blur="onBlurInputConfirmPassword"
+          ><template #prefix>
+            <IcPass
+              class="form-icon form-icon-prefix"
+              :color="
+                setColorIconInputConfirmPassword ? '#07A0B8' : '#999999'
+              "></IcPass>
           </template>
         </a-input-password>
-        <label :class="['label', isFocusConfirmPassword && 'as-label', , 'has-icon']">{{
-        isFocusConfirmPassword
-        ? $t("forgot_password_confirm_new_password")
-        : $t("forgot_password_enter_new_confirm_pass")
-        }}
+        <label
+          :class="['label', isFocusConfirmPassword && 'as-label', , 'has-icon']"
+          >{{
+            isFocusConfirmPassword
+              ? $t("forgot_password_confirm_new_password")
+              : $t("forgot_password_enter_new_confirm_pass")
+          }}
         </label>
       </a-form-item>
       <div class="set-password-form__action-wrap">
-        <a-button class="set-password-form__action-wrap--cancel" :disabled="isLoading" @click="redirectToLogin">{{
-        $t("forgot_password_btn_cancel") }}</a-button>
-        <a-button :disabled="!activeSaveButtonStyle" :class="[
-          'set-password-form__action-wrap--save',
-          activeSaveButtonStyle
-        ]" :loading="isLoading" @click="
-          $emit('submit', {
-            code: formState.code,
-            password: formState.password
-          })
-        ">{{ $t("forgot_password_btn_save") }}</a-button>
+        <a-button
+          class="set-password-form__action-wrap--cancel"
+          :disabled="isLoading"
+          @click="redirectToLogin"
+          >{{ $t("forgot_password_btn_cancel") }}</a-button
+        >
+        <a-button
+          :disabled="!activeSaveButtonStyle"
+          :class="[
+            'set-password-form__action-wrap--save',
+            activeSaveButtonStyle
+          ]"
+          :loading="isLoading"
+          @click="
+            $emit('submit', {
+              code: formState.code,
+              password: formState.password
+            })
+          "
+          >{{ $t("forgot_password_btn_save") }}</a-button
+        >
       </div>
     </a-form>
   </div>
@@ -158,7 +204,21 @@ const isFocusConfirmPassword = ref<boolean>(false);
 //#region hooks
 //#endregion
 //#region function
-const validateConfirmPass = async (_rule: Rule, value: string): void => {
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const NumbersOnly = (evt: any): void | boolean => {
+  evt = evt ? evt : window.event;
+  let charCode = evt.which ? evt.which : evt.keyCode;
+  if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode !== 46) {
+    evt.preventDefault();
+  } else {
+    return true;
+  }
+};
+const validateConfirmPass = async (
+  _rule: Rule,
+  value: string
+): Promise<void> => {
   if (value !== formState.password) {
     return Promise.reject(
       i18n.global.t("forgot_password_msg_err_password_not_match")
@@ -315,13 +375,14 @@ const setColorIconInputConfirmPassword = computed((): string => {
     font-weight: normal;
     position: absolute;
     pointer-events: none;
-    left: 46px;
-    top: 20px;
+    left: 12px;
+    top: 22px;
     transition: 0.2s ease all;
-    font-size: 16px;
     z-index: 1000;
     color: #999999;
+    font-weight: 400;
     font-size: 16px !important;
+    line-height: 100%;
   }
 
   .as-label {
@@ -360,6 +421,12 @@ const setColorIconInputConfirmPassword = computed((): string => {
     line-height: 100%;
     font-weight: 400;
     color: $neutral-800;
+  }
+  .ant-input:not(.set-password-form__input-code) {
+    padding: 20px 0px 0px 0px !important;
+    height: 50px;
+    position: relative !important;
+    top: 0px !important;
   }
 
   .ant-form-item {
@@ -431,18 +498,22 @@ const setColorIconInputConfirmPassword = computed((): string => {
   .wrap-countdown.ant-btn[disabled] {
     background-color: transparent;
   }
-
+  .ant-input-password-icon {
+    color: $neutral-400;
+  }
   .set-password-form__input-password.active .ant-input-password-icon,
   .set-password-form__input-confirm-password.active .ant-input-password-icon {
     color: $primary-400;
   }
 
-  .ant-input-affix-wrapper>input.ant-input {
+  .ant-input-affix-wrapper > input.ant-input {
     top: 8px;
   }
 
-  .field-code.ant-form-item-has-error :not(.ant-input-disabled):not(.ant-input-borderless).ant-input,
-  .ant-form-item-has-error :not(.ant-input-affix-wrapper-disabled):not(.ant-input-affix-wrapper-borderless).ant-input-affix-wrapper {
+  .field-code.ant-form-item-has-error
+    :not(.ant-input-disabled):not(.ant-input-borderless).ant-input,
+  .ant-form-item-has-error
+    :not(.ant-input-affix-wrapper-disabled):not(.ant-input-affix-wrapper-borderless).ant-input-affix-wrapper {
     border: 1px solid $red-500;
   }
 
@@ -454,7 +525,8 @@ const setColorIconInputConfirmPassword = computed((): string => {
     min-height: 14px;
   }
 
-  .ant-form-item-explain.ant-form-item-explain-connected .ant-form-item-explain-error {
+  .ant-form-item-explain.ant-form-item-explain-connected
+    .ant-form-item-explain-error {
     font-family: "Roboto";
     font-style: normal;
     font-weight: 400;

@@ -1,6 +1,13 @@
 <template>
-  <ForgotPasswordForm v-if="activeForgotPasswordForm" @handle-confirm="onHandleConfirm" :is-loading="isLoading" />
-  <SetNewPasswordForm v-else :email="email" :is-loading="isLoading" @submit="onSetNewPassword"
+  <ForgotPasswordForm
+    v-if="activeForgotPasswordForm"
+    @handle-confirm="onHandleConfirm"
+    :is-loading="isLoading" />
+  <SetNewPasswordForm
+    v-else
+    :email="email"
+    :is-loading="isLoading"
+    @submit="onSetNewPassword"
     @resend="onHandleConfirm(email)" />
 </template>
 
@@ -106,6 +113,4 @@ const onSetNewPassword = (data: { code: string; password: string }): void => {
 //#endregion
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>
