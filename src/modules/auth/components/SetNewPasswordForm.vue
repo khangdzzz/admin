@@ -259,11 +259,13 @@ const resendCode = (): void => {
   deadline.time = Date.now() + 1000 * import.meta.env.VITE_TIME_RESEND_CODE;
 };
 const activeSaveButton = (): void => {
-  const regexCode = /^[\S]{6,32}$/i;
+  const regexCode = /^[0-9]{6}$/i;
+  const regexPassword = /^[\S]{6,32}$/i;
+
   if (
     regexCode.test(formState.code) &&
     formState.password == formState.confirmPassword &&
-    formState.password
+    regexPassword.test(formState.password)
   ) {
     activeSaveButtonStyle.value = "active";
   } else {

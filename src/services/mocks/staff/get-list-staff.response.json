@@ -1,0 +1,41 @@
+{
+  "total": 2,
+  "current_page": 1,
+  "total_page": 1,
+  "page_size": 10,
+  "results": [
+    {
+      "created_at": "2022-09-21T16:11:20",
+      "updated_at": "2022-09-19T14:43:34",
+      "id": 1,
+      "employee_code": "xxxxxx1",
+      "email": "email1@gmail.com",
+      "name": "Name Staff 1",
+      "user_role": "User role 1",
+      "tenant": "Tenant 1",
+      "collection_base": "Collection base 1"
+    },
+    {
+      "created_at": "2022-09-21T16:11:20",
+      "updated_at": "2022-09-19T14:43:34",
+      "id": 2,
+      "employee_code": "xxxxxx2",
+      "email": "email2@gmail.com",
+      "name": "Name Staff 2",
+      "user_role": "User role 2",
+      "tenant": "Tenant 2",
+      "collection_base": "Collection base 2"
+    },
+    {
+      "created_at": "2022-09-21T16:11:20",
+      "updated_at": "2022-09-19T14:43:34",
+      "id": 3,
+      "employee_code": "xxxxxx3",
+      "email": "email3@gmail.com",
+      "name": "Name Staff 3",
+      "user_role": "User role 3",
+      "tenant": "Tenant 3",
+      "collection_base": "Collection base 3"
+    }
+  ]
+}
