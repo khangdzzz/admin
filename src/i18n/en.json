@@ -98,5 +98,8 @@
   "create_vehicle_type_edt_vehicle_name": "Name",
   "create_vehicle_type_msg_create_successfully": "Vehicle type is created successfully",
   "create_vehicle_type_msg_create_fail_title": "Create failed",
-  "create_vehicle_type_msg_create_fail_message": "Please try again later"
+  "create_vehicle_type_msg_create_fail_message": "Please try again later",
+  "vehicle_create_success": "Vehicle is created successfully",
+  "create_failed": "Create failed",
+  "please_try_again": "Please try again later"
 }

@@ -85,12 +85,27 @@ export function getVehicleTypes(): VehicleType[] {
 export async function createVehicle(
   vehicleInfo: Vehicle
 ): Promise<Vehicle | unknown> {
-  const { vehicleType, vehicleName, vehiclePlate, maxWeight, code } =
-    vehicleInfo;
+  const {
+    ownerId,
+    vehicleType,
+    vehicleName,
+    vehiclePlate,
+    maxWeight,
+    code,
+    isHasPermission
+  } = vehicleInfo;
   const [error, res] = await transformRequest({
     url: "",
     method: "post",
-    data: { vehicleType, vehicleName, vehiclePlate, maxWeight, code }
+    data: {
+      ownerId,
+      vehicleType,
+      vehicleName,
+      vehiclePlate,
+      maxWeight,
+      code,
+      isHasPermission
+    }
   });
   if (error) return undefined;
   return res;
