@@ -2,7 +2,7 @@
   <div class="language-container">
     <img :src="logoUrl" class="img-flag" @click="changeLanguage" />
     <span @click="changeLanguage" class="title-flag">{{
-    $t("current_language")
+      $t("current_language")
     }}</span>
   </div>
 </template>
@@ -41,10 +41,16 @@ const setLogoUrl = (): void => {
   currentLanguage.value = service.localStorage.getItem(
     localStorageKeys.currentLanguage
   );
-  if (currentLanguage.value === "ja") {
-    logoUrl.value = new URL("../../../assets/images/im_england_flag.png", import.meta.url).href;
+  if (currentLanguage.value === "en") {
+    logoUrl.value = new URL(
+      "../../../assets/images/im_japan_flag.png",
+      import.meta.url
+    ).href;
   } else {
-    logoUrl.value = new URL("../../../assets/images/im_japan_flag.png", import.meta.url).href;
+    logoUrl.value = new URL(
+      "../../../assets/images/im_england_flag.png",
+      import.meta.url
+    ).href;
   }
 };
 

@@ -9,15 +9,13 @@
           :formData="dynamicValidateForm.formData"
           @change="handleOnChange"
           @onBlur="handleOnBlur"
-          @onFocus="handleOnFocus"
-        >
+          @onFocus="handleOnFocus">
         </CustomForm>
         <div class="create-new-container-type-form__action">
           <a-button
             class="create-new-container-type-form__action--cancel"
             :disabled="isLoading"
-            @click="redirectToContainerType"
-          >
+            @click="redirectToContainerType">
             {{ $t("btn_cancel") }}
           </a-button>
           <a-button
@@ -25,8 +23,7 @@
             class="create-new-container-type-form__action--submit"
             html-type="submit"
             :disabled="!isDisabled"
-            :loading="isLoading"
-          >
+            :loading="isLoading">
             {{ $t("btn_submit") }}
           </a-button>
         </div>
@@ -112,6 +109,8 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
   ]
 });
 const handleOnChange = (value: string, index: number): void => {
+  value;
+  index;
   isDisabled.value = dynamicValidateForm.formData[0].value.length > 0;
 };
 const handleOnBlur = (
