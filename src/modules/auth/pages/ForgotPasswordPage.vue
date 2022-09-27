@@ -64,7 +64,14 @@ const onHandleConfirm = (value: string): void => {
       activeForgotPasswordForm.value = false;
     },
     onFailure: (err): void => {
-      err;
+      if (err.name === "LimitExceededException") {
+        messenger(
+          "forgot_password_attempt_limit_exceeded_title",
+          "forgot_password_attempt_limit_exceeded_msg",
+          MessengerType.Error,
+          undefined
+        );
+      }
       isLoading.value = false;
     }
   });

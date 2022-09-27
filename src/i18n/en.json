@@ -101,5 +101,7 @@
   "create_vehicle_type_msg_create_fail_message": "Please try again later",
   "vehicle_create_success": "Vehicle is created successfully",
   "create_failed": "Create failed",
-  "please_try_again": "Please try again later"
+  "please_try_again": "Please try again later",
+  "forgot_password_attempt_limit_exceeded_title": "Attempt limit exceeded",
+  "forgot_password_attempt_limit_exceeded_msg": "Please try again later"
 }
