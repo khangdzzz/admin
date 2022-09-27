@@ -1,62 +1,62 @@
 variables:
-    REPO_NAME: git@git.techvify.com.vn:evp/phase2/ecommit2-fe.git
+  REPO_NAME: git@git.techvify.com.vn:evp/phase2/ecommit2-fe.git
 
 stages:
-    - before_script
-    - test
-    - build_source
-    - deploy
+  - before_script
+  - test
+  - build_source
+  - deploy
 Before_Script:
-    stage: before_script
-    script:
-      - echo $CI_COMMIT_TAG
-    tags:
-      - ecommit2fe
-    variables:
-      GIT_CLONE_PATH: "$CI_BUILDS_DIR/$CI_CONCURRENT_ID/$CI_PROJECT_PATH"
-    only:
-      refs:
-        - main
+  stage: before_script
+  script:
+    - echo $CI_COMMIT_TAG
+  tags:
+    - ecommit2fe
+  variables:
+    GIT_CLONE_PATH: "$CI_BUILDS_DIR/$CI_CONCURRENT_ID/$CI_PROJECT_PATH"
+  only:
+    refs:
+      - main
 Test:
-    stage: test
-    rules:
-      - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-        when: manual
-        allow_failure: false
-    script: 
-      - echo "TESTING $USER "
-    tags:
-      - ecommit2fe
-        #    only:
-        #      refs:
-        #        - devops
+  stage: test
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+      when: manual
+      allow_failure: false
+  script:
+    - echo "TESTING $USER "
+  tags:
+    - ecommit2fe
+      #    only:
+      #      refs:
+      #        - devops
 Build:
-    stage: build_source
-    script:
-      - npm install && npm run build-only
-    artifacts:
-      paths:
-        - dist
-    tags:
-      - ecommit2fe
-    variables:
-      GIT_Build_PATH: "$CI_BUILDS_DIR/$CI_CONCURRENT_ID/$CI_PROJECT_PATH"
-    rules:
-      - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-        when: manual
-        allow_failure: false
+  stage: build_source
+  script:
+    - npm install && npm run build-only
+  artifacts:
+    paths:
+      - dist
+  tags:
+    - ecommit2fe
+  variables:
+    GIT_Build_PATH: "$CI_BUILDS_DIR/$CI_CONCURRENT_ID/$CI_PROJECT_PATH"
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+      when: manual
+      allow_failure: false
 
 Deploy:
-    stage: deploy
-    script:
-      - aws s3 rm s3://dev-ecommit.tk/assets/ --recursive
-      - aws s3 sync ./dist/ s3://dev-ecommit.tk 
-    tags:
-      - ecommit2fe
-    variables:
-      GIT_Build_PATH: "$CI_BUILDS_DIR/$CI_CONCURRENT_ID/$CI_PROJECT_PATH"
-    rules:
-      - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-        when: manual
-        allow_failure: false
-
+  stage: deploy
+  script:
+    - aws s3 rm s3://dev-ecommit.tk/assets/ --recursive
+    - aws s3 sync ./dist/ s3://dev-ecommit.tk
+    - aws cloudfront create-invalidation --distribution-id E1GNNL83EB8MTF --paths "/*"
+  tags:
+    - ecommit2fe
+  variables:
+    GIT_Build_PATH: "$CI_BUILDS_DIR/$CI_CONCURRENT_ID/$CI_PROJECT_PATH"
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+      when: manual
+      allow_failure: false

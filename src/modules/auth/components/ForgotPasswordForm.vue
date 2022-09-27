@@ -118,7 +118,7 @@ const redirectToLogin = (): void => {
 const onEmailChange = (): void => {
   const regExpEmail =
     // eslint-disable-next-line no-control-regex, no-useless-escape
-    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@([a-z]{1})((?=.*[a-z|_])(?=.*[.])(?!.*\.\.)(?!.*\_\_)(?!.*\.\_)(?!.*\_\.)(?!.*\ ).{1,61})([a-z]{1})$/;
+    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@([a-z]{1})((?=.*[a-z|_])(?=.*[.])(?!.*\.\.)(?!.*\_\_)(?!.*\.\_)(?!.*\_\.)(?!.*\s).{1,61})([a-z]{1})$/;
   emailIsChange.value = true;
   if (regExpEmail.test(formState.email)) {
     emailIsValid.value = true;
