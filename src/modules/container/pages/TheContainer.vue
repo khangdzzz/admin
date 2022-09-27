@@ -32,6 +32,18 @@
       }"
       :columns="columns"
       :data-source="data">
+      <template #headerCell="{ column }">
+        <template v-if="column.key === 'index'">
+          <span>{{ $t(column.title) }}</span>
+        </template>
+        <template
+          v-if="['containerName', 'containerType'].includes(column.key)">
+          <div>
+            <span>{{ $t(column.title) }}</span>
+            <SortView class="mx-12" :sort="sort" />
+          </div>
+        </template>
+      </template>
       <template #bodyCell="{ column, record, index }">
         <template v-if="column.key === 'index'">
           <span>{{ index + 1 }}</span>
@@ -51,10 +63,12 @@
 <script setup lang="ts">
 //#region import
 import { i18n } from "@/i18n";
+import SortView from "@/modules/common/components/SortView.vue";
 import ListSearchHeader from "@/modules/base/components/ListSearchHeader.vue";
 import { routeNames, router } from "@/routes";
 import { ref } from "vue";
 import { Container } from "@/modules/container/models";
+import { Sort } from "@/modules/common/models/sort.enum";
 type Key = string | number;
 
 //#endregion
@@ -64,6 +78,8 @@ type Key = string | number;
 //#endregion
 
 //#region variables
+const sort = ref<Sort>(Sort.None);
+
 const selectedRowKeys = ref<Key[]>([]);
 const columns = [
   {

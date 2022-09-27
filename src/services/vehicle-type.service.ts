@@ -1,4 +1,5 @@
 import { Pagination } from "@/modules/common/models";
+import { ContainerType } from "@/modules/container/models";
 import { VehicleTypeModel } from "@/modules/vehicle-management/models";
 import { PaginationDto } from "./dtos/common/pagination.dto";
 import { transformRequest } from "./base.service";
@@ -43,7 +44,7 @@ export function createVehicleType(
 export async function fetchListVehicleType(
   page: 1,
   size: 10
-): Promise<Pagination<VehicleTypeModel> | undefined> {
+): Promise<Pagination<ContainerType> | undefined> {
   page;
   size;
   // const [error, res] = await transformRequest<PaginationDto<VehicleTypeResponseDto>>({

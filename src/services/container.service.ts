@@ -1,3 +1,4 @@
+import { Pagination } from "@/modules/common/models";
 import {
   Container,
   ContainerSelection,
@@ -5,9 +6,12 @@ import {
 } from "@/modules/container/models";
 import ContainerTypeModel from "@/modules/container/models/container-type.models";
 import { transformRequest } from "./base.service";
+import { PaginationDto } from "./dtos/common/pagination.dto";
 import { CreateContainerTypeInputDto } from "./dtos/container-management/create-container-type.dto";
+import { ContainerTypeResponseDto } from "./dtos/container/create-container-type.dto";
 import { VehicleTypeResponseDto } from "./dtos/vehicle-management/create-vehicle-type.dto";
 import createContainerTypeResponse from "./mocks/container-type/create-container-type.response.json";
+import getListContainerResponse from "./mocks/container/get-list-container.reponse.json";
 
 const data: ContainerType[] = [
   {
@@ -40,8 +44,36 @@ export function getMockCollectionBase(): ContainerSelection[] {
   return res;
 }
 
-export function getListContainerType(): ContainerType[] {
-  return data;
+export async function getListContainer(
+  page: 1,
+  size: 10
+): Promise<Pagination<ContainerType> | undefined> {
+  page;
+  size;
+  const res: PaginationDto<ContainerTypeResponseDto> = getListContainerResponse;
+  if (!res) return Promise.resolve(undefined);
+  const {
+    current_page: currentPage,
+    page_size: pageSize,
+    total,
+    total_page: totalPage,
+    results
+  } = res;
+  return {
+    currentPage,
+    pageSize,
+    total,
+    totalPage,
+    results: results.map((vehicleTypeDto) => {
+      const { id, name, tenant_id: tenantId } = vehicleTypeDto;
+      return {
+        key: id,
+        id,
+        name,
+        tenantId
+      };
+    })
+  };
 }
 
 export function getContainerTypeById(
