@@ -23,7 +23,8 @@
             class="edit-container-type-form__action--submit"
             html-type="submit"
             :disabled="!isDisabled"
-            :loading="isLoading">
+            :loading="isLoading"
+            @click="handleSubmit()">
             {{ $t("btn_submit") }}
           </a-button>
         </div>
@@ -36,10 +37,12 @@
 //#===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆import
 import { i18n } from "@/i18n";
 import CustomForm from "@/modules/base/components/CustomForm.vue";
+import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
-import { onMounted, reactive, ref, watch } from "vue";
+import { commonStore } from "@/stores";
+import { inject, onMounted, reactive, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 
 //#endregion===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆
@@ -48,6 +51,15 @@ import { useRoute } from "vue-router";
 //#endregion===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜Props
 
 //#===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎Variables
+const userStore = commonStore();
+const messenger: (
+  title: string,
+  message: string,
+  type: MessengerType,
+  callback: (() => void) | undefined
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+) => void = inject("messenger")!;
+
 const route = useRoute();
 
 const { id } = route.params;
@@ -72,44 +84,6 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
           message: i18n.global.t("max_length_input", { maxLength: 50 })
         }
       ]
-    },
-    {
-      inputType: "AInput",
-      value: "",
-      placeHolder: "container_weight",
-      label: "container_weight",
-      name: "weight",
-      disabled: false,
-      rules: [
-        {
-          max: 10,
-          message: i18n.global.t("max_length_input", { maxLength: 10 })
-        },
-        {
-          pattern: /^\d*$/,
-          message: i18n.global.t("allow_input_number")
-        }
-      ],
-      required: false,
-      key: 3,
-      isFocus: false
-    },
-    {
-      inputType: "AInput",
-      value: "",
-      placeHolder: "container_capacity",
-      label: "container_capacity",
-      name: "capacity",
-      disabled: false,
-      rules: [
-        {
-          max: 50,
-          message: i18n.global.t("max_length_input", { maxLength: 50 })
-        }
-      ],
-      required: false,
-      key: 4,
-      isFocus: false
     }
   ]
 });
@@ -118,6 +92,7 @@ const handleOnChange = (value: string, index: number): void => {
   index;
   isDisabled.value = dynamicValidateForm.formData[0].value.length > 0;
 };
+
 const handleOnBlur = (
   value: number | boolean | Event,
   index: string | number | Event
@@ -143,10 +118,40 @@ onMounted(() => {
 //#===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊Methods
 const fetchContainerTypeById = async (): Promise<void> => {
   const data = await service.container.getContainerTypeById(id.toString());
-  const toArrayRes = Object.values(data);
-  dynamicValidateForm.formData.forEach((item, index) => {
-    dynamicValidateForm.formData[index].value = toArrayRes[index];
-  });
+
+  dynamicValidateForm.formData[0].value = data.name;
+};
+
+const handleSubmit = () => async (): Promise<void> => {
+  const currentContainerType = dynamicValidateForm.formData[0].value;
+  if (!userStore.user || !currentContainerType?.length) return;
+  isLoading.value = true;
+  const res = await service.container.updateContainerType(
+    userStore.user?.tenantId,
+    "Basket trolley"
+  );
+  isLoading.value = false;
+  if (res) {
+    messenger(
+      "create_container_type_msg_create_successfully",
+      "",
+      MessengerType.Success,
+      () => {
+        goToContainerTypeListPage();
+      }
+    );
+  } else {
+    messenger(
+      "create_vehicle_type_msg_create_fail_title",
+      "create_vehicle_type_msg_create_fail_message",
+      MessengerType.Error,
+      undefined
+    );
+  }
+};
+
+const goToContainerTypeListPage = (): void => {
+  router.push({ name: routeNames.containerType });
 };
 //#endregion===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊
 
@@ -157,9 +162,11 @@ const fetchContainerTypeById = async (): Promise<void> => {
 //#endregion===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍
 
 //===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀Watchers
+
 watch(dynamicValidateForm, () => {
-  handleOnChange;
+  isDisabled.value = dynamicValidateForm.formData[0].value.length > 0;
 });
+
 //#endregion===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀
 </script>
 

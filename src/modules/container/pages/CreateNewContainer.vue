@@ -22,12 +22,12 @@
           </a-radio-group>
         </div>
       </div>
-      <div>
+      <a-form :model="formData" layout="inline" class="form-create-container">
         <CustomForm
           :form-data="formData"
           @on-focus="handleOnFocus"
           @on-blur="handleOnBlur"></CustomForm>
-      </div>
+      </a-form>
       <div class="d-flex justify-center align-center gap-20">
         <a-button
           class="create-container__btn-style create-container__cancel-btn"
@@ -51,6 +51,7 @@ import { ref } from "vue";
 
 import CustomForm from "@/modules/base/components/CustomForm.vue";
 import { routeNames, router } from "@/routes";
+import { i18n } from "@/i18n";
 //#endregion
 
 //#region props
@@ -58,6 +59,7 @@ import { routeNames, router } from "@/routes";
 
 //#region variables
 const ownerType = ref<string>("collectionBase");
+
 const formData = ref([
   {
     inputType: "ASelect",
@@ -91,13 +93,57 @@ const formData = ref([
     name: "containerType",
     disabled: false,
     required: true,
-    key: 1,
+    key: 3,
     isFocus: false,
     style: {
       padding: "0px",
       width: "620px",
       border: "none"
     }
+  },
+  {
+    inputType: "AInput",
+    value: "",
+    placeHolder: "container_weight",
+    label: "container_weight",
+    name: "weight",
+    inline:true,
+    disabled: false,
+    spaceStyle:{
+      display:'inline-block',
+      width:'16px'
+    },
+    rules: [
+      {
+        max: 10,
+        message: i18n.global.t("max_length_input", { maxLength: 10 })
+      },
+      {
+        pattern: /^\d*$/,
+        message: i18n.global.t("allow_input_number")
+      }
+    ],
+    required: false,
+    key: 4,
+    isFocus: false
+  },
+  {
+    inputType: "AInput",
+    value: "",
+    placeHolder: "container_capacity",
+    label: "container_capacity",
+    name: "capacity",
+    inline:true,
+    disabled: false,
+    rules: [
+      {
+        max: 50,
+        message: i18n.global.t("max_length_input", { maxLength: 50 })
+      }
+    ],
+    required: false,
+    key: 5,
+    isFocus: false
   }
 ]);
 //#endregion
@@ -134,7 +180,6 @@ const handleCancel = (): void => {
   &__card {
     width: 100%;
     max-width: 660px;
-    height: 460px;
     border-radius: 10px;
     box-shadow: 4px 2px 8px rgba(0, 0, 0, 0.02);
     background-color: $white;
@@ -189,6 +234,25 @@ const handleCancel = (): void => {
     &__card {
       .ant-card-body {
         padding: 0;
+      }
+    }
+  }
+  .form-create-container {
+    .ant-form-item {
+      margin-right: 0px;
+      margin-bottom: 20px;
+      .ant-form-item-control {
+        .ant-form-item-control-input {
+          .ant-form-item-control-input-content {
+            .input-item {
+              padding: 0px;
+              width: 620px;
+            }
+            .inline {
+              width: 300px !important;
+            }
+          }
+        }
       }
     }
   }

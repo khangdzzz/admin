@@ -97,6 +97,7 @@
   "create_vehicle_type_lbl_page_title": "Add new vehicle type",
   "create_vehicle_type_edt_vehicle_name": "Name",
   "create_vehicle_type_msg_create_successfully": "Vehicle type is created successfully",
+  "create_container_type_msg_create_successfully": "Container type is created successfully",
   "create_vehicle_type_msg_create_fail_title": "Create failed",
   "create_vehicle_type_msg_create_fail_message": "Please try again later",
   "vehicle_create_success": "Vehicle is created successfully",
