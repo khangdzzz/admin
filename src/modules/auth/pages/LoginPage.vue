@@ -162,17 +162,16 @@ const handleLogin = async (): Promise<void> => {
   cognitoUser.authenticateUser(authenticationDetails, {
     onSuccess: (rs) => {
       isLoading.value = false;
-      service.localStorage.setAccessToken(rs.getAccessToken().getJwtToken());
+      service.localStorage.setAccessToken(rs.getIdToken().getJwtToken());
       onLoginSuccessfully();
     },
     onFailure: (err) => {
-      err;
       isLoading.value = false;
-      messenger(
-        "login_fail_to_login",
-        "login_confirm_account",
-        MessengerType.Error
-      );
+      const errMessage =
+        err.name === "NotAuthorizedException"
+          ? "login_confirm_account"
+          : "login_fail_to_login_try_again_message";
+      messenger("login_fail_to_login", errMessage, MessengerType.Error);
     }
   });
 };
