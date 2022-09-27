@@ -64,13 +64,14 @@ export async function fetchListVehicleType(
     pageSize,
     total,
     totalPage,
-    results: results.map((vehicleTypeDto) => {
-      const { id, name, tenant_id: tenantId } = vehicleTypeDto;
-      return {
-        id,
-        name,
-        tenantId
-      };
-    })
+    results: []
+    // results.map((vehicleTypeDto) => {
+    //   const { id, name, tenant_id: tenantId } = vehicleTypeDto;
+    //   return {
+    //     id,
+    //     name,
+    //     tenantId
+    //   };
+    // })
   };
 }

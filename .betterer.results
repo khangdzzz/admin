@@ -3,3 +3,13 @@
 // If this file contains merge conflicts, use `betterer merge` to automatically resolve them:
 // https://phenomnomnominal.github.io/betterer/docs/results-file/#merge
 //
+exports[`Better Code Quality !`] = {
+  value: `{
+    "src/modules/container/pages/ContainerTypeList.vue:3530351921": [
+      [142, 8, 3, "\'res\' is assigned a value but never used.", "193432417"]
+    ],
+    "src/services/vehicle-type.service.ts:2889563027": [
+      [59, 4, 7, "\'results\' is assigned a value but never used.", "1366156959"]
+    ]
+  }`
+};

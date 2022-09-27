@@ -5,7 +5,7 @@ const validator = {
   validateEmail: (rule: Rule, value: string): Promise<void> => {
     const regExpEmail =
       // eslint-disable-next-line no-control-regex, no-useless-escape
-      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@([a-z]{1})((?=.*[a-z|_])(?=.*[.])(?!.*\.\.)(?!.*\_\_)(?!.*\.\_)(?!.*\_\.).{1,61})([a-z]{1})$/;
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@([a-z]{1})((?=.*[a-z|_])(?=.*[.])(?!.*\.\.)(?!.*\_\_)(?!.*\.\_)(?!.*\_\.)(?!.*\ ).{1,61})([a-z]{1})$/;
 
     if (value && !regExpEmail.test(value)) {
       return Promise.reject(
