@@ -96,5 +96,7 @@
   "create_vehicle_type_msg_create_fail_message": "後でやり直しください ",
   "vehicle_create_success": "車両が作成されました",
   "create_failed": "作成に失敗しました",
-  "please_try_again": "後でやり直しください"
+  "please_try_again": "後でやり直しください",
+  "forgot_password_attempt_limit_exceeded_title": "問題が発生しました",
+  "forgot_password_attempt_limit_exceeded_msg": "確認コードの送信回数に制限があります。後でやり直しください 。"
 }
