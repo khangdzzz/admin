@@ -10,6 +10,7 @@
   "login_forgot_password": "Forgot password",
   "login_fail_to_login": "Fail to login",
   "login_confirm_account": "Please confirm your account again",
+  "login_fail_to_login_try_again_message": "Please try again later",
   "forgot_password_text_forgot_password": "Forgot password",
   "forgot_password_text_enter_email_address": "Enter Email address",
   "forgot_password_btn_cancel": "Cancel",

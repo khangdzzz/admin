@@ -10,6 +10,7 @@
   "login_forgot_password": "パスワードを忘れた方はこちら",
   "login_fail_to_login": "ログインに失敗しました",
   "login_confirm_account": "アカウント情報をご確認ください",
+  "login_fail_to_login_try_again_message": "後でやり直しください ",
   "forgot_password_text_forgot_password": "パスワード再設定",
   "forgot_password_text_enter_email_address": "メールアドレスを入力",
   "forgot_password_btn_cancel": "キャンセル",
