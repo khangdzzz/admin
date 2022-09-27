@@ -30,6 +30,16 @@ const routes: RouteRecordRaw[] = [
     }
   },
   {
+    path: "/dashboard",
+    name: routeNames.dashboard,
+    component: () =>
+      import("@/modules/collection-business/pages/CollectionBusiness.vue"),
+    beforeEnter: requireLoginGuard,
+    meta: {
+      layout: ScreenLayout.DEFAULT_LAYOUT
+    }
+  },
+  {
     path: "/collection-business",
     name: routeNames.collectionBusiness,
     component: () =>
@@ -37,7 +47,21 @@ const routes: RouteRecordRaw[] = [
     beforeEnter: requireLoginGuard,
     meta: {
       layout: ScreenLayout.DEFAULT_LAYOUT
-    }
+    },
+    children: [
+      {
+        path: "collection-history",
+        name: routeNames.collectionHistory,
+        component: () =>
+          import("@/modules/vehicle-management/pages/RealTimeDynamics.vue")
+      },
+      {
+        path: "real-time-management",
+        name: routeNames.realTimeDynamics,
+        component: () =>
+          import("@/modules/vehicle-management/pages/RealTimeDynamics.vue")
+      }
+    ]
   },
   {
     path: "/product-manufacture",
@@ -69,7 +93,7 @@ const routes: RouteRecordRaw[] = [
     }
   },
   {
-    path: "/verhicle-management",
+    path: "/vehicle-management",
     beforeEnter: requireLoginGuard,
     meta: {
       layout: ScreenLayout.DEFAULT_LAYOUT
@@ -142,6 +166,16 @@ const routes: RouteRecordRaw[] = [
           import("@/modules/staff-management/pages/CreateCollectionBase.vue")
       }
     ]
+  },
+  {
+    path: "/store-management",
+    name: routeNames.storeManagment,
+    component: () =>
+      import("@/modules/staff-management/pages/StaffManagement.vue"),
+    beforeEnter: requireLoginGuard,
+    meta: {
+      layout: ScreenLayout.DEFAULT_LAYOUT
+    }
   },
   {
     path: "/container",

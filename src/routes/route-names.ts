@@ -7,7 +7,7 @@ export const routeNames = {
   productManufacture: "PRODUCT_MANUFACTURE",
   traceability: "TRACEABILITY",
   customerManagement: "CUSTOMER_MANAGEMENT",
-  verhicleManagement: "VERHICLE_MANAGEMENT",
+  vehicleManagement: "VEHICLE_MANAGEMENT",
   realTimeDynamics: "REAL_TIME_DYNAMICS",
   vehicle: "VEHICLE",
   createVehicle: "CREATE_VEHICLE",
@@ -25,5 +25,8 @@ export const routeNames = {
   createContainerType: "CREATE_CONTAINER_TYPE",
   editContainerType: "EDIT_CONTAINER_TYPE",
   workingPlace: "WORKING_PLACE",
-  setting: "SETTING"
+  setting: "SETTING",
+  dashboard: "DASHBOARD",
+  collectionHistory: "COLLECTION_HISTORY",
+  storeManagment: "STORE_MANAGEMENt"
 };

@@ -3,4 +3,5 @@ export interface UserInfo {
   email: string;
   fullName: string;
   tenantId: number;
+  userType: string;
 }
