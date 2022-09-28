@@ -115,5 +115,7 @@
   "forgot_password_attempt_limit_exceeded_title": "Attempt limit exceeded",
   "forgot_password_attempt_limit_exceeded_msg": "Please try again later",
   "edit_failed": "Edit failed",
-  "common_loading": "Loading..."
+  "common_loading": "Loading...",
+  "invalid_field_name": "Invalid {fieldName}",
+  "short_name": "Short name"
 }

@@ -16,13 +16,14 @@ export const routeNames = {
   createVehicleType: "CREATE_VEHICLE_TYPE",
   editVehicleType: "EDIT_VEHICLE_TYPE",
   staffManagement: "STAFF_MANAGEMENT",
+  createCollectionBase: "CREATE_COLLECTION_BASE",
   container: "CONTAINER",
   containerChild: "CONTAINER_CHILD",
   createNewContainer: "CREATE_NEW_CONTAINER",
   editContainer: "EDIT_CONTAINER",
   containerType: "CONTAINER_TYPE",
-  createContainerType:"CREATE_CONTAINER_TYPE",
-  editContainerType:"EDIT_CONTAINER_TYPE",
+  createContainerType: "CREATE_CONTAINER_TYPE",
+  editContainerType: "EDIT_CONTAINER_TYPE",
   workingPlace: "WORKING_PLACE",
   setting: "SETTING"
 };
