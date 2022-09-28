@@ -79,13 +79,14 @@ import { VehicleSelection } from "../models/vehicle.model";
 import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
+import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 //#endregion
 
 //#region props
 //#endregion
 
 //#region variables
-const messenger: (title: string, message: string, type: MessengerType) => void =
+const messenger: (param: MessengerParamModel) => void =
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   inject("messenger")!;
 const vehicleTypes = ref<VehicleSelection[]>([]);
@@ -305,9 +306,17 @@ const onCreate = async (): Promise<void> => {
   const res = await service.vehicle.createVehicle(vehicleInfo);
 
   if (res) {
-    messenger("vehicle_create_success", "", MessengerType.Success);
+    messenger({
+      title: "vehicle_create_success",
+      message: "",
+      type: MessengerType.Success
+    });
   } else {
-    messenger("create_failed", "please_try_again", MessengerType.Error);
+    messenger({
+      title: "create_failed",
+      message: "please_try_again",
+      type: MessengerType.Error
+    });
   }
   isLoading.value = false;
 };

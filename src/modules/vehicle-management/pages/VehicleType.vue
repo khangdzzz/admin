@@ -6,6 +6,7 @@
           class="btn"
           type="primary"
           ghost
+          @click="deleteVehicleType"
           v-if="selectedKeys.length > 0">
           <template #icon>
             <img src="@/assets/icons/ic_delete.svg" class="btn-icon" />
@@ -57,6 +58,8 @@
 <script setup lang="ts">
 //#region import
 import ListSearchHeader from "@/modules/base/components/ListSearchHeader.vue";
+import MessengerParamModel from "@/modules/base/models/messenger-param.model";
+import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import SortView from "@/modules/common/components/SortView.vue";
 import { Sort } from "@/modules/common/models/sort.enum";
 import { router } from "@/routes";
@@ -64,7 +67,7 @@ import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
 import { TableProps } from "ant-design-vue";
 import { Key } from "ant-design-vue/lib/table/interface";
-import { onMounted, ref } from "vue";
+import { inject, onMounted, ref } from "vue";
 import { VehicleTypeModel } from "../models";
 
 //#endregion
@@ -72,6 +75,11 @@ import { VehicleTypeModel } from "../models";
 //#region props
 //#endregion
 //#region variables
+
+const messenger: (param: MessengerParamModel) => void =
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  inject("messenger")!;
+
 const columns = [
   {
     title: "vehicle_column_no",
@@ -103,6 +111,12 @@ const isLoading = ref<boolean>(false);
 
 //#region hooks
 onMounted(async () => {
+  initialize();
+});
+//#endregion
+
+//#region function
+const initialize = async (): Promise<void> => {
   isLoading.value = true;
   const result = await service.vehicleType.fetchListVehicleType(1, 10);
   isLoading.value = false;
@@ -110,10 +124,7 @@ onMounted(async () => {
     return { ...item, key: index + 1 };
   });
   data.value = [...sourceData];
-});
-//#endregion
-
-//#region function
+};
 const rowSelection: TableProps["rowSelection"] = {
   onChange: (
     selectedRowKeys: Key[],
@@ -147,6 +158,45 @@ const softName = (): void => {
         secondVehicleType.name.localeCompare(firtVehicleType.name)
       );
   }
+};
+const deleteVehicleType = (): void => {
+  messenger({
+    title: "",
+    message: "vehicle_type_msg_confirm_delete",
+    type: MessengerType.Confirm,
+    buttonOkTitle: "btn_delete",
+    callback: onDeleteVehicleType
+  });
+};
+
+const onDeleteVehicleType = async (isConfirm: boolean): Promise<void> => {
+  if (!isConfirm) {
+    return;
+  }
+  if (!selectedKeys.value?.length) {
+    return;
+  }
+  const deleteId = selectedKeys.value[0].id;
+  isLoading.value = true;
+  const isSuccess = await service.vehicleType.deleteVehicleTypeById(deleteId);
+  isLoading.value = false;
+  if (!isSuccess) {
+    messenger({
+      title: "vehicle_type_delete_fail_lbl_title",
+      message: "vehicle_type_delete_fail_lbl_message",
+      type: MessengerType.Error
+    });
+    return;
+  }
+  messenger({
+    title: "vehicle_type_msg_delete_successfully",
+    message: "",
+    type: MessengerType.Success,
+    callback: (isConfirm: boolean): void => {
+      isConfirm;
+      initialize();
+    }
+  });
 };
 //#endregion
 

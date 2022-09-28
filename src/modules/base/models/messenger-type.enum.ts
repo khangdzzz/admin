@@ -1,5 +1,6 @@
 export enum MessengerType {
-    Info = 'INFORMATION',
-    Success = 'SUCCESS',
-    Error = 'ERROR'
+  Info = "INFORMATION",
+  Success = "SUCCESS",
+  Error = "ERROR",
+  Confirm = "CONFIRM"
 }

@@ -43,6 +43,7 @@
 
 import Ic_pass from "@/assets/icons/IcPass.vue";
 import Ic_user from "@/assets/icons/IcUser.vue";
+import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
@@ -63,7 +64,7 @@ import CustomForm from "../../base/components/CustomForm.vue";
 //#endregion
 
 //#region variables
-const messenger: (title: string, message: string, type: MessengerType) => void =
+const messenger: (param: MessengerParamModel) => void =
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   inject("messenger")!;
 const isValidated = ref<boolean>(false);
@@ -171,7 +172,11 @@ const handleLogin = async (): Promise<void> => {
         err.name === "NotAuthorizedException"
           ? "login_confirm_account"
           : "login_fail_to_login_try_again_message";
-      messenger("login_fail_to_login", errMessage, MessengerType.Error);
+      messenger({
+        title: "login_fail_to_login",
+        message: errMessage,
+        type: MessengerType.Error
+      });
     }
   });
 };

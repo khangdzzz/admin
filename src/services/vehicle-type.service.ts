@@ -95,3 +95,12 @@ export async function editVehicleTypeById(
   if (error) return undefined;
   return res;
 }
+
+export async function deleteVehicleTypeById(id: number): Promise<boolean> {
+  const [error] = await transformRequest<VehicleTypeModel>({
+    url: `/vehicle_type/${id}`,
+    method: "delete"
+  });
+  if (error) return false;
+  return true;
+}

@@ -8,10 +8,35 @@
     :footer="null"
     :maskClosable="false">
     <div class="modal-content">
-      <img :src="modalIcon" class="modal-icon" />
+      <img
+        :src="modalIcon"
+        class="modal-icon"
+        v-if="modalType !== MessengerType.Confirm" />
       <h3 class="modal-title" v-if="modalTitle">{{ $t(modalTitle) }}</h3>
       <p class="modal-message" v-if="modalMessage">{{ $t(modalMessage) }}</p>
-      <a-button type="primary" class="btn-ok" @click="onOKClick">OK</a-button>
+      <a-button
+        type="primary"
+        class="btn-ok"
+        @click="onOKClick"
+        v-if="modalType !== MessengerType.Confirm">
+        {{ $t(btnOk) }}
+        </a-button
+      >
+      <div v-else class="modal-action-container">
+        <a-button
+          type="primary"
+          class="modal-action-container__action-button"
+          @click="onCancelClick"
+          ghost>
+          {{ $t(btnCancel) }}
+        </a-button>
+        <a-button
+          type="primary"
+          class="modal-action-container__action-button"
+          @click="onOKClick">
+          {{ $t(btnOk) }}
+        </a-button>
+      </div>
     </div>
   </a-modal>
 </template>
@@ -23,13 +48,7 @@
 import { Emitter, EventType } from "mitt";
 import { inject, onMounted, ref } from "vue";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
-
-type Modal = {
-  type: MessengerType;
-  title: string;
-  message: string;
-  callback: () => void;
-};
+import MessengerParamModel from "../models/messenger-param.model";
 //#region props
 //#endregion
 
@@ -41,20 +60,39 @@ const visible = ref<boolean>(false);
 const modalIcon = ref<string>("");
 const modalTitle = ref<string>("");
 const modalMessage = ref<string>("");
-const action = ref<() => void>();
+const action = ref<(isConfirm: boolean) => void>();
+const modalType = ref<MessengerType>(MessengerType.Info);
+const btnOk = ref<string>("btn_ok");
+const btnCancel = ref<string>("btn_cancel");
 //#endregion
 
 //#region hooks
 onMounted(() => {
   if (emitter) {
-    emitter.on("ShowModal", (value) => onShowModal(value as Modal));
+    emitter.on("ShowModal", (value) =>
+      onShowModal(value as MessengerParamModel)
+    );
   }
 });
 
 //#endregion
 
 //#region function
-const onShowModal = ({ type, title, message, callback }: Modal): void => {
+const onShowModal = ({
+  title,
+  message,
+  type,
+  buttonOkTitle,
+  buttonCancelTitle,
+  callback
+}: MessengerParamModel): void => {
+  if (buttonOkTitle) {
+    btnOk.value = buttonOkTitle;
+  }
+  if (buttonCancelTitle) {
+    btnCancel.value = buttonCancelTitle;
+  }
+  modalType.value = type;
   const errorIcon = new URL(
     "../../../assets/icons/ic_error.png",
     import.meta.url
@@ -72,7 +110,13 @@ const onShowModal = ({ type, title, message, callback }: Modal): void => {
 
 const onOKClick = (): void => {
   if (action.value) {
-    action.value();
+    action.value(true);
+  }
+  visible.value = false;
+};
+const onCancelClick = (): void => {
+  if (action.value) {
+    action.value(false);
   }
   visible.value = false;
 };
@@ -91,6 +135,7 @@ const onOKClick = (): void => {
   justify-content: center;
   flex-direction: column;
   align-items: center;
+  margin: 6px;
 
   .modal-icon {
     margin-bottom: 24px;
@@ -127,6 +172,22 @@ const onOKClick = (): void => {
     font-weight: 600;
     font-size: 18px;
     line-height: 18px;
+  }
+
+  .modal-action-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 4px;
+    &__action-button {
+      font-family: "Roboto";
+      font-style: normal;
+      width: calc(50% - 5px);
+      height: 48px;
+      font-weight: 600;
+      font-size: 18px;
+      line-height: 18px;
+    }
   }
 }
 
