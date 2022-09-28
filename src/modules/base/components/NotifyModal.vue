@@ -9,8 +9,8 @@
     :maskClosable="false">
     <div class="modal-content">
       <img :src="modalIcon" class="modal-icon" />
-      <h3 class="modal-title">{{ $t(modalTitle) }}</h3>
-      <p class="modal-message">{{ $t(modalMessage) }}</p>
+      <h3 class="modal-title" v-if="modalTitle">{{ $t(modalTitle) }}</h3>
+      <p class="modal-message" v-if="modalMessage">{{ $t(modalMessage) }}</p>
       <a-button type="primary" class="btn-ok" @click="onOKClick">OK</a-button>
     </div>
   </a-modal>
@@ -98,6 +98,7 @@ const onOKClick = (): void => {
 
   .modal-title {
     margin: 0;
+    margin-bottom: 10px;
     font-family: "Roboto";
     font-style: normal;
     font-weight: 600;
@@ -109,7 +110,7 @@ const onOKClick = (): void => {
 
   .modal-message {
     color: $text-1;
-    margin-top: 10px;
+    margin-top: 0px;
     font-family: "Roboto";
     font-style: normal;
     font-weight: 400;

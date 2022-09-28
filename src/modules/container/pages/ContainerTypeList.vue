@@ -104,15 +104,14 @@
 
 <script setup lang="ts">
 //#===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆import
-import { onMounted, ref } from "vue";
-import type { TableProps, TableColumnType } from "ant-design-vue";
 import ListSearchHeader from "@/modules/base/components/ListSearchHeader.vue";
-import { i18n } from "@/i18n";
-import { service } from "@/services";
-import { routeNames } from "@/routes/route-names";
-import { ContainerType } from "../models/container-type.models";
-import { Sort } from "@/modules/common/models/sort.enum";
 import SortView from "@/modules/common/components/SortView.vue";
+import { Sort } from "@/modules/common/models/sort.enum";
+import { routeNames } from "@/routes/route-names";
+import { service } from "@/services";
+import type { TableColumnType, TableProps } from "ant-design-vue";
+import { onMounted, ref } from "vue";
+import { ContainerType } from "../models/container-type.models";
 
 type Key = string | number;
 //#endregion===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆
@@ -129,7 +128,7 @@ const currentPage = ref<number>(1);
 
 const columns: TableColumnType<ContainerType>[] = [
   {
-    title: i18n.global.t("name"),
+    title: "name",
     dataIndex: "name",
     key: "name"
   },
@@ -156,8 +155,8 @@ const rowSelection: TableProps["rowSelection"] = {
 };
 
 const fetchListContainerType = (): void => {
-  const res = service.container.getListContainerType(1,10);
-  data.value =  [];
+  const res = service.container.getListContainerType(1, 10);
+  data.value = [];
 };
 
 //#endregion===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊
