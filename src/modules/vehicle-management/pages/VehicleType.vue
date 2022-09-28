@@ -1,51 +1,57 @@
 <template>
-  <ListSearchHeader :title="$t('vehicle_type')">
-    <template #action>
-      <a-button class="btn" type="primary" ghost v-if="selectedKeys.length > 0">
-        <template #icon>
-          <img src="@/assets/icons/ic_delete.svg" class="btn-icon" />
-        </template>
-        {{ $t("delete_btn") }}
-      </a-button>
-      <a-button type="primary" class="btn btn-add-new" @click="onCreate">
-        <template #icon>
-          <img src="@/assets/icons/ic_plus.svg" class="btn-icon" />
-        </template>
-        {{ $t("add_new_type_btn") }}
-      </a-button>
-    </template>
-  </ListSearchHeader>
-  <div class="table-container">
-    <a-table
-      :row-selection="rowSelection"
-      :columns="columns"
-      :data-source="data"
-      :pagination="false">
-      <template #headerCell="{ column }">
-        <template v-if="column.key === 'index'">
-          <span>{{ $t(column.title) }}</span>
-        </template>
-        <template v-if="column.key === 'name'">
-          <div @click="softName">
+  <a-spin :tip="$t('common_loading')" :spinning="isLoading">
+    <ListSearchHeader :title="$t('vehicle_type')">
+      <template #action>
+        <a-button
+          class="btn"
+          type="primary"
+          ghost
+          v-if="selectedKeys.length > 0">
+          <template #icon>
+            <img src="@/assets/icons/ic_delete.svg" class="btn-icon" />
+          </template>
+          {{ $t("delete_btn") }}
+        </a-button>
+        <a-button type="primary" class="btn btn-add-new" @click="onCreate">
+          <template #icon>
+            <img src="@/assets/icons/ic_plus.svg" class="btn-icon" />
+          </template>
+          {{ $t("add_new_type_btn") }}
+        </a-button>
+      </template>
+    </ListSearchHeader>
+    <div class="table-container">
+      <a-table
+        :row-selection="rowSelection"
+        :columns="columns"
+        :data-source="data"
+        :pagination="false">
+        <template #headerCell="{ column }">
+          <template v-if="column.key === 'index'">
             <span>{{ $t(column.title) }}</span>
-            <SortView class="mx-12" :sort="sort" />
-          </div>
+          </template>
+          <template v-if="column.key === 'name'">
+            <div @click="softName">
+              <span>{{ $t(column.title) }}</span>
+              <SortView class="mx-12" :sort="sort" />
+            </div>
+          </template>
         </template>
-      </template>
-      <template #bodyCell="{ column, record, index }">
-        <template v-if="column.key === 'index'">
-          <span>{{ index + 1 }}</span>
+        <template #bodyCell="{ column, record, index }">
+          <template v-if="column.key === 'index'">
+            <span>{{ index + 1 }}</span>
+          </template>
+          <template v-if="column.key === 'action'">
+            <img
+              src="@/assets/icons/ic_btn_edit.svg"
+              class="action-icon"
+              @click="editVehicleType(record.id)" />
+            <img src="@/assets/icons/ic_btn_delete.svg" class="action-icon" />
+          </template>
         </template>
-        <template v-if="column.key === 'action'">
-          <img
-            src="@/assets/icons/ic_btn_edit.svg"
-            class="action-icon"
-            @click="editVehicleType(record.id)" />
-          <img src="@/assets/icons/ic_btn_delete.svg" class="action-icon" />
-        </template>
-      </template>
-    </a-table>
-  </div>
+      </a-table>
+    </div>
+  </a-spin>
 </template>
 
 <script setup lang="ts">
@@ -92,11 +98,14 @@ let sourceData: VehicleTypeModel[] = [];
 const data = ref<VehicleTypeModel[]>([]);
 const selectedKeys = ref<VehicleTypeModel[]>([]);
 const sort = ref<Sort>(Sort.None);
+const isLoading = ref<boolean>(false);
 //#endregion
 
 //#region hooks
 onMounted(async () => {
+  isLoading.value = true;
   const result = await service.vehicleType.fetchListVehicleType(1, 10);
+  isLoading.value = false;
   sourceData = (result?.results || []).map((item, index) => {
     return { ...item, key: index + 1 };
   });
