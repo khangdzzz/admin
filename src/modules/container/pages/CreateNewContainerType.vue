@@ -23,7 +23,8 @@
             class="create-new-container-type-form__action--submit"
             html-type="submit"
             :disabled="!isDisabled"
-            :loading="isLoading">
+            :loading="isLoading"
+            @click="createContainerType()">
             {{ $t("btn_submit") }}
           </a-button>
         </div>
@@ -35,9 +36,12 @@
 <script setup lang="ts">
 //#===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆import
 import { i18n } from "@/i18n";
+import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
-import { reactive, ref } from "vue";
+import { service } from "@/services";
+import { commonStore } from "@/stores";
+import { inject, reactive, ref } from "vue";
 import CustomForm from "../../base/components/CustomForm.vue";
 
 //#endregion===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆
@@ -46,6 +50,15 @@ import CustomForm from "../../base/components/CustomForm.vue";
 //#endregion===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜Props
 
 //#===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎Variables
+const userStore = commonStore();
+const messenger: (
+  title: string,
+  message: string,
+  type: MessengerType,
+  callback: (() => void) | undefined
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+) => void = inject("messenger")!;
+
 const isDisabled = ref<boolean>(false);
 const isLoading = ref<boolean>(false);
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -67,44 +80,6 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
           message: i18n.global.t("max_length_input", { maxLength: 50 })
         }
       ]
-    },
-    {
-      inputType: "AInput",
-      value: "",
-      placeHolder: "container_weight",
-      label: "container_weight",
-      name: "weight",
-      disabled: false,
-      rules: [
-        {
-          max: 10,
-          message: i18n.global.t("max_length_input", { maxLength: 10 })
-        },
-        {
-          pattern: /^\d*$/,
-          message: i18n.global.t("allow_input_number")
-        }
-      ],
-      required: false,
-      key: 3,
-      isFocus: false
-    },
-    {
-      inputType: "AInput",
-      value: "",
-      placeHolder: "container_capacity",
-      label: "container_capacity",
-      name: "capacity",
-      disabled: false,
-      rules: [
-        {
-          max: 50,
-          message: i18n.global.t("max_length_input", { maxLength: 50 })
-        }
-      ],
-      required: false,
-      key: 4,
-      isFocus: false
     }
   ]
 });
@@ -133,6 +108,37 @@ const redirectToContainerType = (): void => {
 //#endregion===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌
 
 //#===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊Methods
+const createContainerType = async (): Promise<void> => {
+  const newContainerTypeName = dynamicValidateForm.formData[0].value;
+  if (!userStore.user || !newContainerTypeName?.length) return;
+  isLoading.value = true;
+  const newContainerType = await service.container.createContainerType(
+    userStore.user?.tenantId,
+    "Basket trolley"
+  );
+  isLoading.value = false;
+  if (newContainerType) {
+    messenger(
+      "create_container_type_msg_create_successfully",
+      "",
+      MessengerType.Success,
+      () => {
+        goToContainerTypeListPage();
+      }
+    );
+  } else {
+    messenger(
+      "create_vehicle_type_msg_create_fail_title",
+      "create_vehicle_type_msg_create_fail_message",
+      MessengerType.Error,
+      undefined
+    );
+  }
+};
+
+const goToContainerTypeListPage = (): void => {
+  router.push({ name: routeNames.containerType });
+};
 //#endregion===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊
 
 //#===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏Computed

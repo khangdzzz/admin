@@ -5,3 +5,10 @@ export interface ContainerType {
     capaity:string
   }
   
+  export default interface ContainerTypeModel {
+    tenantId: number;
+    name: string;
+    id: number;
+    key: number;
+  }
+  

@@ -22,13 +22,14 @@
         item.class,
         !item.icon ? 'not-has-icon' : 'has-icon-input',
         isActivePasswordIcon(item) ? 'password-item' : '',
-        !item.label ? 'not-has-label' : 'has-label'
+        !item.label ? 'not-has-label' : 'has-label',
+        item.inline && 'inline'
       ]">
       <!-- //region slot input  -->
       <template #prefix v-if="item.icon">
         <component :is="item.icon" :color="item.iconColor" />
       </template>
-      <template #suffix>
+      <template #suffix >
         <component :is="item.suffixIcon" :color="item.iconColor" />
       </template>
       <!-- endregion -->
@@ -69,6 +70,8 @@
       }}
       <span class="require" v-if="item.required">*</span>
     </label>
+
+    <div v-if="item.inline && item.spaceStyle" :style="item.spaceStyle"></div>
   </a-form-item>
 </template>
 
@@ -153,7 +156,6 @@ const isActivePasswordIcon = (item: any): boolean => {
 }
 :deep() {
   .input-item {
-    min-width: 360px;
     height: 60px;
     border: 1px solid $grey-1;
     outline: none;

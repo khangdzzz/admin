@@ -3,7 +3,11 @@ import {
   ContainerSelection,
   ContainerType
 } from "@/modules/container/models";
+import ContainerTypeModel from "@/modules/container/models/container-type.models";
 import { transformRequest } from "./base.service";
+import { CreateContainerTypeInputDto } from "./dtos/container-management/create-container-type.dto";
+import { VehicleTypeResponseDto } from "./dtos/vehicle-management/create-vehicle-type.dto";
+import createContainerTypeResponse from "./mocks/container-type/create-container-type.response.json";
 
 const data: ContainerType[] = [
   {
@@ -40,8 +44,10 @@ export function getListContainerType(): ContainerType[] {
   return data;
 }
 
-export function getContainerTypeById(id: string): Promise<ContainerType> {
-  const containerType = data.find((item) => item.key === id);
+export function getContainerTypeById(
+  id: string
+): Promise<VehicleTypeResponseDto> {
+  const containerType: VehicleTypeResponseDto = createContainerTypeResponse;
   if (!containerType) throw new Error("id does not exit");
   return Promise.resolve(containerType);
 }
@@ -82,4 +88,44 @@ export async function updateContainer(
 export function getContainerById(id: string): ContainerType | undefined {
   const container = data.find((item) => item.key === id) || undefined;
   return container;
+}
+
+export function createContainerType(
+  tenantId: number,
+  name: string
+): Promise<ContainerTypeModel | undefined> {
+  const data: CreateContainerTypeInputDto = {
+    tenant_id: tenantId,
+    name
+  };
+  data;
+  const res: VehicleTypeResponseDto = createContainerTypeResponse;
+  const { id, name: typeName, tenant_id } = res;
+
+  return Promise.resolve({
+    id,
+    tenantId: tenant_id,
+    name: typeName,
+    key: 0
+  });
+}
+
+export async function updateContainerType(
+  tenantId: number,
+  name: string
+): Promise<ContainerTypeModel | undefined> {
+  const data: CreateContainerTypeInputDto = {
+    tenant_id: tenantId,
+    name
+  };
+  data;
+  const res: VehicleTypeResponseDto = createContainerTypeResponse;
+  const { id, name: typeName, tenant_id } = res;
+
+  return Promise.resolve({
+    id,
+    tenantId: tenant_id,
+    name: typeName,
+    key: 0
+  });
 }
