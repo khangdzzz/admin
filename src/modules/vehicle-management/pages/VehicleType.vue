@@ -1,56 +1,64 @@
 <template>
-  <ListSearchHeader :title="$t('vehicle_type')">
-    <template #action>
-      <a-button class="btn" type="primary" ghost v-if="selectedKeys.length > 0">
-        <template #icon>
-          <img src="@/assets/icons/ic_delete.svg" class="btn-icon" />
-        </template>
-        {{ $t("delete_btn") }}
-      </a-button>
-      <a-button type="primary" class="btn btn-add-new" @click="onCreate">
-        <template #icon>
-          <img src="@/assets/icons/ic_plus.svg" class="btn-icon" />
-        </template>
-        {{ $t("add_new_type_btn") }}
-      </a-button>
-    </template>
-  </ListSearchHeader>
-  <div class="table-container">
-    <a-table
-      :row-selection="rowSelection"
-      :columns="columns"
-      :data-source="data"
-      :pagination="false">
-      <template #headerCell="{ column }">
-        <template v-if="column.key === 'index'">
-          <span>{{ $t(column.title) }}</span>
-        </template>
-        <template v-if="column.key === 'name'">
-          <div @click="softName">
+  <a-spin :tip="$t('common_loading')" :spinning="isLoading">
+    <ListSearchHeader :title="$t('vehicle_type')">
+      <template #action>
+        <a-button
+          class="btn"
+          type="primary"
+          ghost
+          @click="deleteVehicleType"
+          v-if="selectedKeys.length > 0">
+          <template #icon>
+            <img src="@/assets/icons/ic_delete.svg" class="btn-icon" />
+          </template>
+          {{ $t("delete_btn") }}
+        </a-button>
+        <a-button type="primary" class="btn btn-add-new" @click="onCreate">
+          <template #icon>
+            <img src="@/assets/icons/ic_plus.svg" class="btn-icon" />
+          </template>
+          {{ $t("add_new_type_btn") }}
+        </a-button>
+      </template>
+    </ListSearchHeader>
+    <div class="table-container">
+      <a-table
+        :row-selection="rowSelection"
+        :columns="columns"
+        :data-source="data"
+        :pagination="false">
+        <template #headerCell="{ column }">
+          <template v-if="column.key === 'index'">
             <span>{{ $t(column.title) }}</span>
-            <SortView class="mx-12" :sort="sort" />
-          </div>
+          </template>
+          <template v-if="column.key === 'name'">
+            <div @click="softName">
+              <span>{{ $t(column.title) }}</span>
+              <SortView class="mx-12" :sort="sort" />
+            </div>
+          </template>
         </template>
-      </template>
-      <template #bodyCell="{ column, record, index }">
-        <template v-if="column.key === 'index'">
-          <span>{{ index + 1 }}</span>
+        <template #bodyCell="{ column, record, index }">
+          <template v-if="column.key === 'index'">
+            <span>{{ index + 1 }}</span>
+          </template>
+          <template v-if="column.key === 'action'">
+            <img
+              src="@/assets/icons/ic_btn_edit.svg"
+              class="action-icon"
+              @click="editVehicleType(record.id)" />
+            <img src="@/assets/icons/ic_btn_delete.svg" class="action-icon" />
+          </template>
         </template>
-        <template v-if="column.key === 'action'">
-          <img
-            src="@/assets/icons/ic_btn_edit.svg"
-            class="action-icon"
-            @click="editVehicleType(record.id)" />
-          <img src="@/assets/icons/ic_btn_delete.svg" class="action-icon" />
-        </template>
-      </template>
-    </a-table>
-  </div>
+      </a-table>
+    </div>
+  </a-spin>
 </template>
 
 <script setup lang="ts">
 //#region import
 import ListSearchHeader from "@/modules/base/components/ListSearchHeader.vue";
+import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import SortView from "@/modules/common/components/SortView.vue";
 import { Sort } from "@/modules/common/models/sort.enum";
 import { router } from "@/routes";
@@ -58,7 +66,7 @@ import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
 import { TableProps } from "ant-design-vue";
 import { Key } from "ant-design-vue/lib/table/interface";
-import { onMounted, ref } from "vue";
+import { inject, onMounted, ref } from "vue";
 import { VehicleTypeModel } from "../models";
 
 //#endregion
@@ -66,6 +74,16 @@ import { VehicleTypeModel } from "../models";
 //#region props
 //#endregion
 //#region variables
+
+const messenger: (
+  title: string,
+  message: string,
+  type: MessengerType,
+  callback: (() => void) | undefined
+) => void =
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  inject("messenger")!;
+
 const columns = [
   {
     title: "vehicle_column_no",
@@ -92,19 +110,25 @@ let sourceData: VehicleTypeModel[] = [];
 const data = ref<VehicleTypeModel[]>([]);
 const selectedKeys = ref<VehicleTypeModel[]>([]);
 const sort = ref<Sort>(Sort.None);
+const isLoading = ref<boolean>(false);
 //#endregion
 
 //#region hooks
 onMounted(async () => {
-  const result = await service.vehicleType.fetchListVehicleType(1, 10);
-  sourceData = (result?.results || []).map((item, index) => {
-    return { ...item, key: index + 1 };
-  });
-  data.value = [...sourceData];
+  initialize();
 });
 //#endregion
 
 //#region function
+const initialize = async (): Promise<void> => {
+  isLoading.value = true;
+  const result = await service.vehicleType.fetchListVehicleType(1, 10);
+  isLoading.value = false;
+  sourceData = (result?.results || []).map((item, index) => {
+    return { ...item, key: index + 1 };
+  });
+  data.value = [...sourceData];
+};
 const rowSelection: TableProps["rowSelection"] = {
   onChange: (
     selectedRowKeys: Key[],
@@ -138,6 +162,39 @@ const softName = (): void => {
         secondVehicleType.name.localeCompare(firtVehicleType.name)
       );
   }
+};
+const deleteVehicleType = (): void => {
+  messenger(
+    "",
+    "Are you sure you want to delete?",
+    MessengerType.Confirm,
+    onDeleteVehicleType
+  );
+};
+
+const onDeleteVehicleType = async (): Promise<void> => {
+  if (!selectedKeys.value?.length) {
+    return;
+  }
+  const deleteId = selectedKeys.value[0].id;
+  isLoading.value = true;
+  const isSuccess = await service.vehicleType.deleteVehicleTypeById(deleteId);
+  isLoading.value = false;
+  if (!isSuccess) {
+    messenger(
+      "Delete failed",
+      "Please try again later",
+      MessengerType.Error,
+      undefined
+    );
+    return;
+  }
+  messenger(
+    "Vehicle type is deleted successfully",
+    "",
+    MessengerType.Success,
+    initialize
+  );
 };
 //#endregion
 

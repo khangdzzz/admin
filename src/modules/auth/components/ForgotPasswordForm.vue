@@ -25,7 +25,7 @@
         ]">
         <a-input
           class="fgpw-form__input-email"
-          v-model:value="formState.email"
+          v-model:value.trim="formState.email"
           @focus="onFocusInputEmail"
           @blur="onBlurInputEmail">
           <template #prefix>

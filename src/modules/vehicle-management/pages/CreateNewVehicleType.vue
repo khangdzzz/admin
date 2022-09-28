@@ -116,7 +116,7 @@ const createVehicleType = async (): Promise<void> => {
   isLoading.value = true;
   const newVehicleType = await service.vehicleType.createVehicleType(
     userStore.user?.tenantId,
-    "Motobike"
+    newVehicleTypeName
   );
   isLoading.value = false;
   if (newVehicleType) {

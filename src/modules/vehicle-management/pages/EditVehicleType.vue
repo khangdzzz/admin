@@ -1,36 +1,40 @@
 <template>
   <div class="create-new-vehicle-type-form">
-    <a-card :bordered="false">
-      <h3 class="create-new-vehicle-type-form__title">Edit Vehicle type</h3>
-      <a-form
-        :model="dynamicValidateForm"
-        name="basic"
-        autocomplete="off"
-        @finish="handleFinish">
-        <CustomForm
-          :formData="dynamicValidateForm.formData"
-          @change="handleOnChange"
-          @onBlur="handleOnBlur"
-          @onFocus="handleOnFocus">
-        </CustomForm>
-        <div class="create-new-vehicle-type-form__action">
-          <a-button
-            class="create-new-vehicle-type-form__action--cancel"
-            :disabled="isLoading"
-            @click="redirectToVehicleType">
-            {{ $t("btn_cancel") }}
-          </a-button>
-          <a-button
-            type="primary"
-            class="create-new-vehicle-type-form__action--save"
-            html-type="save"
-            :disabled="!isValidated"
-            :loading="isLoading">
-            {{ $t("btn_save") }}
-          </a-button>
-        </div>
-      </a-form>
-    </a-card>
+    <a-spin :tip="$t('common_loading')" :spinning="isLoadingInfo">
+      <a-card :bordered="false">
+        <h3 class="create-new-vehicle-type-form__title">
+          {{ $t("edit_vehicle_type_lbl_page_title") }}
+        </h3>
+        <a-form
+          :model="dynamicValidateForm"
+          name="basic"
+          autocomplete="off"
+          @finish="handleFinish">
+          <CustomForm
+            :formData="dynamicValidateForm.formData"
+            @change="handleOnChange"
+            @onBlur="handleOnBlur"
+            @onFocus="handleOnFocus">
+          </CustomForm>
+          <div class="create-new-vehicle-type-form__action">
+            <a-button
+              class="create-new-vehicle-type-form__action--cancel"
+              :disabled="isLoading"
+              @click="redirectToVehicleType">
+              {{ $t("btn_cancel") }}
+            </a-button>
+            <a-button
+              type="primary"
+              class="create-new-vehicle-type-form__action--save"
+              html-type="save"
+              :disabled="!isValidated"
+              :loading="isLoading">
+              {{ $t("btn_save") }}
+            </a-button>
+          </div>
+        </a-form>
+      </a-card>
+    </a-spin>
   </div>
 </template>
 
@@ -55,6 +59,7 @@ import { VehicleTypeModel } from "../models";
 //#===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎Variables
 const isValidated = ref<boolean>(false);
 const isLoading = ref<boolean>(false);
+const isLoadingInfo = ref<boolean>(false);
 const route = useRoute();
 const userStore = commonStore();
 const vehicleTypeId = ref<string | string[]>("");
@@ -72,8 +77,8 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
     {
       inputType: "AInput",
       value: "",
-      placeHolder: "Name",
-      label: "Name",
+      placeHolder: "name",
+      label: "name",
       name: "name",
       disabled: isLoading,
       required: true,
@@ -111,12 +116,15 @@ const handleOnFocus = (index: number | boolean | Event): void => {
 const redirectToVehicleType = (): void => {
   router.push({ name: routeNames.vehicleType });
 };
-const getVehicleTypeDetail = async () => {
+const getVehicleTypeDetail = async (): Promise<void> => {
+  isLoadingInfo.value = true;
   const response = await service.vehicleType.getVehicleTypeById(
     vehicleTypeId.value
   );
+  isLoadingInfo.value = false;
   if (response) {
     vehicleTypeDetail.value = response;
+    dynamicValidateForm.formData[0].value = response.name;
   }
 };
 const handleFinish = async (): Promise<void> => {
@@ -138,14 +146,9 @@ const handleFinish = async (): Promise<void> => {
       }
     );
   } else {
-    messenger(
-      "edit_failed",
-      "Please try again later",
-      MessengerType.Error,
-      () => {
-        redirectToVehicleType();
-      }
-    );
+    messenger("edit_failed", "please_try_again", MessengerType.Error, () => {
+      redirectToVehicleType();
+    });
   }
   isLoading.value = false;
 };
@@ -154,6 +157,7 @@ const handleFinish = async (): Promise<void> => {
 //#===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌Hooks
 onMounted(() => {
   vehicleTypeId.value = route.params?.id;
+  getVehicleTypeDetail();
 });
 //#endregion===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌
 

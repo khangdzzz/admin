@@ -8,10 +8,34 @@
     :footer="null"
     :maskClosable="false">
     <div class="modal-content">
-      <img :src="modalIcon" class="modal-icon" />
-      <h3 class="modal-title">{{ $t(modalTitle) }}</h3>
-      <p class="modal-message">{{ $t(modalMessage) }}</p>
-      <a-button type="primary" class="btn-ok" @click="onOKClick">OK</a-button>
+      <img
+        :src="modalIcon"
+        class="modal-icon"
+        v-if="modalType !== MessengerType.Confirm" />
+      <h3 class="modal-title" v-if="modalTitle">{{ $t(modalTitle) }}</h3>
+      <p class="modal-message" v-if="modalMessage">{{ $t(modalMessage) }}</p>
+      <a-button
+        type="primary"
+        class="btn-ok"
+        @click="onOKClick"
+        v-if="modalType !== MessengerType.Confirm"
+        >OK</a-button
+      >
+      <div v-else class="modal-action-container">
+        <a-button
+          type="primary"
+          class="modal-action-container__action-button"
+          @click="visible = false"
+          ghost>
+          Cancel
+        </a-button>
+        <a-button
+          type="primary"
+          class="modal-action-container__action-button"
+          @click="onOKClick">
+          OK
+        </a-button>
+      </div>
     </div>
   </a-modal>
 </template>
@@ -42,6 +66,7 @@ const modalIcon = ref<string>("");
 const modalTitle = ref<string>("");
 const modalMessage = ref<string>("");
 const action = ref<() => void>();
+const modalType = ref<MessengerType>(MessengerType.Info);
 //#endregion
 
 //#region hooks
@@ -55,6 +80,7 @@ onMounted(() => {
 
 //#region function
 const onShowModal = ({ type, title, message, callback }: Modal): void => {
+  modalType.value = type;
   const errorIcon = new URL(
     "../../../assets/icons/ic_error.png",
     import.meta.url
@@ -91,6 +117,7 @@ const onOKClick = (): void => {
   justify-content: center;
   flex-direction: column;
   align-items: center;
+  margin: 6px;
 
   .modal-icon {
     margin-bottom: 24px;
@@ -98,6 +125,7 @@ const onOKClick = (): void => {
 
   .modal-title {
     margin: 0;
+    margin-bottom: 10px;
     font-family: "Roboto";
     font-style: normal;
     font-weight: 600;
@@ -109,7 +137,7 @@ const onOKClick = (): void => {
 
   .modal-message {
     color: $text-1;
-    margin-top: 10px;
+    margin-top: 0px;
     font-family: "Roboto";
     font-style: normal;
     font-weight: 400;
@@ -126,6 +154,22 @@ const onOKClick = (): void => {
     font-weight: 600;
     font-size: 18px;
     line-height: 18px;
+  }
+
+  .modal-action-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 4px;
+    &__action-button {
+      font-family: "Roboto";
+      font-style: normal;
+      width: calc(50% - 5px);
+      height: 48px;
+      font-weight: 600;
+      font-size: 18px;
+      line-height: 18px;
+    }
   }
 }
 

@@ -4,7 +4,60 @@
     :key="item.key"
     :name="['formData', index, 'value']"
     :rules="item.rules">
+    <!-- if input email, auto trim value -->
     <component
+      v-if="item.name === 'email'"
+      :is="item.inputType"
+      v-model:value.trim="item.value"
+      :disabled="item.disabled"
+      :options="item.options"
+      :style="item.style"
+      :dropdownClassName="item.dropdownClassName"
+      autocomplete="new-password"
+      @change="handleChange(item.value, index)"
+      @select="onSelect"
+      @pressEnter="onPressEnter"
+      @focus="onFocus(index)"
+      @blur="onBlur(item.value, index)"
+      class="input-item float-label"
+      :class="[
+        item.class,
+        !item.icon ? 'not-has-icon' : 'has-icon-input',
+        isActivePasswordIcon(item) ? 'password-item' : '',
+        !item.label ? 'not-has-label' : 'has-label',
+        item.inline && 'inline'
+      ]">
+      <!-- //region slot input  -->
+      <template #prefix v-if="item.icon">
+        <component :is="item.icon" :color="item.iconColor" />
+      </template>
+      <template #suffix>
+        <component :is="item.suffixIcon" :color="item.iconColor" />
+      </template>
+      <!-- endregion -->
+
+      <!-- //region slot select and autocomplete  -->
+      <template #option="{ label }">
+        <div :style="styleContent">
+          <span class="text-content">
+            {{ label }}
+          </span>
+        </div>
+      </template>
+      <!-- endregion -->
+
+      <!-- //region slot select  -->
+      <template #suffixIcon>
+        <img
+          src="@/assets/icons/ic_dropdown.svg"
+          width="20"
+          height="20"
+          style="padding: 4px" />
+      </template>
+      <!-- endregion -->
+    </component>
+    <component
+      v-else
       :is="item.inputType"
       v-model:value="item.value"
       :disabled="item.disabled"
@@ -29,7 +82,7 @@
       <template #prefix v-if="item.icon">
         <component :is="item.icon" :color="item.iconColor" />
       </template>
-      <template #suffix >
+      <template #suffix>
         <component :is="item.suffixIcon" :color="item.iconColor" />
       </template>
       <!-- endregion -->
