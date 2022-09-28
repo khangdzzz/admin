@@ -101,9 +101,11 @@
   "create_container_type_msg_create_successfully": "Container type is created successfully",
   "create_vehicle_type_msg_create_fail_title": "Create failed",
   "create_vehicle_type_msg_create_fail_message": "Please try again later",
+  "edit_vehicle_type_successfully": "Vehicle type is edited successfully",
   "vehicle_create_success": "Vehicle is created successfully",
   "create_failed": "Create failed",
   "please_try_again": "Please try again later",
   "forgot_password_attempt_limit_exceeded_title": "Attempt limit exceeded",
-  "forgot_password_attempt_limit_exceeded_msg": "Please try again later"
+  "forgot_password_attempt_limit_exceeded_msg": "Please try again later",
+  "edit_failed": "Edit failed"
 }

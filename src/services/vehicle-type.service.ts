@@ -1,6 +1,7 @@
 import { Pagination } from "@/modules/common/models";
 import { VehicleTypeModel } from "@/modules/vehicle-management/models";
 import { PaginationDto } from "./dtos/common/pagination.dto";
+import { transformRequest } from "./base.service";
 import {
   CreateVehicleTypeInputDto,
   VehicleTypeResponseDto
@@ -74,4 +75,29 @@ export async function fetchListVehicleType(
     //   };
     // })
   };
+}
+
+export async function getVehicleTypeById(
+  id: string | string[]
+): Promise<VehicleTypeModel | undefined> {
+  const [error, res] = await transformRequest<VehicleTypeModel>({
+    url: `/vehicle-types/${id}`,
+    method: "get"
+  });
+  if (error) return undefined;
+  return res;
+}
+
+export async function editVehicleTypeById(
+  id: string | string[],
+  tenant_id: number | string | undefined,
+  name: string
+): Promise<VehicleTypeModel | undefined> {
+  const [error, res] = await transformRequest<VehicleTypeModel>({
+    url: `/vehicle-types/${id}`,
+    method: "put",
+    data: { tenant_id, name }
+  });
+  if (error) return undefined;
+  return res;
 }
