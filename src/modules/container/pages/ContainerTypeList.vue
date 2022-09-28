@@ -22,6 +22,17 @@
       :columns="columns"
       :data-source="data"
       :pagination="false">
+      <template #headerCell="{ column }">
+        <template v-if="column.key === 'index'">
+          <span>{{ $t(column.title) }}</span>
+        </template>
+        <template v-if="['name'].includes(column.key)">
+          <div>
+            <span>{{ $t(column.title) }}</span>
+            <SortView class="mx-12" :sort="sort" />
+          </div>
+        </template>
+      </template>
       <template #bodyCell="{ column, record }">
         <template v-if="column.dataIndex === 'type'">
           <span>{{ record.type }}</span>
@@ -100,6 +111,8 @@ import { i18n } from "@/i18n";
 import { service } from "@/services";
 import { routeNames } from "@/routes/route-names";
 import { ContainerType } from "../models/container-type.models";
+import { Sort } from "@/modules/common/models/sort.enum";
+import SortView from "@/modules/common/components/SortView.vue";
 
 type Key = string | number;
 //#endregion===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆
@@ -108,6 +121,8 @@ type Key = string | number;
 //#endregion===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜Props
 
 //#===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎Variables
+const sort = ref<Sort>(Sort.None);
+
 const selectedKeys = ref<ContainerType[]>([]);
 
 const currentPage = ref<number>(1);
@@ -115,7 +130,8 @@ const currentPage = ref<number>(1);
 const columns: TableColumnType<ContainerType>[] = [
   {
     title: i18n.global.t("name"),
-    dataIndex: "name"
+    dataIndex: "name",
+    key: "name"
   },
   {
     dataIndex: "action",
