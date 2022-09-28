@@ -156,8 +156,8 @@ const rowSelection: TableProps["rowSelection"] = {
 };
 
 const fetchListContainerType = (): void => {
-  const res = service.container.getListContainerType();
-  data.value = []; //res;
+  const res = service.container.getListContainerType(1,10);
+  data.value =  [];
 };
 
 //#endregion===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊

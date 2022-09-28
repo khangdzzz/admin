@@ -11,6 +11,7 @@ import { CreateContainerTypeInputDto } from "./dtos/container-management/create-
 import { ContainerTypeResponseDto } from "./dtos/container/create-container-type.dto";
 import { VehicleTypeResponseDto } from "./dtos/vehicle-management/create-vehicle-type.dto";
 import createContainerTypeResponse from "./mocks/container-type/create-container-type.response.json";
+import getListContainerTypeResponse from "./mocks/container-type/get-list-container-type.response.json"
 import getListContainerResponse from "./mocks/container/get-list-container.reponse.json";
 
 const data: ContainerType[] = [
@@ -73,6 +74,43 @@ export async function getListContainer(
         tenantId
       };
     })
+  };
+}
+
+export async function getListContainerType(
+  page: 1,
+  size: 10
+): Promise<Pagination<ContainerType> | undefined> {
+  page;
+  size;
+  // const [error, res] = await transformRequest<PaginationDto<VehicleTypeResponseDto>>({
+  //     url: "/vehicle-types",
+  //     method: "get",
+  // });
+  // if (error || !res) return undefined;
+  const res: PaginationDto<VehicleTypeResponseDto> = getListContainerTypeResponse;
+  if (!res) return Promise.resolve(undefined);
+  const {
+    current_page: currentPage,
+    page_size: pageSize,
+    total,
+    total_page: totalPage,
+    results
+  } = res;
+  return {
+    currentPage,
+    pageSize,
+    total,
+    totalPage,
+    results: []
+    // results.map((vehicleTypeDto) => {
+    //   const { id, name, tenant_id: tenantId } = vehicleTypeDto;
+    //   return {
+    //     id,
+    //     name,
+    //     tenantId
+    //   };
+    // })
   };
 }
 
