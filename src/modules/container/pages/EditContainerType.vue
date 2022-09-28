@@ -37,6 +37,7 @@
 //#===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆import
 import { i18n } from "@/i18n";
 import CustomForm from "@/modules/base/components/CustomForm.vue";
+import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
@@ -53,10 +54,7 @@ import { useRoute } from "vue-router";
 //#===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎Variables
 const userStore = commonStore();
 const messenger: (
-  title: string,
-  message: string,
-  type: MessengerType,
-  callback: (() => void) | undefined
+  param: MessengerParamModel
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 ) => void = inject("messenger")!;
 
@@ -132,21 +130,21 @@ const handleSubmit = () => async (): Promise<void> => {
   );
   isLoading.value = false;
   if (res) {
-    messenger(
-      "create_container_type_msg_create_successfully",
-      "",
-      MessengerType.Success,
-      () => {
+    messenger({
+      title: "create_container_type_msg_create_successfully",
+      message: "",
+      type: MessengerType.Success,
+      callback: (isConfirm: boolean) => {
+        isConfirm;
         goToContainerTypeListPage();
       }
-    );
+    });
   } else {
-    messenger(
-      "create_vehicle_type_msg_create_fail_title",
-      "create_vehicle_type_msg_create_fail_message",
-      MessengerType.Error,
-      undefined
-    );
+    messenger({
+      title: "create_vehicle_type_msg_create_fail_title",
+      message: "create_vehicle_type_msg_create_fail_message",
+      type: MessengerType.Error
+    });
   }
 };
 

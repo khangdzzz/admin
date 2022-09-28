@@ -18,22 +18,23 @@
         type="primary"
         class="btn-ok"
         @click="onOKClick"
-        v-if="modalType !== MessengerType.Confirm"
-        >OK</a-button
+        v-if="modalType !== MessengerType.Confirm">
+        {{ $t(btnOk) }}
+        </a-button
       >
       <div v-else class="modal-action-container">
         <a-button
           type="primary"
           class="modal-action-container__action-button"
-          @click="visible = false"
+          @click="onCancelClick"
           ghost>
-          Cancel
+          {{ $t(btnCancel) }}
         </a-button>
         <a-button
           type="primary"
           class="modal-action-container__action-button"
           @click="onOKClick">
-          OK
+          {{ $t(btnOk) }}
         </a-button>
       </div>
     </div>
@@ -47,13 +48,7 @@
 import { Emitter, EventType } from "mitt";
 import { inject, onMounted, ref } from "vue";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
-
-type Modal = {
-  type: MessengerType;
-  title: string;
-  message: string;
-  callback: () => void;
-};
+import MessengerParamModel from "../models/messenger-param.model";
 //#region props
 //#endregion
 
@@ -65,21 +60,38 @@ const visible = ref<boolean>(false);
 const modalIcon = ref<string>("");
 const modalTitle = ref<string>("");
 const modalMessage = ref<string>("");
-const action = ref<() => void>();
+const action = ref<(isConfirm: boolean) => void>();
 const modalType = ref<MessengerType>(MessengerType.Info);
+const btnOk = ref<string>("btn_ok");
+const btnCancel = ref<string>("btn_cancel");
 //#endregion
 
 //#region hooks
 onMounted(() => {
   if (emitter) {
-    emitter.on("ShowModal", (value) => onShowModal(value as Modal));
+    emitter.on("ShowModal", (value) =>
+      onShowModal(value as MessengerParamModel)
+    );
   }
 });
 
 //#endregion
 
 //#region function
-const onShowModal = ({ type, title, message, callback }: Modal): void => {
+const onShowModal = ({
+  title,
+  message,
+  type,
+  buttonOkTitle,
+  buttonCancelTitle,
+  callback
+}: MessengerParamModel): void => {
+  if (buttonOkTitle) {
+    btnOk.value = buttonOkTitle;
+  }
+  if (buttonCancelTitle) {
+    btnCancel.value = buttonCancelTitle;
+  }
   modalType.value = type;
   const errorIcon = new URL(
     "../../../assets/icons/ic_error.png",
@@ -98,7 +110,13 @@ const onShowModal = ({ type, title, message, callback }: Modal): void => {
 
 const onOKClick = (): void => {
   if (action.value) {
-    action.value();
+    action.value(true);
+  }
+  visible.value = false;
+};
+const onCancelClick = (): void => {
+  if (action.value) {
+    action.value(false);
   }
   visible.value = false;
 };

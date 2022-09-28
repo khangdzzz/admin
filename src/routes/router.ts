@@ -15,7 +15,7 @@ const routes: RouteRecordRaw[] = [
     path: "/login",
     name: routeNames.login,
     component: () => import("@/modules/auth/pages/LoginPage.vue"),
-    // beforeEnter: loginGuard,
+    beforeEnter: loginGuard,
     meta: {
       layout: ScreenLayout.AUTH_LAYOUT
     }

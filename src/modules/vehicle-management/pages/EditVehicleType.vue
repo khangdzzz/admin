@@ -50,6 +50,7 @@ import { commonStore } from "@/stores";
 import { useRoute } from "vue-router";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import { VehicleTypeModel } from "../models";
+import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 
 //#endregion===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆
 
@@ -65,10 +66,7 @@ const userStore = commonStore();
 const vehicleTypeId = ref<string | string[]>("");
 const vehicleTypeDetail = ref<VehicleTypeModel>();
 const messenger: (
-  title: string,
-  message: string,
-  type: MessengerType,
-  callback: (() => void) | undefined
+  param: MessengerParamModel
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 ) => void = inject("messenger")!;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -137,17 +135,24 @@ const handleFinish = async (): Promise<void> => {
     name
   );
   if (response) {
-    messenger(
-      "edit_vehicle_type_successfully",
-      "",
-      MessengerType.Success,
-      () => {
+    messenger({
+      title: "edit_vehicle_type_successfully",
+      message: "",
+      type: MessengerType.Success,
+      callback: (isConfirm: boolean) => {
+        isConfirm;
         redirectToVehicleType();
       }
-    );
+    });
   } else {
-    messenger("edit_failed", "please_try_again", MessengerType.Error, () => {
-      redirectToVehicleType();
+    messenger({
+      title: "edit_failed",
+      message: "please_try_again",
+      type: MessengerType.Error,
+      callback: (isConfirm: boolean) => {
+        isConfirm;
+        redirectToVehicleType();
+      }
     });
   }
   isLoading.value = false;

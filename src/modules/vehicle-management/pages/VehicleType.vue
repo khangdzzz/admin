@@ -58,6 +58,7 @@
 <script setup lang="ts">
 //#region import
 import ListSearchHeader from "@/modules/base/components/ListSearchHeader.vue";
+import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import SortView from "@/modules/common/components/SortView.vue";
 import { Sort } from "@/modules/common/models/sort.enum";
@@ -75,12 +76,7 @@ import { VehicleTypeModel } from "../models";
 //#endregion
 //#region variables
 
-const messenger: (
-  title: string,
-  message: string,
-  type: MessengerType,
-  callback: (() => void) | undefined
-) => void =
+const messenger: (param: MessengerParamModel) => void =
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   inject("messenger")!;
 
@@ -164,15 +160,19 @@ const softName = (): void => {
   }
 };
 const deleteVehicleType = (): void => {
-  messenger(
-    "",
-    "Are you sure you want to delete?",
-    MessengerType.Confirm,
-    onDeleteVehicleType
-  );
+  messenger({
+    title: "",
+    message: "vehicle_type_msg_confirm_delete",
+    type: MessengerType.Confirm,
+    buttonOkTitle: "btn_delete",
+    callback: onDeleteVehicleType
+  });
 };
 
-const onDeleteVehicleType = async (): Promise<void> => {
+const onDeleteVehicleType = async (isConfirm: boolean): Promise<void> => {
+  if (!isConfirm) {
+    return;
+  }
   if (!selectedKeys.value?.length) {
     return;
   }
@@ -181,20 +181,22 @@ const onDeleteVehicleType = async (): Promise<void> => {
   const isSuccess = await service.vehicleType.deleteVehicleTypeById(deleteId);
   isLoading.value = false;
   if (!isSuccess) {
-    messenger(
-      "Delete failed",
-      "Please try again later",
-      MessengerType.Error,
-      undefined
-    );
+    messenger({
+      title: "vehicle_type_delete_fail_lbl_title",
+      message: "vehicle_type_delete_fail_lbl_message",
+      type: MessengerType.Error
+    });
     return;
   }
-  messenger(
-    "Vehicle type is deleted successfully",
-    "",
-    MessengerType.Success,
-    initialize
-  );
+  messenger({
+    title: "vehicle_type_msg_delete_successfully",
+    message: "",
+    type: MessengerType.Success,
+    callback: (isConfirm: boolean): void => {
+      isConfirm;
+      initialize();
+    }
+  });
 };
 //#endregion
 

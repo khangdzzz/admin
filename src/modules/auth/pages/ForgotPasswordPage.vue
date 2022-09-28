@@ -20,6 +20,7 @@ import SetNewPasswordForm from "../components/SetNewPasswordForm.vue";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import { routeNames, router } from "@/routes";
 import { CognitoUser, CognitoUserPool } from "amazon-cognito-identity-js";
+import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 //#endregion
 
 //#region props
@@ -27,10 +28,7 @@ import { CognitoUser, CognitoUserPool } from "amazon-cognito-identity-js";
 
 //#region variables
 const messenger: (
-  title: string,
-  message: string,
-  type: MessengerType,
-  callback: (() => void) | undefined
+  param: MessengerParamModel
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 ) => void = inject("messenger")!;
 const poolData = {
@@ -65,12 +63,11 @@ const onHandleConfirm = (value: string): void => {
     },
     onFailure: (err): void => {
       if (err.name === "LimitExceededException") {
-        messenger(
-          "forgot_password_attempt_limit_exceeded_title",
-          "forgot_password_attempt_limit_exceeded_msg",
-          MessengerType.Error,
-          undefined
-        );
+        messenger({
+          title: "forgot_password_attempt_limit_exceeded_title",
+          message: "forgot_password_attempt_limit_exceeded_msg",
+          type: MessengerType.Error
+        });
       }
       isLoading.value = false;
     }
@@ -90,24 +87,24 @@ const onSetNewPassword = (data: { code: string; password: string }): void => {
         return;
       }
       isLoading.value = false;
-      messenger(
-        "forgot_password_reset_successfully_lbl_title",
-        "forgot_password_reset_successfully_lbl_message",
-        MessengerType.Success,
-        () => {
+      messenger({
+        title: "forgot_password_reset_successfully_lbl_title",
+        message: "forgot_password_reset_successfully_lbl_message",
+        type: MessengerType.Success,
+        callback: (isConfirm: boolean) => {
+          isConfirm;
           router.push({ name: routeNames.login });
         }
-      );
+      });
     },
     onFailure: (err): void => {
       err;
       isLoading.value = false;
-      messenger(
-        "forgot_password_error_popup_lbl_title",
-        "forgot_password_error_popup_lbl_message",
-        MessengerType.Error,
-        undefined
-      );
+      messenger({
+        title: "forgot_password_error_popup_lbl_title",
+        message: "forgot_password_error_popup_lbl_message",
+        type: MessengerType.Error
+      });
     }
   });
 };
