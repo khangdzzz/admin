@@ -1,6 +1,6 @@
 <template>
   <a-spin :tip="$t('common_loading')" :spinning="isLoading">
-    <ListSearchHeader :title="$t('vehicle_type')">
+    <ListSearchHeader :title="$t('vehicle_type')" @onChange="onSearchChange">
       <template #action>
         <a-button
           class="btn"
@@ -32,7 +32,7 @@
             <span>{{ $t(column.title) }}</span>
           </template>
           <template v-if="column.key === 'name'">
-            <div @click="softName">
+            <div @click="changeSort">
               <span>{{ $t(column.title) }}</span>
               <SortView class="mx-12" :sort="sort" />
             </div>
@@ -82,12 +82,6 @@ const messenger: (param: MessengerParamModel) => void =
 
 const columns = [
   {
-    title: "vehicle_column_no",
-    dataIndex: "index",
-    key: "index",
-    width: "5%"
-  },
-  {
     title: "vehicle_column_name",
     dataIndex: "name",
     key: "name"
@@ -107,6 +101,7 @@ const data = ref<VehicleTypeModel[]>([]);
 const selectedKeys = ref<VehicleTypeModel[]>([]);
 const sort = ref<Sort>(Sort.None);
 const isLoading = ref<boolean>(false);
+const searchString = ref<string>("");
 //#endregion
 
 //#region hooks
@@ -140,23 +135,46 @@ const onCreate = (): void => {
 const editVehicleType = (id: string): void => {
   router.push(`edit-vehicle-type/${id}`);
 };
-const softName = (): void => {
+
+const changeSort = (): void => {
   switch (sort.value) {
     case Sort.Asc:
       sort.value = Sort.Desc;
-      data.value = [...sourceData].sort((firtVehicleType, secondVehicleType) =>
-        firtVehicleType.name.localeCompare(secondVehicleType.name)
-      );
       break;
     case Sort.Desc:
       sort.value = Sort.None;
-      data.value = [...sourceData];
       break;
     default:
       sort.value = Sort.Asc;
-      data.value = [...sourceData].sort((firtVehicleType, secondVehicleType) =>
-        secondVehicleType.name.localeCompare(firtVehicleType.name)
+  }
+  sortAndFilterName();
+};
+const onSearchChange = (searchKeyword: string): void => {
+  searchString.value = searchKeyword || "";
+  sortAndFilterName();
+};
+
+const sortAndFilterName = (): void => {
+  const filteredData = [...sourceData].filter((vehicleType) => {
+    return vehicleType.name
+      .toLowerCase()
+      .includes(searchString.value.toLowerCase());
+  });
+  switch (sort.value) {
+    case Sort.Asc:
+      data.value = [...filteredData].sort(
+        (firtVehicleType, secondVehicleType) =>
+          firtVehicleType.name.localeCompare(secondVehicleType.name)
       );
+      break;
+    case Sort.Desc:
+      data.value = [...filteredData].sort(
+        (firtVehicleType, secondVehicleType) =>
+          secondVehicleType.name.localeCompare(firtVehicleType.name)
+      );
+      break;
+    default:
+      data.value = [...filteredData];
   }
 };
 const deleteVehicleType = (): void => {
