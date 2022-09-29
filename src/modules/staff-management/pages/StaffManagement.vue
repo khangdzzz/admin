@@ -146,7 +146,7 @@ const fetchListStaff = async (): Promise<void> => {
   }
 };
 const handleAddStaff = (): void => {
-  message.success("redirect to add staff");
+  router.push({ name: routeNames.createNewStaff });
 };
 const onSelectChange = (rowSelect: Staff[]): void => {
   selectedRowKeys.value = rowSelect;
