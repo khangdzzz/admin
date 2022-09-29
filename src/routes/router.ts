@@ -121,13 +121,27 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: "/staff-management",
-    name: routeNames.staffManagement,
-    component: () =>
-      import("@/modules/staff-management/pages/StaffManagement.vue"),
     beforeEnter: requireLoginGuard,
+    redirect: {
+      name: routeNames.staffManagement
+    },
     meta: {
       layout: ScreenLayout.DEFAULT_LAYOUT
-    }
+    },
+    children: [
+      {
+        path: "",
+        name: routeNames.staffManagement,
+        component: () =>
+          import("@/modules/staff-management/pages/StaffManagement.vue")
+      },
+      {
+        path: "create-new",
+        name: routeNames.createCollectionBase,
+        component: () =>
+          import("@/modules/staff-management/pages/CreateCollectionBase.vue")
+      }
+    ]
   },
   {
     path: "/container",

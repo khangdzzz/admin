@@ -2,9 +2,9 @@
   <a-form-item
     v-for="(item, index) in formData"
     :key="item.key"
-    :name="['formData', index, 'value']"
-    :rules="item.rules">
-    <!-- if input email, auto trim value -->
+    :name="[item.parent || 'formData', index, 'value']"
+    :rules="item.rules"
+  >
     <component
       v-if="item.name === 'email'"
       :is="item.inputType"
@@ -26,7 +26,8 @@
         isActivePasswordIcon(item) ? 'password-item' : '',
         !item.label ? 'not-has-label' : 'has-label',
         item.inline && 'inline'
-      ]">
+      ]"
+    >
       <!-- //region slot input  -->
       <template #prefix v-if="item.icon">
         <component :is="item.icon" :color="item.iconColor" />
@@ -52,7 +53,8 @@
           src="@/assets/icons/ic_dropdown.svg"
           width="20"
           height="20"
-          style="padding: 4px" />
+          style="padding: 4px"
+        />
       </template>
       <!-- endregion -->
     </component>
@@ -77,7 +79,8 @@
         isActivePasswordIcon(item) ? 'password-item' : '',
         !item.label ? 'not-has-label' : 'has-label',
         item.inline && 'inline'
-      ]">
+      ]"
+    >
       <!-- //region slot input  -->
       <template #prefix v-if="item.icon">
         <component :is="item.icon" :color="item.iconColor" />
@@ -103,7 +106,8 @@
           src="@/assets/icons/ic_dropdown.svg"
           width="20"
           height="20"
-          style="padding: 4px" />
+          style="padding: 4px"
+        />
       </template>
       <!-- endregion -->
     </component>

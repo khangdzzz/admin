@@ -117,7 +117,8 @@ const goHome = (): void => {
     <div class="default-layout__lhs-wrapper">
       <div
         class="default-layout__logo d-flex justify-center align-center"
-        @click="goHome">
+        @click="goHome"
+      >
         <Logo />
       </div>
       <a-divider class="m-0" />
@@ -125,24 +126,29 @@ const goHome = (): void => {
         {{ $t("menu_lbl_hello", { name: user }) }}
       </div>
       <div
-        class="default-layout__menu-wrapper d-flex flex-column justify-space-between">
+        class="default-layout__menu-wrapper d-flex flex-column justify-space-between"
+      >
         <div class="default-layout__menu fill-height">
           <a-menu
             mode="inline"
             v-model:openKeys="openKeys"
             v-model:selectedKeys="selectedKeys"
-            @openChange="onOpenChange">
+            @openChange="onOpenChange"
+          >
             <span
               v-for="(subMenu, idx) in menuItems"
               :key="subMenu.title + idx"
-              class="default-layout__menu-item-wrapper">
+              class="default-layout__menu-item-wrapper"
+            >
               <a-sub-menu
                 v-if="subMenu.items && subMenu.items.length > 0"
-                :key="subMenu.title">
+                :key="subMenu.title"
+              >
                 <template #icon>
                   <component
                     :is="subMenu.icon"
-                    class="default-layout__icon"></component>
+                    class="default-layout__icon"
+                  ></component>
                 </template>
                 <template #title>
                   <span class="default-layout__menu-title">
@@ -156,7 +162,8 @@ const goHome = (): void => {
                 </template>
                 <a-menu-item
                   v-for="subMenuItem in subMenu.items"
-                  :key="subMenuItem.title">
+                  :key="subMenuItem.title"
+                >
                   <router-link :to="{ name: subMenuItem.pathName }">
                     <span class="default-layout__sub-menu-title">
                       {{ $t(subMenuItem.title) }}
@@ -169,7 +176,8 @@ const goHome = (): void => {
                   <div class="d-flex align-center">
                     <component
                       :is="subMenu.icon"
-                      class="default-layout__icon"></component>
+                      class="default-layout__icon"
+                    ></component>
                   </div>
                 </template>
                 <router-link :to="{ name: subMenu.pathName }">
@@ -185,7 +193,8 @@ const goHome = (): void => {
           <a-button
             type="text"
             class="default-layout__logout-btn d-flex align-center gap-10"
-            @click="onLogout">
+            @click="onLogout"
+          >
             <template #icon>
               <DoorArrowRight />
             </template>
@@ -290,6 +299,7 @@ const goHome = (): void => {
 
   &__content-wrapper {
     background-color: #f0f8fa;
+    overflow: auto;
   }
 }
 

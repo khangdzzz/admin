@@ -48,6 +48,13 @@ const validator = {
     } else {
       return Promise.resolve();
     }
+  },
+  validateNumber: (rule: Rule, value: number): Promise<void> => {
+    if (value && isNaN(value)) {
+      return Promise.reject(i18n.global.t("allow_input_number"));
+    }
+
+    return Promise.resolve();
   }
 };
 export default validator;
