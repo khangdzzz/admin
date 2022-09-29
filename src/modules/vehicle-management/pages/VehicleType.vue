@@ -163,14 +163,14 @@ const sortAndFilterName = (): void => {
   switch (sort.value) {
     case Sort.Asc:
       data.value = [...filteredData].sort(
-        (firtVehicleType, secondVehicleType) =>
-          firtVehicleType.name.localeCompare(secondVehicleType.name)
+        (firstVehicleType, secondVehicleType) =>
+          firstVehicleType.name.localeCompare(secondVehicleType.name)
       );
       break;
     case Sort.Desc:
       data.value = [...filteredData].sort(
-        (firtVehicleType, secondVehicleType) =>
-          secondVehicleType.name.localeCompare(firtVehicleType.name)
+        (firstVehicleType, secondVehicleType) =>
+          secondVehicleType.name.localeCompare(firstVehicleType.name)
       );
       break;
     default:

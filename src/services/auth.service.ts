@@ -14,14 +14,22 @@ export async function getCurrentUserInformation(): Promise<
   //   return undefined;
   // }
   const res: UserInfomationDto = mockGetMe;
-  const { id, email, full_name: fullName, tenant_id: tenantId } = res;
+  const {
+    id,
+    email,
+    full_name: fullName,
+    tenant_id: tenantId,
+    user_type: userType
+  } = res;
 
   const userInfo = {
     id,
     email,
     fullName,
-    tenantId
+    tenantId,
+    userType
   };
+
   const userStore = commonStore();
   userStore.user = userInfo;
   return userInfo;

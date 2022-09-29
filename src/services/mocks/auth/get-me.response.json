@@ -1,6 +1,7 @@
 {
-    "full_name": "Nghia Ha Minh",
-    "email": "nghiahm@techvify.com.vn",
-    "tenant_id": 1,
-    "id": 1
+  "full_name": "User A",
+  "email": "nghiahm@techvify.com.vn",
+  "tenant_id": 1,
+  "user_type": "TENANT_ADMIN",
+  "id": 1
 }

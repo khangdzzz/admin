@@ -1,105 +1,53 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 
 import Logo from "@/assets/images/ImLogo.vue";
-import SuitCase from "@/assets/images/ImSuitCase.vue";
-import Manufacture from "@/assets/images/ImManufacture.vue";
-import Trace from "@/assets/images/ImTrace.vue";
-import GroupOfPeople from "@/assets/images/ImGroupOfPeople.vue";
-import Truck from "@/assets/images/ImTruck.vue";
-import Location from "@/assets/images/ImLocation.vue";
-import Container from "@/assets/images/ImContainer.vue";
-import Setting from "@/assets/images/ImSetting.vue";
 import DoorArrowRight from "@/assets/images/ImDoorArrowRight.vue";
 import ArrowUp from "@/assets/images/ImArrowUp.vue";
 import { routeNames } from "@/routes/route-names";
 import { router } from "@/routes";
 import { service } from "@/services";
+import { UserType } from "../models/user-type.enum";
+import sideMenuItem from "../models/menu";
 
 const user = ref<string>("");
 const selectedKeys = ref<string[]>(["Collection business"]);
 const openKeys = ref<string[]>([""]);
-
+const userTypeName = ref();
 if (service.localStorage.getAccessToken()) {
   const userInfo = await service.auth.getCurrentUserInformation();
   user.value = userInfo?.fullName || "";
+  userTypeName.value = userInfo?.userType;
 }
 
-const menuItems = [
-  {
-    key: "Collection business",
-    icon: SuitCase,
-    title: "menu_lbl_collection_business",
-    pathName: routeNames.collectionBusiness
-  },
-  {
-    key: "Product manufacture",
-    icon: Manufacture,
-    title: "menu_lbl_product_manufacture",
-    pathName: routeNames.productManufacture
-  },
-  {
-    key: "Traceability",
-    icon: Trace,
-    title: "menu_lbl_traceability",
-    pathName: routeNames.traceability
-  },
-  {
-    key: "Customer management",
-    icon: GroupOfPeople,
-    title: "menu_lbl_customer_management",
-    pathName: routeNames.customerManagement
-  },
-  {
-    key: "Vehicle management",
-    icon: Truck,
-    title: "menu_lbl_vehicle_management",
-    items: [
-      {
-        title: "menu_lbl_vehicle_management_item_realtime_dynamics",
-        pathName: routeNames.realTimeDynamics
-      },
-      {
-        title: "menu_lbl_vehicle_management_item_vehicle",
-        pathName: routeNames.vehicle
-      },
-      {
-        title: "menu_lbl_vehicle_management_item_vehicle_type",
-        pathName: routeNames.vehicleType
-      }
-    ]
-  },
-  {
-    key: "Collection base/ Staff management",
-    icon: Location,
-    title: "menu_lbl_collection_base_and_staff_management",
-    pathName: routeNames.staffManagement
-  },
-  {
-    key: "Container/ Working place management",
-    icon: Container,
-    title: "menu_lbl_container_and_working_place_management",
-    items: [
-      {
-        title: "container_container",
-        pathName: routeNames.containerChild
-      },
-      {
-        title: "container_container_type",
-        pathName: routeNames.containerType
-      }
-    ]
-  },
-  {
-    key: "Setting",
-    icon: Setting,
-    title: "menu_lbl_setting",
-    pathName: routeNames.setting
-  }
-];
+onMounted(async () => {
+  const userInfo = await service.auth.getCurrentUserInformation();
+  userTypeName.value = userInfo?.userType;
+});
 
 const onOpenChange = (keys: string[]): void => {
   openKeys.value = [keys[keys.length - 1]];
+};
+
+const isHasPermission = (listUserType: UserType[] | undefined): boolean => {
+  if (!listUserType?.length) {
+    return true;
+  }
+
+  return listUserType.includes(userTypeName.value);
+};
+
+//Todo: Teddy need to fix this
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const isShowExpand = (menuItem: any): boolean => {
+  let numberOfItems = 0;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  menuItem?.map((item: any) => {
+    if (isHasPermission(item.requireUserType)) {
+      numberOfItems++;
+    }
+  });
+  return numberOfItems > 0;
 };
 
 const onLogout = (): void => {
@@ -135,61 +83,73 @@ const goHome = (): void => {
             v-model:selectedKeys="selectedKeys"
             @openChange="onOpenChange"
           >
-            <span
-              v-for="(subMenu, idx) in menuItems"
+            <div
+              v-for="(subMenu, idx) in sideMenuItem"
               :key="subMenu.title + idx"
-              class="default-layout__menu-item-wrapper"
             >
-              <a-sub-menu
-                v-if="subMenu.items && subMenu.items.length > 0"
-                :key="subMenu.title"
+              <span
+                v-if="isHasPermission(subMenu.requireUserType)"
+                class="default-layout__menu-item-wrapper"
               >
-                <template #icon>
-                  <component
-                    :is="subMenu.icon"
-                    class="default-layout__icon"
-                  ></component>
-                </template>
-                <template #title>
-                  <span class="default-layout__menu-title">
-                    {{ $t(subMenu.title) }}
-                  </span>
-                </template>
-                <template #expandIcon>
-                  <span class="default-layout__arrow-icon">
-                    <ArrowUp />
-                  </span>
-                </template>
-                <a-menu-item
-                  v-for="subMenuItem in subMenu.items"
-                  :key="subMenuItem.title"
+                <a-sub-menu
+                  v-if="
+                    subMenu.items &&
+                    subMenu.items.length > 0 &&
+                    isShowExpand(subMenu.items)
+                  "
+                  :key="subMenu.title"
                 >
-                  <router-link :to="{ name: subMenuItem.pathName }">
-                    <span class="default-layout__sub-menu-title">
-                      {{ $t(subMenuItem.title) }}
-                    </span>
-                  </router-link>
-                </a-menu-item>
-              </a-sub-menu>
-              <a-menu-item v-else :key="subMenu.key">
-                <template #icon>
-                  <div class="d-flex align-center">
+                  <template #icon>
                     <component
                       :is="subMenu.icon"
                       class="default-layout__icon"
                     ></component>
-                  </div>
-                </template>
-                <router-link :to="{ name: subMenu.pathName }">
-                  <span class="default-layout__menu-title">
-                    {{ $t(subMenu.title) }}
+                  </template>
+                  <template #title>
+                    <span class="default-layout__menu-title">
+                      {{ $t(subMenu.title) }}
+                    </span>
+                  </template>
+                  <template #expandIcon>
+                    <span class="default-layout__arrow-icon">
+                      <ArrowUp />
+                    </span>
+                  </template>
+                  <span v-for="subMenuItem in subMenu.items">
+                    <a-menu-item
+                      :key="subMenuItem.title"
+                      v-if="isHasPermission(subMenuItem.requireUserType)"
+                    >
+                      <router-link :to="{ name: subMenuItem.pathName }">
+                        <span class="default-layout__sub-menu-title">
+                          {{ $t(subMenuItem.title) }}
+                        </span>
+                      </router-link>
+                    </a-menu-item>
                   </span>
-                </router-link>
-              </a-menu-item>
-            </span>
+                </a-sub-menu>
+                <a-menu-item v-else :key="subMenu.key">
+                  <template #icon>
+                    <div class="d-flex align-center">
+                      <component
+                        :is="subMenu.icon"
+                        class="default-layout__icon"
+                      ></component>
+                    </div>
+                  </template>
+                  <router-link :to="{ name: subMenu.pathName }">
+                    <span class="default-layout__menu-title">
+                      {{ $t(subMenu.title) }}
+                    </span>
+                  </router-link>
+                </a-menu-item>
+              </span>
+            </div>
           </a-menu>
         </div>
-        <div class="d-flex justify-center align-center mb-20">
+        <div
+          class="d-flex justify-center align-center mb-20 default-layout__logout-content"
+        >
           <a-button
             type="text"
             class="default-layout__logout-btn d-flex align-center gap-10"
@@ -212,7 +172,7 @@ const goHome = (): void => {
 <style scoped lang="scss">
 .default-layout {
   &__lhs-wrapper {
-    width: 300px;
+    min-width: 300px;
     height: 100%;
     background-color: #fff;
     box-shadow: 4px 2px 8px rgba(0, 0, 0, 0.02);
@@ -238,7 +198,11 @@ const goHome = (): void => {
   }
 
   &__menu {
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+    .ant-menu-root {
+      border: none !important;
+    }
   }
 
   &__menu-title {
@@ -300,6 +264,11 @@ const goHome = (): void => {
   &__content-wrapper {
     background-color: #f0f8fa;
     overflow: auto;
+  }
+
+  &__logout-content {
+    box-shadow: 0px -3px 6px rgba(0, 0, 0, 0.06);
+    padding-top: 15px;
   }
 }
 

@@ -10,4 +10,31 @@
 
 * {
   font-family: "Roboto";
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    border: none;
+    padding: 1px;
+    background-color: transparent;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    border: 1px solid transparent;
+    background: rgba($color: #000000, $alpha: 0);
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #D7D7D7;
+    border-radius: 5px;
+    width: 8px;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #D7D7D7;
+    border-radius: 5px;
+    width: 8px;
+  }
 }

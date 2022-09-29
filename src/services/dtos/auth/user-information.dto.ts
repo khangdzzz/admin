@@ -3,4 +3,5 @@ export default interface UserInfomationDto {
   tenant_id: number;
   email: string;
   full_name: string;
+  user_type: string;
 }
