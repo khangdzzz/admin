@@ -43,6 +43,7 @@
 
 import Ic_pass from "@/assets/icons/IcPass.vue";
 import Ic_user from "@/assets/icons/IcUser.vue";
+import validator from "@/modules/base/components/validator/validator";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import { router } from "@/routes";
@@ -83,6 +84,12 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
       name: "email",
       disabled: false,
       required: false,
+      rules: [
+        {
+          validator: validator.validateEmail,
+          trigger: ["change", "blur"]
+        }
+      ],
       key: 1,
       isFocus: false
     },
@@ -189,6 +196,13 @@ const onLoginSuccessfully = async (): Promise<void> => {
     router.push({ name: routeNames.collectionBusiness });
   }
 };
+
+const isValidateEmail = (): boolean => {
+  const regExpEmail =
+    // eslint-disable-next-line no-control-regex, no-useless-escape
+    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@([a-z]{1})((?=.*[a-z|_])(?=.*[.])(?!.*\.\.)(?!.*\_\_)(?!.*\.\_)(?!.*\_\.)(?!.*\s).{1,61})([a-z]{1})$/;
+  return regExpEmail.test(dynamicValidateForm.formData[0].value);
+};
 //#endregion
 
 //#region computed
@@ -200,7 +214,8 @@ watch(
   () => {
     if (
       dynamicValidateForm.formData[0].value &&
-      dynamicValidateForm.formData[1].value
+      dynamicValidateForm.formData[1].value &&
+      isValidateEmail()
     ) {
       isValidated.value = true;
     } else {
