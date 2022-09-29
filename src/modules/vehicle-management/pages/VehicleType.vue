@@ -179,8 +179,8 @@ const sortAndFilterName = (): void => {
 };
 const deleteVehicleType = (): void => {
   messenger({
-    title: "",
-    message: "vehicle_type_msg_confirm_delete",
+    title: "vehicle_type_msg_confirm_delete",
+    message: "",
     type: MessengerType.Confirm,
     buttonOkTitle: "btn_delete",
     callback: onDeleteVehicleType

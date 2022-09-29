@@ -140,6 +140,8 @@
   "vehicle_type_delete_fail_lbl_message": "Please try again later",
   "vehicle_type_msg_delete_successfully": "Vehicle type is deleted successfully",
   "vehicle_create_success": "Vehicle is created successfully",
+  "container_type_delete_successfully": "Container type is deleted successfully",
+  "container_type_eidt_successfully": "Container type is edited successfully",
   "create_failed": "Create failed",
   "please_try_again": "Please try again later",
   "forgot_password_attempt_limit_exceeded_title": "Attempt limit exceeded",

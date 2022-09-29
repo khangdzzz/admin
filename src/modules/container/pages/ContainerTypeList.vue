@@ -1,117 +1,139 @@
 <template>
-  <ListSearchHeader :title="$t('container_type')">
-    <template #action>
-      <a-button type="primary" :class="[containerTypeList.btnAddNew]">
-        <template #icon>
-          <img
-            src="@/assets/icons/ic_plus.svg"
-            :class="[containerTypeList.btnIcon]" />
-        </template>
-        <router-link
-          :to="{
-            name: routeNames.createContainerType
-          }">
-          {{ $t("add_container_type") }}
-        </router-link>
-      </a-button>
-    </template>
-  </ListSearchHeader>
-  <div :class="[containerTypeList.tableContainer]">
-    <a-table
-      :row-selection="rowSelection"
-      :columns="columns"
-      :data-source="data"
-      :pagination="false">
-      <template #headerCell="{ column }">
-        <template v-if="column.key === 'index'">
-          <span>{{ $t(column.title) }}</span>
-        </template>
-        <template v-if="['name'].includes(column.key)">
-          <div>
-            <span>{{ $t(column.title) }}</span>
-            <SortView class="mx-12" :sort="sort" />
-          </div>
-        </template>
-      </template>
-      <template #bodyCell="{ column, record }">
-        <template v-if="column.dataIndex === 'type'">
-          <span>{{ record.type }}</span>
-        </template>
-        <template v-if="column.dataIndex === 'action'">
-          <center>
-            <router-link
-              :to="{
-                name: routeNames.editContainerType,
-                params: {
-                  id: record.key
-                }
-              }">
-              <img
-                src="@/assets/icons/ic_btn_edit.svg"
-                :class="[containerTypeList.actionIcon]" />
-            </router-link>
+  <a-spin :tip="$t('common_loading')" :spinning="isLoading">
+    <ListSearchHeader
+      :title="$t('container_type')"
+      @onChange="handleSearchChange">
+      <template #action>
+        <a-button
+          class="btn"
+          type="primary"
+          ghost
+          @click="deleteContainerType"
+          v-if="selectedKeys.length > 0">
+          <template #icon>
+            <img src="@/assets/icons/ic_delete.svg" class="btn-icon" />
+          </template>
+          {{ $t("delete_btn") }}
+        </a-button>
+        <a-button
+          type="primary"
+          :class="[containerTypeList.btnAddNew]"
+          class="btn btn-add-new">
+          <template #icon>
             <img
-              src="@/assets/icons/ic_btn_delete.svg"
-              :class="[containerTypeList.actionIcon]" />
-          </center>
-        </template>
+              src="@/assets/icons/ic_plus.svg"
+              :class="[containerTypeList.btnIcon]" />
+          </template>
+          <router-link
+            :to="{
+              name: routeNames.createContainerType
+            }">
+            {{ $t("add_container_type") }}
+          </router-link>
+        </a-button>
       </template>
-    </a-table>
-    <div :class="containerTypeList.pagination" v-if="data.length > 50">
-      <a-pagination
-        v-model:current="currentPage"
-        :total="data.length"
-        class="ant-pagination">
-        <template #itemRender="{ type, originalElement }">
-          <a-button
-            :class="[containerTypeList.btnPagination]"
-            type="primary"
-            ghost
-            v-if="type === 'prev'">
-            <template #icon>
-              <img
-                src="@/assets/icons/ic_prev.svg"
-                :class="[containerTypeList.btnIconPrev]" />
-              <span :class="[containerTypeList.action]">{{
-                $t("previous_btn")
-              }}</span>
-            </template>
-          </a-button>
-          <a-button
-            :class="[containerTypeList.btnPagination]"
-            type="primary"
-            ghost
-            v-else-if="type === 'next'">
-            <template #icon>
-              <span :class="[containerTypeList.action]">{{
-                $t("next_btn")
-              }}</span>
-              <img
-                src="@/assets/icons/ic_next.svg"
-                :class="[containerTypeList.btnIconNext]" />
-            </template>
-          </a-button>
-          <component :is="originalElement" v-else></component>
+    </ListSearchHeader>
+    <div :class="[containerTypeList.tableContainer]">
+      <a-table
+        :row-selection="rowSelection"
+        :columns="columns"
+        :data-source="data"
+        :pagination="false">
+        <template #headerCell="{ column }">
+          <template v-if="column.key === 'index'">
+            <span>{{ $t(column.title) }}</span>
+          </template>
+          <template v-if="['name'].includes(column.key)">
+            <div @click="changeSort">
+              <span>{{ $t(column.title) }}</span>
+              <SortView class="mx-12" :sort="sort" />
+            </div>
+          </template>
         </template>
+        <template #bodyCell="{ column, record }">
+          <template v-if="column.dataIndex === 'type'">
+            <span>{{ record.type }}</span>
+          </template>
+          <template v-if="column.dataIndex === 'action'">
+            <center>
+              <router-link
+                :to="{
+                  name: routeNames.editContainerType,
+                  params: {
+                    id: record.key
+                  }
+                }">
+                <img
+                  src="@/assets/icons/ic_btn_edit.svg"
+                  :class="[containerTypeList.actionIcon]" />
+              </router-link>
+              <img
+                src="@/assets/icons/ic_btn_delete.svg"
+                :class="[containerTypeList.actionIcon]" />
+            </center>
+          </template>
+        </template>
+      </a-table>
+      <div :class="containerTypeList.pagination" v-if="data.length > 50">
+        <a-pagination
+          v-model:current="currentPage"
+          :total="data.length"
+          class="ant-pagination">
+          <template #itemRender="{ type, originalElement }">
+            <a-button
+              :class="[containerTypeList.btnPagination]"
+              type="primary"
+              ghost
+              v-if="type === 'prev'">
+              <template #icon>
+                <img
+                  src="@/assets/icons/ic_prev.svg"
+                  :class="[containerTypeList.btnIconPrev]" />
+                <span :class="[containerTypeList.action]">{{
+                  $t("previous_btn")
+                }}</span>
+              </template>
+            </a-button>
+            <a-button
+              :class="[containerTypeList.btnPagination]"
+              type="primary"
+              ghost
+              v-else-if="type === 'next'">
+              <template #icon>
+                <span :class="[containerTypeList.action]">{{
+                  $t("next_btn")
+                }}</span>
+                <img
+                  src="@/assets/icons/ic_next.svg"
+                  :class="[containerTypeList.btnIconNext]" />
+              </template>
+            </a-button>
+            <component :is="originalElement" v-else></component>
+          </template>
 
-        <template #buildOptionText="{ value }">
-          {{ value }}
-        </template>
-      </a-pagination>
+          <template #buildOptionText="{ value }">
+            {{ value }}
+          </template>
+        </a-pagination>
+      </div>
     </div>
-  </div>
+  </a-spin>
 </template>
 
 <script setup lang="ts">
 //#===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆import
 import ListSearchHeader from "@/modules/base/components/ListSearchHeader.vue";
+import MessengerParamModel from "@/modules/base/models/messenger-param.model";
+import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import SortView from "@/modules/common/components/SortView.vue";
 import { Sort } from "@/modules/common/models/sort.enum";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
 import type { TableColumnType, TableProps } from "ant-design-vue";
-import { onMounted, ref } from "vue";
-import { ContainerType } from "../models/container-type.models";
+import { inject, onMounted, ref } from "vue";
+import ContainerTypeModel, {
+  ContainerType
+} from "../models/container-type.models";
 
 type Key = string | number;
 //#endregion===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆
@@ -120,8 +142,11 @@ type Key = string | number;
 //#endregion===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜Props
 
 //#===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎Variables
+let sourceData: ContainerTypeModel[] = [];
 const sort = ref<Sort>(Sort.None);
-
+const messenger: (param: MessengerParamModel) => void =
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  inject("messenger")!;
 const selectedKeys = ref<ContainerType[]>([]);
 
 const currentPage = ref<number>(1);
@@ -137,7 +162,9 @@ const columns: TableColumnType<ContainerType>[] = [
     width: "20%"
   }
 ];
-const data = ref<ContainerType[]>([]);
+const data = ref<ContainerTypeModel[]>([]);
+const searchString = ref<string>("");
+const isLoading = ref<boolean>(false);
 //#endregion===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎
 
 //#===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌Hooks
@@ -154,11 +181,95 @@ const rowSelection: TableProps["rowSelection"] = {
   }
 };
 
-const fetchListContainerType = (): void => {
-  const res = service.container.getListContainerType(1, 10);
-  data.value = [];
+const fetchListContainerType = async (): Promise<void> => {
+  isLoading.value = true;
+  const res = await service.container.getListContainerType();
+  isLoading.value = false;
+  sourceData = (res?.results || []).map((item, index) => {
+    return { ...item, key: index + 1 };
+  });
+  data.value = [...sourceData];
+};
+const changeSort = (): void => {
+  switch (sort.value) {
+    case Sort.Asc:
+      sort.value = Sort.Desc;
+      break;
+    case Sort.Desc:
+      sort.value = Sort.None;
+      break;
+    default:
+      sort.value = Sort.Asc;
+  }
+  sortAndFilterName();
 };
 
+const sortAndFilterName = (): void => {
+  const filteredData = [...sourceData].filter((containerType) => {
+    return containerType.name
+      .toLowerCase()
+      .includes(searchString.value.toLowerCase());
+  });
+  switch (sort.value) {
+    case Sort.Asc:
+      data.value = [...filteredData].sort(
+        (firstContainerType, secondContainerType) =>
+          firstContainerType.name.localeCompare(secondContainerType.name)
+      );
+      break;
+    case Sort.Desc:
+      data.value = [...filteredData].sort(
+        (firstContainerType, secondContainerType) =>
+          secondContainerType.name.localeCompare(firstContainerType.name)
+      );
+      break;
+    default:
+      data.value = [...filteredData];
+  }
+};
+const handleSearchChange = (value: string): void => {
+  searchString.value = value || "";
+  sortAndFilterName();
+};
+const deleteContainerType = (): void => {
+  messenger({
+    title: "vehicle_type_msg_confirm_delete",
+    message: "",
+    type: MessengerType.Confirm,
+    buttonOkTitle: "btn_delete",
+    callback: onDeleteContainerType
+  });
+};
+
+const onDeleteContainerType = async (isConfirm: boolean): Promise<void> => {
+  if (!isConfirm) {
+    return;
+  }
+  if (!selectedKeys.value?.length) {
+    return;
+  }
+  const deleteId = selectedKeys.value[0].id;
+  isLoading.value = true;
+  const isSuccess = await service.container.deleteContainerTypeById(deleteId);
+  isLoading.value = false;
+  if (!isSuccess) {
+    messenger({
+      title: "vehicle_type_delete_fail_lbl_title",
+      message: "vehicle_type_delete_fail_lbl_message",
+      type: MessengerType.Error
+    });
+    return;
+  }
+  messenger({
+    title: "container_type_delete_successfully",
+    message: "",
+    type: MessengerType.Success,
+    callback: (isConfirm: boolean): void => {
+      isConfirm;
+      fetchListContainerType();
+    }
+  });
+};
 //#endregion===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊
 
 //#===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏Computed
@@ -222,7 +333,7 @@ const fetchListContainerType = (): void => {
 }
 
 .btnAddNew {
-  @include size-btn(170px, 48px);
+  @include size-btn(215px, 48px);
   margin-left: 15px;
   padding: 0px 15px;
   a {
@@ -271,6 +382,23 @@ const fetchListContainerType = (): void => {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+.btn {
+  font-weight: 600;
+  font-size: 18px;
+  width: 120px;
+  height: 48px;
+  margin-left: 15px;
+  padding: 0 15px 0 15px;
+
+  .btn-icon {
+    margin-right: 10px;
+  }
+}
+
+.btn-add-new {
+  width: 170px;
+  height: 48px;
 }
 
 :deep() {

@@ -136,6 +136,8 @@
   "vehicle_type_delete_fail_lbl_message": "後でやり直しください",
   "vehicle_type_msg_delete_successfully": "風袋種別が削除されました",
   "vehicle_create_success": "車両が作成されました",
+  "container_type_delete_successfully": "風袋種別が削除されました",
+  "container_type_eidt_successfully": "風袋種別が編集されました",
   "create_failed": "作成に失敗しました",
   "please_try_again": "後でやり直しください",
   "forgot_password_attempt_limit_exceeded_title": "問題が発生しました",
