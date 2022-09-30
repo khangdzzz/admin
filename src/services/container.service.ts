@@ -114,7 +114,7 @@ export async function getListContainerType(): Promise<
   const [error, res] = await transformRequest<
     PaginationDto<ContainerTypeResponseDto>
   >({
-    url: "/container-type",
+    url: "/container_type",
     method: "get"
   });
   if (error || !res) return undefined;

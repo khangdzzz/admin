@@ -2,14 +2,16 @@
   <a-spin :tip="$t('common_loading')" :spinning="isLoading">
     <ListSearchHeader
       :title="$t('container_type')"
-      @onChange="handleSearchChange">
+      @onChange="handleSearchChange"
+    >
       <template #action>
         <a-button
           class="btn"
           type="primary"
           ghost
           @click="deleteContainerType"
-          v-if="selectedKeys.length > 0">
+          v-if="selectedKeys.length > 0"
+        >
           <template #icon>
             <img src="@/assets/icons/ic_delete.svg" class="btn-icon" />
           </template>
@@ -18,16 +20,19 @@
         <a-button
           type="primary"
           :class="[containerTypeList.btnAddNew]"
-          class="btn btn-add-new">
+          class="btn btn-add-new"
+        >
           <template #icon>
             <img
               src="@/assets/icons/ic_plus.svg"
-              :class="[containerTypeList.btnIcon]" />
+              :class="[containerTypeList.btnIcon]"
+            />
           </template>
           <router-link
             :to="{
               name: routeNames.createContainerType
-            }">
+            }"
+          >
             {{ $t("add_container_type") }}
           </router-link>
         </a-button>
@@ -38,7 +43,8 @@
         :row-selection="rowSelection"
         :columns="columns"
         :data-source="data"
-        :pagination="false">
+        :pagination="false"
+      >
         <template #headerCell="{ column }">
           <template v-if="column.key === 'index'">
             <span>{{ $t(column.title) }}</span>
@@ -60,16 +66,19 @@
                 :to="{
                   name: routeNames.editContainerType,
                   params: {
-                    id: record.key
+                    id: record.id
                   }
-                }">
+                }"
+              >
                 <img
                   src="@/assets/icons/ic_btn_edit.svg"
-                  :class="[containerTypeList.actionIcon]" />
+                  :class="[containerTypeList.actionIcon]"
+                />
               </router-link>
               <img
                 src="@/assets/icons/ic_btn_delete.svg"
-                :class="[containerTypeList.actionIcon]" />
+                :class="[containerTypeList.actionIcon]"
+              />
             </center>
           </template>
         </template>
@@ -78,17 +87,20 @@
         <a-pagination
           v-model:current="currentPage"
           :total="data.length"
-          class="ant-pagination">
+          class="ant-pagination"
+        >
           <template #itemRender="{ type, originalElement }">
             <a-button
               :class="[containerTypeList.btnPagination]"
               type="primary"
               ghost
-              v-if="type === 'prev'">
+              v-if="type === 'prev'"
+            >
               <template #icon>
                 <img
                   src="@/assets/icons/ic_prev.svg"
-                  :class="[containerTypeList.btnIconPrev]" />
+                  :class="[containerTypeList.btnIconPrev]"
+                />
                 <span :class="[containerTypeList.action]">{{
                   $t("previous_btn")
                 }}</span>
@@ -98,14 +110,16 @@
               :class="[containerTypeList.btnPagination]"
               type="primary"
               ghost
-              v-else-if="type === 'next'">
+              v-else-if="type === 'next'"
+            >
               <template #icon>
                 <span :class="[containerTypeList.action]">{{
                   $t("next_btn")
                 }}</span>
                 <img
                   src="@/assets/icons/ic_next.svg"
-                  :class="[containerTypeList.btnIconNext]" />
+                  :class="[containerTypeList.btnIconNext]"
+                />
               </template>
             </a-button>
             <component :is="originalElement" v-else></component>
