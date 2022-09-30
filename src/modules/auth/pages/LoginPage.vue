@@ -11,12 +11,14 @@
             name="basic"
             autocomplete="off"
             @finish="onFinish"
-            @finishFailed="onFinishFailed">
+            @finishFailed="onFinishFailed"
+          >
             <CustomForm
               :formData="dynamicValidateForm.formData"
               @change="handleOnChange"
               @onBlur="handleOnBlur"
-              @onFocus="handleOnFocus">
+              @onFocus="handleOnFocus"
+            >
             </CustomForm>
             <a-form-item>
               <a-button
@@ -24,7 +26,8 @@
                 html-type="submit"
                 class="btn-login"
                 :disabled="!isValidated"
-                :loading="isLoading">
+                :loading="isLoading"
+              >
                 {{ $t("login_btn_submit") }}
               </a-button>
             </a-form-item>
@@ -43,7 +46,6 @@
 
 import Ic_pass from "@/assets/icons/IcPass.vue";
 import Ic_user from "@/assets/icons/IcUser.vue";
-import validator from "@/modules/base/components/validator/validator";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import { router } from "@/routes";
@@ -84,12 +86,6 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
       name: "email",
       disabled: false,
       required: false,
-      rules: [
-        {
-          validator: validator.validateEmail,
-          trigger: ["change", "blur"]
-        }
-      ],
       key: 1,
       isFocus: false
     },
