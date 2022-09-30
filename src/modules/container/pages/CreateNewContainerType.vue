@@ -24,7 +24,7 @@
             html-type="submit"
             :disabled="!isDisabled"
             :loading="isLoading"
-            @click="createContainerType()">
+            @click="createContainerType">
             {{ $t("btn_submit") }}
           </a-button>
         </div>
@@ -112,7 +112,7 @@ const createContainerType = async (): Promise<void> => {
   isLoading.value = true;
   const newContainerType = await service.container.createContainerType(
     userStore.user?.tenantId,
-    "Basket trolley"
+    newContainerTypeName
   );
   isLoading.value = false;
   if (newContainerType) {

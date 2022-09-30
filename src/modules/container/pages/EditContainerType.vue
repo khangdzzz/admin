@@ -21,10 +21,9 @@
           <a-button
             type="primary"
             class="edit-container-type-form__action--submit"
-            html-type="submit"
             :disabled="!isDisabled"
             :loading="isLoading"
-            @click="handleSubmit()">
+            @click="handleSubmit">
             {{ $t("btn_submit") }}
           </a-button>
         </div>
@@ -45,6 +44,7 @@ import { service } from "@/services";
 import { commonStore } from "@/stores";
 import { inject, onMounted, reactive, ref, watch } from "vue";
 import { useRoute } from "vue-router";
+import ContainerTypeModel from "../models/container-type.models";
 
 //#endregion===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆
 
@@ -61,6 +61,7 @@ const messenger: (
 const route = useRoute();
 
 const { id } = route.params;
+const containerTypeDetail = ref<ContainerTypeModel>();
 const isDisabled = ref<boolean>(false);
 const isLoading = ref<boolean>(false);
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -116,22 +117,25 @@ onMounted(() => {
 //#===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊Methods
 const fetchContainerTypeById = async (): Promise<void> => {
   const data = await service.container.getContainerTypeById(id.toString());
-
-  dynamicValidateForm.formData[0].value = data.name;
+  if (data) {
+    containerTypeDetail.value = data;
+    dynamicValidateForm.formData[0].value = data.name;
+  }
 };
 
-const handleSubmit = () => async (): Promise<void> => {
+const handleSubmit = async (): Promise<void> => {
   const currentContainerType = dynamicValidateForm.formData[0].value;
   if (!userStore.user || !currentContainerType?.length) return;
   isLoading.value = true;
-  const res = await service.container.updateContainerType(
+  const res = await service.container.editContainerTypeById(
+    id,
     userStore.user?.tenantId,
-    "Basket trolley"
+    currentContainerType
   );
   isLoading.value = false;
   if (res) {
     messenger({
-      title: "create_container_type_msg_create_successfully",
+      title: "container_type_eidt_successfully",
       message: "",
       type: MessengerType.Success,
       callback: (isConfirm: boolean) => {
@@ -141,7 +145,7 @@ const handleSubmit = () => async (): Promise<void> => {
     });
   } else {
     messenger({
-      title: "create_vehicle_type_msg_create_fail_title",
+      title: "edit_failed",
       message: "create_vehicle_type_msg_create_fail_message",
       type: MessengerType.Error
     });

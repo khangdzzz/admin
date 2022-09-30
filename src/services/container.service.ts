@@ -11,7 +11,7 @@ import { CreateContainerTypeInputDto } from "./dtos/container-management/create-
 import { ContainerTypeResponseDto } from "./dtos/container/create-container-type.dto";
 import { VehicleTypeResponseDto } from "./dtos/vehicle-management/create-vehicle-type.dto";
 import createContainerTypeResponse from "./mocks/container-type/create-container-type.response.json";
-import getListContainerTypeResponse from "./mocks/container-type/get-list-container-type.response.json"
+import getListContainerTypeResponse from "./mocks/container-type/get-list-container-type.response.json";
 import getListContainerResponse from "./mocks/container/get-list-container.reponse.json";
 
 const data: ContainerType[] = [
@@ -77,58 +77,6 @@ export async function getListContainer(
   };
 }
 
-export async function getListContainerType(
-  page: 1,
-  size: 10
-): Promise<Pagination<ContainerType> | undefined> {
-  page;
-  size;
-  // const [error, res] = await transformRequest<PaginationDto<VehicleTypeResponseDto>>({
-  //     url: "/vehicle-types",
-  //     method: "get",
-  // });
-  // if (error || !res) return undefined;
-  const res: PaginationDto<VehicleTypeResponseDto> = getListContainerTypeResponse;
-  if (!res) return Promise.resolve(undefined);
-  const {
-    current_page: currentPage,
-    page_size: pageSize,
-    total,
-    total_page: totalPage,
-    results
-  } = res;
-  return {
-    currentPage,
-    pageSize,
-    total,
-    totalPage,
-    results: []
-    // results.map((vehicleTypeDto) => {
-    //   const { id, name, tenant_id: tenantId } = vehicleTypeDto;
-    //   return {
-    //     id,
-    //     name,
-    //     tenantId
-    //   };
-    // })
-  };
-}
-
-export function getContainerTypeById(
-  id: string
-): Promise<VehicleTypeResponseDto> {
-  const containerType: VehicleTypeResponseDto = createContainerTypeResponse;
-  if (!containerType) throw new Error("id does not exit");
-  return Promise.resolve(containerType);
-}
-export function getMockPartner(): ContainerSelection[] {
-  const res: ContainerSelection[] = [
-    { value: 1, label: "Partner 1" },
-    { value: 2, label: "Partner 2" }
-  ];
-  return res;
-}
-
 export function getContainerTypes(): ContainerType[] {
   const res: ContainerType[] = [];
   for (let i = 0; i < 20; i++) {
@@ -160,7 +108,46 @@ export function getContainerById(id: string): ContainerType | undefined {
   return container;
 }
 
-export function createContainerType(
+export async function getListContainerType(): Promise<
+  Pagination<ContainerTypeModel> | undefined
+> {
+  const [error, res] = await transformRequest<
+    PaginationDto<ContainerTypeResponseDto>
+  >({
+    url: "/container-type",
+    method: "get"
+  });
+  if (error || !res) return undefined;
+
+  if (!res) return Promise.resolve(undefined);
+
+  const { results } = res;
+
+  return {
+    results: results.map((containerType) => {
+      const { id, name, tenant_id: tenantId } = containerType;
+      return {
+        id,
+        name,
+        tenantId,
+        key: 0
+      };
+    })
+  };
+}
+
+export async function getContainerTypeById(
+  id: string | string[]
+): Promise<ContainerTypeModel | undefined> {
+  const [error, res] = await transformRequest<ContainerTypeModel>({
+    url: `/container_type/${id}`,
+    method: "get"
+  });
+  if (error) return undefined;
+  return res;
+}
+
+export async function createContainerType(
   tenantId: number,
   name: string
 ): Promise<ContainerTypeModel | undefined> {
@@ -168,8 +155,12 @@ export function createContainerType(
     tenant_id: tenantId,
     name
   };
-  data;
-  const res: VehicleTypeResponseDto = createContainerTypeResponse;
+  const [error, res] = await transformRequest<ContainerTypeResponseDto>({
+    url: "/container_type",
+    method: "post",
+    data
+  });
+  if (error || !res) return undefined;
   const { id, name: typeName, tenant_id } = res;
 
   return Promise.resolve({
@@ -180,22 +171,29 @@ export function createContainerType(
   });
 }
 
-export async function updateContainerType(
-  tenantId: number,
+export async function deleteContainerTypeById(id: number): Promise<boolean> {
+  const [error] = await transformRequest<ContainerTypeModel>({
+    url: `/container_type/${id}`,
+    method: "delete"
+  });
+  if (error) return false;
+  return true;
+}
+
+export async function editContainerTypeById(
+  id: string | string[],
+  tenant_id: number | string | undefined,
   name: string
 ): Promise<ContainerTypeModel | undefined> {
-  const data: CreateContainerTypeInputDto = {
-    tenant_id: tenantId,
+  const data = {
+    tenant_id,
     name
   };
-  data;
-  const res: VehicleTypeResponseDto = createContainerTypeResponse;
-  const { id, name: typeName, tenant_id } = res;
-
-  return Promise.resolve({
-    id,
-    tenantId: tenant_id,
-    name: typeName,
-    key: 0
+  const [error, res] = await transformRequest<ContainerTypeModel>({
+    url: `/container_type/${id}`,
+    method: "put",
+    data
   });
+  if (error) return undefined;
+  return res;
 }
