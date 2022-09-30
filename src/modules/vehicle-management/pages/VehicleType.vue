@@ -7,7 +7,8 @@
           type="primary"
           ghost
           @click="deleteVehicleType"
-          v-if="selectedKeys.length > 0">
+          v-if="selectedKeys.length > 0"
+        >
           <template #icon>
             <img src="@/assets/icons/ic_delete.svg" class="btn-icon" />
           </template>
@@ -26,7 +27,8 @@
         :row-selection="rowSelection"
         :columns="columns"
         :data-source="data"
-        :pagination="false">
+        :pagination="true"
+      >
         <template #headerCell="{ column }">
           <template v-if="column.key === 'index'">
             <span>{{ $t(column.title) }}</span>
@@ -46,7 +48,8 @@
             <img
               src="@/assets/icons/ic_btn_edit.svg"
               class="action-icon"
-              @click="editVehicleType(record.id)" />
+              @click="editVehicleType(record.id)"
+            />
             <img src="@/assets/icons/ic_btn_delete.svg" class="action-icon" />
           </template>
         </template>
@@ -90,10 +93,9 @@ const columns = [
     title: "",
     dataIndex: "action",
     key: "action",
-    width: "120px"
+    width: "150px"
   }
 ];
-
 // todo: handle any here
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let sourceData: VehicleTypeModel[] = [];
@@ -249,7 +251,7 @@ const onDeleteVehicleType = async (isConfirm: boolean): Promise<void> => {
 }
 
 .action-icon {
-  margin-left: 20px;
+  margin-left: 30px;
   cursor: pointer;
 }
 
@@ -314,6 +316,10 @@ const onDeleteVehicleType = async (isConfirm: boolean): Promise<void> => {
     > tr
     > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
     height: 0;
+  }
+  .ant-checkbox-inner {
+    width: 22px !important;
+    height: 22px !important;
   }
 }
 </style>

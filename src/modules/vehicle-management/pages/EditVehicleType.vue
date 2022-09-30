@@ -9,18 +9,21 @@
           :model="dynamicValidateForm"
           name="basic"
           autocomplete="off"
-          @finish="handleFinish">
+          @finish="handleFinish"
+        >
           <CustomForm
             :formData="dynamicValidateForm.formData"
             @change="handleOnChange"
             @onBlur="handleOnBlur"
-            @onFocus="handleOnFocus">
+            @onFocus="handleOnFocus"
+          >
           </CustomForm>
           <div class="create-new-vehicle-type-form__action">
             <a-button
               class="create-new-vehicle-type-form__action--cancel"
               :disabled="isLoading"
-              @click="redirectToVehicleType">
+              @click="redirectToVehicleType"
+            >
               {{ $t("btn_cancel") }}
             </a-button>
             <a-button
@@ -28,7 +31,8 @@
               class="create-new-vehicle-type-form__action--save"
               html-type="save"
               :disabled="!isValidated"
-              :loading="isLoading">
+              :loading="isLoading"
+            >
               {{ $t("btn_save") }}
             </a-button>
           </div>
@@ -190,13 +194,15 @@ onMounted(() => {
   position: relative;
   top: 50%;
   transform: translateY(-50%);
-  border-radius: 20px;
-  padding: 6px 0;
+  border-radius: 10px;
+  padding: 10px;
 
   &__title {
     font-size: 22px;
     font-weight: 600;
-    line-height: 18px;
+    height: 28px;
+    color: $neutral-600;
+    line-height: 28px;
     text-align: center;
     margin-bottom: 30px;
   }
@@ -235,5 +241,19 @@ onMounted(() => {
 .create-new-vehicle-type-form__action--save.active {
   background: $primary;
   color: $neutral-0;
+}
+.create-new-vehicle-type-form .ant-card-body {
+  padding: 20px 10px !important;
+}
+:deep() {
+  .ant-card-body {
+    padding: 20px 10px !important;
+  }
+  .ant-form-item-explain {
+    margin-top: 8px;
+  }
+  .ant-form-item {
+    margin-bottom: 25px;
+  }
 }
 </style>

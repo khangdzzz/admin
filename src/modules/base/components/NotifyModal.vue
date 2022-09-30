@@ -198,6 +198,6 @@ const onCancelClick = (): void => {
 }
 
 .custom-modal .ant-modal-content {
-  border-radius: 30px !important;
+  border-radius: 20px !important;
 }
 </style>

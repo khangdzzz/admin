@@ -332,6 +332,10 @@ const getVehicleById = computed(() =>
     background: #f7f7f7;
     border-color: rgba(0, 0, 0, 0.03);
   }
+  .ant-checkbox-inner {
+    width: 22px !important;
+    height: 22px !important;
+  }
   .ant-pagination {
     .ant-pagination-options {
       float: left;

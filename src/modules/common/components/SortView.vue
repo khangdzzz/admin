@@ -1,9 +1,9 @@
 <template>
-  <div class="sort-view">
+  <span class="sort-view">
     <IcSortAsc v-if="sort === Sort.Asc" />
     <IcSortDesc v-else-if="sort === Sort.Desc" />
     <IcSortNone v-else />
-  </div>
+  </span>
 </template>
 
 <script setup lang="ts">
@@ -44,10 +44,14 @@ defineProps({
 .sort-view {
   display: inline-block;
   vertical-align: middle;
-  height: 23px;
+  height: 24px;
   &__icon-container {
     margin: 0px;
-    padding: 0px;
+    padding: 4px 0px;
+  }
+  svg {
+    position: relative;
+    top: 4px;
   }
 }
 </style>
