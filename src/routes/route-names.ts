@@ -25,8 +25,11 @@ export const routeNames = {
   createContainerType: "CREATE_CONTAINER_TYPE",
   editContainerType: "EDIT_CONTAINER_TYPE",
   workingPlace: "WORKING_PLACE",
-  setting: "SETTING",
+  tenantSetting: "TENANT_SETTING",
+  accountSetting: "ACCOUNT_SETTING",
   dashboard: "DASHBOARD",
+  internalDashboard: "INTERNAL_DASHBOARD",
+  externalDashboard: "EXTERNAL_DASHBOARD",
   collectionHistory: "COLLECTION_HISTORY",
   storeManagment: "STORE_MANAGEMENt"
 };

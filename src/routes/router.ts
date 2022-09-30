@@ -8,7 +8,7 @@ const routes: RouteRecordRaw[] = [
     path: "/",
     name: routeNames.default,
     redirect: {
-      name: routeNames.collectionBusiness
+      name: routeNames.dashboard
     }
   },
   {
@@ -34,6 +34,26 @@ const routes: RouteRecordRaw[] = [
     name: routeNames.dashboard,
     component: () =>
       import("@/modules/collection-business/pages/CollectionBusiness.vue"),
+    beforeEnter: requireLoginGuard,
+    meta: {
+      layout: ScreenLayout.DEFAULT_LAYOUT
+    }
+  },
+  {
+    path: "/internal-dashboard",
+    name: routeNames.internalDashboard,
+    component: () =>
+      import("@/modules/dashboard/pages/InternalDashboardPage.vue"),
+    beforeEnter: requireLoginGuard,
+    meta: {
+      layout: ScreenLayout.DEFAULT_LAYOUT
+    }
+  },
+  {
+    path: "/external-dashboard",
+    name: routeNames.externalDashboard,
+    component: () =>
+      import("@/modules/dashboard/pages/ExternalDashboardPage.vue"),
     beforeEnter: requireLoginGuard,
     meta: {
       layout: ScreenLayout.DEFAULT_LAYOUT
@@ -227,9 +247,18 @@ const routes: RouteRecordRaw[] = [
     ]
   },
   {
-    path: "/setting",
-    name: routeNames.setting,
-    component: () => import("@/modules/setting/pages/TheSetting.vue"),
+    path: "/tenant-setting",
+    name: routeNames.tenantSetting,
+    component: () => import("@/modules/setting/pages/TenantSettingPage.vue"),
+    beforeEnter: requireLoginGuard,
+    meta: {
+      layout: ScreenLayout.DEFAULT_LAYOUT
+    }
+  },
+  {
+    path: "/account-setting",
+    name: routeNames.accountSetting,
+    component: () => import("@/modules/setting/pages/AccountSettingPage.vue"),
     beforeEnter: requireLoginGuard,
     meta: {
       layout: ScreenLayout.DEFAULT_LAYOUT

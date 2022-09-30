@@ -11,7 +11,7 @@ import { UserType } from "../models/user-type.enum";
 import sideMenuItem from "../models/menu";
 
 const user = ref<string>("");
-const selectedKeys = ref<string[]>(["Collection business"]);
+const selectedKeys = ref<string[]>(["menu_lbl_dashboard_internal"]);
 const openKeys = ref<string[]>([""]);
 const userTypeName = ref();
 if (service.localStorage.getAccessToken()) {
@@ -115,7 +115,10 @@ const goHome = (): void => {
                       <ArrowUp />
                     </span>
                   </template>
-                  <span v-for="subMenuItem in subMenu.items">
+                  <span
+                    v-for="subMenuItem in subMenu.items"
+                    :key="subMenuItem.title"
+                  >
                     <a-menu-item
                       :key="subMenuItem.title"
                       v-if="isHasPermission(subMenuItem.requireUserType)"
