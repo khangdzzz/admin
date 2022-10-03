@@ -73,7 +73,7 @@ const goHome = (): void => {
         <Logo />
       </div>
       <a-divider class="m-0" />
-      <div class="default-layout__greeting p-15">
+      <div class="default-layout__greeting p-15" v-if="$t">
         {{ $t("menu_lbl_hello", { name: user }) }}
       </div>
       <div
@@ -109,7 +109,7 @@ const goHome = (): void => {
                     ></component>
                   </template>
                   <template #title>
-                    <span class="default-layout__menu-title">
+                    <span class="default-layout__menu-title" v-if="$t">
                       {{ $t(subMenu.title) }}
                     </span>
                   </template>
@@ -127,7 +127,7 @@ const goHome = (): void => {
                       v-if="isHasPermission(subMenuItem.requireUserType)"
                     >
                       <router-link :to="{ name: subMenuItem.pathName }">
-                        <span class="default-layout__sub-menu-title">
+                        <span class="default-layout__sub-menu-title" v-if="$t">
                           {{ $t(subMenuItem.title) }}
                         </span>
                       </router-link>
@@ -144,7 +144,7 @@ const goHome = (): void => {
                     </div>
                   </template>
                   <router-link :to="{ name: subMenu.pathName }">
-                    <span class="default-layout__menu-title">
+                    <span class="default-layout__menu-title" v-if="$t">
                       {{ $t(subMenu.title) }}
                     </span>
                   </router-link>
@@ -160,6 +160,7 @@ const goHome = (): void => {
             type="text"
             class="default-layout__logout-btn d-flex align-center gap-10"
             @click="onLogout"
+            v-if="$t"
           >
             <template #icon>
               <DoorArrowRight />
