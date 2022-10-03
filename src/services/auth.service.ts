@@ -1,4 +1,5 @@
 import { UserInfo } from "@/modules/auth/models";
+import { UserType } from "@/modules/base/models/user-type.enum";
 import { commonStore } from "@/stores/common.store";
 import UserInfomationDto from "./dtos/auth/user-information.dto";
 import * as mockGetMe from "./mocks/auth/get-me.response.json";
@@ -14,20 +15,16 @@ export async function getCurrentUserInformation(): Promise<
   //   return undefined;
   // }
   const res: UserInfomationDto = mockGetMe;
-  const {
-    id,
-    email,
-    full_name: fullName,
-    tenant_id: tenantId,
-    user_type: userType
-  } = res;
+  const mockRole: UserType = (localStorage.getItem("USER_TYPE_KEY") ||
+    UserType.DischargerCustomer) as UserType;
+  const { id, email, full_name: fullName, tenant_id: tenantId } = res;
 
   const userInfo = {
     id,
     email,
     fullName,
     tenantId,
-    userType
+    userType: mockRole
   };
 
   const userStore = commonStore();

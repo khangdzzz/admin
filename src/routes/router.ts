@@ -8,7 +8,7 @@ const routes: RouteRecordRaw[] = [
     path: "/",
     name: routeNames.default,
     redirect: {
-      name: routeNames.collectionBusiness
+      name: routeNames.dashboard
     }
   },
   {
@@ -34,6 +34,26 @@ const routes: RouteRecordRaw[] = [
     name: routeNames.dashboard,
     component: () =>
       import("@/modules/collection-business/pages/CollectionBusiness.vue"),
+    beforeEnter: requireLoginGuard,
+    meta: {
+      layout: ScreenLayout.DEFAULT_LAYOUT
+    }
+  },
+  {
+    path: "/internal-dashboard",
+    name: routeNames.internalDashboard,
+    component: () =>
+      import("@/modules/dashboard/pages/InternalDashboardPage.vue"),
+    beforeEnter: requireLoginGuard,
+    meta: {
+      layout: ScreenLayout.DEFAULT_LAYOUT
+    }
+  },
+  {
+    path: "/external-dashboard",
+    name: routeNames.externalDashboard,
+    component: () =>
+      import("@/modules/dashboard/pages/ExternalDashboardPage.vue"),
     beforeEnter: requireLoginGuard,
     meta: {
       layout: ScreenLayout.DEFAULT_LAYOUT
@@ -227,12 +247,172 @@ const routes: RouteRecordRaw[] = [
     ]
   },
   {
-    path: "/setting",
-    name: routeNames.setting,
-    component: () => import("@/modules/setting/pages/TheSetting.vue"),
+    path: "/tenant-setting",
+    name: routeNames.tenantSetting,
+    component: () => import("@/modules/setting/pages/TenantSettingPage.vue"),
     beforeEnter: requireLoginGuard,
     meta: {
       layout: ScreenLayout.DEFAULT_LAYOUT
+    }
+  },
+  {
+    path: "/account-setting",
+    name: routeNames.accountSetting,
+    component: () => import("@/modules/setting/pages/AccountSettingPage.vue"),
+    beforeEnter: requireLoginGuard,
+    meta: {
+      layout: ScreenLayout.DEFAULT_LAYOUT
+    }
+  },
+  //dummies route
+  {
+    path: "/collection-base-management",
+    name: routeNames.collectionBaseManagement,
+    meta: {
+      layout: ScreenLayout.DEFAULT_LAYOUT
+    },
+    redirect: {
+      name: routeNames.default
+    }
+  },
+  {
+    path: "/partner-management",
+    name: routeNames.partnerManagement,
+    meta: {
+      layout: ScreenLayout.DEFAULT_LAYOUT
+    },
+    redirect: {
+      name: routeNames.default
+    }
+  },
+  {
+    path: "/collection-management",
+    name: routeNames.collectionManagement,
+    meta: {
+      layout: ScreenLayout.DEFAULT_LAYOUT
+    },
+    redirect: {
+      name: routeNames.default
+    }
+  },
+  {
+    path: "/collection-type-management",
+    name: routeNames.collectionTypeManagement,
+    meta: {
+      layout: ScreenLayout.DEFAULT_LAYOUT
+    },
+    redirect: {
+      name: routeNames.default
+    }
+  },
+  {
+    path: "/unit-price",
+    name: routeNames.unitPrice,
+    meta: {
+      layout: ScreenLayout.DEFAULT_LAYOUT
+    },
+    redirect: {
+      name: routeNames.default
+    }
+  },
+  {
+    path: "/unit-price-update-plan",
+    name: routeNames.unitPriceUpdatePlan,
+    meta: {
+      layout: ScreenLayout.DEFAULT_LAYOUT
+    },
+    redirect: {
+      name: routeNames.default
+    }
+  },
+  {
+    path: "/landmark-management",
+    name: routeNames.landmarkManagement,
+    meta: {
+      layout: ScreenLayout.DEFAULT_LAYOUT
+    },
+    redirect: {
+      name: routeNames.default
+    }
+  },
+  {
+    path: "/collection-order-management",
+    name: routeNames.collectionOrderManagement,
+    meta: {
+      layout: ScreenLayout.DEFAULT_LAYOUT
+    },
+    redirect: {
+      name: routeNames.default
+    }
+  },
+  {
+    path: "/collection-route-management",
+    name: routeNames.collectionRouteManagement,
+    meta: {
+      layout: ScreenLayout.DEFAULT_LAYOUT
+    },
+    redirect: {
+      name: routeNames.default
+    }
+  },
+  {
+    path: "/delivery-management",
+    name: routeNames.deliveryManagement,
+    meta: {
+      layout: ScreenLayout.DEFAULT_LAYOUT
+    },
+    redirect: {
+      name: routeNames.default
+    }
+  },
+  {
+    path: "/storage-management",
+    name: routeNames.storageManagement,
+    meta: {
+      layout: ScreenLayout.DEFAULT_LAYOUT
+    },
+    redirect: {
+      name: routeNames.default
+    }
+  },
+  {
+    path: "/manufacture-category-management",
+    name: routeNames.manufactureCategoryManagement,
+    meta: {
+      layout: ScreenLayout.DEFAULT_LAYOUT
+    },
+    redirect: {
+      name: routeNames.default
+    }
+  },
+  {
+    path: "/manufacture-task-management",
+    name: routeNames.manufactureTaskManagement,
+    meta: {
+      layout: ScreenLayout.DEFAULT_LAYOUT
+    },
+    redirect: {
+      name: routeNames.default
+    }
+  },
+  {
+    path: "/manufacture-item-management",
+    name: routeNames.manufactureItemManagement,
+    meta: {
+      layout: ScreenLayout.DEFAULT_LAYOUT
+    },
+    redirect: {
+      name: routeNames.default
+    }
+  },
+  {
+    path: "/role-management",
+    name: routeNames.roleManagement,
+    meta: {
+      layout: ScreenLayout.DEFAULT_LAYOUT
+    },
+    redirect: {
+      name: routeNames.default
     }
   }
 ];

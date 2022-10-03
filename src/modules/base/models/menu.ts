@@ -22,12 +22,12 @@ const sideMenuItems = [
     items: [
       {
         title: "menu_lbl_dashboard_internal",
-        pathName: "",
+        pathName: routeNames.internalDashboard,
         requireUserType: [UserType.TenantAdmin]
       },
       {
         title: "menu_lbl_dashboard_extenal",
-        pathName: "",
+        pathName: routeNames.externalDashboard,
         requireUserType: [UserType.TenantAdmin]
       }
     ]
@@ -45,11 +45,13 @@ const sideMenuItems = [
     items: [
       {
         title: "menu_lbl_collection_history",
-        pathName: routeNames.collectionHistory
+        pathName: routeNames.collectionHistory,
+        requireUserType: []
       },
       {
         title: "menu_lbl_realtime_management",
-        pathName: routeNames.realTimeDynamics
+        pathName: routeNames.realTimeDynamics,
+        requireUserType: []
       }
     ]
   },
@@ -62,7 +64,8 @@ const sideMenuItems = [
     items: [
       {
         title: "menu_lbl_manufacture_history",
-        pathName: routeNames.productManufacture
+        pathName: routeNames.productManufacture,
+        requireUserType: []
       }
     ]
   },
@@ -71,7 +74,6 @@ const sideMenuItems = [
     key: "Master data",
     icon: GroupOfPeople,
     title: "menu_lbl_master_data",
-
     requireUserType: [
       UserType.TenantAdmin,
       UserType.CollectionBaseAdmin,
@@ -80,21 +82,22 @@ const sideMenuItems = [
     items: [
       {
         title: "menu_lbl_staff_management",
-        pathName: routeNames.staffManagement
+        pathName: routeNames.staffManagement,
+        requireUserType: []
       },
       {
         title: "menu_lbl_collection_base_management",
-        pathName: "",
+        pathName: routeNames.collectionBaseManagement,
         requireUserType: [UserType.TenantAdmin]
       },
       {
         title: "menu_lbl_partner_management",
-        pathName: "",
+        pathName: routeNames.partnerManagement,
         requireUserType: [UserType.TenantAdmin]
       },
       {
         title: "menu_lbl_customer_management",
-        pathName: "",
+        pathName: routeNames.customerManagement,
         requireUserType: [UserType.TenantAdmin]
       },
       {
@@ -124,64 +127,67 @@ const sideMenuItems = [
       },
       {
         title: "menu_lbl_collection_management",
-        pathName: "",
+        pathName: routeNames.collectionManagement,
         requireUserType: [UserType.TenantAdmin, UserType.CollectionBaseAdmin]
       },
       {
         title: "menu_lbl_collection_type_management",
-        pathName: "",
+        pathName: routeNames.collectionTypeManagement,
         requireUserType: [UserType.TenantAdmin]
       },
       {
         title: "menu_lbl_unit_price",
-        pathName: "",
+        pathName: routeNames.unitPrice,
         requireUserType: [UserType.TenantAdmin, UserType.CollectionBaseAdmin]
       },
       {
         title: "menu_lbl_unit_price_update_plan",
-        pathName: "",
+        pathName: routeNames.unitPriceUpdatePlan,
         requireUserType: [UserType.TenantAdmin, UserType.CollectionBaseAdmin]
       },
       {
         title: "menu_lbl_landmark_management",
-        pathName: ""
+        pathName: routeNames.landmarkManagement,
+        requireUserType: []
       },
       {
         title: "menu_lbl_collection_order_management",
-        pathName: ""
+        pathName: routeNames.collectionOrderManagement,
+        requireUserType: []
       },
       {
         title: "menu_lbl_collection_route_management",
-        pathName: ""
+        pathName: routeNames.collectionRouteManagement,
+        requireUserType: []
       },
       {
         title: "menu_lbl_delivery_management",
-        pathName: "",
+        pathName: routeNames.deliveryManagement,
         requireUserType: [UserType.TenantAdmin, UserType.CollectionBaseAdmin]
       },
       {
         title: "menu_lbl_storage_management",
-        pathName: "",
+        pathName: routeNames.storageManagement,
         requireUserType: [UserType.TenantAdmin, UserType.CollectionBaseAdmin]
       },
       {
         title: "menu_lbl_manufacture_task_management",
-        pathName: "",
+        pathName: routeNames.manufactureTaskManagement,
         requireUserType: [UserType.TenantAdmin, UserType.CollectionBaseAdmin]
       },
       {
         title: "menu_lbl_manufacture_category_management",
-        pathName: "",
+        pathName: routeNames.manufactureCategoryManagement,
         requireUserType: [UserType.TenantAdmin, UserType.CollectionBaseAdmin]
       },
       {
         title: "menu_lbl_manufacture_item_management",
-        pathName: "",
+        pathName: routeNames.manufactureItemManagement,
         requireUserType: [UserType.TenantAdmin, UserType.CollectionBaseAdmin]
       },
       {
         title: "menu_lbl_role_management",
-        pathName: "",
+        pathName: routeNames.roleManagement,
         requireUserType: [UserType.TenantAdmin]
       }
     ]
@@ -204,7 +210,7 @@ const sideMenuItems = [
     key: "Setting",
     icon: Setting,
     title: "menu_lbl_setting",
-    pathName: routeNames.setting,
+    pathName: routeNames.tenantSetting,
     requireUserType: [
       UserType.TenantAdmin,
       UserType.CollectionBaseAdmin,
@@ -215,12 +221,12 @@ const sideMenuItems = [
     items: [
       {
         title: "menu_lbl_tenant_setting",
-        pathName: routeNames.setting,
+        pathName: routeNames.tenantSetting,
         requireUserType: [UserType.TenantAdmin, UserType.CollectionBaseAdmin]
       },
       {
         title: "menu_lbl_account_setting",
-        pathName: routeNames.setting,
+        pathName: routeNames.accountSetting,
         requireUserType: [UserType.TenantAdmin, UserType.CollectionBaseAdmin]
       }
     ]

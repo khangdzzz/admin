@@ -1,5 +1,5 @@
 <template>
-    <h1>This is setting page</h1>
+  <div class="external-dashboard">External Dashboard</div>
 </template>
 
 <script setup lang="ts">
@@ -26,5 +26,7 @@
 </script>
 
 <style lang="scss" scoped>
-
+.external-dashboard {
+  padding: 30px;
+}
 </style>
