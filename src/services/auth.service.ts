@@ -16,7 +16,7 @@ export async function getCurrentUserInformation(): Promise<
   // }
   const res: UserInfomationDto = mockGetMe;
   const mockRole: UserType = (localStorage.getItem("USER_TYPE_KEY") ||
-    UserType.DischargerCustomer) as UserType;
+    UserType.TenantAdmin) as UserType;
   const { id, email, full_name: fullName, tenant_id: tenantId } = res;
 
   const userInfo = {
