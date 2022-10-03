@@ -204,6 +204,9 @@ const routes: RouteRecordRaw[] = [
     meta: {
       layout: ScreenLayout.DEFAULT_LAYOUT
     },
+    redirect: {
+      name: routeNames.containerChild
+    },
     children: [
       {
         name: routeNames.createNewContainer,
