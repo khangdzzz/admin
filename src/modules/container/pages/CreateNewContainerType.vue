@@ -5,26 +5,16 @@
         {{ $t("add_new_container_type") }}
       </h3>
       <a-form :model="dynamicValidateForm" name="basic" autocomplete="off">
-        <CustomForm
-          :formData="dynamicValidateForm.formData"
-          @change="handleOnChange"
-          @onBlur="handleOnBlur"
+        <CustomForm :formData="dynamicValidateForm.formData" @change="handleOnChange" @onBlur="handleOnBlur"
           @onFocus="handleOnFocus">
         </CustomForm>
         <div class="create-new-container-type-form__action">
-          <a-button
-            class="create-new-container-type-form__action--cancel"
-            :disabled="isLoading"
+          <a-button class="create-new-container-type-form__action--cancel" :disabled="isLoading"
             @click="redirectToContainerType">
             {{ $t("btn_cancel") }}
           </a-button>
-          <a-button
-            type="primary"
-            class="create-new-container-type-form__action--submit"
-            html-type="submit"
-            :disabled="!isDisabled"
-            :loading="isLoading"
-            @click="createContainerType">
+          <a-button type="primary" class="create-new-container-type-form__action--submit" :disabled="!isDisabled"
+            :loading="isLoading" @click="createContainerType">
             {{ $t("btn_submit") }}
           </a-button>
         </div>
@@ -160,7 +150,7 @@ const goToContainerTypeListPage = (): void => {
   position: relative;
   top: 50%;
   transform: translateY(-50%);
-  border-radius: 20px;
+  border-radius: 10px;
   padding: 6px 0;
 
   &__title {
@@ -183,7 +173,7 @@ const goToContainerTypeListPage = (): void => {
 
     &--cancel,
     &--submit {
-      width: 175px !important;
+      width: 180px !important;
       height: 48px !important;
       height: 18px;
       font-family: "Roboto";
@@ -192,6 +182,11 @@ const goToContainerTypeListPage = (): void => {
       font-size: 18px;
       line-height: 100%;
       padding: 15px;
+    }
+
+    &--submit {
+      background-color: $neutral-200;
+      color: $neutral-0;
     }
 
     &--cancel {
@@ -205,5 +200,26 @@ const goToContainerTypeListPage = (): void => {
 .create-new-container-type-form__action--save.active {
   background: $primary;
   color: $neutral-0;
+}
+
+:deep() {
+  .ant-form-item-explain.ant-form-item-explain-connected {
+    .ant-form-item-explain-error {
+      margin-top: 8px;
+      font-size: 12px;
+      color: $red-500;
+    }
+  }
+
+  .ant-form-item-control {
+    &-input {
+      &-content {
+        .input-item {
+          width: 620px !important;
+        }
+      }
+    }
+  }
+
 }
 </style>
