@@ -67,6 +67,8 @@
       :style="item.style"
       :dropdownClassName="item.dropdownClassName"
       autocomplete="new-password"
+      show-search
+      :filter-option="filterOption"
       @change="handleChange(item.value, index)"
       @select="onSelect"
       @pressEnter="onPressEnter"
@@ -190,6 +192,11 @@ const onFocus = (index: number): void => {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const isActivePasswordIcon = (item: any): boolean => {
   return item.name === "password" && item?.value?.length;
+};
+
+const filterOption = (input: string, option: any): boolean => {
+  if (!input) return true;
+  return option.label.toLowerCase().includes(input.toLowerCase());
 };
 
 //#endregion
