@@ -1,17 +1,15 @@
 <template>
-  <div class="language-container">
-    <img :src="logoUrl" class="img-flag" @click="changeLanguage" />
-    <span @click="changeLanguage" class="title-flag">{{
-      $t("current_language")
-    }}</span>
+  <div class="language-container" @click="changeLanguage">
+    <img :src="logoUrl" class="img-flag" />
+    <span class="title-flag">{{ $t("current_language") }}</span>
   </div>
 </template>
 
 <script setup lang="ts">
 //#region import
 
+import { i18n } from "@/i18n";
 import { service } from "@/services";
-import { localStorageKeys } from "@/services/local-storage-keys";
 import { onMounted, ref } from "vue";
 //#endregion
 
@@ -38,9 +36,7 @@ const changeLanguage = (): void => {
   setLogoUrl();
 };
 const setLogoUrl = (): void => {
-  currentLanguage.value = service.localStorage.getItem(
-    localStorageKeys.currentLanguage
-  );
+  currentLanguage.value = i18n.global.locale;
   if (currentLanguage.value === "en") {
     logoUrl.value = new URL(
       "../../../assets/images/im_japan_flag.png",
