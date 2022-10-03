@@ -6,34 +6,40 @@
     class="custom-modal"
     centered
     :footer="null"
-    :maskClosable="false">
+    :maskClosable="false"
+  >
     <div class="modal-content">
       <img
         :src="modalIcon"
         class="modal-icon"
-        v-if="modalType !== MessengerType.Confirm" />
+        v-if="modalType !== MessengerType.Confirm"
+      />
       <h3 class="modal-title" v-if="modalTitle">{{ $t(modalTitle) }}</h3>
-      <p class="modal-message" v-if="modalMessage">{{ $t(modalMessage) }}</p>
+      <p class="modal-message mb-0 mt-10" v-if="modalMessage">
+        {{ $t(modalMessage) }}
+      </p>
       <a-button
         type="primary"
-        class="btn-ok"
+        class="btn-ok mt-20"
         @click="onOKClick"
-        v-if="modalType !== MessengerType.Confirm">
-        {{ $t(btnOk) }}
-        </a-button
+        v-if="modalType !== MessengerType.Confirm"
       >
+        {{ $t(btnOk) }}
+      </a-button>
       <div v-else class="modal-action-container">
         <a-button
           type="primary"
           class="modal-action-container__action-button"
           @click="onCancelClick"
-          ghost>
+          ghost
+        >
           {{ $t(btnCancel) }}
         </a-button>
         <a-button
           type="primary"
           class="modal-action-container__action-button"
-          @click="onOKClick">
+          @click="onOKClick"
+        >
           {{ $t(btnOk) }}
         </a-button>
       </div>
@@ -143,23 +149,21 @@ const onCancelClick = (): void => {
 
   .modal-title {
     margin: 0;
-    margin-bottom: 10px;
     font-family: "Roboto";
     font-style: normal;
     font-weight: 600;
-    font-size: 18px;
-    line-height: 22px;
+    font-size: 22px;
+    line-height: 28px;
     text-align: center;
     color: $neutral-600;
   }
 
   .modal-message {
     color: $text-1;
-    margin-top: 0px;
     font-family: "Roboto";
     font-style: normal;
     font-weight: 400;
-    font-size: 16px;
+    font-size: 18px;
     line-height: 20px;
     text-align: center;
   }
