@@ -87,17 +87,17 @@ const sideMenuItems = [
       },
       {
         title: "menu_lbl_collection_base_management",
-        pathName: "",
+        pathName: routeNames.collectionBaseManagement,
         requireUserType: [UserType.TenantAdmin]
       },
       {
         title: "menu_lbl_partner_management",
-        pathName: "",
+        pathName: routeNames.partnerManagement,
         requireUserType: [UserType.TenantAdmin]
       },
       {
         title: "menu_lbl_customer_management",
-        pathName: "",
+        pathName: routeNames.customerManagement,
         requireUserType: [UserType.TenantAdmin]
       },
       {
@@ -127,67 +127,67 @@ const sideMenuItems = [
       },
       {
         title: "menu_lbl_collection_management",
-        pathName: "",
+        pathName: routeNames.collectionManagement,
         requireUserType: [UserType.TenantAdmin, UserType.CollectionBaseAdmin]
       },
       {
         title: "menu_lbl_collection_type_management",
-        pathName: "",
+        pathName: routeNames.collectionTypeManagement,
         requireUserType: [UserType.TenantAdmin]
       },
       {
         title: "menu_lbl_unit_price",
-        pathName: "",
+        pathName: routeNames.unitPrice,
         requireUserType: [UserType.TenantAdmin, UserType.CollectionBaseAdmin]
       },
       {
         title: "menu_lbl_unit_price_update_plan",
-        pathName: "",
+        pathName: routeNames.unitPriceUpdatePlan,
         requireUserType: [UserType.TenantAdmin, UserType.CollectionBaseAdmin]
       },
       {
         title: "menu_lbl_landmark_management",
-        pathName: "",
+        pathName: routeNames.landmarkManagement,
         requireUserType: []
       },
       {
         title: "menu_lbl_collection_order_management",
-        pathName: "",
+        pathName: routeNames.collectionOrderManagement,
         requireUserType: []
       },
       {
         title: "menu_lbl_collection_route_management",
-        pathName: "",
+        pathName: routeNames.collectionRouteManagement,
         requireUserType: []
       },
       {
         title: "menu_lbl_delivery_management",
-        pathName: "",
+        pathName: routeNames.deliveryManagement,
         requireUserType: [UserType.TenantAdmin, UserType.CollectionBaseAdmin]
       },
       {
         title: "menu_lbl_storage_management",
-        pathName: "",
+        pathName: routeNames.storageManagement,
         requireUserType: [UserType.TenantAdmin, UserType.CollectionBaseAdmin]
       },
       {
         title: "menu_lbl_manufacture_task_management",
-        pathName: "",
+        pathName: routeNames.manufactureTaskManagement,
         requireUserType: [UserType.TenantAdmin, UserType.CollectionBaseAdmin]
       },
       {
         title: "menu_lbl_manufacture_category_management",
-        pathName: "",
+        pathName: routeNames.manufactureCategoryManagement,
         requireUserType: [UserType.TenantAdmin, UserType.CollectionBaseAdmin]
       },
       {
         title: "menu_lbl_manufacture_item_management",
-        pathName: "",
+        pathName: routeNames.manufactureItemManagement,
         requireUserType: [UserType.TenantAdmin, UserType.CollectionBaseAdmin]
       },
       {
         title: "menu_lbl_role_management",
-        pathName: "",
+        pathName: routeNames.roleManagement,
         requireUserType: [UserType.TenantAdmin]
       }
     ]

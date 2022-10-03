@@ -23,6 +23,9 @@ if (service.localStorage.getAccessToken()) {
 onMounted(async () => {
   const userInfo = await service.auth.getCurrentUserInformation();
   userTypeName.value = userInfo?.userType;
+  if (router?.currentRoute?.value?.name) {
+    selectedKeys.value = [router.currentRoute.value.name.toString()];
+  }
 });
 
 const onOpenChange = (keys: string[]): void => {
@@ -120,7 +123,7 @@ const goHome = (): void => {
                     :key="subMenuItem.title"
                   >
                     <a-menu-item
-                      :key="subMenuItem.title"
+                      :key="subMenuItem.pathName"
                       v-if="isHasPermission(subMenuItem.requireUserType)"
                     >
                       <router-link :to="{ name: subMenuItem.pathName }">

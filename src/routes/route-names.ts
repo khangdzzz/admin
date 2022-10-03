@@ -31,5 +31,20 @@ export const routeNames = {
   internalDashboard: "INTERNAL_DASHBOARD",
   externalDashboard: "EXTERNAL_DASHBOARD",
   collectionHistory: "COLLECTION_HISTORY",
-  storeManagment: "STORE_MANAGEMENt"
+  storeManagment: "STORE_MANAGEMENt",
+  collectionBaseManagement: "COLLECTION_BASE_MANAGEMENT",
+  partnerManagement: "PARTNER_MANAGEMENT",
+  collectionManagement: "COLLECTION_MANAGEMENT",
+  collectionTypeManagement: "COLLECTION_TYPE_MANAGEMENT",
+  unitPrice: "UNIT_PRICE",
+  unitPriceUpdatePlan: "UNIT_PRICE_UPDATE_PLAN",
+  landmarkManagement: "LANDMARK_MANAGEMENT",
+  collectionOrderManagement: "COLLECTION_ORDER_MANAGEMENT",
+  collectionRouteManagement: "COLLECTION_ROUTE_MANAGEMENT",
+  deliveryManagement: "DELIVERY_MANAGEMENT",
+  storageManagement: "STORAGE_MANAGEMENT",
+  manufactureCategoryManagement: "MANUFACTURE_CATEGORY_MANAGEMENT",
+  manufactureTaskManagement: "MANUFACTURE_TASK_MANAGEMENT",
+  manufactureItemManagement: "MANUFACTURE_ITEM_MANAGEMENT",
+  roleManagement: "ROLE_MANAGEMENT"
 };
