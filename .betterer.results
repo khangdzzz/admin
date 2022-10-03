@@ -5,15 +5,16 @@
 //
 exports[`Better Code Quality !`] = {
   value: `{
-    "src/modules/container/pages/ContainerTypeList.vue:3974317739": [
-      [157, 8, 3, "\'res\' is assigned a value but never used.", "193432417"]
+    "src/modules/base/components/CustomForm.vue:3645686261": [
+      [196, 45, 3, "Unexpected any. Specify a different type.", "193409811"]
     ],
     "src/services/base.service.ts:2934675873": [
       [54, 44, 3, "Unexpected any. Specify a different type.", "193409811"]
     ],
-    "src/services/container.service.ts:2417814991": [
-      [97, 4, 7, "\'results\' is assigned a value but never used.", "1366156959"],
-      [117, 2, 10, "\'id\' is defined but never used.", "3776056839"]
+    "src/services/container.service.ts:1915440255": [
+      [11, 9, 22, "\'VehicleTypeResponseDto\' is defined but never used.", "4257591257"],
+      [12, 7, 27, "\'createContainerTypeResponse\' is defined but never used.", "796996349"],
+      [13, 7, 28, "\'getListContainerTypeResponse\' is defined but never used.", "2386768269"]
     ]
   }`
 };
