@@ -11,12 +11,14 @@ const layout = computed(() => $route.meta.layout || undefined);
 
 <template>
   <div class="app-layout-base" v-if="layout">
-    <suspense>
-      <component :is="layout" v0>
-        <router-view :key="$route.path" />
-      </component>
-    </suspense>
-    <notify-modal></notify-modal>
+    <a-config-provider :auto-insert-space-in-button="false">
+      <suspense>
+        <component :is="layout" v0>
+          <router-view :key="$route.path" />
+        </component>
+      </suspense>
+      <notify-modal></notify-modal>
+    </a-config-provider>
   </div>
 </template>
 
