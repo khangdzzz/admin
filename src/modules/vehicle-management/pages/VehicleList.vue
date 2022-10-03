@@ -4,11 +4,13 @@
       <a-button
         :class="[vehicleList.btn]"
         type="primary"
-        v-if="selectedKeys.length > 0">
+        v-if="selectedKeys.length > 0"
+      >
         <template #icon>
           <img
             src="@/assets/icons/ic_delete.svg"
-            :class="[vehicleList.btnIcon]" />
+            :class="[vehicleList.btnIcon]"
+          />
         </template>
         {{ $t("delete_btn") }}
       </a-button>
@@ -16,7 +18,8 @@
         <template #icon>
           <img
             src="@/assets/icons/ic_import.svg"
-            :class="[vehicleList.btnIcon]" />
+            :class="[vehicleList.btnIcon]"
+          />
         </template>
         {{ $t("import_btn") }}
       </a-button>
@@ -24,20 +27,23 @@
         <template #icon>
           <img
             src="@/assets/icons/ic_export.svg"
-            :class="[vehicleList.btnIcon]" />
+            :class="[vehicleList.btnIcon]"
+          />
         </template>
         {{ $t("export_btn") }}
       </a-button>
       <a-button
         type="primary"
         :class="[vehicleList.btnAddNew]"
-        @click="onCreate">
+        @click="onCreate"
+      >
         <template #icon>
           <img
             src="@/assets/icons/ic_plus.svg"
-            :class="[vehicleList.btnIcon]" />
+            :class="[vehicleList.btnIcon]"
+          />
         </template>
-        {{ $t("add_new_type_btn") }}
+        {{ $t("create_vehicle_lbl") }}
       </a-button>
     </template>
   </ListSearchHeader>
@@ -46,7 +52,8 @@
       :row-selection="rowSelection"
       :columns="columns"
       :data-source="data"
-      :pagination="false">
+      :pagination="false"
+    >
       <template #bodyCell="{ column, record }">
         <template v-if="column.dataIndex === 'type'">
           <span>{{ record.type }}</span>
@@ -56,18 +63,22 @@
             :to="{
               name: routeNames.editVehicle,
               params: { id: record.key }
-            }">
+            }"
+          >
             <img
               src="@/assets/icons/ic_btn_edit.svg"
-              :class="[vehicleList.actionIcon]" />
+              :class="[vehicleList.actionIcon]"
+            />
           </router-link>
           <img
             src="@/assets/icons/ic_btn_delete.svg"
-            :class="[vehicleList.actionIcon]" />
+            :class="[vehicleList.actionIcon]"
+          />
           <img
             src="@/assets/icons/ic_btn_qrcode.svg"
             :class="[vehicleList.actionIcon]"
-            @click="setVehicleId(record.key)" />
+            @click="setVehicleId(record.key)"
+          />
         </template>
       </template>
     </a-table>
@@ -75,17 +86,20 @@
       <a-pagination
         v-model:current="currentPage"
         :total="data.length"
-        class="ant-pagination">
+        class="ant-pagination"
+      >
         <template #itemRender="{ type, originalElement }">
           <a-button
             :class="[vehicleList.btnPagination]"
             type="primary"
             ghost
-            v-if="type === 'prev'">
+            v-if="type === 'prev'"
+          >
             <template #icon>
               <img
                 src="@/assets/icons/ic_prev.svg"
-                :class="[vehicleList.btnIconPrev]" />
+                :class="[vehicleList.btnIconPrev]"
+              />
               <span :class="[vehicleList.action]">Previous</span>
             </template>
           </a-button>
@@ -93,12 +107,14 @@
             :class="[vehicleList.btnPagination]"
             type="primary"
             ghost
-            v-else-if="type === 'next'">
+            v-else-if="type === 'next'"
+          >
             <template #icon>
               <span :class="[vehicleList.action]">Next</span>
               <img
                 src="@/assets/icons/ic_next.svg"
-                :class="[vehicleList.btnIconNext]" />
+                :class="[vehicleList.btnIconNext]"
+              />
             </template>
           </a-button>
           <component :is="originalElement" v-else></component>
@@ -114,7 +130,8 @@
   <VehicleDetailModal
     v-if="!!vehicleId"
     :currentVehicle="getVehicleById"
-    @close="vehicleId = ''" />
+    @close="vehicleId = ''"
+  />
 </template>
 
 <script setup lang="ts">
@@ -258,16 +275,20 @@ const getVehicleById = computed(() =>
 }
 
 .btnAddNew {
-  @include size-btn(170px, 48px);
+  @include size-btn(157px, 48px);
+  @include text(600, 18px, 100%);
   margin-left: 15px;
-  padding: 0px 15px;
+  padding: 15px 18.5px;
+  .btnIcon {
+    margin-right: 10px;
+  }
 }
 
 .btn {
-  @include size-btn(108px, 40px);
+  @include size-btn(120px, 48px);
   @include text(600, 18px, 100%);
   margin-left: 15px;
-  padding: 0px 15px;
+  padding: 15px 18.5px;
   background-color: #fff;
   color: #07a0b8;
 

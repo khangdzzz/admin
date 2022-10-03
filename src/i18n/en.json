@@ -128,6 +128,7 @@
   "max_length_input": "Input max length is {maxLength} characters",
   "allow_input_number": "This field allows number input only",
   "create_vehicle_type_lbl_page_title": "Add new vehicle type",
+  "create_vehicle_lbl": "Add Vehicle",
   "create_vehicle_type_edt_vehicle_name": "Name",
   "create_vehicle_type_msg_create_successfully": "Vehicle type is created successfully",
   "create_container_type_msg_create_successfully": "Container type is created successfully",
