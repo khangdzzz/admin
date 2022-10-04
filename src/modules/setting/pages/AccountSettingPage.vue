@@ -34,6 +34,7 @@ import { UserType } from "@/modules/base/models/user-type.enum";
 import { service } from "@/services";
 import { ref } from "vue";
 import ChangeLanguage from "@/modules/base/components/ChangeLanguage.vue";
+import { localStorageKeys } from "@/services/local-storage-keys";
 
 //#region props
 //#endregion
@@ -43,13 +44,13 @@ const currentRole = ref<UserType>(UserType.TenantAdmin);
 //#endregion
 
 //#region hooks
-currentRole.value = (service.localStorage.getItem("USER_TYPE_KEY") ||
+currentRole.value = (service.localStorage.getItem(localStorageKeys.userType) ||
   UserType.TenantAdmin) as UserType;
 //#endregion
 
 //#region function
 const onSelect = (value: string): void => {
-  service.localStorage.setItem("USER_TYPE_KEY", value);
+  service.localStorage.setItem(localStorageKeys.userType, value);
   location.replace(import.meta.env.BASE_URL);
 };
 //#endregion
