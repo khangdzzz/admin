@@ -8,7 +8,7 @@ exports[`Better Code Quality !`] = {
     "src/modules/base/components/CustomForm.vue:3645686261": [
       [196, 45, 3, "Unexpected any. Specify a different type.", "193409811"]
     ],
-    "src/services/base.service.ts:2934675873": [
+    "src/services/base.service.ts:3270101479": [
       [54, 44, 3, "Unexpected any. Specify a different type.", "193409811"]
     ],
     "src/services/container.service.ts:3912412062": [

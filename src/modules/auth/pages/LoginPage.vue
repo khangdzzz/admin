@@ -53,6 +53,7 @@ import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
+import { localStorageKeys } from "@/services/local-storage-keys";
 import {
   AuthenticationDetails,
   CognitoUser,
@@ -177,6 +178,10 @@ const handleLogin = async (): Promise<void> => {
     onSuccess: (rs) => {
       isLoading.value = false;
       service.localStorage.setAccessToken(rs.getIdToken().getJwtToken());
+      service.localStorage.setItem(
+        localStorageKeys.refreshToken,
+        rs.getRefreshToken().getToken()
+      );
       onLoginSuccessfully();
     },
     onFailure: (err) => {

@@ -42,11 +42,11 @@ const handleResponse = (data: any): any => {
 };
 const handleExpiredAccessToken = async (error: AxiosError): Promise<void> => {
   if (error.code == "401") {
-    // todo: need to refresh token
+    service.auth.refreshToken();
   }
-  if (error) {
-    // router.push({ path: "login" })
-  }
+  // if (error) {
+  //   router.push({ name: routeNames.login });
+  // }
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
