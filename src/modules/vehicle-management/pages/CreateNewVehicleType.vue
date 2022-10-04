@@ -91,11 +91,9 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
   ]
 });
 const handleOnChange = (value: string, index: number): void => {
-  if (dynamicValidateForm.formData[index].value.trim().length > 0) {
-    isValidated.value = true;
-  } else {
-    isValidated.value = false;
-  }
+  isValidated.value =
+    dynamicValidateForm.formData[index].value.length > 0 &&
+    dynamicValidateForm.formData[index].value.length < 51;
 };
 const handleOnBlur = (
   value: number | boolean | Event,
