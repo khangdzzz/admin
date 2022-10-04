@@ -27,7 +27,7 @@
             :loading="isLoading"
             @click="handleSubmit"
           >
-            {{ $t("btn_submit") }}
+            {{ $t("btn_save") }}
           </a-button>
         </div>
       </a-form>
@@ -85,12 +85,13 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
           required: true,
           trigger: ["blur", "change"],
           message: i18n.global.t("please_enter_input", {
-            fieldName: i18n.global.t("vehicle_type")
+            fieldName: i18n.global.t("container_type")
           })
         },
         {
           max: 50,
-          message: i18n.global.t("max_length_input", { maxLength: 50 })
+          message: i18n.global.t("max_length_input", { maxLength: 50 }),
+          trigger: ["blur", "change"]
         }
       ]
     }
@@ -202,6 +203,7 @@ watch(dynamicValidateForm, () => {
     line-height: 18px;
     text-align: center;
     margin-bottom: 30px;
+    color: $neutral-600;
   }
 
   &__action {
@@ -216,7 +218,7 @@ watch(dynamicValidateForm, () => {
 
     &--cancel,
     &--submit {
-      width: 175px !important;
+      width: 180px !important;
       height: 48px !important;
       height: 18px;
       font-family: "Roboto";
@@ -238,5 +240,10 @@ watch(dynamicValidateForm, () => {
 .edit-container-type-form__action--save.active {
   background: $primary;
   color: $neutral-0;
+}
+.edit-container-type-form {
+  .ant-card {
+    border-radius: 20px;
+  }
 }
 </style>

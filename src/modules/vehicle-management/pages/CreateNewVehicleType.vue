@@ -80,22 +80,25 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
           required: true,
           trigger: ["blur", "change"],
           message: i18n.global.t("please_enter_input", {
-            fieldName: i18n.global.t("vehicle_type")
+            fieldName: i18n.global.t("name")
           })
         },
         {
           max: 50,
+          trigger: ["blur", "change"],
           message: i18n.global.t("max_length_input", { maxLength: 50 })
         }
       ]
     }
   ]
 });
+
 const handleOnChange = (value: string, index: number): void => {
   isValidated.value =
     dynamicValidateForm.formData[index].value.trim().length > 0 &&
     dynamicValidateForm.formData[index].value.trim().length < 51;
 };
+
 const handleOnBlur = (
   value: number | boolean | Event,
   index: string | number | Event
@@ -103,13 +106,16 @@ const handleOnBlur = (
   index = Number(index);
   dynamicValidateForm.formData[index].isFocus = false;
 };
+
 const handleOnFocus = (index: number | boolean | Event): void => {
   index = Number(index);
   dynamicValidateForm.formData[index].isFocus = true;
 };
+
 const redirectToVehicleType = (): void => {
   router.push({ name: routeNames.vehicleType });
 };
+
 const createVehicleType = async (): Promise<void> => {
   const newVehicleTypeName = dynamicValidateForm.formData[0].value.trim();
   if (!userStore.user || !newVehicleTypeName?.length) return;
@@ -137,6 +143,7 @@ const createVehicleType = async (): Promise<void> => {
     });
   }
 };
+
 const goToVehicleTypeListPage = (): void => {
   router.push({ name: routeNames.vehicleType });
 };

@@ -90,7 +90,7 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
         {
           required: true,
           message: i18n.global.t("please_enter_input", {
-            fieldName: i18n.global.t("vehicle_type")
+            fieldName: i18n.global.t("name")
           })
         },
         {
@@ -101,9 +101,13 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
     }
   ]
 });
+
 const handleOnChange = (value: string, index: number): void => {
-  isValidated.value = dynamicValidateForm.formData[index].value.length > 0;
+  isValidated.value =
+    dynamicValidateForm.formData[index].value.trim().length > 0 &&
+    dynamicValidateForm.formData[index].value.trim().length < 51;
 };
+
 const handleOnBlur = (
   value: number | boolean | Event,
   index: string | number | Event
@@ -111,13 +115,16 @@ const handleOnBlur = (
   index = Number(index);
   dynamicValidateForm.formData[index].isFocus = false;
 };
+
 const handleOnFocus = (index: number | boolean | Event): void => {
   index = Number(index);
   dynamicValidateForm.formData[index].isFocus = true;
 };
+
 const redirectToVehicleType = (): void => {
   router.push({ name: routeNames.vehicleType });
 };
+
 const getVehicleTypeDetail = async (): Promise<void> => {
   isLoadingInfo.value = true;
   const response = await service.vehicleType.getVehicleTypeById(
@@ -129,6 +136,7 @@ const getVehicleTypeDetail = async (): Promise<void> => {
     dynamicValidateForm.formData[0].value = response.name;
   }
 };
+
 const handleFinish = async (): Promise<void> => {
   isLoading.value = true;
   const ternantId = userStore.user?.tenantId;
