@@ -146,5 +146,13 @@
   "edit_failed": "編集に失敗しました",
   "common_loading": "処理中...",
   "invalid_field_name": "{fieldName}を正しく入力してください。 ",
-  "short_name": "Short name"
+  "short_name": "Short name",
+  "staff": "スタッフ",
+  "staff_add_staff": "スタッフ追加",
+  "staff_employee_code": "社員番号",
+  "staff_name": "ユーザー名",
+  "email": "Eメール(ログインID)",
+  "staff_user_role": "ユーザーロール",
+  "tenant": "テナント",
+  "staff_collection_base": "回収拠点"
 }
