@@ -80,7 +80,7 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
           required: true,
           trigger: ["blur", "change"],
           message: i18n.global.t("please_enter_input", {
-            fieldName: i18n.global.t("container_type")
+            fieldName: i18n.global.t("name_lowercase")
           })
         },
         {
@@ -203,11 +203,6 @@ const goToContainerTypeListPage = (): void => {
       font-size: 18px;
       line-height: 100%;
       padding: 15px;
-    }
-
-    &--submit {
-      background-color: $neutral-200;
-      color: $neutral-0;
     }
 
     &--cancel {
