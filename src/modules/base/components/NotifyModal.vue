@@ -166,6 +166,7 @@ const onCancelClick = (): void => {
     font-size: 18px;
     line-height: 20px;
     text-align: center;
+    margin-bottom: 10px;
   }
 
   .btn-ok {
@@ -176,13 +177,14 @@ const onCancelClick = (): void => {
     font-weight: 600;
     font-size: 18px;
     line-height: 18px;
+    margin-top: 10px;
   }
 
   .modal-action-container {
     display: flex;
     justify-content: space-between;
     width: 100%;
-    margin-top: 4px;
+    margin-top: 10px;
     &__action-button {
       font-family: "Roboto";
       font-style: normal;

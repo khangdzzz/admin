@@ -1,0 +1,11 @@
+.ant-form-item-explain {
+    font-size: 12px !important;
+    min-height: 12px !important;
+    .ant-form-item-explain-error {
+      color: $red-500 !important;
+    }
+}
+.ant-btn[disabled] {
+    color: $neutral-0 !important;
+    background-color: $neutral-200 !important;
+}
