@@ -58,7 +58,7 @@ import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 //#endregion===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜Props
 
 //#===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎Variables
-const isValidated = ref<boolean>(false);
+const isValidated = ref<boolean>(true);
 const isLoading = ref<boolean>(false);
 const isLoadingInfo = ref<boolean>(false);
 const route = useRoute();
