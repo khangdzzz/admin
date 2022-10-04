@@ -93,8 +93,8 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
 });
 const handleOnChange = (value: string, index: number): void => {
   isDisabled.value =
-    dynamicValidateForm.formData[index].value.length > 0 &&
-    dynamicValidateForm.formData[index].value.length < 51;
+    dynamicValidateForm.formData[index].value.trim().length > 0 &&
+    dynamicValidateForm.formData[index].value.trim().length < 51;
 };
 const handleOnBlur = (
   value: number | boolean | Event,
@@ -117,7 +117,7 @@ const redirectToContainerType = (): void => {
 
 //#===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊Methods
 const createContainerType = async (): Promise<void> => {
-  const newContainerTypeName = dynamicValidateForm.formData[0].value;
+  const newContainerTypeName = dynamicValidateForm.formData[0].value.trim();
   if (!userStore.user || !newContainerTypeName?.length) return;
   isLoading.value = true;
   const newContainerType = await service.container.createContainerType(
@@ -240,6 +240,5 @@ const goToContainerTypeListPage = (): void => {
       }
     }
   }
-
 }
 </style>
