@@ -177,6 +177,7 @@ const goToVehicleTypeListPage = (): void => {
     font-size: 22px;
     font-weight: 600;
     height: 28px;
+    color: $neutral-600;
     line-height: 28px;
     text-align: center;
     margin-bottom: 30px;

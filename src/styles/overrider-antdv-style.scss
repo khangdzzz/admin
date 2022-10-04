@@ -1,11 +1,28 @@
 .ant-form-item-explain {
-    font-size: 12px !important;
-    min-height: 12px !important;
-    .ant-form-item-explain-error {
-      color: $red-500 !important;
-    }
+  font-size: 12px !important;
+  min-height: 12px !important;
+  .ant-form-item-explain-error {
+    color: $red-500 !important;
+  }
 }
 .ant-btn[disabled] {
-    color: $neutral-0 !important;
-    background-color: $neutral-200 !important;
+  color: $neutral-0 !important;
+  background-color: $neutral-200 !important;
+}
+.ant-btn {
+  box-shadow: none;
+}
+.ant-table-row {
+  height: 70px;
+}
+.ant-table-thead > tr > th {
+  font-weight: 700 !important;
+}
+.ant-checkbox-inner {
+  width: 22px !important;
+  height: 22px !important;
+}
+.action-icon {
+  margin-left: 30px;
+  cursor: pointer;
 }
