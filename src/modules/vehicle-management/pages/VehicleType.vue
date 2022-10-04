@@ -6,7 +6,7 @@
           class="btn"
           type="primary"
           ghost
-          @click="deleteVehicleType"
+          @click="deleteVehicleType(undefined)"
           v-if="selectedKeys.length > 0"
         >
           <template #icon>
@@ -50,7 +50,11 @@
               class="action-icon"
               @click="editVehicleType(record.id)"
             />
-            <img src="@/assets/icons/ic_btn_delete.svg" class="action-icon" />
+            <img
+              src="@/assets/icons/ic_btn_delete.svg"
+              class="action-icon"
+              @click="deleteVehicleType(record.id)"
+            />
           </template>
         </template>
       </a-table>
@@ -179,26 +183,36 @@ const sortAndFilterName = (): void => {
       data.value = [...filteredData];
   }
 };
-const deleteVehicleType = (): void => {
+const deleteVehicleType = (id?: number): void => {
   messenger({
     title: "vehicle_type_msg_confirm_delete",
     message: "",
     type: MessengerType.Confirm,
     buttonOkTitle: "btn_delete",
-    callback: onDeleteVehicleType
+    callback: async (isConfirm: boolean): Promise<void> => {
+      if (!isConfirm) {
+        return;
+      }
+
+      if (!selectedKeys.value?.length && !id) {
+        return;
+      }
+      const selectedVehicleTypeIds = id
+        ? [id]
+        : selectedKeys.value.map(
+            (selectedVehicleType) => selectedVehicleType.id
+          );
+      onDeleteVehicleType(selectedVehicleTypeIds);
+    }
   });
 };
 
-const onDeleteVehicleType = async (isConfirm: boolean): Promise<void> => {
-  if (!isConfirm) {
+const onDeleteVehicleType = async (deleteIds: number[]): Promise<void> => {
+  if (!deleteIds.length) {
     return;
   }
-  if (!selectedKeys.value?.length) {
-    return;
-  }
-  const deleteId = selectedKeys.value[0].id;
   isLoading.value = true;
-  const isSuccess = await service.vehicleType.deleteVehicleTypeById(deleteId);
+  const isSuccess = await service.vehicleType.deleteVehicleTypeById(deleteIds);
   isLoading.value = false;
   if (!isSuccess) {
     messenger({

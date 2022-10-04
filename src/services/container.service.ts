@@ -171,10 +171,13 @@ export async function createContainerType(
   });
 }
 
-export async function deleteContainerTypeById(id: number): Promise<boolean> {
+export async function deleteContainerTypeById(ids: number[]): Promise<boolean> {
   const [error] = await transformRequest<ContainerTypeModel>({
-    url: `/container_type/${id}`,
-    method: "delete"
+    url: `/container_type`,
+    method: "delete",
+    data: {
+      ids
+    }
   });
   if (error) return false;
   return true;

@@ -96,10 +96,13 @@ export async function editVehicleTypeById(
   return res;
 }
 
-export async function deleteVehicleTypeById(id: number): Promise<boolean> {
+export async function deleteVehicleTypeById(ids: number[]): Promise<boolean> {
   const [error] = await transformRequest<VehicleTypeModel>({
-    url: `/vehicle_type/${id}`,
-    method: "delete"
+    url: `/vehicle_type`,
+    method: "delete",
+    data: {
+      ids
+    }
   });
   if (error) return false;
   return true;
