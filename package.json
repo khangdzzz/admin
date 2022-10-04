@@ -16,6 +16,7 @@
     "ant-design-vue": "^3.2.12",
     "antd-css-utilities": "^1.0.3",
     "axios": "^0.27.2",
+    "lodash": "^4.17.21",
     "mitt": "^3.0.0",
     "pinia": "^2.0.22",
     "qrcode": "^1.5.1",
@@ -27,6 +28,7 @@
   "devDependencies": {
     "@betterer/cli": "^5.4.0",
     "@betterer/eslint": "^5.4.0",
+    "@types/lodash": "^4.14.186",
     "@types/node": "^18.7.15",
     "@types/qrcode": "^1.5.0",
     "@typescript-eslint/eslint-plugin": "^5.36.2",
