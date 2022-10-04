@@ -9,13 +9,15 @@
           :formData="dynamicValidateForm.formData"
           @change="handleOnChange"
           @onBlur="handleOnBlur"
-          @onFocus="handleOnFocus">
+          @onFocus="handleOnFocus"
+        >
         </CustomForm>
         <div class="create-new-vehicle-type-form__action">
           <a-button
             class="create-new-vehicle-type-form__action--cancel"
             :disabled="isLoading"
-            @click="redirectToVehicleType">
+            @click="redirectToVehicleType"
+          >
             {{ $t("btn_cancel") }}
           </a-button>
           <a-button
@@ -24,7 +26,8 @@
             html-type="submit"
             :disabled="!isValidated"
             :loading="isLoading"
-            @click="createVehicleType">
+            @click="createVehicleType"
+          >
             {{ $t("btn_submit") }}
           </a-button>
         </div>
@@ -67,7 +70,7 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
       value: "",
       placeHolder: "create_vehicle_type_edt_vehicle_name",
       label: "create_vehicle_type_edt_vehicle_name",
-      name: "name",
+      name: "createVehicleType",
       disabled: false,
       required: true,
       key: 1,
@@ -88,7 +91,7 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
   ]
 });
 const handleOnChange = (value: string, index: number): void => {
-  if (dynamicValidateForm.formData[index].value.length > 0) {
+  if (dynamicValidateForm.formData[index].value.trim().length > 0) {
     isValidated.value = true;
   } else {
     isValidated.value = false;
@@ -109,7 +112,7 @@ const redirectToVehicleType = (): void => {
   router.push({ name: routeNames.vehicleType });
 };
 const createVehicleType = async (): Promise<void> => {
-  const newVehicleTypeName = dynamicValidateForm.formData[0].value;
+  const newVehicleTypeName = dynamicValidateForm.formData[0].value.trim();
   if (!userStore.user || !newVehicleTypeName?.length) return;
   isLoading.value = true;
   const newVehicleType = await service.vehicleType.createVehicleType(
@@ -126,16 +129,13 @@ const createVehicleType = async (): Promise<void> => {
         isConfirm;
         goToVehicleTypeListPage();
       }
-    }
-    );
+    });
   } else {
-    messenger(
-      {
-        title: "create_vehicle_type_msg_create_fail_title",
-        message: "create_vehicle_type_msg_create_fail_message",
-        type: MessengerType.Error
-      }
-    );
+    messenger({
+      title: "create_vehicle_type_msg_create_fail_title",
+      message: "create_vehicle_type_msg_create_fail_message",
+      type: MessengerType.Error
+    });
   }
 };
 const goToVehicleTypeListPage = (): void => {
@@ -170,13 +170,14 @@ const goToVehicleTypeListPage = (): void => {
   position: relative;
   top: 50%;
   transform: translateY(-50%);
-  border-radius: 20px;
-  padding: 6px 0;
+  border-radius: 10px;
+  padding: 10px;
 
   &__title {
     font-size: 22px;
     font-weight: 600;
-    line-height: 18px;
+    height: 28px;
+    line-height: 28px;
     text-align: center;
     margin-bottom: 30px;
   }
@@ -215,5 +216,19 @@ const goToVehicleTypeListPage = (): void => {
 .create-new-vehicle-type-form__action--save.active {
   background: $primary;
   color: $neutral-0;
+}
+.create-new-vehicle-type-form .ant-card-body {
+  padding: 20px 10px !important;
+}
+:deep() {
+  .ant-card-body {
+    padding: 20px 10px !important;
+  }
+  .ant-form-item-explain {
+    margin-top: 8px;
+  }
+  .ant-form-item {
+    margin-bottom: 25px;
+  }
 }
 </style>
