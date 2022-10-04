@@ -5,16 +5,29 @@
         {{ $t("add_new_container_type") }}
       </h3>
       <a-form :model="dynamicValidateForm" name="basic" autocomplete="off">
-        <CustomForm :formData="dynamicValidateForm.formData" @change="handleOnChange" @onBlur="handleOnBlur"
-          @onFocus="handleOnFocus">
+        <CustomForm
+          :formData="dynamicValidateForm.formData"
+          @change="handleOnChange"
+          @onBlur="handleOnBlur"
+          @onFocus="handleOnFocus"
+        >
         </CustomForm>
         <div class="create-new-container-type-form__action">
-          <a-button class="create-new-container-type-form__action--cancel" :disabled="isLoading"
-            @click="redirectToContainerType">
+          <a-button
+            class="create-new-container-type-form__action--cancel"
+            :disabled="isLoading"
+            @click="redirectToContainerType"
+          >
             {{ $t("btn_cancel") }}
           </a-button>
-          <a-button type="primary" class="create-new-container-type-form__action--submit" :disabled="!isDisabled"
-            :loading="isLoading" @click="createContainerType">
+          <a-button
+            type="primary"
+            class="create-new-container-type-form__action--submit"
+            html-type="submit"
+            :disabled="!isDisabled"
+            :loading="isLoading"
+            @click="createContainerType"
+          >
             {{ $t("btn_submit") }}
           </a-button>
         </div>
@@ -64,6 +77,13 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
       isFocus: false,
       rules: [
         {
+          required: true,
+          trigger: ["blur", "change"],
+          message: i18n.global.t("please_enter_input", {
+            fieldName: i18n.global.t("container_type")
+          })
+        },
+        {
           max: 50,
           message: i18n.global.t("max_length_input", { maxLength: 50 })
         }
@@ -72,9 +92,9 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
   ]
 });
 const handleOnChange = (value: string, index: number): void => {
-  value;
-  index;
-  isDisabled.value = dynamicValidateForm.formData[0].value.length > 0;
+  isDisabled.value =
+    dynamicValidateForm.formData[index].value.length > 0 &&
+    dynamicValidateForm.formData[index].value.length < 51;
 };
 const handleOnBlur = (
   value: number | boolean | Event,

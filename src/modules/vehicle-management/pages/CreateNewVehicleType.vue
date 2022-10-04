@@ -78,6 +78,7 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
       rules: [
         {
           required: true,
+          trigger: ['blur','change'],
           message: i18n.global.t("please_enter_input", {
             fieldName: i18n.global.t("vehicle_type")
           })

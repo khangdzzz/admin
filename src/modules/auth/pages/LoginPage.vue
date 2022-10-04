@@ -46,6 +46,8 @@
 
 import Ic_pass from "@/assets/icons/IcPass.vue";
 import Ic_user from "@/assets/icons/IcUser.vue";
+import { i18n } from "@/i18n";
+import validator from "@/modules/base/components/validator/validator";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import { router } from "@/routes";
@@ -87,7 +89,15 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
       disabled: false,
       required: false,
       key: 1,
-      isFocus: false
+      isFocus: false,
+      rules: [
+        {
+          required: true,
+          trigger: ["blur", "change"],
+          message:  i18n.global.t("forgot_password_msg_err_email_required")
+        },
+        { validator: validator.validateEmail }
+      ]
     },
     {
       inputType: "AInputPassword",
