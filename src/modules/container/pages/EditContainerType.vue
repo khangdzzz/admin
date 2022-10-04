@@ -98,8 +98,8 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
 });
 const handleOnChange = (value: string, index: number): void => {
   isDisabled.value =
-    dynamicValidateForm.formData[index].value.length > 0 &&
-    dynamicValidateForm.formData[index].value.length < 51;
+    dynamicValidateForm.formData[index].value.trim().length > 0 &&
+    dynamicValidateForm.formData[index].value.trim().length < 51;
 };
 
 const handleOnBlur = (
@@ -134,7 +134,7 @@ const fetchContainerTypeById = async (): Promise<void> => {
 };
 
 const handleSubmit = async (): Promise<void> => {
-  const currentContainerType = dynamicValidateForm.formData[0].value;
+  const currentContainerType = dynamicValidateForm.formData[0].value.trim();
   if (!userStore.user || !currentContainerType?.length) return;
   isLoading.value = true;
   const res = await service.container.editContainerTypeById(

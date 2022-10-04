@@ -78,7 +78,7 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
       rules: [
         {
           required: true,
-          trigger: ['blur','change'],
+          trigger: ["blur", "change"],
           message: i18n.global.t("please_enter_input", {
             fieldName: i18n.global.t("vehicle_type")
           })
@@ -93,8 +93,8 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
 });
 const handleOnChange = (value: string, index: number): void => {
   isValidated.value =
-    dynamicValidateForm.formData[index].value.length > 0 &&
-    dynamicValidateForm.formData[index].value.length < 51;
+    dynamicValidateForm.formData[index].value.trim().length > 0 &&
+    dynamicValidateForm.formData[index].value.trim().length < 51;
 };
 const handleOnBlur = (
   value: number | boolean | Event,
