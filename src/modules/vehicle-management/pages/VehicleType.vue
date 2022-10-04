@@ -27,7 +27,7 @@
         :row-selection="rowSelection"
         :columns="columns"
         :data-source="data"
-        :pagination="true"
+        :pagination="false"
       >
         <template #headerCell="{ column }">
           <template v-if="column.key === 'index'">
@@ -250,6 +250,8 @@ const onDeleteVehicleType = async (deleteIds: number[]): Promise<void> => {
   font-weight: 600;
   font-size: 18px;
   width: 120px;
+  display: flex;
+  align-items: center;
   height: 48px;
   margin-left: 15px;
   padding: 0 15px 0 15px;
@@ -268,72 +270,10 @@ const onDeleteVehicleType = async (deleteIds: number[]): Promise<void> => {
   margin-left: 30px;
   cursor: pointer;
 }
-
 :deep() {
-  .ant-table {
-    box-shadow: 4px 2px 8px rgba(0, 0, 0, 0.02);
-    background: transparent;
-    border: none;
-  }
-
-  .ant-table-cell {
-    background-color: white;
-  }
-
-  .ant-table-selection-column {
-    padding: 0 18px;
-  }
-
-  .ant-checkbox-indeterminate .ant-checkbox-inner::after {
-    background: $white;
-  }
-
-  .ant-table-row-selected .ant-table-cell {
-    background-color: $neutral-50;
-  }
-
-  .ant-table-container table > thead > tr:first-child th {
-    color: $text-1;
-  }
-
-  .ant-table-container table > thead > tr:first-child th:first-child {
-    border-top-left-radius: 10px;
-  }
-
-  .ant-table-container table > thead > tr:first-child th:last-child {
-    border-top-right-radius: 10px;
-  }
-
-  .ant-table-container table > tbody > tr:last-child td:first-child {
-    border-bottom-left-radius: 10px;
-  }
-
-  .ant-table-container table > tbody > tr:last-child td:last-child {
-    border-bottom-right-radius: 10px;
-  }
-
-  .ant-pagination-item-active {
-    background-color: $primary;
-    color: $white;
-  }
-
-  .ant-pagination-item {
-    font-weight: 700;
-    font-size: 14px;
-  }
-
-  .ant-pagination-item-active a {
-    color: $white;
-  }
-
-  .ant-table-thead
-    > tr
-    > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
-    height: 0;
-  }
-  .ant-checkbox-inner {
-    width: 22px !important;
-    height: 22px !important;
+  .ant-table-tbody > tr.ant-table-row-selected > td {
+    background: $grey-2;
+    border-color: rgba(0, 0, 0, 0.03);
   }
 }
 </style>

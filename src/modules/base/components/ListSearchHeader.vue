@@ -10,6 +10,7 @@
           :placeholder="$t('search_input')"
           class="search-input"
           @change="debouncedOnChange"
+          allow-clear
           ><template #prefix>
             <img src="@/assets/icons/ic_search.svg" />
           </template>
@@ -81,8 +82,9 @@ defineExpose({ clearInput });
     font-family: "Roboto";
     font-style: normal;
     font-weight: 600;
+    color: $neutral-600;
     font-size: 28px;
-    line-height: 36px;
+    line-height: 32.81px;
   }
   .ant-input {
     font-size: 20px;
