@@ -363,52 +363,8 @@ const getVehicleById = computed(() =>
 
 :deep() {
   .ant-table-tbody > tr.ant-table-row-selected > td {
-    background: #f7f7f7;
+    background: $grey-2;
     border-color: rgba(0, 0, 0, 0.03);
-  }
-  .ant-checkbox-inner {
-    width: 22px !important;
-    height: 22px !important;
-  }
-  .ant-pagination {
-    .ant-pagination-options {
-      float: left;
-      @include size-btn(60px, 30px);
-      @extend .flex-center;
-      .ant-select {
-        .ant-select-selector {
-          @extend .border;
-        }
-      }
-    }
-    .ant-pagination-prev {
-      height: 40px;
-    }
-
-    .ant-pagination-next {
-      height: 40px;
-    }
-
-    .ant-pagination-item {
-      @include size-btn(40px, 40px);
-      @include pagination-item(#ffffff);
-      padding: 0px;
-
-      a {
-        @extend .flex-center;
-        height: 100%;
-        @include pagination-item(#ffffff);
-        @include text(700, 14px, 18px);
-      }
-    }
-
-    .ant-pagination-item-active {
-      a {
-        color: #ffffff;
-        @include pagination-item(#07a0b8);
-        @include text(700, 14px, 18px);
-      }
-    }
   }
 }
 </style>

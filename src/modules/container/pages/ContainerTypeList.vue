@@ -17,25 +17,25 @@
           </template>
           {{ $t("delete_btn") }}
         </a-button>
-        <a-button
-          type="primary"
-          :class="[containerTypeList.btnAddNew]"
-          class="btn btn-add-new"
+        <router-link
+          :to="{
+            name: routeNames.createContainerType
+          }"
         >
-          <template #icon>
-            <img
-              src="@/assets/icons/ic_plus.svg"
-              :class="[containerTypeList.btnIcon]"
-            />
-          </template>
-          <router-link
-            :to="{
-              name: routeNames.createContainerType
-            }"
+          <a-button
+            type="primary"
+            :class="[containerTypeList.btnAddNew]"
+            class="btn btn-add-new"
           >
+            <template #icon>
+              <img
+                src="@/assets/icons/ic_plus.svg"
+                :class="[containerTypeList.btnIcon]"
+              />
+            </template>
             {{ $t("add_container_type") }}
-          </router-link>
-        </a-button>
+          </a-button>
+        </router-link>
       </template>
     </ListSearchHeader>
     <div :class="[containerTypeList.tableContainer]">
@@ -174,7 +174,7 @@ const columns: TableColumnType<ContainerType>[] = [
   },
   {
     dataIndex: "action",
-    width: "20%"
+    width: "8%"
   }
 ];
 const data = ref<ContainerTypeModel[]>([]);
@@ -358,6 +358,10 @@ const onDeleteContainerType = async (deleteIds: number[]): Promise<void> => {
   @include size-btn(215px, 48px);
   margin-left: 15px;
   padding: 0px 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
   a {
     color: $white;
   }
@@ -410,6 +414,9 @@ const onDeleteContainerType = async (deleteIds: number[]): Promise<void> => {
   font-size: 18px;
   width: 120px;
   height: 48px;
+  display: flex;
+  align-items: center;
+  line-height: 18px;
   margin-left: 15px;
   padding: 0 15px 0 15px;
 
@@ -425,51 +432,8 @@ const onDeleteContainerType = async (deleteIds: number[]): Promise<void> => {
 
 :deep() {
   .ant-table-tbody > tr.ant-table-row-selected > td {
-    background: #f7f7f7;
+    background: $grey-2;
     border-color: rgba(0, 0, 0, 0.03);
-  }
-
-  .ant-pagination {
-    .ant-pagination-options {
-      float: left;
-      @include size-btn(60px, 30px);
-      @extend .flex-center;
-
-      .ant-select {
-        .ant-select-selector {
-          @extend .border;
-        }
-      }
-    }
-
-    .ant-pagination-prev {
-      height: 40px;
-    }
-
-    .ant-pagination-next {
-      height: 40px;
-    }
-
-    .ant-pagination-item {
-      @include size-btn(40px, 40px);
-      @include pagination-item(#ffffff);
-      padding: 0px;
-
-      a {
-        @extend .flex-center;
-        height: 100%;
-        @include pagination-item(#ffffff);
-        @include text(700, 14px, 18px);
-      }
-    }
-
-    .ant-pagination-item-active {
-      a {
-        color: #ffffff;
-        @include pagination-item(#07a0b8);
-        @include text(700, 14px, 18px);
-      }
-    }
   }
 }
 </style>
