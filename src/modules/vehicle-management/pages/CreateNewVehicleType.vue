@@ -76,7 +76,7 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
         {
           required: true,
           message: i18n.global.t("please_enter_input", {
-            fieldName: i18n.global.t("create_vehicle_type_edt_vehicle_name")
+            fieldName: i18n.global.t("vehicle_type")
           })
         },
         {
