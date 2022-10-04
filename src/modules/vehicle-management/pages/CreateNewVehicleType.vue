@@ -80,7 +80,7 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
           required: true,
           trigger: ["blur", "change"],
           message: i18n.global.t("please_enter_input", {
-            fieldName: i18n.global.t("name")
+            fieldName: i18n.global.t("name_lowercase")
           })
         },
         {

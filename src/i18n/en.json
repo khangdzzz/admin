@@ -158,5 +158,6 @@
   "email": "Email",
   "staff_user_role": "User role",
   "tenant": "Tenant",
-  "staff_collection_base": "Collection base"
+  "staff_collection_base": "Collection base",
+  "name_lowercase":"name"
 }
