@@ -72,9 +72,7 @@ import { Sort } from "@/modules/common/models/sort.enum";
 import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
-import { TableProps } from "ant-design-vue";
-import { Key } from "ant-design-vue/lib/table/interface";
-import { inject, onMounted, ref } from "vue";
+import { computed, inject, onMounted, ref } from "vue";
 import { VehicleTypeModel } from "../models";
 
 //#endregion
@@ -104,7 +102,7 @@ const columns = [
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let sourceData: VehicleTypeModel[] = [];
 const data = ref<VehicleTypeModel[]>([]);
-const selectedKeys = ref<VehicleTypeModel[]>([]);
+const selectedKeys = ref<number[]>([]);
 const sort = ref<Sort>(Sort.None);
 const isLoading = ref<boolean>(false);
 const searchString = ref<string>("");
@@ -122,19 +120,20 @@ const initialize = async (): Promise<void> => {
   const result = await service.vehicleType.fetchListVehicleType(1, 10);
   isLoading.value = false;
   sourceData = (result?.results || []).map((item, index) => {
-    return { ...item, key: index + 1 };
+    return { ...item, key: item.id || index + 1 };
   });
   data.value = [...sourceData];
 };
-const rowSelection: TableProps["rowSelection"] = {
-  onChange: (
-    selectedRowKeys: Key[],
-    selectedRows: VehicleTypeModel[]
-  ): void => {
-    selectedRowKeys;
-    selectedKeys.value = [...selectedRows];
-  }
-};
+
+const rowSelection = computed(() => {
+  return {
+    selectedRowKeys: selectedKeys.value,
+    onChange: (keys: number[]): void => {
+      selectedKeys.value = keys;
+    }
+  };
+});
+
 const onCreate = (): void => {
   router.push({ name: routeNames.createVehicleType });
 };
@@ -197,11 +196,7 @@ const deleteVehicleType = (id?: number): void => {
       if (!selectedKeys.value?.length && !id) {
         return;
       }
-      const selectedVehicleTypeIds = id
-        ? [id]
-        : selectedKeys.value.map(
-            (selectedVehicleType) => selectedVehicleType.id
-          );
+      const selectedVehicleTypeIds = id ? [id] : selectedKeys.value;
       onDeleteVehicleType(selectedVehicleTypeIds);
     }
   });
@@ -334,6 +329,16 @@ const onDeleteVehicleType = async (deleteIds: number[]): Promise<void> => {
   .ant-checkbox-inner {
     width: 22px !important;
     height: 22px !important;
+  }
+}
+</style>
+<style lang="scss">
+.table-container {
+  .ant-checkbox-inner {
+    &::after {
+      top: 45%;
+      left: 30%;
+    }
   }
 }
 </style>
