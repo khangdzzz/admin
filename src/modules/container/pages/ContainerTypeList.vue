@@ -9,7 +9,7 @@
           class="btn"
           type="primary"
           ghost
-          @click="deleteContainerType"
+          @click="deleteContainerType(undefined)"
           v-if="selectedKeys.length > 0"
         >
           <template #icon>
@@ -78,6 +78,7 @@
               <img
                 src="@/assets/icons/ic_btn_delete.svg"
                 :class="[containerTypeList.actionIcon]"
+                @click="deleteContainerType(record.id)"
               />
             </center>
           </template>
@@ -245,26 +246,33 @@ const handleSearchChange = (value: string): void => {
   searchString.value = value || "";
   sortAndFilterName();
 };
-const deleteContainerType = (): void => {
+const deleteContainerType = (id?: number): void => {
   messenger({
     title: "vehicle_type_msg_confirm_delete",
     message: "",
     type: MessengerType.Confirm,
     buttonOkTitle: "btn_delete",
-    callback: onDeleteContainerType
+    callback: async (isConfirm: boolean): Promise<void> => {
+      if (!isConfirm) {
+        return;
+      }
+
+      if (!selectedKeys.value?.length && !id) {
+        return;
+      }
+      const selectedVehicleTypeIds = id
+        ? [id]
+        : selectedKeys.value.map(
+            (selectedVehicleType) => selectedVehicleType.id
+          );
+      onDeleteContainerType(selectedVehicleTypeIds);
+    }
   });
 };
 
-const onDeleteContainerType = async (isConfirm: boolean): Promise<void> => {
-  if (!isConfirm) {
-    return;
-  }
-  if (!selectedKeys.value?.length) {
-    return;
-  }
-  const deleteId = selectedKeys.value[0].id;
+const onDeleteContainerType = async (deleteIds: number[]): Promise<void> => {
   isLoading.value = true;
-  const isSuccess = await service.container.deleteContainerTypeById(deleteId);
+  const isSuccess = await service.container.deleteContainerTypeById(deleteIds);
   isLoading.value = false;
   if (!isSuccess) {
     messenger({

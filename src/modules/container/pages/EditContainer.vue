@@ -6,12 +6,14 @@
         <a-form
           :model="dynamicValidateForm"
           name="editContainer"
-          autocomplete="off">
+          autocomplete="off"
+        >
           <a-form-item name="formDatavalue" :validateFirst="false">
             <a-radio-group
               disabled
               v-model:value="ownerType"
-              class="radio-group">
+              class="radio-group"
+            >
               <label class="label-radio disabled-color"
                 >{{ $t("container_owner_type") }}<span> *</span></label
               >
@@ -24,7 +26,8 @@
           <CustomForm
             :formData="dynamicValidateForm.formData"
             @onBlur="handleOnBlur"
-            @onFocus="handleOnFocus"></CustomForm>
+            @onFocus="handleOnFocus"
+          ></CustomForm>
         </a-form>
       </div>
       <a-row type="flex" justify="center" align="middle" gutter="20">
@@ -172,7 +175,7 @@ const fetchContainerType = (): void => {
 
 const fetchMockData = (): void => {
   mockCollectionBase.value = service.container.getMockCollectionBase();
-  mockPartner.value = service.container.getMockPartner();
+  mockPartner.value = service.vehicle.getMockPartner();
 };
 const fetchContainerById = (): void => {
   const res = service.container.getContainerById(id.toString());
