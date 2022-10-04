@@ -1,129 +1,145 @@
 <template>
-  <ListSearchHeader :title="$t('vehicle')" :colTitle="3" :colAction="21">
-    <template #action>
-      <a-button
-        :class="[vehicleList.btn]"
-        type="primary"
-        v-if="selectedKeys.length > 0"
-      >
-        <template #icon>
-          <img
-            src="@/assets/icons/ic_delete.svg"
-            :class="[vehicleList.btnIcon]"
-          />
-        </template>
-        {{ $t("delete_btn") }}
-      </a-button>
-      <a-button :class="[vehicleList.btn]" type="primary">
-        <template #icon>
-          <img
-            src="@/assets/icons/ic_import.svg"
-            :class="[vehicleList.btnIcon]"
-          />
-        </template>
-        {{ $t("import_btn") }}
-      </a-button>
-      <a-button :class="[vehicleList.btn]" type="primary">
-        <template #icon>
-          <img
-            src="@/assets/icons/ic_export.svg"
-            :class="[vehicleList.btnIcon]"
-          />
-        </template>
-        {{ $t("export_btn") }}
-      </a-button>
-      <a-button
-        type="primary"
-        :class="[vehicleList.btnAddNew]"
-        @click="onCreate"
-      >
-        <template #icon>
-          <img
-            src="@/assets/icons/ic_plus.svg"
-            :class="[vehicleList.btnIcon]"
-          />
-        </template>
-        {{ $t("create_vehicle_lbl") }}
-      </a-button>
-    </template>
-  </ListSearchHeader>
-  <div :class="[vehicleList.tableContainer]">
-    <a-table
-      :row-selection="rowSelection"
-      :columns="columns"
-      :data-source="data"
-      :pagination="false"
+  <div class="fill-height d-flex flex-column">
+    <ListSearchHeader
+      ref="searchHeader"
+      :title="$t('vehicle')"
+      :colTitle="3"
+      :colAction="21"
+      @onChange="handleSearchChange"
     >
-      <template #bodyCell="{ column, record }">
-        <template v-if="column.dataIndex === 'type'">
-          <span>{{ record.type }}</span>
-        </template>
-        <template v-if="column.dataIndex === 'action'">
-          <router-link
-            :to="{
-              name: routeNames.editVehicle,
-              params: { id: record.key }
-            }"
-          >
+      <template #action>
+        <a-button
+          :class="[vehicleList.btn]"
+          type="primary"
+          v-if="selectedKeys.length > 0"
+        >
+          <template #icon>
             <img
-              src="@/assets/icons/ic_btn_edit.svg"
+              src="@/assets/icons/ic_delete.svg"
+              :class="[vehicleList.btnIcon]"
+            />
+          </template>
+          {{ $t("delete_btn") }}
+        </a-button>
+        <a-button :class="[vehicleList.btn]" type="primary">
+          <template #icon>
+            <img
+              src="@/assets/icons/ic_import.svg"
+              :class="[vehicleList.btnIcon]"
+            />
+          </template>
+          {{ $t("import_btn") }}
+        </a-button>
+        <a-button :class="[vehicleList.btn]" type="primary">
+          <template #icon>
+            <img
+              src="@/assets/icons/ic_export.svg"
+              :class="[vehicleList.btnIcon]"
+            />
+          </template>
+          {{ $t("export_btn") }}
+        </a-button>
+        <a-button
+          type="primary"
+          :class="[vehicleList.btnAddNew]"
+          @click="onCreate"
+        >
+          <template #icon>
+            <img
+              src="@/assets/icons/ic_plus.svg"
+              :class="[vehicleList.btnIcon]"
+            />
+          </template>
+          {{ $t("create_vehicle_lbl") }}
+        </a-button>
+      </template>
+    </ListSearchHeader>
+    <div :class="[vehicleList.tableContainer, 'mx-30 mb-30']">
+      <NoData
+        :value="searchValue"
+        :is-loading="isLoading"
+        @onClick="handleBackToList"
+        v-if="isLoading || !data || !data.length"
+      />
+
+      <a-table
+        :row-selection="rowSelection"
+        :columns="columns"
+        :data-source="data"
+        :pagination="false"
+        v-if="!isLoading && data && data.length > 0"
+      >
+        <template #bodyCell="{ column, record }">
+          <template v-if="column.dataIndex === 'type'">
+            <span>{{ record.type }}</span>
+          </template>
+          <template v-if="column.dataIndex === 'action'">
+            <router-link
+              :to="{
+                name: routeNames.editVehicle,
+                params: { id: record.key }
+              }"
+            >
+              <img
+                src="@/assets/icons/ic_btn_edit.svg"
+                :class="[vehicleList.actionIcon]"
+              />
+            </router-link>
+            <img
+              src="@/assets/icons/ic_btn_delete.svg"
               :class="[vehicleList.actionIcon]"
             />
-          </router-link>
-          <img
-            src="@/assets/icons/ic_btn_delete.svg"
-            :class="[vehicleList.actionIcon]"
-          />
-          <img
-            src="@/assets/icons/ic_btn_qrcode.svg"
-            :class="[vehicleList.actionIcon]"
-            @click="setVehicleId(record.key)"
-          />
+            <img
+              src="@/assets/icons/ic_btn_qrcode.svg"
+              :class="[vehicleList.actionIcon]"
+              @click="setVehicleId(record.key)"
+            />
+          </template>
         </template>
-      </template>
-    </a-table>
-    <div :class="vehicleList.pagination" v-if="data.length > 50">
-      <a-pagination
-        v-model:current="currentPage"
-        :total="data.length"
-        class="ant-pagination"
-      >
-        <template #itemRender="{ type, originalElement }">
-          <a-button
-            :class="[vehicleList.btnPagination]"
-            type="primary"
-            ghost
-            v-if="type === 'prev'"
-          >
-            <template #icon>
-              <img
-                src="@/assets/icons/ic_prev.svg"
-                :class="[vehicleList.btnIconPrev]"
-              />
-              <span :class="[vehicleList.action]">Previous</span>
-            </template>
-          </a-button>
-          <a-button
-            :class="[vehicleList.btnPagination]"
-            type="primary"
-            ghost
-            v-else-if="type === 'next'"
-          >
-            <template #icon>
-              <span :class="[vehicleList.action]">Next</span>
-              <img
-                src="@/assets/icons/ic_next.svg"
-                :class="[vehicleList.btnIconNext]"
-              />
-            </template>
-          </a-button>
-          <component :is="originalElement" v-else></component>
-        </template>
+      </a-table>
+      <div :class="vehicleList.pagination" v-if="data.length > 50">
+        <a-pagination
+          v-model:current="currentPage"
+          :total="data.length"
+          class="ant-pagination"
+        >
+          <template #itemRender="{ type, originalElement }">
+            <a-button
+              :class="[vehicleList.btnPagination]"
+              type="primary"
+              ghost
+              v-if="type === 'prev'"
+            >
+              <template #icon>
+                <img
+                  src="@/assets/icons/ic_prev.svg"
+                  :class="[vehicleList.btnIconPrev]"
+                />
+                <span :class="[vehicleList.action]">Previous</span>
+              </template>
+            </a-button>
+            <a-button
+              :class="[vehicleList.btnPagination]"
+              type="primary"
+              ghost
+              v-else-if="type === 'next'"
+            >
+              <template #icon>
+                <span :class="[vehicleList.action]">Next</span>
+                <img
+                  src="@/assets/icons/ic_next.svg"
+                  :class="[vehicleList.btnIconNext]"
+                />
+              </template>
+            </a-button>
+            <component :is="originalElement" v-else></component>
+          </template>
 
-        <template #buildOptionText="{ value }">
-          {{ value }}
-        </template>
-      </a-pagination>
+          <template #buildOptionText="{ value }">
+            {{ value }}
+          </template>
+        </a-pagination>
+      </div>
     </div>
   </div>
 
@@ -144,7 +160,9 @@ import { service } from "@/services";
 import type { TableColumnType, TableProps } from "ant-design-vue";
 import { computed, onMounted, ref } from "vue";
 import { VehicleDetail } from "../models/vehicle.model";
+import HeaderRef from "@/modules/base/models/search-header.model";
 import VehicleDetailModal from "./VehicleDetailModal.vue";
+import NoData from "@/modules/base/components/NoData.vue";
 
 type Key = string | number;
 //#endregion===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆
@@ -178,6 +196,10 @@ const columns: TableColumnType<VehicleDetail>[] = [
   }
 ];
 const data = ref<VehicleDetail[]>([]);
+const searchValue = ref<string>("");
+const searchHeader = ref<HeaderRef | null>(null);
+const isLoading = ref<boolean>(false);
+
 //#endregion===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎
 
 //#===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌Hooks
@@ -200,12 +222,24 @@ const rowSelection: TableProps["rowSelection"] = {
 };
 
 const fetchVehicleList = (): void => {
+  isLoading.value = true;
   const res = service.vehicle.getListVehicle();
+  isLoading.value = false;
   data.value = res;
 };
 
 const onCreate = (): void => {
   router.push({ name: routeNames.createVehicle });
+};
+
+const handleSearchChange = (currentSearchValue: string): void => {
+  searchValue.value = currentSearchValue;
+};
+
+const handleBackToList = (): void => {
+  if (searchHeader.value) {
+    searchHeader.value.clearInput();
+  }
 };
 
 //#endregion===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊
@@ -236,7 +270,7 @@ const getVehicleById = computed(() =>
 }
 
 .tableContainer {
-  margin: 30px;
+  flex-grow: 1;
 
   .actionIcon {
     margin-left: 20px;

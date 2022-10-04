@@ -9,7 +9,7 @@
           v-model:value="searchValue"
           :placeholder="$t('search_input')"
           class="search-input"
-          @change="$emit('onChange', searchValue)"
+          @change="debouncedOnChange"
           ><template #prefix>
             <img src="@/assets/icons/ic_search.svg" />
           </template>
@@ -22,6 +22,7 @@
 
 <script setup lang="ts">
 //#region import
+import debounce from "lodash/debounce";
 import { ref } from "vue";
 //#endregion
 
@@ -40,6 +41,8 @@ defineProps({
     default: 18
   }
 });
+
+const emit = defineEmits<{ (e: "onChange", value: string): void }>();
 //#endregion
 
 //#region variables
@@ -50,6 +53,17 @@ const searchValue = ref<string>("");
 //#endregion
 
 //#region function
+const debouncedOnChange = debounce(() => {
+  emit("onChange", searchValue.value);
+}, 300);
+
+const clearInput = (): void => {
+  searchValue.value = "";
+  emit("onChange", searchValue.value);
+};
+
+defineExpose({ clearInput });
+
 //#endregion
 
 //#region computed
