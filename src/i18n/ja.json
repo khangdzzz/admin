@@ -154,5 +154,6 @@
   "email": "Eメール(ログインID)",
   "staff_user_role": "ユーザーロール",
   "tenant": "テナント",
-  "staff_collection_base": "回収拠点"
+  "staff_collection_base": "回収拠点",
+  "create_container_type_msg_create_successfully": "風袋種別が作成されました"
 }

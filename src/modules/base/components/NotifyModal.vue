@@ -92,12 +92,8 @@ const onShowModal = ({
   buttonCancelTitle,
   callback
 }: MessengerParamModel): void => {
-  if (buttonOkTitle) {
-    btnOk.value = buttonOkTitle;
-  }
-  if (buttonCancelTitle) {
-    btnCancel.value = buttonCancelTitle;
-  }
+  btnOk.value = buttonOkTitle || "btn_ok";
+  btnCancel.value = buttonCancelTitle || "btn_cancel";
   modalType.value = type;
   const errorIcon = new URL(
     "../../../assets/icons/ic_error.png",
