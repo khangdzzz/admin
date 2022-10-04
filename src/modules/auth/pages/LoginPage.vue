@@ -96,7 +96,7 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
           trigger: ["blur", "change"],
           message:  i18n.global.t("forgot_password_msg_err_email_required")
         },
-        { validator: validator.validateEmail }
+        { validator: validator.validateEmail , trigger: ["blur", "change"],}
       ]
     },
     {
