@@ -310,8 +310,6 @@ const filterOption = (input: string, option: any): boolean => {
 
 .float-label {
   position: relative;
-  width: 620px;
-  margin-bottom: 8px;
 }
 
 .label {

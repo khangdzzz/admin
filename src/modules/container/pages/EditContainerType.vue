@@ -246,4 +246,24 @@ watch(dynamicValidateForm, () => {
     border-radius: 20px;
   }
 }
+
+:deep() {
+  .ant-form-item-explain.ant-form-item-explain-connected {
+    .ant-form-item-explain-error {
+      margin-top: 8px;
+      font-size: 12px;
+      color: $red-500;
+    }
+  }
+
+  .ant-form-item-control {
+    &-input {
+      &-content {
+        .input-item {
+          width: 620px !important;
+        }
+      }
+    }
+  }
+}
 </style>
