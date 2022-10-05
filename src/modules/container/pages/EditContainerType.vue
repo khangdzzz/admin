@@ -194,7 +194,7 @@ watch(dynamicValidateForm, () => {
   position: relative;
   top: 50%;
   transform: translateY(-50%);
-  border-radius: 20px;
+  border-radius: 10px;
   padding: 6px 0;
 
   &__title {
@@ -243,7 +243,7 @@ watch(dynamicValidateForm, () => {
 }
 .edit-container-type-form {
   .ant-card {
-    border-radius: 20px;
+    border-radius: 10px;
   }
 }
 
