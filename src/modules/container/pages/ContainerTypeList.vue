@@ -38,7 +38,12 @@
         </router-link>
       </template>
     </ListSearchHeader>
-    <div :class="[containerTypeList.tableContainer]">
+    <div
+      :class="[
+        containerTypeList.tableContainer,
+        'container-type__table-wrapper'
+      ]"
+    >
       <a-table
         :row-selection="rowSelection"
         :columns="columns"
@@ -144,13 +149,11 @@ import SortView from "@/modules/common/components/SortView.vue";
 import { Sort } from "@/modules/common/models/sort.enum";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
-import type { TableColumnType, TableProps } from "ant-design-vue";
-import { inject, onMounted, ref } from "vue";
+import type { TableColumnType } from "ant-design-vue";
+import { computed, inject, onMounted, ref } from "vue";
 import ContainerTypeModel, {
   ContainerType
 } from "../models/container-type.models";
-
-type Key = string | number;
 //#endregion===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆
 
 //#===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜Props
@@ -162,7 +165,7 @@ const sort = ref<Sort>(Sort.None);
 const messenger: (param: MessengerParamModel) => void =
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   inject("messenger")!;
-const selectedKeys = ref<ContainerType[]>([]);
+const selectedKeys = ref<number[]>([]);
 
 const currentPage = ref<number>(1);
 
@@ -189,19 +192,21 @@ onMounted(() => {
 //#endregion===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌
 
 //#===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊Methods
-const rowSelection: TableProps["rowSelection"] = {
-  onChange: (selectedRowKeys: Key[], selectedRows: ContainerType[]): void => {
-    selectedRowKeys;
-    selectedKeys.value = [...selectedRows];
-  }
-};
+const rowSelection = computed(() => {
+  return {
+    selectedRowKeys: selectedKeys.value,
+    onChange: (keys: number[]): void => {
+      selectedKeys.value = keys;
+    }
+  };
+});
 
 const fetchListContainerType = async (): Promise<void> => {
   isLoading.value = true;
   const res = await service.container.getListContainerType();
   isLoading.value = false;
   sourceData = (res?.results || []).map((item, index) => {
-    return { ...item, key: index + 1 };
+    return { ...item, key: item.id || index + 1 };
   });
   data.value = [...sourceData];
 };
@@ -260,11 +265,7 @@ const deleteContainerType = (id?: number): void => {
       if (!selectedKeys.value?.length && !id) {
         return;
       }
-      const selectedVehicleTypeIds = id
-        ? [id]
-        : selectedKeys.value.map(
-            (selectedVehicleType) => selectedVehicleType.id
-          );
+      const selectedVehicleTypeIds = id ? [id] : selectedKeys.value;
       onDeleteContainerType(selectedVehicleTypeIds);
     }
   });
@@ -434,6 +435,18 @@ const onDeleteContainerType = async (deleteIds: number[]): Promise<void> => {
   .ant-table-tbody > tr.ant-table-row-selected > td {
     background: $grey-2;
     border-color: rgba(0, 0, 0, 0.03);
+  }
+}
+</style>
+<style lang="scss">
+.container-type {
+  &__table-wrapper {
+    .ant-checkbox-inner {
+      &::after {
+        top: 45%;
+        left: 30%;
+      }
+    }
   }
 }
 </style>
