@@ -5,8 +5,18 @@ import Manufacture from "@/assets/images/ImManufacture.vue";
 import GroupOfPeople from "@/assets/images/ImGroupOfPeople.vue";
 import Setting from "@/assets/images/ImSetting.vue";
 import { UserType } from "./user-type.enum";
+import { Component } from "vue";
 
-const sideMenuItems = [
+export interface SideMenuItems {
+  key?: string;
+  icon?: Component;
+  title: string;
+  pathName?: string;
+  requireUserType?: UserType[];
+  items?: SideMenuItems[];
+}
+
+const sideMenuItems: SideMenuItems[] = [
   {
     key: "Dashboard",
     icon: IcDashboard,

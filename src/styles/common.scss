@@ -68,7 +68,7 @@ $justifyContents: ("center", "space-around", "space-between", "space-evenly","en
   }
 }
 
-$gaps: (0, 4, 8, 10, 12, 15, 16, 20, 24, 40);
+$gaps: (0, 4, 8, 10, 12, 15, 16, 18, 20, 24, 40);
 
 @each $gap in $gaps {
   .gap-#{$gap} {
