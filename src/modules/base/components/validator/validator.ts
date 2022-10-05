@@ -1,5 +1,7 @@
 import { Rule } from "ant-design-vue/lib/form";
 import { i18n } from "@/i18n";
+import { localStorageKeys } from "@/services/local-storage-keys";
+import { SupportedLanguage } from "../../models";
 
 const validator = {
   validateEmail: (rule: Rule, value: string): Promise<void> => {
@@ -8,8 +10,11 @@ const validator = {
       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@([a-z]{1})((?=.*[a-z|_])(?=.*[.])(?!.*\.\.)(?!.*\_\_)(?!.*\.\_)(?!.*\_\.)(?!.*\s).{1,61})([a-z]{1})$/;
 
     if (value && !regExpEmail.test(value)) {
+      const currentLanguage = (localStorage.getItem(
+        localStorageKeys.currentLanguage
+      ) || SupportedLanguage.Japanese) as SupportedLanguage;
       return Promise.reject(
-        i18n.global.t("forgot_password_msg_err_email_invalid")
+        i18n.global.t("forgot_password_msg_err_email_invalid", currentLanguage)
       );
     } else {
       return Promise.resolve();

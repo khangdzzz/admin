@@ -139,7 +139,8 @@ onMounted(() => {
 const fetchListStaff = async (): Promise<void> => {
   const res = await service.staff.getlistStaff(1, 10);
   if (res) {
-    data.value = res.results;
+    //Todo: Teddy need to fix this
+    data.value = []; //res.results;
   } else {
     message.error("Error");
   }
