@@ -60,7 +60,7 @@ $alignItems: ("stretch", "center", "flex-start", "flex-end", "baseline");
   }
 }
 
-$justifyContents: ("center", "space-around", "space-between", "space-evenly");
+$justifyContents: ("center", "space-around", "space-between", "space-evenly","end");
 
 @each $justify in $justifyContents {
   .justify-#{$justify} {
@@ -76,7 +76,7 @@ $gaps: (0, 4, 8, 10, 12, 15, 16, 20, 24, 40);
   }
 }
 
-$amounts: (0, 4, 8, 10, 12, 14, 15, 16, 20, 24, 30);
+$amounts: (0, 4, 8, 10, 12,13, 14, 15, 16, 20, 24, 30);
 $directions: (top, bottom, left, right, x, y);
 @each $amount in $amounts {
   @each $direction in $directions {

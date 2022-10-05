@@ -37,7 +37,7 @@ defineProps({
   },
   colAction: {
     type: Number,
-    default: 18
+    default: 20
   },
   modelValue: {
     type: String,

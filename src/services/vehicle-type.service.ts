@@ -1,4 +1,5 @@
 import { Pagination } from "@/modules/common/models";
+import { Sort } from "@/modules/common/models/sort.enum";
 import { VehicleTypeModel } from "@/modules/vehicle-management/models";
 import { transformRequest } from "./base.service";
 import { PaginationDto } from "./dtos/common/pagination.dto";
@@ -30,24 +31,33 @@ export async function createVehicleType(
 }
 
 export async function fetchListVehicleType(
-  page: 1,
-  size: 10
+  page: number,
+  size: number,
+  sort: Sort = Sort.None,
+  searchKeyword: string | null | undefined = ""
 ): Promise<Pagination<VehicleTypeModel> | undefined> {
-  page;
-  size;
+  const params = {
+    page,
+    page_size: size,
+    name__like: searchKeyword ? `%${searchKeyword}%` : undefined,
+    order_by:
+      sort === Sort.None ? undefined : sort === Sort.Asc ? "name" : "-name"
+  };
+
   const [error, res] = await transformRequest<
     PaginationDto<VehicleTypeResponseDto>
   >({
     url: "/vehicle_type",
-    method: "get"
+    method: "get",
+    params
   });
   if (error || !res) return undefined;
   if (!res) return Promise.resolve(undefined);
   const {
-    current_page: currentPage,
-    page_size: pageSize,
-    total,
-    total_page: totalPage,
+    current_page: currentPage = page,
+    page_size: pageSize = size,
+    total = 0,
+    total_page: totalPage = 1,
     results
   } = res;
   return {
