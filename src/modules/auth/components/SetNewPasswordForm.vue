@@ -18,7 +18,8 @@
             validator: validator.validateCode,
             trigger: ['change', 'blur']
           }
-        ]">
+        ]"
+      >
         <p class="set-password-form__input-code-description">
           {{ $t("forgot_password_text_input_code_description") }}
         </p>
@@ -27,7 +28,8 @@
           @keypress="NumbersOnly"
           class="set-password-form__input-code"
           v-model:value="formState.code"
-          :placeholder="$t('forgot_password_text_enter_code')">
+          :placeholder="$t('forgot_password_text_enter_code')"
+        >
         </a-input>
       </a-form-item>
       <a-button
@@ -36,7 +38,8 @@
         class="wrap-countdown"
         @click="resendCode"
         :class="activeResendCode"
-        href="#">
+        href="#"
+      >
         <a-row>
           <span class="set-password-form__input-code-resend-code"
             >{{ $t("forgot_password_resend_code") }} (
@@ -45,7 +48,8 @@
             class="set-password-form__input-code-countdown"
             :value="deadline.time"
             format="mm:ss"
-            @finish="onFinishCountdown" />
+            @finish="onFinishCountdown"
+          />
           <span class="set-password-form__input-code-resend-code">)</span>
         </a-row>
       </a-button>
@@ -61,7 +65,8 @@
             validator: validator.validatePassword,
             trigger: ['change', 'blur']
           }
-        ]">
+        ]"
+      >
         <a-input-password
           v-model:value="formState.password"
           class="set-password-form__input-password"
@@ -71,7 +76,8 @@
           ><template #prefix>
             <IcPass
               class="form-icon form-icon-prefix"
-              :color="setColorIconInputPassword ? '#07A0B8' : '#999999'">
+              :color="setColorIconInputPassword ? '#07A0B8' : '#999999'"
+            >
             </IcPass>
           </template>
         </a-input-password>
@@ -99,7 +105,8 @@
             validator: validateConfirmPass,
             trigger: ['change', 'blur']
           }
-        ]">
+        ]"
+      >
         <a-input-password
           v-model:value="formState.confirmPassword"
           class="set-password-form__input-confirm-password"
@@ -109,9 +116,8 @@
           ><template #prefix>
             <IcPass
               class="form-icon form-icon-prefix"
-              :color="
-                setColorIconInputConfirmPassword ? '#07A0B8' : '#999999'
-              "></IcPass>
+              :color="setColorIconInputConfirmPassword ? '#07A0B8' : '#999999'"
+            ></IcPass>
           </template>
         </a-input-password>
         <label
@@ -498,7 +504,7 @@ const setColorIconInputConfirmPassword = computed((): string => {
   }
 
   .wrap-countdown.ant-btn[disabled] {
-    background-color: transparent;
+    background-color: transparent !important;
   }
   .ant-input-password-icon {
     color: $neutral-400;
