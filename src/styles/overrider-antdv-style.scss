@@ -3,13 +3,13 @@
   min-height: 12px !important;
 
   .ant-form-item-explain-error {
-    color: $red-500  !important;
+    color: $red-500 !important;
   }
 }
 
 .ant-btn[disabled] {
-  color: $neutral-0  !important;
-  background-color: $neutral-200  !important;
+  color: $neutral-0 !important;
+  background-color: $neutral-200 !important;
 }
 
 .ant-btn {
@@ -17,7 +17,7 @@
 }
 
 .ant-input::placeholder {
-  color: $text-1  !important;
+  color: $text-1 !important;
 }
 
 .ant-table-row {
@@ -28,13 +28,12 @@
   background-color: $white;
 }
 
-.ant-table-thead>tr>th {
+.ant-table-thead > tr > th {
   font-weight: 700 !important;
   line-height: 18px;
   height: 58px !important;
   padding-top: 0px !important;
   padding-bottom: 0px !important;
-
 }
 
 .ant-checkbox-inner {
@@ -49,11 +48,14 @@
 
 .ant-table {
   box-shadow: 4px 2px 8px rgba(0, 0, 0, 0.02);
-  background: transparent;
   border: none;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
 }
 
-.ant-table-tbody>tr.ant-table-row-selected>td {
+.ant-table-tbody > tr.ant-table-row-selected > td {
   background: $grey-2;
   border-color: rgba(0, 0, 0, 0.03);
 }
@@ -61,12 +63,12 @@
 .ant-table-cell {
   background-color: $white;
   color: $neutral-600;
-  border-bottom: 1px solid $grey-3  !important;
+  border-bottom: 1px solid $grey-3 !important;
   font-size: 16px;
   font-weight: 400;
 }
 
-.ant-table-thead>tr>th {
+.ant-table-thead > tr > th {
   font-weight: 700;
 }
 
@@ -82,34 +84,32 @@
   background-color: $neutral-50;
 }
 
-.ant-table-container table>thead>tr>th {
+.ant-table-container table > thead > tr > th {
   background-color: $white;
 }
 
-.ant-table-container table>thead>tr:first-child th {
+.ant-table-container table > thead > tr:first-child th {
   color: $text-1;
 }
 
-.ant-table-container table>thead>tr:first-child th:first-child {
+.ant-table-container table > thead > tr:first-child th:first-child {
   border-top-left-radius: 10px;
 }
 
-.ant-table-container table>thead>tr:first-child th:last-child {
+.ant-table-container table > thead > tr:first-child th:last-child {
   border-top-right-radius: 10px;
 }
 
-.ant-table-container table>tbody>tr:last-child td:first-child {
+.ant-table-container table > tbody > tr:last-child td:first-child {
   border-bottom-left-radius: 10px;
-}
-
-.ant-table-container table>tbody>tr:last-child td:last-child {
-  border-bottom-right-radius: 10px;
 }
 
 .ant-checkbox-indeterminate .ant-checkbox-inner::after {
   background: $white;
 }
 
-.ant-table-thead>tr>th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
+.ant-table-thead
+  > tr
+  > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
   height: 0;
 }

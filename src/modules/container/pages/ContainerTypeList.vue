@@ -6,7 +6,7 @@
     >
       <template #action>
         <a-button
-          class="btn"
+          class="btn-action"
           type="primary"
           ghost
           @click="deleteContainerType(undefined)"
@@ -22,16 +22,9 @@
             name: routeNames.createContainerType
           }"
         >
-          <a-button
-            type="primary"
-            :class="[containerTypeList.btnAddNew]"
-            class="btn btn-add-new"
-          >
+          <a-button type="primary" class="btn-add-new">
             <template #icon>
-              <img
-                src="@/assets/icons/ic_plus.svg"
-                :class="[containerTypeList.btnIcon]"
-              />
+              <img src="@/assets/icons/ic_plus.svg" class="btn-icon" />
             </template>
             {{ $t("add_container_type") }}
           </a-button>
@@ -44,6 +37,7 @@
         :columns="columns"
         :data-source="data"
         :pagination="false"
+        :scroll="{ y: 640 }"
         v-if="!isLoading && data && data.length"
       >
         <template #headerCell="{ column }">
@@ -204,7 +198,8 @@ const rowSelection = computed(() => {
     selectedRowKeys: selectedKeys.value,
     onChange: (keys: number[]): void => {
       selectedKeys.value = keys;
-    }
+    },
+    columnWidth: "50px"
   };
 });
 
@@ -366,32 +361,6 @@ watch(searchString, onSearchChange);
     }
   }
 }
-
-.btnAddNew {
-  @include size-btn(215px, 48px);
-  margin-left: 15px;
-  padding: 0px 15px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 12px;
-  a {
-    color: $white;
-  }
-}
-
-.btn {
-  @include size-btn(108px, 40px);
-  @include text(600, 18px, 100%);
-  margin-left: 15px;
-  padding: 0px 15px;
-  background-color: #fff;
-  color: #07a0b8;
-
-  .btnIcon {
-    margin-right: 10px;
-  }
-}
 </style>
 
 <style scoped lang="scss">
@@ -417,32 +386,6 @@ watch(searchString, onSearchChange);
 }
 
 //extend
-.flex-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.btn {
-  font-weight: 600;
-  font-size: 18px;
-  width: 120px;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  line-height: 18px;
-  margin-left: 15px;
-  padding: 0 15px 0 15px;
-
-  .btn-icon {
-    margin-right: 10px;
-  }
-}
-
-.btn-add-new {
-  width: 170px;
-  height: 48px;
-}
-
 :deep() {
   .ant-table-tbody > tr.ant-table-row-selected > td {
     background: $grey-2;

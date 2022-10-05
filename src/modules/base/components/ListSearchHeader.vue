@@ -4,7 +4,7 @@
       <h2 class="header-title">{{ title }}</h2>
     </a-col>
     <a-col :span="colAction">
-      <a-row type="flex" align="middle" justify="end">
+      <a-row type="flex" align="middle" justify="end" class="gap-20">
         <a-input
           :value="modelValue"
           :placeholder="$t('search_input')"
@@ -33,7 +33,7 @@ defineProps({
   },
   colTitle: {
     type: Number,
-    default: 6
+    default: 4
   },
   colAction: {
     type: Number,
