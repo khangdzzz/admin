@@ -94,6 +94,7 @@ const handleClick = (): void => {
 <style lang="scss" scoped>
 .no-data-container {
   background-color: $white;
+  border-radius: 10px;
 
   &__message {
     font-style: normal;

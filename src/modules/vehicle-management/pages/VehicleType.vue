@@ -1,6 +1,9 @@
 <template>
-  <a-spin :tip="$t('common_loading')" :spinning="isLoading">
-    <ListSearchHeader :title="$t('vehicle_type')" @onChange="onSearchChange">
+  <div class="fill-height d-flex flex-column">
+    <ListSearchHeader
+      :title="$t('vehicle_type')"
+      v-model:model-value.sync="searchString"
+    >
       <template #action>
         <a-button
           class="btn"
@@ -22,12 +25,13 @@
         </a-button>
       </template>
     </ListSearchHeader>
-    <div class="table-container">
+    <div class="table-container mx-30 mb-30">
       <a-table
         :row-selection="rowSelection"
         :columns="columns"
         :data-source="data"
         :pagination="false"
+        v-if="!isLoading && data && data.length"
       >
         <template #headerCell="{ column }">
           <template v-if="column.key === 'index'">
@@ -58,10 +62,16 @@
           </template>
         </template>
       </a-table>
-    </div>
-  </a-spin>
-</template>
 
+      <NoData
+        :value="searchString"
+        :is-loading="isLoading"
+        @click="handleBackToList"
+        v-else
+      />
+    </div>
+  </div>
+</template>
 <script setup lang="ts">
 //#region import
 import ListSearchHeader from "@/modules/base/components/ListSearchHeader.vue";
@@ -72,9 +82,10 @@ import { Sort } from "@/modules/common/models/sort.enum";
 import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
-import { computed, inject, onMounted, ref } from "vue";
+import { computed, inject, onMounted, ref, watch } from "vue";
 import { VehicleTypeModel } from "../models";
-
+import NoData from "@/modules/base/components/NoData.vue";
+import { debounce } from "lodash";
 //#endregion
 
 //#region props
@@ -154,10 +165,10 @@ const changeSort = (): void => {
   }
   sortAndFilterName();
 };
-const onSearchChange = (searchKeyword: string): void => {
-  searchString.value = searchKeyword || "";
+
+const onSearchChange = debounce((): void => {
   sortAndFilterName();
-};
+}, 500);
 
 const sortAndFilterName = (): void => {
   const filteredData = [...sourceData].filter((vehicleType) => {
@@ -227,18 +238,23 @@ const onDeleteVehicleType = async (deleteIds: number[]): Promise<void> => {
     }
   });
 };
+
+const handleBackToList = (): void => {
+  searchString.value = "";
+};
 //#endregion
 
 //#region computed
 //#endregion
 
 //#region reactive
+watch(searchString, onSearchChange);
 //#endregion
 </script>
 
 <style lang="scss" scoped>
 .table-container {
-  margin: 30px;
+  flex-grow: 1;
 }
 
 .btn {

@@ -1,8 +1,8 @@
 <template>
-  <a-spin :tip="$t('common_loading')" :spinning="isLoading">
+  <div class="fill-height d-flex flex-column">
     <ListSearchHeader
       :title="$t('container_type')"
-      @onChange="handleSearchChange"
+      v-model:model-value.sync="searchString"
     >
       <template #action>
         <a-button
@@ -38,17 +38,13 @@
         </router-link>
       </template>
     </ListSearchHeader>
-    <div
-      :class="[
-        containerTypeList.tableContainer,
-        'container-type__table-wrapper'
-      ]"
-    >
+    <div :class="[containerTypeList.tableContainer, 'mb-30 mx-30']">
       <a-table
         :row-selection="rowSelection"
         :columns="columns"
         :data-source="data"
         :pagination="false"
+        v-if="!isLoading && data && data.length"
       >
         <template #headerCell="{ column }">
           <template v-if="column.key === 'index'">
@@ -89,7 +85,10 @@
           </template>
         </template>
       </a-table>
-      <div :class="containerTypeList.pagination" v-if="data.length > 50">
+      <div
+        :class="containerTypeList.pagination"
+        v-if="!isLoading && data && data.length"
+      >
         <a-pagination
           v-model:current="currentPage"
           :total="data.length"
@@ -136,8 +135,14 @@
           </template>
         </a-pagination>
       </div>
+      <NoData
+        :value="searchString"
+        :is-loading="isLoading"
+        @click="handleBackToList"
+        v-else
+      />
     </div>
-  </a-spin>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -150,10 +155,12 @@ import { Sort } from "@/modules/common/models/sort.enum";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
 import type { TableColumnType } from "ant-design-vue";
-import { computed, inject, onMounted, ref } from "vue";
+import { computed, inject, onMounted, ref, watch } from "vue";
 import ContainerTypeModel, {
   ContainerType
 } from "../models/container-type.models";
+import NoData from "@/modules/base/components/NoData.vue";
+import { debounce } from "lodash";
 //#endregion===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆
 
 //#===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜Props
@@ -224,6 +231,10 @@ const changeSort = (): void => {
   sortAndFilterName();
 };
 
+const onSearchChange = debounce((): void => {
+  sortAndFilterName();
+}, 500);
+
 const sortAndFilterName = (): void => {
   const filteredData = [...sourceData].filter((containerType) => {
     return containerType.name
@@ -246,10 +257,6 @@ const sortAndFilterName = (): void => {
     default:
       data.value = [...filteredData];
   }
-};
-const handleSearchChange = (value: string): void => {
-  searchString.value = value || "";
-  sortAndFilterName();
 };
 const deleteContainerType = (id?: number): void => {
   messenger({
@@ -293,6 +300,9 @@ const onDeleteContainerType = async (deleteIds: number[]): Promise<void> => {
     }
   });
 };
+const handleBackToList = (): void => {
+  searchString.value = "";
+};
 //#endregion===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊
 
 //#===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏Computed
@@ -302,6 +312,7 @@ const onDeleteContainerType = async (deleteIds: number[]): Promise<void> => {
 //#endregion===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍
 
 //===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀Watchers
+watch(searchString, onSearchChange);
 //#endregion===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀
 </script>
 
@@ -318,7 +329,7 @@ const onDeleteContainerType = async (deleteIds: number[]): Promise<void> => {
 }
 
 .tableContainer {
-  margin: 30px;
+  flex-grow: 1;
 
   .actionIcon {
     margin-left: 30px;

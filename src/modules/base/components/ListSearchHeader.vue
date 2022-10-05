@@ -6,10 +6,10 @@
     <a-col :span="colAction">
       <a-row type="flex" align="middle" justify="end">
         <a-input
-          v-model:value="searchValue"
+          :value="modelValue"
           :placeholder="$t('search_input')"
           class="search-input"
-          @change="debouncedOnChange"
+          @change="onSeachChange($event.target.value)"
           allow-clear
           ><template #prefix>
             <img src="@/assets/icons/ic_search.svg" />
@@ -23,8 +23,6 @@
 
 <script setup lang="ts">
 //#region import
-import debounce from "lodash/debounce";
-import { ref } from "vue";
 //#endregion
 
 //#region props
@@ -40,27 +38,29 @@ defineProps({
   colAction: {
     type: Number,
     default: 18
+  },
+  modelValue: {
+    type: String,
+    default: ""
   }
 });
 
-const emit = defineEmits<{ (e: "onChange", value: string): void }>();
+const emit = defineEmits<{ (e: "update:modelValue", value: string): void }>();
 //#endregion
 
 //#region variables
-const searchValue = ref<string>("");
 //#endregion
 
 //#region hooks
 //#endregion
 
 //#region function
-const debouncedOnChange = debounce(() => {
-  emit("onChange", searchValue.value);
-}, 300);
+const onSeachChange = (value: string): void => {
+  emit("update:modelValue", value);
+};
 
 const clearInput = (): void => {
-  searchValue.value = "";
-  emit("onChange", searchValue.value);
+  emit("update:modelValue", "");
 };
 
 defineExpose({ clearInput });
