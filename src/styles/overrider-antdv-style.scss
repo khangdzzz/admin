@@ -113,3 +113,7 @@
   > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
   height: 0;
 }
+.ant-select-dropdown{
+  border-radius: 6px;
+  padding: 0;
+}

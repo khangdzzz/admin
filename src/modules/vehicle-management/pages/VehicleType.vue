@@ -26,43 +26,89 @@
       </template>
     </ListSearchHeader>
     <div class="table-container mx-30 mb-30">
-      <a-table
-        :row-selection="rowSelection"
-        :columns="columns"
-        :data-source="data"
-        :pagination="false"
-        :scroll="{ y: 640 }"
-        v-if="!isLoading && data && data.length"
-      >
-        <template #headerCell="{ column }">
-          <template v-if="column.key === 'index'">
-            <span>{{ $t(column.title) }}</span>
-          </template>
-          <template v-if="column.key === 'name'">
-            <div @click="changeSort">
+      <div v-if="!isLoading && data && data.length">
+        <a-table
+          :row-selection="rowSelection"
+          :columns="columns"
+          :data-source="data"
+          :pagination="false"
+        >
+          <template #headerCell="{ column }">
+            <template v-if="column.key === 'index'">
               <span>{{ $t(column.title) }}</span>
-              <SortView class="mx-12" :sort="sort" />
-            </div>
+            </template>
+            <template v-if="column.key === 'name'">
+              <div @click="changeSort">
+                <span>{{ $t(column.title) }}</span>
+                <SortView class="mx-12" :sort="sort" />
+              </div>
+            </template>
           </template>
-        </template>
-        <template #bodyCell="{ column, record, index }">
-          <template v-if="column.key === 'index'">
-            <span>{{ index + 1 }}</span>
+          <template #bodyCell="{ column, record, index }">
+            <template v-if="column.key === 'index'">
+              <span>{{ index + 1 }}</span>
+            </template>
+            <template v-if="column.key === 'action'">
+              <img
+                src="@/assets/icons/ic_btn_edit.svg"
+                class="action-icon"
+                @click="editVehicleType(record.id)"
+              />
+              <img
+                src="@/assets/icons/ic_btn_delete.svg"
+                class="action-icon"
+                @click="deleteVehicleType(record.id)"
+              />
+            </template>
           </template>
-          <template v-if="column.key === 'action'">
-            <img
-              src="@/assets/icons/ic_btn_edit.svg"
-              class="action-icon"
-              @click="editVehicleType(record.id)"
-            />
-            <img
-              src="@/assets/icons/ic_btn_delete.svg"
-              class="action-icon"
-              @click="deleteVehicleType(record.id)"
-            />
-          </template>
-        </template>
-      </a-table>
+        </a-table>
+        <div :class="vehicleType.pagination">
+          <a-pagination
+            v-model:current="pageOption.currentPage"
+            v-model:page-size="pageOption.pageSize"
+            :total="pageOption.total"
+            :pageSizeOptions="['20', '30', '40', '50']"
+            show-size-changer
+            @showSizeChange="onShowSizeChange"
+            @change="onChange"
+            :class="['ant-pagination', 'd-flex', 'justify-end']"
+          >
+            <template #buildOptionText="{ value }">
+              <div class="options-text">
+                <span class="mr-13">{{ value }} </span>
+                <img src="@/assets/icons/ic_arrow.svg" />
+              </div>
+            </template>
+            <template #itemRender="{ type, originalElement }">
+              <a-button
+                :class="[vehicleType.btnPagination, 'mt-10']"
+                type="primary"
+                ghost
+                v-if="type === 'prev'"
+              >
+                <img
+                  src="@/assets/icons/ic_prev.svg"
+                  :class="[vehicleType.btnIconPrev]"
+                />
+                <span :class="[vehicleType.action]">Previous</span>
+              </a-button>
+              <a-button
+                :class="[vehicleType.btnPagination, 'mt-10', 'mr-15']"
+                type="primary"
+                ghost
+                v-else-if="type === 'next'"
+              >
+                <span :class="[vehicleType.action]">Next</span>
+                <img
+                  src="@/assets/icons/ic_next.svg"
+                  :class="[vehicleType.btnIconNext]"
+                />
+              </a-button>
+              <component :is="originalElement" v-else></component>
+            </template>
+          </a-pagination>
+        </div>
+      </div>
 
       <NoData
         :value="searchString"
@@ -76,17 +122,18 @@
 <script setup lang="ts">
 //#region import
 import ListSearchHeader from "@/modules/base/components/ListSearchHeader.vue";
+import NoData from "@/modules/base/components/NoData.vue";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import SortView from "@/modules/common/components/SortView.vue";
+import { Pagination } from "@/modules/common/models";
 import { Sort } from "@/modules/common/models/sort.enum";
 import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
-import { computed, inject, onMounted, ref, watch } from "vue";
-import { VehicleTypeModel } from "../models";
-import NoData from "@/modules/base/components/NoData.vue";
 import { debounce } from "lodash";
+import { computed, inject, onMounted, reactive, ref, watch } from "vue";
+import { VehicleTypeModel } from "../models";
 //#endregion
 
 //#region props
@@ -118,6 +165,11 @@ const selectedKeys = ref<number[]>([]);
 const sort = ref<Sort>(Sort.None);
 const isLoading = ref<boolean>(false);
 const searchString = ref<string>("");
+const pageOption = reactive<Pagination<VehicleTypeModel>>({
+  currentPage: 1,
+  pageSize: 20,
+  total: 0
+});
 //#endregion
 
 //#region hooks
@@ -129,12 +181,21 @@ onMounted(async () => {
 //#region function
 const initialize = async (): Promise<void> => {
   isLoading.value = true;
-  const result = await service.vehicleType.fetchListVehicleType(1, 10);
+  const result = await service.vehicleType.fetchListVehicleType(
+    pageOption?.currentPage || 1,
+    pageOption.pageSize || 20,
+    sort.value,
+    searchString.value
+  );
   isLoading.value = false;
   sourceData = (result?.results || []).map((item, index) => {
     return { ...item, key: item.id || index + 1 };
   });
   data.value = [...sourceData];
+  pageOption.currentPage = result?.currentPage;
+  pageOption.pageSize = result?.pageSize || 20;
+  pageOption.total = result?.total;
+  pageOption.totalPage = result?.totalPage;
 };
 
 const rowSelection = computed(() => {
@@ -147,9 +208,21 @@ const rowSelection = computed(() => {
   };
 });
 
+const onShowSizeChange = (current: number, pageSize: number): void => {
+  pageOption.currentPage = current;
+  pageOption.pageSize = pageSize;
+  initialize();
+};
+
+const onChange = (pageNumber: number) :void => {
+  pageOption.currentPage = pageNumber;
+  initialize();
+};
+
 const onCreate = (): void => {
   router.push({ name: routeNames.createVehicleType });
 };
+
 const editVehicleType = (id: string): void => {
   router.push(`edit-vehicle-type/${id}`);
 };
@@ -165,36 +238,13 @@ const changeSort = (): void => {
     default:
       sort.value = Sort.Asc;
   }
-  sortAndFilterName();
+  initialize();
 };
 
 const onSearchChange = debounce((): void => {
-  sortAndFilterName();
+  initialize();
 }, 500);
 
-const sortAndFilterName = (): void => {
-  const filteredData = [...sourceData].filter((vehicleType) => {
-    return vehicleType.name
-      .toLowerCase()
-      .includes(searchString.value.toLowerCase());
-  });
-  switch (sort.value) {
-    case Sort.Asc:
-      data.value = [...filteredData].sort(
-        (firstVehicleType, secondVehicleType) =>
-          firstVehicleType.name.localeCompare(secondVehicleType.name)
-      );
-      break;
-    case Sort.Desc:
-      data.value = [...filteredData].sort(
-        (firstVehicleType, secondVehicleType) =>
-          secondVehicleType.name.localeCompare(firstVehicleType.name)
-      );
-      break;
-    default:
-      data.value = [...filteredData];
-  }
-};
 const deleteVehicleType = (id?: number): void => {
   messenger({
     title: "vehicle_type_msg_confirm_delete",
@@ -256,7 +306,7 @@ watch(searchString, onSearchChange);
 
 <style lang="scss" scoped>
 .table-container {
-  margin: 30px;
+  flex-grow: 1;
 }
 
 .action-icon {
@@ -272,11 +322,130 @@ watch(searchString, onSearchChange);
 </style>
 <style lang="scss">
 .table-container {
+  .ant-table-wrapper {
+    .ant-spin-nested-loading {
+      .ant-spin-container {
+        .ant-table {
+          .ant-table-container table > tbody > tr:last-child td:last-child {
+            border-bottom-right-radius: 0px;
+          }
+          .ant-table-container table > tbody > tr:last-child td:first-child {
+            border-bottom-left-radius: 0px;
+          }
+        }
+      }
+    }
+  }
   .ant-checkbox-inner {
     &::after {
       top: 45%;
       left: 30%;
     }
+  }
+  .ant-pagination {
+    position: relative;
+    .ant-pagination-item {
+      width: 40px;
+      height: 40px;
+      margin-top: 10px;
+      border-radius: 6px;
+      a {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 14px;
+        line-height: 18px;
+        font-weight: 400;
+        color: $neutral-600;
+      }
+    }
+    .ant-pagination-item-active {
+      background-color: $primary;
+      a {
+        color: #ffffff;
+        font-weight: 700;
+      }
+    }
+    .ant-pagination-options {
+      margin: 0px;
+      position: absolute;
+      left: 15px;
+      top: 15px;
+      .ant-pagination-options-size-changer {
+        .ant-select-selector {
+          height: 30px;
+          box-sizing: border-box;
+          width: 60px;
+          padding: 6px 12px 6px 7px;
+          border-radius: 6px;
+        }
+        .ant-select-selection-item {
+          padding: 0;
+          .options-text {
+            border-radius: 6px;
+            line-height: 18px;
+            span {
+              font-size: 14px;
+              font-weight: 700;
+            }
+            img {
+              width: 10px;
+              height: 5px;
+            }
+          }
+        }
+        .ant-select-arrow {
+          display: none;
+        }
+      }
+    }
+  }
+  .ant-select-dropdown {
+    .ant-select-item-option-content {
+      img {
+        display: none;
+      }
+    }
+    .ant-select-item-option-selected {
+      background-color: $neutral-50;
+    }
+  }
+}
+</style>
+<style lang="scss" module="vehicleType">
+@mixin size-btn($width, $height) {
+  min-width: $width;
+  height: $height;
+}
+@mixin text($fontWeight, $fontSize, $lineHeight) {
+  font-weight: $fontWeight;
+  font-size: $fontSize;
+  line-height: $lineHeight;
+}
+.pagination {
+  text-align: end;
+  background-color: #fff;
+  height: 60px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  .btnPagination {
+    @include size-btn(82px, 40px);
+    background-color: #fff;
+
+    .btnIconPrev {
+      margin-right: 8px;
+    }
+
+    .btnIconNext {
+      margin-left: 8px;
+    }
+  }
+
+  .action {
+    @include text(700, 14px, 18px);
+    text-align: center;
+    color: $neutral-600;
   }
 }
 </style>

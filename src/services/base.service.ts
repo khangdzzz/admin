@@ -41,12 +41,9 @@ const handleResponse = (data: any): any => {
   return data;
 };
 const handleExpiredAccessToken = async (error: AxiosError): Promise<void> => {
-  if (error.code == "401") {
+  if (error.code == "ERR_NETWORK") {
     service.auth.refreshToken();
   }
-  // if (error) {
-  //   router.push({ name: routeNames.login });
-  // }
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
