@@ -14,17 +14,17 @@
         class="modal-icon"
         v-if="modalType !== MessengerType.Confirm"
       />
-      <h3 class="modal-title" v-if="modalTitle">{{ $t(modalTitle) }}</h3>
-      <p class="modal-message mb-0 mt-10" v-if="modalMessage">
+      <h3 class="modal-title mb-10" v-if="modalTitle">{{ $t(modalTitle) }}</h3>
+      <p class="modal-message mb-10 mt-0" v-if="modalMessage">
         {{ $t(modalMessage) }}
       </p>
       <a-button
         type="primary"
-        class="btn-ok mt-20"
+        class="btn-ok mt-10"
         @click="onOKClick"
         v-if="modalType !== MessengerType.Confirm"
       >
-        {{ $t(btnOk) }}
+        OK
       </a-button>
       <div v-else class="modal-action-container">
         <a-button
