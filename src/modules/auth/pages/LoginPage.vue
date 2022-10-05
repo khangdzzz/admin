@@ -93,7 +93,6 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
       isFocus: false,
       rules: [
         {
-          required: true,
           trigger: ["blur", "change"],
           message: i18n.global.t("forgot_password_msg_err_email_required")
         },
