@@ -9,46 +9,30 @@
     >
       <template #action>
         <a-button
-          :class="[vehicleList.btn]"
+          class="btn-action"
           type="primary"
           v-if="selectedKeys.length > 0"
         >
           <template #icon>
-            <img
-              src="@/assets/icons/ic_delete.svg"
-              :class="[vehicleList.btnIcon]"
-            />
+            <img src="@/assets/icons/ic_delete.svg" class="btn-icon" />
           </template>
           {{ $t("delete_btn") }}
         </a-button>
-        <a-button :class="[vehicleList.btn]" type="primary">
+        <a-button class="btn-action" type="primary">
           <template #icon>
-            <img
-              src="@/assets/icons/ic_import.svg"
-              :class="[vehicleList.btnIcon]"
-            />
+            <img src="@/assets/icons/ic_import.svg" class="btn-icon" />
           </template>
           {{ $t("import_btn") }}
         </a-button>
-        <a-button :class="[vehicleList.btn]" type="primary">
+        <a-button class="btn-action" type="primary">
           <template #icon>
-            <img
-              src="@/assets/icons/ic_export.svg"
-              :class="[vehicleList.btnIcon]"
-            />
+            <img src="@/assets/icons/ic_export.svg" class="btn-icon" />
           </template>
           {{ $t("export_btn") }}
         </a-button>
-        <a-button
-          type="primary"
-          :class="[vehicleList.btnAddNew]"
-          @click="onCreate"
-        >
+        <a-button type="primary" class="btn-add-new" @click="onCreate">
           <template #icon>
-            <img
-              src="@/assets/icons/ic_plus.svg"
-              :class="[vehicleList.btnIcon]"
-            />
+            <img src="@/assets/icons/ic_plus.svg" class="btn-icon" />
           </template>
           {{ $t("create_vehicle_lbl") }}
         </a-button>
@@ -68,6 +52,7 @@
         :data-source="data"
         :pagination="false"
         v-if="!isLoading && data && data.length > 0"
+        :scroll="{ y: 700 }"
       >
         <template #bodyCell="{ column, record }">
           <template v-if="column.dataIndex === 'type'">
@@ -217,8 +202,9 @@ const rowSelection: TableProps["rowSelection"] = {
   onChange: (selectedRowKeys: Key[], selectedRows: VehicleDetail[]): void => {
     selectedRowKeys;
     selectedRows;
-    // selectedKeys.value = [...selectedRows];
-  }
+    selectedKeys.value = [...selectedRows];
+  },
+  columnWidth: "50px"
 };
 
 const fetchVehicleList = (): void => {
@@ -276,7 +262,6 @@ const getVehicleById = computed(() =>
     margin-left: 20px;
     cursor: pointer;
   }
-
   .ant-table-cell {
     text-align: center;
   }
@@ -305,29 +290,6 @@ const getVehicleById = computed(() =>
       text-align: center;
       color: $neutral-600;
     }
-  }
-}
-
-.btnAddNew {
-  @include size-btn(157px, 48px);
-  @include text(600, 18px, 100%);
-  margin-left: 15px;
-  padding: 15px 18.5px;
-  .btnIcon {
-    margin-right: 10px;
-  }
-}
-
-.btn {
-  @include size-btn(120px, 48px);
-  @include text(600, 18px, 100%);
-  margin-left: 15px;
-  padding: 15px 18.5px;
-  background-color: #fff;
-  color: #07a0b8;
-
-  .btnIcon {
-    margin-right: 10px;
   }
 }
 </style>

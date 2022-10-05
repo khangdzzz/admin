@@ -6,7 +6,7 @@
     >
       <template #action>
         <a-button
-          class="btn"
+          class="btn-action"
           type="primary"
           ghost
           @click="deleteVehicleType(undefined)"
@@ -17,7 +17,7 @@
           </template>
           {{ $t("delete_btn") }}
         </a-button>
-        <a-button type="primary" class="btn btn-add-new" @click="onCreate">
+        <a-button type="primary" class="btn-add-new" @click="onCreate">
           <template #icon>
             <img src="@/assets/icons/ic_plus.svg" class="btn-icon" />
           </template>
@@ -31,6 +31,7 @@
         :columns="columns"
         :data-source="data"
         :pagination="false"
+        :scroll="{ y: 640 }"
         v-if="!isLoading && data && data.length"
       >
         <template #headerCell="{ column }">
@@ -141,7 +142,8 @@ const rowSelection = computed(() => {
     selectedRowKeys: selectedKeys.value,
     onChange: (keys: number[]): void => {
       selectedKeys.value = keys;
-    }
+    },
+    columnWidth: "50px"
   };
 });
 
@@ -254,27 +256,7 @@ watch(searchString, onSearchChange);
 
 <style lang="scss" scoped>
 .table-container {
-  flex-grow: 1;
-}
-
-.btn {
-  font-weight: 600;
-  font-size: 18px;
-  width: 120px;
-  display: flex;
-  align-items: center;
-  height: 48px;
-  margin-left: 15px;
-  padding: 0 15px 0 15px;
-
-  .btn-icon {
-    margin-right: 10px;
-  }
-}
-
-.btn-add-new {
-  width: 170px;
-  height: 48px;
+  margin: 30px;
 }
 
 .action-icon {

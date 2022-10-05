@@ -1,23 +1,30 @@
 <template>
   <ListSearchHeader :title="$t('container_container')">
     <template #action>
-      <a-button class="btn" type="primary" ghost>
+      <a-button
+        class="btn-action"
+        type="primary"
+        ghost
+        v-if="selectedKeys.length > 0"
+      >
+        <template #icon>
+          <img src="@/assets/icons/ic_delete.svg" class="btn-icon" />
+        </template>
+        {{ $t("delete_btn") }}
+      </a-button>
+      <a-button class="btn-action" type="primary" ghost>
         <template #icon>
           <img src="@/assets/icons/ic_import.svg" class="btn-icon" />
         </template>
         {{ $t("import_btn") }}
       </a-button>
-      <a-button class="btn" type="primary" ghost>
+      <a-button class="btn-action" type="primary" ghost>
         <template #icon>
           <img src="@/assets/icons/ic_export.svg" class="btn-icon" />
         </template>
         {{ $t("export_btn") }}
       </a-button>
-      <a-button
-        type="primary"
-        class="btn btn-add-new"
-        @click="handleAddContainer"
-      >
+      <a-button type="primary" class="btn-add-new" @click="handleAddContainer">
         <template #icon>
           <img src="@/assets/icons/ic_plus.svg" class="btn-icon" />
         </template>
@@ -27,12 +34,10 @@
   </ListSearchHeader>
   <div class="table-container">
     <a-table
-      :row-selection="{
-        selectedRowKeys: selectedRowKeys,
-        onChange: onSelectChange
-      }"
+      :row-selection="rowSelection"
       :columns="columns"
       :data-source="data"
+      :scroll="{ y: 640 }"
     >
       <template #headerCell="{ column }">
         <template v-if="column.key === 'index'">
@@ -69,7 +74,7 @@ import { i18n } from "@/i18n";
 import SortView from "@/modules/common/components/SortView.vue";
 import ListSearchHeader from "@/modules/base/components/ListSearchHeader.vue";
 import { routeNames, router } from "@/routes";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { Container } from "@/modules/container/models";
 import { Sort } from "@/modules/common/models/sort.enum";
 type Key = string | number;
@@ -82,8 +87,6 @@ type Key = string | number;
 
 //#region variables
 const sort = ref<Sort>(Sort.None);
-
-const selectedRowKeys = ref<Key[]>([]);
 const columns = [
   {
     title: i18n.global.t("container_container_name"),
@@ -104,7 +107,7 @@ const columns = [
     width: "15%"
   }
 ];
-
+const selectedKeys = ref<number[]>([]);
 const data: Container[] = [];
 for (let i = 0; i < 20; i++) {
   data.push({
@@ -119,9 +122,15 @@ for (let i = 0; i < 20; i++) {
 //#endregion
 
 //#region function
-const onSelectChange = (rowSelect: Key[]): void => {
-  selectedRowKeys.value = rowSelect;
-};
+const rowSelection = computed(() => {
+  return {
+    selectedRowKeys: selectedKeys.value,
+    onChange: (keys: number[]): void => {
+      selectedKeys.value = keys;
+    },
+    columnWidth: "50px"
+  };
+});
 
 const handleAddContainer = (): void => {
   router.push({ name: routeNames.createNewContainer });
@@ -145,27 +154,10 @@ const onEditContainer = (id: string): void => {
 .action-icon {
   margin-left: 20px;
 }
-.btn {
-  font-weight: 600;
-  font-size: 18px;
-  width: 120px;
-  height: 48px;
-  margin-left: 15px;
-  padding: 0 15px 0 15px;
 
-  .btn-icon {
-    margin-right: 10px;
-  }
-}
-
-.btn-add-new {
-  width: 170px;
-  height: 48px;
-}
 :deep() {
   .ant-table {
     box-shadow: 4px 2px 8px rgba(0, 0, 0, 0.02);
-    background: transparent;
     border: none;
   }
 }
