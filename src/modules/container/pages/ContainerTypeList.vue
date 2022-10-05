@@ -177,7 +177,7 @@ const columns: TableColumnType<ContainerType>[] = [
   },
   {
     dataIndex: "action",
-    width: "8%"
+    width: "150px"
   }
 ];
 const data = ref<ContainerTypeModel[]>([]);
@@ -321,7 +321,8 @@ const onDeleteContainerType = async (deleteIds: number[]): Promise<void> => {
   margin: 30px;
 
   .actionIcon {
-    margin-left: 20px;
+    margin-left: 30px;
+    cursor: pointer;
   }
 
   .ant-table-cell {

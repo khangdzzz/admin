@@ -94,9 +94,9 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
         {
           required: true,
           trigger: ["blur", "change"],
-          message:  i18n.global.t("forgot_password_msg_err_email_required")
+          message: i18n.global.t("forgot_password_msg_err_email_required")
         },
-        { validator: validator.validateEmail , trigger: ["blur", "change"],}
+        { validator: validator.validateEmail, trigger: ["blur", "change"] }
       ]
     },
     {
@@ -293,7 +293,9 @@ watch(
   .ant-input:placeholder-shown {
     margin-left: 10px;
   }
-
+  .ant-form-item-explain-error {
+    margin-top: 8px;
+  }
   .ant-form-item {
     margin-bottom: 25px;
   }

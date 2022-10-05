@@ -192,7 +192,7 @@ const columns: TableColumnType<VehicleDetail>[] = [
   },
   {
     dataIndex: "action",
-    width: "20%"
+    width: "180px"
   }
 ];
 const data = ref<VehicleDetail[]>([]);
