@@ -207,6 +207,13 @@ const onLoginSuccessfully = async (): Promise<void> => {
     router.push({ name: routeNames.collectionBusiness });
   }
 };
+
+const isValidateEmail = (): boolean => {
+  const regExpEmail =
+    // eslint-disable-next-line no-control-regex, no-useless-escape
+    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@([a-z]{1})((?=.*[a-z|_])(?=.*[.])(?!.*\.\.)(?!.*\_\_)(?!.*\.\_)(?!.*\_\.)(?!.*\s).{1,61})([a-z]{1})$/;
+  return regExpEmail.test(dynamicValidateForm.formData[0].value);
+};
 //#endregion
 
 //#region computed
@@ -218,7 +225,8 @@ watch(
   () => {
     if (
       dynamicValidateForm.formData[0].value &&
-      dynamicValidateForm.formData[1].value
+      dynamicValidateForm.formData[1].value &&
+      isValidateEmail()
     ) {
       isValidated.value = true;
     } else {
