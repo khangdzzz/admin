@@ -11,13 +11,14 @@
 import { i18n } from "@/i18n";
 import { service } from "@/services";
 import { onMounted, ref } from "vue";
+import { SupportedLanguage } from "../models";
 //#endregion
 
 //#region props
 //#endregion
 
 //#region variables
-const currentLanguage = ref<string | null>();
+const currentLanguage = ref<SupportedLanguage>(SupportedLanguage.Japanese);
 const logoUrl = ref<string>("");
 
 //#endregion
@@ -36,8 +37,9 @@ const changeLanguage = (): void => {
   setLogoUrl();
 };
 const setLogoUrl = (): void => {
-  currentLanguage.value = i18n.global.locale;
-  if (currentLanguage.value === "en") {
+  currentLanguage.value = (i18n.global.locale ||
+    SupportedLanguage.Japanese) as SupportedLanguage;
+  if (currentLanguage.value === SupportedLanguage.English) {
     logoUrl.value = new URL(
       "../../../assets/images/im_japan_flag.png",
       import.meta.url
