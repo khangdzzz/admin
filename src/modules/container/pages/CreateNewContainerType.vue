@@ -180,6 +180,7 @@ const goToContainerTypeListPage = (): void => {
     line-height: 18px;
     text-align: center;
     margin-bottom: 30px;
+    color: $neutral-600;
   }
 
   &__action {
