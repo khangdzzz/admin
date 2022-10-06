@@ -56,7 +56,7 @@ export async function fetchListVehicleType(
   const {
     current_page: currentPage = page,
     page_size: pageSize = size,
-    total = 0,
+    count: total = 0,
     total_page: totalPage = 1,
     results
   } = res;
