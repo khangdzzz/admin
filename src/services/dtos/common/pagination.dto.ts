@@ -1,5 +1,5 @@
 export interface PaginationDto<T> {
-  total: number;
+  count: number;
   current_page: number;
   total_page: number;
   page_size: number;

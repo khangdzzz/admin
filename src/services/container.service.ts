@@ -9,9 +9,6 @@ import { transformRequest } from "./base.service";
 import { PaginationDto } from "./dtos/common/pagination.dto";
 import { CreateContainerTypeInputDto } from "./dtos/container-management/create-container-type.dto";
 import { ContainerTypeResponseDto } from "./dtos/container/create-container-type.dto";
-import { VehicleTypeResponseDto } from "./dtos/vehicle-management/create-vehicle-type.dto";
-import createContainerTypeResponse from "./mocks/container-type/create-container-type.response.json";
-import getListContainerTypeResponse from "./mocks/container-type/get-list-container-type.response.json";
 import getListContainerResponse from "./mocks/container/get-list-container.reponse.json";
 
 const data: ContainerType[] = [
@@ -56,7 +53,7 @@ export async function getListContainer(
   const {
     current_page: currentPage,
     page_size: pageSize,
-    total,
+    count: total,
     total_page: totalPage,
     results
   } = res;

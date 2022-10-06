@@ -1,6 +1,6 @@
 import { Pagination } from "@/modules/common/models";
-import { PaginationDto } from "./dtos/common/pagination.dto";
 import { Staff } from "@/modules/staff-management/models";
+import { PaginationDto } from "./dtos/common/pagination.dto";
 import { StaffTypeResponseDto } from "./dtos/staff-management/create-staff-type.dto";
 import getListStaffResponse from "./mocks/staff/get-list-staff.response.json";
 export async function getlistStaff(
@@ -14,7 +14,7 @@ export async function getlistStaff(
   const {
     current_page: currentPage,
     page_size: pageSize,
-    total,
+    count: total,
     total_page: totalPage,
     results
   } = res;
@@ -46,4 +46,3 @@ export async function getlistStaff(
     })
   };
 }
-
