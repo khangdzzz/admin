@@ -32,7 +32,7 @@
           :columns="columns"
           :data-source="data"
           :pagination="false"
-          :scroll="{ y: 700 }"
+          :scroll="{ y: tableMaxHeight }"
         >
           <template #headerCell="{ column }">
             <template v-if="column.key === 'index'">
@@ -171,6 +171,7 @@ const selectedKeys = ref<number[]>([]);
 const sort = ref<Sort>(Sort.None);
 const isLoading = ref<boolean>(false);
 const searchString = ref<string>("");
+const innerHeight = ref<number>(0);
 const pageOption = reactive<Pagination<VehicleTypeModel>>({
   currentPage: 1,
   pageSize: 20,
@@ -180,6 +181,11 @@ const pageOption = reactive<Pagination<VehicleTypeModel>>({
 
 //#region hooks
 onMounted(async () => {
+  innerHeight.value = window.innerHeight;
+  window.addEventListener("resize", () => {
+    innerHeight.value = window.innerHeight;
+  });
+
   initialize();
 });
 //#endregion
@@ -323,6 +329,21 @@ const isShowNextBtn = (): boolean => {
 const totalPages = (): number => {
   return Math.ceil(Number(pageOption.total) / Number(pageOption.pageSize));
 };
+
+const tableMaxHeight = computed(() => {
+  const tableHeaderHeight = 58;
+  const tableFooterHeight = 52;
+  const pageHeaderHeight = 120;
+  const marginBottom = 30;
+
+  return (
+    innerHeight.value -
+    tableHeaderHeight -
+    tableFooterHeight -
+    pageHeaderHeight -
+    marginBottom
+  );
+});
 //#endregion
 
 //#region reactive

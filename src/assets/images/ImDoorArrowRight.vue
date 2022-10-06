@@ -32,7 +32,7 @@ defineProps({
   },
   height: {
     type: String,
-    default: "20"
+    default: "18"
   },
   color: {
     type: String
