@@ -21,12 +21,12 @@
       v-if="!isLoading && value"
       class="fill-width d-flex flex-column justify-center align-center"
     >
-      <div class="no-data-container__message mb-30 d-flex">
-        Sorry we couldn't find any matches for
-        <span class="no-data-container__value">&nbsp;“{{ value }}”</span>
-      </div>
+      <div
+        class="no-data-container__message mb-30 d-flex"
+        v-html="getMessage"
+      ></div>
       <div class="no-data-container__sub-message mb-30">
-        Try searching for another term
+        {{ $t("try_searching_for_another_term") }}
       </div>
       <div>
         <a-button
@@ -35,18 +35,18 @@
           @click="handleClick"
         >
           <template #icon><ArrowLeft /></template>
-          Back to list</a-button
+          {{ $t("back_to_list") }}</a-button
         >
       </div>
     </div>
     <div class="no-data-container__no-data" v-if="!isLoading && !value">
-      No data
+      {{ $t("no_data") }}
     </div>
     <div v-if="isLoading">
       <div class="d-flex justify-center align-center mb-20">
         <LoadingSpinner />
       </div>
-      <div class="no-data-container__loading">Loading...</div>
+      <div class="no-data-container__loading">{{ $t("common_loading") }}</div>
     </div>
   </div>
 </template>
@@ -56,11 +56,14 @@
 import ImNotFound from "@/assets/images/ImNotFound.vue";
 import ArrowLeft from "@/assets/icons/IcArrowLeft.vue";
 import LoadingSpinner from "@/modules/base/components/LoadingSpinner.vue";
+import { computed } from "vue";
+import { service } from "@/services";
+import { SupportedLanguage } from "../models";
 
 //#endregion
 
 //#region props
-defineProps({
+const props = defineProps({
   value: {
     type: String
   },
@@ -85,6 +88,14 @@ const handleClick = (): void => {
 //#endregion
 
 //#region computed
+const getMessage = computed(() => {
+  const currentLanguage = service.language.getCurrentLanguage();
+  if (currentLanguage === SupportedLanguage.English) {
+    return `Sorry we couldn't find any matches for<span class="no-data-container__value">&nbsp;“${props.value}”</span>`;
+  }
+
+  return ` <span class="no-data-container__value">&nbsp;“${props.value}”</span>に一致する情報は見つかりませんでした。`;
+});
 //#endregion
 
 //#region reactive
