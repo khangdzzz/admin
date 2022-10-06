@@ -37,7 +37,7 @@
         :columns="columns"
         :data-source="data"
         :pagination="false"
-        :scroll="{ y: 640 }"
+        :scroll="{ y: 700 }"
         v-if="!isLoading && data && data.length"
       >
         <template #headerCell="{ column }">

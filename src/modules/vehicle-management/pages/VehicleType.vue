@@ -32,6 +32,7 @@
           :columns="columns"
           :data-source="data"
           :pagination="false"
+          :scroll="{ y: 700 }"
         >
           <template #headerCell="{ column }">
             <template v-if="column.key === 'index'">
@@ -134,6 +135,7 @@ import { service } from "@/services";
 import { debounce } from "lodash";
 import { computed, inject, onMounted, reactive, ref, watch } from "vue";
 import { VehicleTypeModel } from "../models";
+
 //#endregion
 
 //#region props
@@ -214,7 +216,7 @@ const onShowSizeChange = (current: number, pageSize: number): void => {
   initialize();
 };
 
-const onChange = (pageNumber: number) :void => {
+const onChange = (pageNumber: number): void => {
   pageOption.currentPage = pageNumber;
   initialize();
 };
