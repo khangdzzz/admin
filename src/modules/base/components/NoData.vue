@@ -46,7 +46,7 @@
       <div class="d-flex justify-center align-center mb-20">
         <LoadingSpinner />
       </div>
-      <div class="no-data-container__loading">Loading...</div>
+      <div class="no-data-container__loading">{{ $t("common_loading") }}</div>
     </div>
   </div>
 </template>
