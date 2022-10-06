@@ -37,7 +37,7 @@
       :row-selection="rowSelection"
       :columns="columns"
       :data-source="data"
-      :scroll="{ y: 640 }"
+      :scroll="{ y: 700 }"
     >
       <template #headerCell="{ column }">
         <template v-if="column.key === 'index'">
