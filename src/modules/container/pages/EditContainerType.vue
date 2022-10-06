@@ -45,7 +45,7 @@ import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
 import { commonStore } from "@/stores";
-import { inject, onMounted, reactive, ref, watch } from "vue";
+import { inject, onMounted, reactive, ref } from "vue";
 import { useRoute } from "vue-router";
 import ContainerTypeModel from "../models/container-type.models";
 
@@ -175,10 +175,6 @@ const goToContainerTypeListPage = (): void => {
 //#endregion===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍
 
 //===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀Watchers
-
-watch(dynamicValidateForm, () => {
-  isDisabled.value = dynamicValidateForm.formData[0].value.length > 0;
-});
 
 //#endregion===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀
 </script>
