@@ -11,6 +11,12 @@ import { service } from "@/services";
 import { UserType } from "../models/user-type.enum";
 import sideMenuItem, { SideMenuItems } from "../models/menu";
 
+type menuItem = {
+  pathName: string;
+  title: string;
+  requireUserType: UserType[];
+};
+
 const user = ref<string>("");
 const selectedKeys = ref<string[]>(["menu_lbl_dashboard_internal"]);
 const openKeys = ref<string[]>([""]);
@@ -54,8 +60,7 @@ const handleClickMenuWhenCollapsed = (item: SideMenuItems): void => {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const isShowExpand = (menuItem: any): boolean => {
   let numberOfItems = 0;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  menuItem?.map((item: any) => {
+  menuItem?.map((item: menuItem) => {
     if (isHasPermission(item.requireUserType)) {
       numberOfItems++;
     }
@@ -526,6 +531,7 @@ $transition-time: 0.3s;
           height: 48px;
           display: flex;
           align-items: center;
+          padding-right: 10px;
         }
       }
 
@@ -553,6 +559,7 @@ $transition-time: 0.3s;
         border-left: 3px solid transparent;
         padding-left: 12px !important;
         height: 48px;
+        padding-right: 18px;
         white-space: normal;
       }
 
