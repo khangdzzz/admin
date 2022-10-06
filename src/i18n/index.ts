@@ -10,9 +10,9 @@ const translations = {
   ja
 };
 
-const currentLanguage = service.localStorage.getItem(
+const currentLanguage = (service?.localStorage?.getItem(
   localStorageKeys.currentLanguage
-);
+) || SupportedLanguage.Japanese) as SupportedLanguage;
 
 export const i18n = createI18n({
   locale: currentLanguage || SupportedLanguage.Japanese,
