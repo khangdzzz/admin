@@ -1,24 +1,22 @@
 <template>
-  <a-row type="flex" align="middle" justify="center" class="header mt-30 mb-20">
-    <a-col :span="colTitle">
-      <h2 class="header-title">{{ title }}</h2>
-    </a-col>
-    <a-col :span="colAction">
-      <a-row type="flex" align="middle" justify="end" class="gap-20">
-        <a-input
-          :value="modelValue"
-          :placeholder="$t('search_input')"
-          class="search-input"
-          @change="onSeachChange($event.target.value)"
-          allow-clear
-          ><template #prefix>
-            <img src="@/assets/icons/ic_search.svg" />
-          </template>
-        </a-input>
-        <slot name="action"></slot>
-      </a-row>
-    </a-col>
-  </a-row>
+  <div class="d-flex justify-space-between mx-30 mt-30 mb-20 header">
+    <div>
+      <div class="header__title">{{ title }}</div>
+    </div>
+    <div class="d-flex gap-15">
+      <a-input
+        :value="modelValue"
+        :placeholder="$t('search_input')"
+        class="search-input"
+        @change="onSeachChange($event.target.value)"
+        allow-clear
+        ><template #prefix>
+          <img src="@/assets/icons/ic_search.svg" />
+        </template>
+      </a-input>
+      <slot name="action"></slot>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -33,11 +31,11 @@ defineProps({
   },
   colTitle: {
     type: Number,
-    default: 4
+    default: 6
   },
   colAction: {
     type: Number,
-    default: 20
+    default: 6
   },
   modelValue: {
     type: String,
@@ -77,7 +75,7 @@ defineExpose({ clearInput });
 <style lang="scss" scoped>
 .header {
   margin: 36px 30px;
-  .header-title {
+  &__title {
     margin: 0 !important;
     font-family: "Roboto";
     font-style: normal;

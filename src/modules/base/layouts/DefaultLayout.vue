@@ -267,7 +267,7 @@ $transition-time: 0.3s;
   &__lhs-wrapper {
     width: 300px;
     height: 100%;
-    background-color: #fff;
+    background-color: $white;
     box-shadow: 4px 2px 8px rgba(0, 0, 0, 0.02);
     z-index: 1;
     transition: width $transition-time;
@@ -304,7 +304,7 @@ $transition-time: 0.3s;
     font-weight: 700;
     font-size: 16px;
     line-height: 20px;
-    color: #3c3c3c;
+    color: $neutral-600;
     transition: opacity $transition-time;
 
     &__collapsed {
@@ -335,7 +335,7 @@ $transition-time: 0.3s;
     font-weight: 400;
     font-size: 16px;
     line-height: 20px;
-    color: #3c3c3c;
+    color: $neutral-600;
   }
 
   &__sub-menu-title {
@@ -343,22 +343,22 @@ $transition-time: 0.3s;
     font-weight: 400;
     font-size: 16px;
     line-height: 20px;
-    color: #999999;
+    color: $neutral-400;
   }
 
   &__icon {
-    color: #999999;
+    color: $neutral-400;
   }
 
   &__menu-item-wrapper {
     &:hover {
       .default-layout {
         &__icon {
-          color: #07a0b8;
+          color: $primary-400;
         }
 
         &__menu-title {
-          color: #07a0b8;
+          color: $primary-400;
         }
       }
     }
@@ -390,8 +390,13 @@ $transition-time: 0.3s;
       font-weight: 400;
       font-size: 16px;
       line-height: 20px;
-      color: #999999;
+      color: $neutral-600;
       border: none;
+
+      svg {
+        color: $neutral-400;
+        transition: color 0.3s;
+      }
 
       &:focus {
         background-color: transparent;
@@ -399,12 +404,16 @@ $transition-time: 0.3s;
 
       &:hover {
         color: $primary;
+
+        svg {
+          color: $primary;
+        }
       }
     }
   }
 
   &__content-wrapper {
-    background-color: #f0f8fa;
+    background-color: $neutral-50;
     overflow: auto;
     flex-grow: 1;
   }
@@ -428,6 +437,7 @@ $transition-time: 0.3s;
 
     &__toggle-btn {
       transform: rotate(-90deg);
+      color: $neutral-400;
       border: none;
 
       &:focus {
@@ -448,14 +458,14 @@ $transition-time: 0.3s;
 :deep(.default-layout__menu-item-wrapper) {
   .default-layout__menu-title {
     &:hover {
-      color: #07a0b8;
+      color: $primary-400;
     }
   }
 
   .ant-menu {
     &-item-active {
       .default-layout__sub-menu-title {
-        color: #07a0b8;
+        color: $primary-400;
       }
     }
 
@@ -463,11 +473,11 @@ $transition-time: 0.3s;
       .ant-menu {
         &-item-selected {
           border-left: 3px solid transparent;
-          background-color: #fff;
+          background-color: $white;
 
           .ant-menu {
             &-title-content {
-              background: #f7f7f7;
+              background: $neutral-50;
               border-radius: 8px;
             }
           }
@@ -491,7 +501,7 @@ $transition-time: 0.3s;
       }
 
       &-selected {
-        border-left: 3px solid #07a0b8;
+        border-left: 3px solid $primary-400;
 
         &::after {
           border-right: none !important;
@@ -503,7 +513,7 @@ $transition-time: 0.3s;
             font-weight: 600;
             font-size: 16px;
             line-height: 20px;
-            color: #07a0b8;
+            color: $primary-400;
           }
 
           &__sub-menu-title {
@@ -511,11 +521,11 @@ $transition-time: 0.3s;
             font-weight: 600;
             font-size: 16px;
             line-height: 20px;
-            color: #07a0b8;
+            color: $primary-400;
           }
 
           &__icon {
-            color: #07a0b8;
+            color: $primary-400;
           }
         }
       }
@@ -524,7 +534,7 @@ $transition-time: 0.3s;
     &-submenu {
       .ant-menu {
         &-sub {
-          background-color: #fff;
+          background-color: $white;
         }
 
         &-title-content {
@@ -570,11 +580,11 @@ $transition-time: 0.3s;
             font-weight: 600;
             font-size: 16px;
             line-height: 20px;
-            color: #07a0b8;
+            color: $primary-400;
           }
 
           &__icon {
-            color: #07a0b8;
+            color: $primary-400;
           }
         }
       }

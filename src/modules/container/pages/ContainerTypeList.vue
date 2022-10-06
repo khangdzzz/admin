@@ -31,13 +31,13 @@
         </router-link>
       </template>
     </ListSearchHeader>
-    <div :class="[containerTypeList.tableContainer, 'mb-30 mx-30']">
+    <div :class="[containerTypeList.tableContainer, 'mx-30']">
       <a-table
         :row-selection="rowSelection"
         :columns="columns"
         :data-source="data"
         :pagination="false"
-        :scroll="{ y: 700 }"
+        :scroll="{ y: tableMaxHeight }"
         v-if="!isLoading && data && data.length"
       >
         <template #headerCell="{ column }">
@@ -80,7 +80,7 @@
         </template>
       </a-table>
       <div
-        :class="containerTypeList.pagination"
+        :class="[containerTypeList.pagination, 'mb-30']"
         v-if="!isLoading && data && data.length"
       >
         <a-pagination
@@ -205,10 +205,16 @@ const columns: TableColumnType<ContainerType>[] = [
 const data = ref<ContainerTypeModel[]>([]);
 const searchString = ref<string>("");
 const isLoading = ref<boolean>(false);
+const innerHeight = ref<number>(0);
 //#endregion===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎
 
 //#===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌Hooks
 onMounted(() => {
+  innerHeight.value = window.innerHeight;
+  window.addEventListener("resize", () => {
+    innerHeight.value = window.innerHeight;
+  });
+
   initialize();
 });
 //#endregion===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌
@@ -242,6 +248,7 @@ const initialize = async (): Promise<void> => {
   pageOption.total = res?.total;
   pageOption.totalPage = res?.totalPage;
 };
+
 const changeSort = (): void => {
   switch (sort.value) {
     case Sort.Asc:
@@ -337,6 +344,21 @@ const onChange = (pageNumber: number): void => {
 //#endregion===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊
 
 //#===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏Computed
+const tableMaxHeight = computed(() => {
+  const tableHeaderHeight = 58;
+  const tableFooterHeight = 52;
+  const pageHeaderHeight = 120;
+  const marginBottom = 30;
+
+  return (
+    innerHeight.value -
+    tableHeaderHeight -
+    tableFooterHeight -
+    pageHeaderHeight -
+    marginBottom
+  );
+});
+
 //#endregion===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏
 
 //#===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍Emits
