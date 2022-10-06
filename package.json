@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "prepare": "husky install && npx @betterer/cli init",
     "betterer": "betterer --update",
-    "release-dev": "npm run build-only && aws s3 sync ./dist/ s3://dev-ecommit.tk && aws cloudfront create-invalidation --distribution-id E1GNNL83EB8MTF --paths \"/*\""
+    "release-dev": "npm run build-only && aws s3 sync ./dist/ s3://eco-value.jp && aws cloudfront create-invalidation --distribution-id E1MEU6Y19FXVBO --paths \"/*\""
   },
   "dependencies": {
     "amazon-cognito-identity-js": "^5.2.10",
