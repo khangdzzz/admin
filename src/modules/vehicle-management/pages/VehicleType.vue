@@ -312,7 +312,7 @@ const isShowPrevBtn = (): boolean => {
 const isShowNextBtn = (): boolean => {
   const isLastPage =
     pageOption.currentPage ===
-    Math.ceil(Number(pageOption.total) / Number(pageOption?.pageSize));  
+    Math.ceil(Number(pageOption.total) / Number(pageOption?.pageSize));
 
   if (totalPages() === 1 || isLastPage) return false;
   return true;
@@ -343,99 +343,6 @@ watch(searchString, onSearchChange);
   .ant-table-tbody > tr.ant-table-row-selected > td {
     background: $grey-2;
     border-color: rgba(0, 0, 0, 0.03);
-  }
-}
-</style>
-<style lang="scss">
-.table-container {
-  .ant-table-wrapper {
-    .ant-spin-nested-loading {
-      .ant-spin-container {
-        .ant-table {
-          .ant-table-container table > tbody > tr:last-child td:last-child {
-            border-bottom-right-radius: 0px;
-          }
-          .ant-table-container table > tbody > tr:last-child td:first-child {
-            border-bottom-left-radius: 0px;
-          }
-        }
-      }
-    }
-  }
-  .ant-checkbox-inner {
-    &::after {
-      top: 45%;
-      left: 30%;
-    }
-  }
-  .ant-pagination {
-    position: relative;
-    .ant-pagination-item {
-      width: 40px;
-      height: 40px;
-      margin-top: 10px;
-      border-radius: 6px;
-      a {
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 14px;
-        line-height: 18px;
-        font-weight: 400;
-        color: $neutral-600;
-      }
-    }
-    .ant-pagination-item-active {
-      background-color: $primary;
-      a {
-        color: #ffffff;
-        font-weight: 700;
-      }
-    }
-    .ant-pagination-options {
-      margin: 0px;
-      position: absolute;
-      left: 15px;
-      top: 15px;
-      .ant-pagination-options-size-changer {
-        .ant-select-selector {
-          height: 30px;
-          box-sizing: border-box;
-          width: 60px;
-          padding: 6px 12px 6px 7px;
-          border-radius: 6px;
-        }
-        .ant-select-selection-item {
-          padding: 0;
-          .options-text {
-            border-radius: 6px;
-            line-height: 18px;
-            span {
-              font-size: 14px;
-              font-weight: 700;
-            }
-            img {
-              width: 10px;
-              height: 5px;
-            }
-          }
-        }
-        .ant-select-arrow {
-          display: none;
-        }
-      }
-    }
-  }
-  .ant-select-dropdown {
-    .ant-select-item-option-content {
-      img {
-        display: none;
-      }
-    }
-    .ant-select-item-option-selected {
-      background-color: $neutral-50;
-    }
   }
 }
 </style>
