@@ -47,7 +47,7 @@
   "container_capacity": "容量(m3)",
   "add_new_container_type": "風袋新規種別の追加",
   "name": "名称",
-  "delete_btn": "削除",
+  "delete_btn": "Delete",
   "search_input": "検索",
   "import_btn": "Import",
   "export_btn": "Export",
