@@ -49,7 +49,7 @@
   "name": "Name",
   "next_btn": "Next",
   "previous_btn": "Previous",
-  "add_new_type_btn": "Add new type",
+  "add_new_type_btn": "Add",
   "search_input": "Search",
   "edit_container_type": "Edit container type",
   "container_weight": "Weight",
@@ -159,5 +159,8 @@
   "staff_user_role": "User role",
   "tenant": "Tenant",
   "staff_collection_base": "Collection base",
-  "name_lowercase":"name"
+  "name_lowercase": "name",
+  "try_searching_for_another_term": "Try searching for another term",
+  "no_data": "No data",
+  "back_to_list": "Back to list"
 }

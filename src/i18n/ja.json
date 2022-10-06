@@ -156,5 +156,8 @@
   "tenant": "テナント",
   "staff_collection_base": "回収拠点",
   "create_container_type_msg_create_successfully": "風袋種別が作成されました",
-  "name_lowercase": "名称"
+  "name_lowercase": "名称",
+  "try_searching_for_another_term": "別のキーワードを試しください",
+  "no_data": "データがありません。",
+  "back_to_list": "一覧表に戻る"
 }
