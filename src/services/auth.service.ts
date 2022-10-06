@@ -1,4 +1,5 @@
 import { UserInfo } from "@/modules/auth/models";
+import { SupportedLanguage } from "@/modules/base/models";
 import { UserType } from "@/modules/base/models/user-type.enum";
 import { router, routeNames } from "@/routes";
 import { commonStore } from "@/stores/common.store";
@@ -41,10 +42,14 @@ export async function getCurrentUserInformation(): Promise<
 }
 
 export function logout(): void {
+  const currentLanguage = (localStorage.getItem(
+    localStorageKeys.currentLanguage
+  ) || SupportedLanguage.Japanese) as SupportedLanguage;
   localStorage.clear();
   sessionStorage.clear();
   const store = commonStore();
   store.$reset;
+  localStorage.setItem(localStorageKeys.currentLanguage, currentLanguage);
 }
 
 export function refreshToken(): void {
