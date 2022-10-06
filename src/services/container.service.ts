@@ -1,4 +1,5 @@
 import { Pagination } from "@/modules/common/models";
+import { Sort } from "@/modules/common/models/sort.enum";
 import {
   Container,
   ContainerSelection,
@@ -105,22 +106,44 @@ export function getContainerById(id: string): ContainerType | undefined {
   return container;
 }
 
-export async function getListContainerType(): Promise<
-  Pagination<ContainerTypeModel> | undefined
-> {
+export async function getListContainerType(
+  page: number,
+  size: number,
+  sort: Sort = Sort.None,
+  searchKeyword: string | null | undefined = ""
+): Promise<Pagination<ContainerTypeModel> | undefined> {
+  const params = {
+    page,
+    page_size: size,
+    name__like: searchKeyword ? `%${searchKeyword}%` : undefined,
+    order_by:
+      sort === Sort.None ? undefined : sort === Sort.Asc ? "name" : "-name"
+  };
+
   const [error, res] = await transformRequest<
     PaginationDto<ContainerTypeResponseDto>
   >({
     url: "/container_type",
-    method: "get"
+    method: "get",
+    params
   });
   if (error || !res) return undefined;
 
   if (!res) return Promise.resolve(undefined);
 
-  const { results } = res;
+  const {
+    results,
+    current_page: currentPage = page,
+    page_size: pageSize = size,
+    count: total = 0,
+    total_page: totalPage = 1
+  } = res;
 
   return {
+    currentPage,
+    pageSize,
+    total,
+    totalPage,
     results: results.map((containerType) => {
       const { id, name, tenant_id: tenantId } = containerType;
       return {

@@ -84,9 +84,14 @@
         v-if="!isLoading && data && data.length"
       >
         <a-pagination
-          v-model:current="currentPage"
-          :total="data.length"
-          class="ant-pagination"
+          v-model:current="pageOption.currentPage"
+          v-model:page-size="pageOption.pageSize"
+          :total="pageOption.total"
+          :pageSizeOptions="['20', '30', '40', '50']"
+          show-size-changer
+          @showSizeChange="onShowSizeChange"
+          @change="onChange"
+          :class="['ant-pagination', 'd-flex', 'justify-end']"
         >
           <template #itemRender="{ type, originalElement }">
             <a-button
@@ -149,12 +154,13 @@ import { Sort } from "@/modules/common/models/sort.enum";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
 import type { TableColumnType } from "ant-design-vue";
-import { computed, inject, onMounted, ref, watch } from "vue";
+import { computed, inject, onMounted, reactive, ref, watch } from "vue";
 import ContainerTypeModel, {
   ContainerType
 } from "../models/container-type.models";
 import NoData from "@/modules/base/components/NoData.vue";
 import { debounce } from "lodash";
+import { Pagination } from "@/modules/common/models";
 //#endregion===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆
 
 //#===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜Props
@@ -168,7 +174,11 @@ const messenger: (param: MessengerParamModel) => void =
   inject("messenger")!;
 const selectedKeys = ref<number[]>([]);
 
-const currentPage = ref<number>(1);
+const pageOption = reactive<Pagination<ContainerType>>({
+  currentPage: 1,
+  pageSize: 20,
+  total: 0
+});
 
 const columns: TableColumnType<ContainerType>[] = [
   {
@@ -188,7 +198,7 @@ const isLoading = ref<boolean>(false);
 
 //#===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌Hooks
 onMounted(() => {
-  fetchListContainerType();
+  initialize();
 });
 //#endregion===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌
 
@@ -203,14 +213,23 @@ const rowSelection = computed(() => {
   };
 });
 
-const fetchListContainerType = async (): Promise<void> => {
+const initialize = async (): Promise<void> => {
   isLoading.value = true;
-  const res = await service.container.getListContainerType();
+  const res = await service.container.getListContainerType(
+    pageOption?.currentPage || 1,
+    pageOption.pageSize || 20,
+    sort.value,
+    searchString.value
+  );
   isLoading.value = false;
   sourceData = (res?.results || []).map((item, index) => {
     return { ...item, key: item.id || index + 1 };
   });
   data.value = [...sourceData];
+  pageOption.currentPage = res?.currentPage;
+  pageOption.pageSize = res?.pageSize || 20;
+  pageOption.total = res?.total;
+  pageOption.totalPage = res?.totalPage;
 };
 const changeSort = (): void => {
   switch (sort.value) {
@@ -223,36 +242,13 @@ const changeSort = (): void => {
     default:
       sort.value = Sort.Asc;
   }
-  sortAndFilterName();
+  initialize();
 };
 
 const onSearchChange = debounce((): void => {
-  sortAndFilterName();
+  initialize();
 }, 500);
 
-const sortAndFilterName = (): void => {
-  const filteredData = [...sourceData].filter((containerType) => {
-    return containerType.name
-      .toLowerCase()
-      .includes(searchString.value.toLowerCase());
-  });
-  switch (sort.value) {
-    case Sort.Asc:
-      data.value = [...filteredData].sort(
-        (firstContainerType, secondContainerType) =>
-          firstContainerType.name.localeCompare(secondContainerType.name)
-      );
-      break;
-    case Sort.Desc:
-      data.value = [...filteredData].sort(
-        (firstContainerType, secondContainerType) =>
-          secondContainerType.name.localeCompare(firstContainerType.name)
-      );
-      break;
-    default:
-      data.value = [...filteredData];
-  }
-};
 const deleteContainerType = (id?: number): void => {
   messenger({
     title: "vehicle_type_msg_confirm_delete",
@@ -291,12 +287,23 @@ const onDeleteContainerType = async (deleteIds: number[]): Promise<void> => {
     type: MessengerType.Success,
     callback: (isConfirm: boolean): void => {
       isConfirm;
-      fetchListContainerType();
+      initialize();
     }
   });
 };
 const handleBackToList = (): void => {
   searchString.value = "";
+};
+
+const onShowSizeChange = (current: number, pageSize: number): void => {
+  pageOption.currentPage = current;
+  pageOption.pageSize = pageSize;
+  initialize();
+};
+
+const onChange = (pageNumber: number): void => {
+  pageOption.currentPage = pageNumber;
+  initialize();
 };
 //#endregion===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊
 
