@@ -422,7 +422,7 @@ $transition-time: 0.3s;
     }
 
     &__toggle-btn {
-      rotate: -90deg;
+      transform: rotate(-90deg);
       border: none;
 
       &:focus {
@@ -434,7 +434,7 @@ $transition-time: 0.3s;
       }
 
       &__close {
-        rotate: 90deg !important;
+        transform: rotate(90deg) !important;
       }
     }
   }
