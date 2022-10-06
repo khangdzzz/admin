@@ -118,7 +118,7 @@
       <NoData
         :value="searchString"
         :is-loading="isLoading"
-        @click="handleBackToList"
+        @onClick="handleBackToList"
         v-else
       />
     </div>

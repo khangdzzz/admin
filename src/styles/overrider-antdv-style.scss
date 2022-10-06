@@ -49,10 +49,10 @@
 .ant-table {
   box-shadow: 4px 2px 8px rgba(0, 0, 0, 0.02);
   border: none;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
+  border-top-left-radius: 10px !important;
+  border-top-right-radius: 10px !important;
+  border-bottom-left-radius: 10px !important;
+  border-bottom-right-radius: 10px !important;
 }
 
 .ant-table-tbody > tr.ant-table-row-selected > td {
@@ -93,11 +93,11 @@
 }
 
 .ant-table-container table > thead > tr:first-child th:first-child {
-  border-top-left-radius: 10px;
+  border-top-left-radius: 10px !important;
 }
 
 .ant-table-container table > thead > tr:first-child th:last-child {
-  border-top-right-radius: 10px;
+  border-top-right-radius: 10px !important;
 }
 
 .ant-table-container table > tbody > tr:last-child td:first-child {
@@ -117,7 +117,7 @@
   > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
   height: 0;
 }
-.ant-select-dropdown{
+.ant-select-dropdown {
   border-radius: 6px;
   padding: 0;
 }
