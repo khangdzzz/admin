@@ -1,5 +1,5 @@
 <template>
-  <a-row type="flex" align="middle" justify="center" class="header">
+  <a-row type="flex" align="middle" justify="center" class="header mt-30 mb-20">
     <a-col :span="colTitle">
       <h2 class="header-title">{{ title }}</h2>
     </a-col>

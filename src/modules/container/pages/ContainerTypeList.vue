@@ -93,12 +93,22 @@
           @change="onChange"
           :class="['ant-pagination', 'd-flex', 'justify-end']"
         >
+          <template #buildOptionText="{ value }">
+            <div class="options-text">
+              <span class="mr-13">{{ value }} </span>
+              <img src="@/assets/icons/ic_arrow.svg" />
+            </div>
+          </template>
           <template #itemRender="{ type, originalElement }">
             <a-button
-              :class="[containerTypeList.btnPagination]"
+              :class="[
+                containerTypeList.btnPagination,
+                'btn-pagination',
+                'mt-10'
+              ]"
               type="primary"
-              ghost
               v-if="type === 'prev'"
+              v-show="isShowPrevBtn()"
             >
               <template #icon>
                 <img
@@ -111,10 +121,15 @@
               </template>
             </a-button>
             <a-button
-              :class="[containerTypeList.btnPagination]"
+              :class="[
+                containerTypeList.btnPagination,
+                'btn-pagination',
+                'mt-10',
+                'mr-15'
+              ]"
               type="primary"
-              ghost
               v-else-if="type === 'next'"
+              v-show="isShowNextBtn()"
             >
               <template #icon>
                 <span :class="[containerTypeList.action]">{{
@@ -127,10 +142,6 @@
               </template>
             </a-button>
             <component :is="originalElement" v-else></component>
-          </template>
-
-          <template #buildOptionText="{ value }">
-            {{ value }}
           </template>
         </a-pagination>
       </div>
@@ -244,7 +255,25 @@ const changeSort = (): void => {
   }
   initialize();
 };
+const isShowPrevBtn = (): boolean => {
+  const isFirtPage = pageOption.currentPage === 1;
+  if (totalPages() === 1 || isFirtPage) return false;
+  return true;
+};
 
+const isShowNextBtn = (): boolean => {
+  const isLastPage =
+    pageOption.currentPage ===
+    Math.ceil(Number(pageOption.total) / Number(pageOption?.pageSize));
+  if (totalPages() === 1 || isLastPage) return false;
+  return true;
+};
+
+//#endregion
+
+const totalPages = (): number => {
+  return Math.ceil(Number(pageOption.total) / Number(pageOption.pageSize));
+};
 const onSearchChange = debounce((): void => {
   initialize();
 }, 500);
@@ -344,9 +373,10 @@ watch(searchString, onSearchChange);
 
   .pagination {
     text-align: end;
-    padding: 10px 0;
     background-color: #fff;
-
+    height: 60px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
     .btnPagination {
       @include size-btn(108px, 40px);
       padding: 0px 15px;
@@ -397,6 +427,9 @@ watch(searchString, onSearchChange);
   .ant-table-tbody > tr.ant-table-row-selected > td {
     background: $grey-2;
     border-color: rgba(0, 0, 0, 0.03);
+  }
+  .btn-pagination.ant-btn[disabled] {
+    background-color: $neutral-0 !important;
   }
 }
 </style>
