@@ -80,12 +80,12 @@
                 <img src="@/assets/icons/ic_arrow.svg" />
               </div>
             </template>
-            <template #itemRender="{ type, originalElement }">
+            <template #itemRender="item">
               <a-button
                 :class="[vehicleType.btnPagination, 'mt-10']"
                 type="primary"
                 ghost
-                v-if="type === 'prev'"
+                v-if="item.type === 'prev' && isShowPrevBtn()"
               >
                 <img
                   src="@/assets/icons/ic_prev.svg"
@@ -97,7 +97,7 @@
                 :class="[vehicleType.btnPagination, 'mt-10', 'mr-15']"
                 type="primary"
                 ghost
-                v-else-if="type === 'next'"
+                v-else-if="item.type === 'next' && isShowNextBtn()"
               >
                 <span :class="[vehicleType.action]">Next</span>
                 <img
@@ -105,7 +105,11 @@
                   :class="[vehicleType.btnIconNext]"
                 />
               </a-button>
-              <component :is="originalElement" v-else></component>
+
+              <component
+                v-else-if="item.type === 'page'"
+                :is="item.originalElement"
+              ></component>
             </template>
           </a-pagination>
         </div>
@@ -181,6 +185,7 @@ onMounted(async () => {
 //#endregion
 
 //#region function
+
 const initialize = async (): Promise<void> => {
   isLoading.value = true;
   const result = await service.vehicleType.fetchListVehicleType(
@@ -296,9 +301,28 @@ const onDeleteVehicleType = async (deleteIds: number[]): Promise<void> => {
 const handleBackToList = (): void => {
   searchString.value = "";
 };
+
+const isShowPrevBtn = (): boolean => {
+  const isFirtPage = pageOption.currentPage === 1;
+  if (totalPages() === 1 || isFirtPage) return false;
+
+  return true;
+};
+
+const isShowNextBtn = (): boolean => {
+  const isLastPage =
+    pageOption.currentPage ===
+    Math.ceil(Number(pageOption.total) / Number(pageOption?.pageSize));  
+
+  if (totalPages() === 1 || isLastPage) return false;
+  return true;
+};
 //#endregion
 
 //#region computed
+const totalPages = (): number => {
+  return Math.ceil(Number(pageOption.total) / Number(pageOption.pageSize));
+};
 //#endregion
 
 //#region reactive
@@ -433,6 +457,7 @@ watch(searchString, onSearchChange);
   border-bottom-right-radius: 10px;
   .btnPagination {
     @include size-btn(82px, 40px);
+    border-color: #eaeaea;
     background-color: #fff;
 
     .btnIconPrev {

@@ -13,11 +13,6 @@ exports[`Better Code Quality !`] = {
     ],
     "src/services/base.service.ts:3213300086": [
       [51, 44, 3, "Unexpected any. Specify a different type.", "193409811"]
-    ],
-    "src/services/container.service.ts:3912412062": [
-      [11, 9, 22, "\'VehicleTypeResponseDto\' is defined but never used.", "4257591257"],
-      [12, 7, 27, "\'createContainerTypeResponse\' is defined but never used.", "796996349"],
-      [13, 7, 28, "\'getListContainerTypeResponse\' is defined but never used.", "2386768269"]
     ]
   }`
 };
