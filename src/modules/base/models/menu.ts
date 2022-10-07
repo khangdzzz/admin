@@ -97,7 +97,7 @@ const sideMenuItems: SideMenuItems[] = [
       },
       {
         title: "menu_lbl_collection_base_management",
-        pathName: routeNames.collectionBaseManagement,
+        pathName: routeNames.listCollectionBase,
         requireUserType: [UserType.TenantAdmin]
       },
       {
