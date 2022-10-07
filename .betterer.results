@@ -5,21 +5,16 @@
 //
 exports[`Better Code Quality !`] = {
   value: `{
-    "src/modules/base/components/CustomForm.vue:2327349476": [
-      [204, 16, 36, "Missing return type on function.", "3688369342"],
-      [208, 29, 3, "Unexpected any. Specify a different type.", "193409811"]
-    ],
-    "src/modules/container/pages/ContainerTypeList.vue:3974317739": [
-      [157, 8, 3, "\'res\' is assigned a value but never used.", "193432417"]
-    ],
-    "src/modules/staff-management/pages/CreateNewStaff.vue:2044512979": [
-      [126, 49, 3, "Unexpected any. Specify a different type.", "193409811"]
-    ],
-    "src/routes/guards/require-login.guard.ts:1833641903": [
-      [2, 9, 10, "\'routeNames\' is defined but never used.", "292271144"]
+    "src/modules/base/components/CustomForm.vue:3817144310": [
+      [206, 16, 36, "Missing return type on function.", "3688369342"],
+      [210, 29, 3, "Unexpected any. Specify a different type.", "193409811"],
+      [230, 45, 3, "Unexpected any. Specify a different type.", "193409811"]
     ],
     "src/modules/container/pages/TheContainer.vue:2688956769": [
       [79, 5, 3, "\'Key\' is defined but never used.", "193457490"]
+    ],
+    "src/modules/staff-management/pages/CreateNewStaff.vue:2488377755": [
+      [124, 49, 3, "Unexpected any. Specify a different type.", "193409811"]
     ],
     "src/services/base.service.ts:3213300086": [
       [51, 44, 3, "Unexpected any. Specify a different type.", "193409811"]
