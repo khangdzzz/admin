@@ -184,6 +184,12 @@ const routes: RouteRecordRaw[] = [
         name: routeNames.createCollectionBase,
         component: () =>
           import("@/modules/staff-management/pages/CreateCollectionBase.vue")
+      },
+      {
+        path: "create-new-staff",
+        name: routeNames.createNewStaff,
+        component: () =>
+          import("@/modules/staff-management/pages/CreateNewStaff.vue")
       }
     ]
   },
