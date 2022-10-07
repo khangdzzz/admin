@@ -180,10 +180,10 @@ const routes: RouteRecordRaw[] = [
           import("@/modules/staff-management/pages/StaffManagement.vue")
       },
       {
-        path: "create-new",
-        name: routeNames.createCollectionBase,
+        path: "create-new-staff",
+        name: routeNames.createNewStaff,
         component: () =>
-          import("@/modules/staff-management/pages/CreateCollectionBase.vue")
+          import("@/modules/staff-management/pages/CreateNewStaff.vue")
       }
     ]
   },
@@ -276,7 +276,21 @@ const routes: RouteRecordRaw[] = [
     },
     redirect: {
       name: routeNames.default
-    }
+    },
+    children: [
+      {
+        path: "list",
+        name: routeNames.listCollectionBase,
+        component: () =>
+          import("@/modules/staff-management/pages/CollectionBase.vue")
+      },
+      {
+        path: "create-new",
+        name: routeNames.createCollectionBase,
+        component: () =>
+          import("@/modules/staff-management/pages/CreateCollectionBase.vue")
+      }
+    ]
   },
   {
     path: "/partner-management",

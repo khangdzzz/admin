@@ -17,6 +17,8 @@ export const routeNames = {
   editVehicleType: "EDIT_VEHICLE_TYPE",
   staffManagement: "STAFF_MANAGEMENT",
   createCollectionBase: "CREATE_COLLECTION_BASE",
+  listCollectionBase: "LIST_COLLECTION_BASE",
+  createNewStaff: "CREATE_NEW_STAFF",
   container: "CONTAINER",
   containerChild: "CONTAINER_CHILD",
   createNewContainer: "CREATE_NEW_CONTAINER",
