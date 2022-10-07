@@ -3,13 +3,13 @@
   min-height: 12px !important;
 
   .ant-form-item-explain-error {
-    color: $red-500 !important;
+    color: $red-500  !important;
   }
 }
 
 .ant-btn[disabled] {
-  color: $neutral-0 !important;
-  background-color: $neutral-200 !important;
+  color: $neutral-0  !important;
+  background-color: $neutral-200  !important;
 }
 
 .ant-btn {
@@ -17,7 +17,7 @@
 }
 
 .ant-input::placeholder {
-  color: $text-1 !important;
+  color: $text-1  !important;
 }
 
 .ant-table-row {
@@ -28,7 +28,7 @@
   background-color: $white;
 }
 
-.ant-table-thead > tr > th {
+.ant-table-thead>tr>th {
   font-weight: 700 !important;
   line-height: 18px;
   height: 58px !important;
@@ -55,7 +55,7 @@
   border-bottom-right-radius: 10px !important;
 }
 
-.ant-table-tbody > tr.ant-table-row-selected > td {
+.ant-table-tbody>tr.ant-table-row-selected>td {
   background: $grey-2;
   border-color: rgba(0, 0, 0, 0.03);
 }
@@ -63,12 +63,12 @@
 .ant-table-cell {
   background-color: $white;
   color: $neutral-600;
-  border-bottom: 1px solid $grey-3 !important;
+  border-bottom: 1px solid $grey-3  !important;
   font-size: 16px;
   font-weight: 400;
 }
 
-.ant-table-thead > tr > th {
+.ant-table-thead>tr>th {
   font-weight: 700;
 }
 
@@ -84,27 +84,27 @@
   background-color: $neutral-50;
 }
 
-.ant-table-container table > thead > tr > th {
+.ant-table-container table>thead>tr>th {
   background-color: $white;
 }
 
-.ant-table-container table > thead > tr:first-child th {
+.ant-table-container table>thead>tr:first-child th {
   color: $text-1;
 }
 
-.ant-table-container table > thead > tr:first-child th:first-child {
+.ant-table-container table>thead>tr:first-child th:first-child {
   border-top-left-radius: 10px !important;
 }
 
-.ant-table-container table > thead > tr:first-child th:last-child {
+.ant-table-container table>thead>tr:first-child th:last-child {
   border-top-right-radius: 10px !important;
 }
 
-.ant-table-container table > tbody > tr:last-child td:first-child {
+.ant-table-container table>tbody>tr:last-child td:first-child {
   border-bottom-left-radius: 0px;
 }
 
-.ant-table-container table > tbody > tr:last-child td:last-child {
+.ant-table-container table>tbody>tr:last-child td:last-child {
   border-bottom-right-radius: 0px;
 }
 
@@ -112,11 +112,10 @@
   background: $white;
 }
 
-.ant-table-thead
-  > tr
-  > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
+.ant-table-thead>tr>th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
   height: 0 !important;
 }
+
 .ant-select-dropdown {
   border-radius: 6px;
   padding: 0;
@@ -126,29 +125,34 @@
   .ant-spin-nested-loading {
     .ant-spin-container {
       .ant-table {
-        .ant-table-container table > tbody > tr:last-child td:last-child {
+        .ant-table-container table>tbody>tr:last-child td:last-child {
           border-bottom-right-radius: 0px;
         }
-        .ant-table-container table > tbody > tr:last-child td:first-child {
+
+        .ant-table-container table>tbody>tr:last-child td:first-child {
           border-bottom-left-radius: 0px;
         }
       }
     }
   }
 }
+
 .ant-checkbox-inner {
   &::after {
     top: 45%;
     left: 30%;
   }
 }
+
 .ant-pagination {
   position: relative;
+
   .ant-pagination-item {
     width: 40px;
     height: 40px;
     margin-top: 10px;
     border-radius: 6px;
+
     a {
       height: 100%;
       display: flex;
@@ -160,18 +164,22 @@
       color: $neutral-600;
     }
   }
+
   .ant-pagination-item-active {
     background-color: $primary;
+
     a {
       color: #ffffff;
       font-weight: 700;
     }
   }
+
   .ant-pagination-options {
     margin: 0px;
     position: absolute;
     left: 15px;
     top: 15px;
+
     .ant-pagination-options-size-changer {
       .ant-select-selector {
         height: 30px;
@@ -180,33 +188,44 @@
         padding: 6px 12px 6px 7px;
         border-radius: 6px;
       }
+
       .ant-select-selection-item {
         padding: 0;
+
         .options-text {
           border-radius: 6px;
           line-height: 18px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
           span {
             font-size: 14px;
             font-weight: 700;
           }
+
           img {
             width: 10px;
             height: 5px;
+            vertical-align: middle;
           }
         }
       }
+
       .ant-select-arrow {
         display: none;
       }
     }
   }
 }
+
 .ant-select-dropdown {
   .ant-select-item-option-content {
     img {
       display: none;
     }
   }
+
   .ant-select-item-option-selected {
     background-color: $neutral-50;
   }

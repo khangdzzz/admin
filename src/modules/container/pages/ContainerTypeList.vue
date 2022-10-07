@@ -394,7 +394,7 @@ watch(searchString, onSearchChange);
   }
 
   .pagination {
-    text-align: end;
+    text-align: start;
     background-color: #fff;
     height: 60px;
     border-bottom-left-radius: 10px;

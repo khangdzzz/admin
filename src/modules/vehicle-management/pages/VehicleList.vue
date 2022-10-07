@@ -267,7 +267,7 @@ const getVehicleById = computed(() =>
   }
 
   .pagination {
-    text-align: end;
+    text-align: start;
     padding: 10px 0;
     background-color: #fff;
 
