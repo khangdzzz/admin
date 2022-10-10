@@ -103,7 +103,9 @@
                   src="@/assets/icons/ic_prev.svg"
                   :class="[vehicleType.btnIconPrev]"
                 />
-                <span :class="[vehicleType.action]">Previous</span>
+                <span :class="[vehicleType.action]">{{
+                  $t("previous_btn")
+                }}</span>
               </a-button>
               <a-button
                 :class="[vehicleType.btnPagination, 'mt-10', 'mr-15']"
@@ -111,7 +113,7 @@
                 ghost
                 v-else-if="item.type === 'next' && isShowNextBtn()"
               >
-                <span :class="[vehicleType.action]">Next</span>
+                <span :class="[vehicleType.action]">{{ $t("next_btn") }}</span>
                 <img
                   src="@/assets/icons/ic_next.svg"
                   :class="[vehicleType.btnIconNext]"
