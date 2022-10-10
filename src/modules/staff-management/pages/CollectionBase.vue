@@ -3,7 +3,7 @@
     <ListSearchHeader :title="$t('staff_collection_base')">
       <template #action>
         <a-button
-          class="btn-action"
+          class="btn-action btn-delete"
           type="primary"
           ghost
           v-if="selectedKeys.length"
