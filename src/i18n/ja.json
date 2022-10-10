@@ -183,5 +183,8 @@
   "collection_name": "名称",
   "collection_postal_code": "郵便番号",
   "collection_address": "住所",
-  "collection_phone_number": "電話番号"
+  "collection_phone_number": "電話番号",
+  "collection_base_msg_delete_successfully": "回収拠点が削除されました",
+  "next_btn":"next_btn",
+  "previous_btn": "Previous"
 }
