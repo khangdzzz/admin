@@ -1,0 +1,89 @@
+{
+  "count": 2,
+  "current_page": 1,
+  "total_page": 1,
+  "page_size": 10,
+  "results": [
+    {
+      "postal_code": "810-1999",
+      "address": "3-33 Kandacho",
+      "key": 1,
+      "id": 1,
+      "tenant_id": 1,
+      "name": "Basket trolley No. 1",
+      "phone_number": "0391239120"
+    },
+    {
+      "postal_code": "810-1999",
+      "address": "3-33 Kandacho",
+      "key": 2,
+      "id": 2,
+      "tenant_id": 1,
+      "name": "Folding Container",
+      "phone_number": "0391239120"
+    },
+    {
+      "postal_code": "810-1999",
+      "address": "3-33 Kandacho",
+      "key": 3,
+      "id": 3,
+      "tenant_id": 1,
+      "name": "Big Truck",
+      "phone_number": "0391239120"
+    },
+    {
+      "postal_code": "810-1999",
+      "address": "3-33 Kandacho",
+      "key": 4,
+      "id": 4,
+      "tenant_id": 1,
+      "name": "Basket trolley No. 5",
+      "phone_number": "0391239120"
+    },
+    {
+      "postal_code": "810-1999",
+      "address": "3-33 Kandacho",
+      "key": 5,
+      "id": 5,
+      "tenant_id": 1,
+      "name": "Basket trolley No. 2",
+      "phone_number": "0391239120"
+    },
+    {
+      "postal_code": "810-1999",
+      "address": "3-33 Kandacho",
+      "key": 6,
+      "id": 6,
+      "tenant_id": 1,
+      "name": "Basket trolley No. 2",
+      "phone_number": "0391239120"
+    },
+    {
+      "postal_code": "810-1999",
+      "address": "3-33 Kandacho",
+      "key": 7,
+      "id": 7,
+      "tenant_id": 1,
+      "name": "Mini Truck",
+      "phone_number": "0391239120"
+    },
+    {
+      "postal_code": "810-1999",
+      "address": "3-33 Kandacho",
+      "key": 8,
+      "id": 8,
+      "tenant_id": 1,
+      "name": "Truck",
+      "phone_number": "0391239120"
+    },
+    {
+      "postal_code": "810-1999",
+      "address": "3-33 Kandacho",
+      "key": 9,
+      "id": 9,
+      "tenant_id": 1,
+      "name": "Big Truck",
+      "phone_number": "0391239120"
+    }
+  ]
+}
