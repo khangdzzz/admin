@@ -9,7 +9,7 @@
     >
       <template #action>
         <a-button
-          class="btn-action"
+          class="btn-action btn-delete"
           type="primary"
           v-if="selectedKeys.length > 0"
         >
