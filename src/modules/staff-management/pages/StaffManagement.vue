@@ -1,23 +1,37 @@
 <template>
-  <ListSearchHeader :title="$t('staff')">
+  <ListSearchHeader
+    :title="$t('staff')"
+    v-model:model-value.sync="searchString"
+  >
     <template #action>
-      <a-button class="btn" type="primary" ghost>
+      <a-button
+        class="btn-action color-btn-delete"
+        type="primary"
+        ghost
+        v-if="selectedKeys.length > 0"
+      >
+        <template #icon>
+          <IcTrash class="btn-icon" :color="'#F54E4E'" />
+        </template>
+        {{ $t("delete_btn") }}
+      </a-button>
+      <a-button class="btn btn-action" type="primary" ghost>
         <template #icon>
           <img src="@/assets/icons/ic_import.svg" class="btn-icon" />
         </template>
         {{ $t("import_btn") }}
       </a-button>
-      <a-button class="btn" type="primary" ghost>
+      <a-button class="btn btn-action" type="primary" ghost>
         <template #icon>
           <img src="@/assets/icons/ic_export.svg" class="btn-icon" />
         </template>
         {{ $t("export_btn") }}
       </a-button>
-      <a-button type="primary" class="btn btn-add-new" @click="handleAddStaff">
+      <a-button type="primary" class="btn btn-add-new" @click="onCreate">
         <template #icon>
           <img src="@/assets/icons/ic_plus.svg" class="btn-icon" />
         </template>
-        {{ $t("staff_add_staff") }}
+        {{ $t("add_btn") }}
       </a-button>
     </template>
   </ListSearchHeader>
@@ -78,15 +92,18 @@ import { message } from "ant-design-vue";
 import { Sort } from "@/modules/common/models/sort.enum";
 import { Staff } from "@/modules/staff-management/models";
 import { service } from "@/services";
+import IcTrash from "@/assets/icons/IcTrash.vue";
 
 //#endregion
 
 //#region props
+
 //#endregion
 
 //#region variables
 const selectedRowKeys = ref<Staff[]>([]);
 const sort = ref<Sort>(Sort.None);
+const searchString = ref<string>("");
 const columns = [
   {
     title: i18n.global.t("staff_employee_code"),
@@ -125,7 +142,6 @@ const columns = [
     width: "110px"
   }
 ];
-
 const data = ref<Staff[]>([]);
 //#endregion
 
@@ -145,7 +161,7 @@ const fetchListStaff = async (): Promise<void> => {
     message.error("Error");
   }
 };
-const handleAddStaff = (): void => {
+const onCreate = (): void => {
   router.push({ name: routeNames.createNewStaff });
 };
 const onSelectChange = (rowSelect: Staff[]): void => {
@@ -154,6 +170,8 @@ const onSelectChange = (rowSelect: Staff[]): void => {
 const onEditContainer = (id: string): void => {
   router.push({ name: routeNames.editContainer, params: { id: id } });
 };
+const selectedKeys = ref<number[]>([]);
+
 //#endregion
 
 //#region computed
@@ -183,10 +201,6 @@ const onEditContainer = (id: string): void => {
   }
 }
 
-.btn-add-new {
-  width: 170px;
-  height: 48px;
-}
 :deep() {
   .ant-table {
     box-shadow: 4px 2px 8px rgba(0, 0, 0, 0.02);

@@ -49,6 +49,17 @@
   }
 }
 
+.header .btn {
+  font-weight: 600;
+  font-size: 18px;
+  width: 120px;
+  height: 48px;
+  margin-left: 15px;
+  padding: 0 15px 0 15px;
+  .btn-icon {
+    margin-right: 10px;
+  }
+}
 // variables scss
 $flexDirections: ("row", "row-reverse", "column", "column-reverse");
 

@@ -6,29 +6,35 @@
     >
       <template #action>
         <a-button
-          class="btn-action btn-delete"
+          class="btn-action color-btn-delete"
           type="primary"
           ghost
           @click="deleteContainerType(undefined)"
           v-if="selectedKeys.length > 0"
         >
           <template #icon>
-            <img src="@/assets/icons/ic_delete.svg" class="btn-icon" />
+            <IcTrash class="btn-icon" :color="'#F54E4E'" />
           </template>
           {{ $t("delete_btn") }}
         </a-button>
-        <router-link
-          :to="{
-            name: routeNames.createContainerType
-          }"
-        >
-          <a-button type="primary" class="btn-add-new">
-            <template #icon>
-              <img src="@/assets/icons/ic_plus.svg" class="btn-icon" />
-            </template>
-            {{ $t("add_container_type") }}
-          </a-button>
-        </router-link>
+        <a-button class="btn btn-action" type="primary" ghost>
+          <template #icon>
+            <img src="@/assets/icons/ic_import.svg" class="btn-icon" />
+          </template>
+          {{ $t("import_btn") }}
+        </a-button>
+        <a-button class="btn btn-action" type="primary" ghost>
+          <template #icon>
+            <img src="@/assets/icons/ic_export.svg" class="btn-icon" />
+          </template>
+          {{ $t("export_btn") }}
+        </a-button>
+        <a-button type="primary" class="btn-add-new" @click="onCreate">
+          <template #icon>
+            <img src="@/assets/icons/ic_plus.svg" class="btn-icon" />
+          </template>
+          {{ $t("add_btn") }}
+        </a-button>
       </template>
     </ListSearchHeader>
     <div :class="[containerTypeList.tableContainer, 'mx-30']">
@@ -172,6 +178,9 @@ import ContainerTypeModel, {
 import NoData from "@/modules/base/components/NoData.vue";
 import { debounce } from "lodash";
 import { Pagination } from "@/modules/common/models";
+import { router } from "@/routes";
+import IcTrash from "@/assets/icons/IcTrash.vue";
+
 //#endregion===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆
 
 //#===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜Props
@@ -229,6 +238,9 @@ const rowSelection = computed(() => {
     columnWidth: "50px"
   };
 });
+const onCreate = (): void => {
+  router.push({ name: routeNames.createContainerType });
+};
 
 const initialize = async (): Promise<void> => {
   isLoading.value = true;
