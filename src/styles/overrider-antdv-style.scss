@@ -230,3 +230,7 @@
     background-color: $neutral-50;
   }
 }
+.color-btn-delete.btn-action{
+  color: $red-500 !important;
+  border-color: $red-500 !important;
+}

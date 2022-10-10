@@ -1,27 +1,39 @@
 <template>
-  <div class="d-flex flex-column">
+  <div class="fill-height d-flex flex-column">
     <ListSearchHeader
       :title="$t('staff_collection_base')"
       v-model:model-value.sync="searchString"
     >
       <template #action>
         <a-button
-          class="btn-action btn-delete"
+          class="btn-action color-btn-delete"
           type="primary"
           @click="deleteCollectionBase(undefined)"
           ghost
-          v-if="selectedKeys.length"
+          v-if="selectedKeys.length > 0"
         >
           <template #icon>
-            <img src="@/assets/icons/ic_delete.svg" class="btn-icon" />
+            <IcTrash class="btn-icon" :color="'#F54E4E'" />
           </template>
           {{ $t("delete_btn") }}
+        </a-button>
+        <a-button class="btn btn-action" type="primary" ghost>
+          <template #icon>
+            <img src="@/assets/icons/ic_import.svg" class="btn-icon" />
+          </template>
+          {{ $t("import_btn") }}
+        </a-button>
+        <a-button class="btn btn-action" type="primary" ghost>
+          <template #icon>
+            <img src="@/assets/icons/ic_export.svg" class="btn-icon" />
+          </template>
+          {{ $t("export_btn") }}
         </a-button>
         <a-button type="primary" class="btn-add-new" @click="onCreate">
           <template #icon>
             <img src="@/assets/icons/ic_plus.svg" class="btn-icon" />
           </template>
-          {{ $t("add_new_type_btn") }}
+          {{ $t("add_btn") }}
         </a-button>
       </template>
     </ListSearchHeader>
@@ -134,6 +146,7 @@ import { computed, inject, onMounted, reactive, ref } from "vue";
 import NoData from "@/modules/base/components/NoData.vue";
 import { CollectionBase } from "../models/collection-base.model";
 import { Pagination } from "@/modules/common/models/pagination.model";
+import IcTrash from "@/assets/icons/IcTrash.vue";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 //#endregion
@@ -188,6 +201,8 @@ const columns = [
     width: "200px"
   }
 ];
+
+
 //#endregion
 
 //#region hooks
