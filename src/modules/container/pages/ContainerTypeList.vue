@@ -294,6 +294,8 @@ const totalPages = (): number => {
   return Math.ceil(Number(pageOption.total) / Number(pageOption.pageSize));
 };
 const onSearchChange = debounce((): void => {
+  pageOption.currentPage = 1;
+  selectedKeys.value = [];
   initialize();
 }, 500);
 
@@ -335,9 +337,13 @@ const onDeleteContainerType = async (deleteIds: number[]): Promise<void> => {
     type: MessengerType.Success,
     callback: (isConfirm: boolean): void => {
       isConfirm;
+
       initialize();
     }
   });
+  pageOption.currentPage = 1;
+  selectedKeys.value = [];
+  searchString.value = "";
 };
 const handleBackToList = (): void => {
   searchString.value = "";

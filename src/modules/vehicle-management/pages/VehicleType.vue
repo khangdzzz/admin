@@ -270,6 +270,8 @@ const changeSort = (): void => {
 };
 
 const onSearchChange = debounce((): void => {
+  pageOption.currentPage = 1;
+  selectedKeys.value = [];
   initialize();
 }, 500);
 
@@ -317,6 +319,9 @@ const onDeleteVehicleType = async (deleteIds: number[]): Promise<void> => {
       initialize();
     }
   });
+  pageOption.currentPage = 1;
+  selectedKeys.value = [];
+  searchString.value = "";
 };
 
 const handleBackToList = (): void => {
