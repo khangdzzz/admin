@@ -1,6 +1,9 @@
 <template>
   <div class="d-flex flex-column">
-    <ListSearchHeader :title="$t('staff_collection_base')">
+    <ListSearchHeader
+      :title="$t('staff_collection_base')"
+      v-model:model-value.sync="searchString"
+    >
       <template #action>
         <a-button
           class="btn-action btn-delete"
@@ -152,7 +155,7 @@ const columns = [
   },
   {
     title: i18n.global.t("collection_postal_code"),
-    dataIndex: "portal_code",
+    dataIndex: "postal_code",
     key: "portal_code",
     isSort: true
   },
