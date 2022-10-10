@@ -169,7 +169,7 @@ const columns = [
   },
   {
     title: i18n.global.t("collection_postal_code"),
-    dataIndex: "portal_code",
+    dataIndex: "postal_code",
     key: "portal_code",
     isSort: true
   },

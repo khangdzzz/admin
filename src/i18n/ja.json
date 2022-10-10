@@ -130,7 +130,7 @@
   "create_vehicle_type_msg_create_successfully": "車両種別が作成されました",
   "create_vehicle_type_msg_create_fail_title": "作成に失敗しました",
   "create_vehicle_type_msg_create_fail_message": "後でやり直しください ",
-  "edit_vehicle_type_lbl_page_title": "車両新規種別の編集",
+  "edit_vehicle_type_lbl_page_title": "車両種別の編集",
   "edit_vehicle_type_successfully": "車両種別が編集されました",
   "vehicle_type_msg_confirm_delete": "削除しますか？",
   "vehicle_type_delete_fail_lbl_title": "削除に失敗しました",
