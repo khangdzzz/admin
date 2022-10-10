@@ -2,7 +2,7 @@
   <div class="fill-height d-flex flex-column">
     <ListSearchHeader :title="$t('staff_collection_base')">
       <template #action>
-        <a-button class="btn-action" type="primary" ghost>
+        <a-button class="btn-action" type="primary" ghost >
           <template #icon>
             <img src="@/assets/icons/ic_delete.svg" class="btn-icon" />
           </template>

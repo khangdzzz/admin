@@ -2,7 +2,7 @@
   <ListSearchHeader :title="$t('vehicle_type')">
     <template #action>
       <a-button
-        class="btn"
+        class="btn btn-delete"
         type="primary"
         ghost
         v-if="selectedRowKeys.length > 0"

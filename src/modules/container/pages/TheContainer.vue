@@ -2,7 +2,7 @@
   <ListSearchHeader :title="$t('container_container')">
     <template #action>
       <a-button
-        class="btn-action"
+        class="btn-action btn-delete"
         type="primary"
         ghost
         v-if="selectedKeys.length > 0"
@@ -109,13 +109,8 @@ const columns = [
 ];
 const selectedKeys = ref<number[]>([]);
 const data: Container[] = [];
-for (let i = 0; i < 20; i++) {
-  data.push({
-    key: i,
-    containerName: `Basket trolley No. ${i}`,
-    containerType: `Folding Container ${i}`
-  });
-}
+
+
 //#endregion
 
 //#region hooks
