@@ -8,6 +8,7 @@
         <a-button
           class="btn-action btn-delete"
           type="primary"
+          @click="deleteCollectionBase(undefined)"
           ghost
           v-if="selectedKeys.length"
         >
@@ -45,14 +46,18 @@
             </div>
           </template>
         </template>
-        <template #bodyCell="{ column, index }">
+        <template #bodyCell="{ column, record, index }">
           <template v-if="column.key === 'index'">
             <span>{{ index + 1 }}</span>
           </template>
           <template v-if="column.key === 'action'">
             <img src="@/assets/icons/ic_user.svg" class="action-icon" />
             <img src="@/assets/icons/ic_btn_edit.svg" class="action-icon" />
-            <img src="@/assets/icons/ic_btn_delete.svg" class="action-icon" />
+            <img
+              src="@/assets/icons/ic_btn_delete.svg"
+              class="action-icon"
+              @click="deleteCollectionBase(record.id)"
+            />
           </template>
         </template>
       </a-table>
@@ -125,16 +130,21 @@ import { Sort } from "@/modules/common/models/sort.enum";
 import { routeNames, router } from "@/routes";
 import SortView from "@/modules/common/components/SortView.vue";
 import { service } from "@/services";
-import { computed, onMounted, reactive, ref } from "vue";
+import { computed, inject, onMounted, reactive, ref } from "vue";
 import NoData from "@/modules/base/components/NoData.vue";
 import { CollectionBase } from "../models/collection-base.model";
 import { Pagination } from "@/modules/common/models/pagination.model";
+import MessengerParamModel from "@/modules/base/models/messenger-param.model";
+import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 //#endregion
 
 //#region props
 //#endregion
 
 //#region variables
+const messenger: (param: MessengerParamModel) => void =
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  inject("messenger")!;
 const listCollectionBase = ref<CollectionBase[]>();
 const selectedKeys = ref<number[]>([]);
 const sort = ref<Sort>(Sort.None);
@@ -156,7 +166,7 @@ const columns = [
   {
     title: i18n.global.t("collection_postal_code"),
     dataIndex: "postal_code",
-    key: "portal_code",
+    key: "postal_code",
     isSort: true
   },
   {
@@ -194,7 +204,7 @@ const handleBackToList = (): void => {
   searchString.value = "";
 };
 const initialize = async (): Promise<void> => {
-  const res = service.collectionBase.getListCollectionBase();
+  const res = service.collectionBase.getMockCollectionBase();
   listCollectionBase.value = res?.results;
   pageOption.currentPage = res?.currentPage;
   pageOption.pageSize = res?.pageSize || 10;
@@ -222,8 +232,8 @@ const onChange = (pageNumber: number): void => {
   initialize();
 };
 const isShowPrevBtn = (): boolean => {
-  const isFirtPage = pageOption.currentPage === 1;
-  if (totalPages() === 1 || isFirtPage) return false;
+  const isFirstPage = pageOption.currentPage === 1;
+  if (totalPages() === 1 || isFirstPage) return false;
 
   return true;
 };
@@ -235,6 +245,53 @@ const isShowNextBtn = (): boolean => {
 
   if (totalPages() === 1 || isLastPage) return false;
   return true;
+};
+const deleteCollectionBase = (id?: number): void => {
+  messenger({
+    title: "vehicle_type_msg_confirm_delete",
+    message: "",
+    type: MessengerType.Confirm,
+    buttonOkTitle: "btn_delete",
+    callback: async (isConfirm: boolean): Promise<void> => {
+      if (!isConfirm) {
+        return;
+      }
+
+      if (!selectedKeys.value?.length && !id) {
+        return;
+      }
+      const selectedCollectionBaseIds = id ? [id] : selectedKeys.value;
+      onDeleteCollectionBase(selectedCollectionBaseIds);
+    }
+  });
+};
+
+const onDeleteCollectionBase = async (deleteIds: number[]): Promise<void> => {
+  if (!deleteIds.length) {
+    return;
+  }
+  isLoading.value = true;
+  const isSuccess = await service.collectionBase.deleteCollectionBase(
+    deleteIds
+  );
+  isLoading.value = false;
+  if (!isSuccess) {
+    messenger({
+      title: "vehicle_type_delete_fail_lbl_title",
+      message: "vehicle_type_delete_fail_lbl_message",
+      type: MessengerType.Error
+    });
+    return;
+  }
+  messenger({
+    title: "collection_base_msg_delete_successfully",
+    message: "",
+    type: MessengerType.Success,
+    callback: (isConfirm: boolean): void => {
+      isConfirm;
+      initialize();
+    }
+  });
 };
 //#endregion
 
