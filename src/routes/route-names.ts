@@ -33,7 +33,7 @@ export const routeNames = {
   internalDashboard: "INTERNAL_DASHBOARD",
   externalDashboard: "EXTERNAL_DASHBOARD",
   collectionHistory: "COLLECTION_HISTORY",
-  storeManagment: "STORE_MANAGEMENt",
+  collectionPointManagement: "COLLECTION_POINT_MANAGEMENT",
   collectionBaseManagement: "COLLECTION_BASE_MANAGEMENT",
   partnerManagement: "PARTNER_MANAGEMENT",
   collectionManagement: "COLLECTION_MANAGEMENT",
