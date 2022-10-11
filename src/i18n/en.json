@@ -189,5 +189,12 @@
   "collection_postal_code": "Postal code",
   "collection_address": "Address",
   "collection_phone_number": "Phone number",
-  "collection_base_msg_delete_successfully": "Collection base is deleted successfully"
+  "collection_base_msg_delete_successfully": "Collection base is deleted successfully",
+  "change_password":"Change password",
+  "capacity":"Capacity",
+  "permission":"Permission",
+  "delete_vehicle_successfully":"Vehicle is deleted successfully",
+  "delete_vehicle_mutiple_successfully":"{length} Vehicle is deleted successfully",
+  "yes":"Yes",
+  "no":"No"
 }

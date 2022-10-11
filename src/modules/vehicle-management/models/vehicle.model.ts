@@ -27,3 +27,24 @@ export interface VehicleDetail {
   code: string | null;
   industrial: boolean;
 }
+
+export interface ResVehicle {
+  created_at: Date;
+  created_by: string | null;
+  updated_at: Date;
+  updated_by: string | null;
+  deleted_at: Date | null;
+  deleted_by: string | null;
+  id: number;
+  key: number;
+  tenant_id: number;
+  workplace_id: number;
+  vehicle_type_id: number;
+  plate_number: string;
+  name: string
+  ext_code: string;
+  max_capacity: string;
+  permission_flag: number;
+  workplace__name: string
+  vehicle_type___name:string
+}
