@@ -111,8 +111,8 @@ const sideMenuItems: SideMenuItems[] = [
         requireUserType: [UserType.TenantAdmin]
       },
       {
-        title: "menu_lbl_store_management",
-        pathName: routeNames.storeManagment,
+        title: "menu_lbl_collection_point_management",
+        pathName: routeNames.collectionPointManagement,
         requireUserType: [UserType.TenantAdmin, UserType.CollectionBaseAdmin]
       },
       {

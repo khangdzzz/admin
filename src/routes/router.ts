@@ -188,8 +188,8 @@ const routes: RouteRecordRaw[] = [
     ]
   },
   {
-    path: "/store-management",
-    name: routeNames.storeManagment,
+    path: "/collection-point-management",
+    name: routeNames.collectionPointManagement,
     component: () =>
       import("@/modules/staff-management/pages/StaffManagement.vue"),
     beforeEnter: requireLoginGuard,
