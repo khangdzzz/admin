@@ -12,3 +12,17 @@ export interface CollectionBase {
   address: string;
   phone_number: string;
 }
+export interface CollectionBaseDetail {
+  key?: number;
+  id?: number;
+  name: string;
+  shortName: string;
+  kana: string;
+  postalCode: string;
+  email: string;
+  representative: string;
+  latitude: string | number;
+  longitude: string | number;
+  address: string;
+  telephone: string;
+}
