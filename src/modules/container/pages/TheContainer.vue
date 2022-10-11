@@ -1,14 +1,17 @@
 <template>
-  <ListSearchHeader :title="$t('container_container')">
+  <ListSearchHeader
+    :title="$t('container_container')"
+    v-model:model-value.sync="searchString"
+  >
     <template #action>
       <a-button
-        class="btn-action"
+        class="btn-action color-btn-delete"
         type="primary"
         ghost
         v-if="selectedKeys.length > 0"
       >
         <template #icon>
-          <img src="@/assets/icons/ic_delete.svg" class="btn-icon" />
+          <IcTrash class="btn-icon" :color="'#F54E4E'" />
         </template>
         {{ $t("delete_btn") }}
       </a-button>
@@ -28,7 +31,7 @@
         <template #icon>
           <img src="@/assets/icons/ic_plus.svg" class="btn-icon" />
         </template>
-        {{ $t("container_add_container") }}
+        {{ $t("add_btn") }}
       </a-button>
     </template>
   </ListSearchHeader>
@@ -77,7 +80,7 @@ import { routeNames, router } from "@/routes";
 import { computed, ref } from "vue";
 import { Container } from "@/modules/container/models";
 import { Sort } from "@/modules/common/models/sort.enum";
-type Key = string | number;
+import IcTrash from "@/assets/icons/IcTrash.vue";
 
 //#endregion
 
@@ -109,6 +112,9 @@ const columns = [
 ];
 const selectedKeys = ref<number[]>([]);
 const data: Container[] = [];
+
+
+const searchString = ref<string>("");
 for (let i = 0; i < 20; i++) {
   data.push({
     key: i,

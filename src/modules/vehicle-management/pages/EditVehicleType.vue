@@ -133,14 +133,14 @@ const getVehicleTypeDetail = async (): Promise<void> => {
   isLoadingInfo.value = false;
   if (response) {
     vehicleTypeDetail.value = response;
-    dynamicValidateForm.formData[0].value = response.name;
+    dynamicValidateForm.formData[0].value = response.name.trim();
   }
 };
 
 const handleFinish = async (): Promise<void> => {
   isLoading.value = true;
   const ternantId = userStore.user?.tenantId;
-  const name = dynamicValidateForm.formData[0].value;
+  const name = dynamicValidateForm.formData[0].value.trim();
   const response = await service.vehicleType.editVehicleTypeById(
     vehicleTypeId.value,
     ternantId,

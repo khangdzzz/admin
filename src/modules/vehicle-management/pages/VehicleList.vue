@@ -9,12 +9,13 @@
     >
       <template #action>
         <a-button
-          class="btn-action"
+          class="btn-action color-btn-delete"
+          ghost
           type="primary"
           v-if="selectedKeys.length > 0"
         >
           <template #icon>
-            <img src="@/assets/icons/ic_delete.svg" class="btn-icon" />
+            <IcTrash class="btn-icon" :color="'#F54E4E'" />
           </template>
           {{ $t("delete_btn") }}
         </a-button>
@@ -34,7 +35,7 @@
           <template #icon>
             <img src="@/assets/icons/ic_plus.svg" class="btn-icon" />
           </template>
-          {{ $t("create_vehicle_lbl") }}
+          {{ $t("add_btn") }}
         </a-button>
       </template>
     </ListSearchHeader>
@@ -148,6 +149,7 @@ import { VehicleDetail } from "../models/vehicle.model";
 import HeaderRef from "@/modules/base/models/search-header.model";
 import VehicleDetailModal from "./VehicleDetailModal.vue";
 import NoData from "@/modules/base/components/NoData.vue";
+import IcTrash from "@/assets/icons/IcTrash.vue";
 
 type Key = string | number;
 //#endregion===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆
@@ -267,7 +269,7 @@ const getVehicleById = computed(() =>
   }
 
   .pagination {
-    text-align: end;
+    text-align: start;
     padding: 10px 0;
     background-color: #fff;
 

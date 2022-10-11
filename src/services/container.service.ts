@@ -12,29 +12,7 @@ import { CreateContainerTypeInputDto } from "./dtos/container-management/create-
 import { ContainerTypeResponseDto } from "./dtos/container/create-container-type.dto";
 import getListContainerResponse from "./mocks/container/get-list-container.reponse.json";
 
-const data: ContainerType[] = [
-  {
-    name: "Basket trolley",
-    weight: 4,
-    capaity: "100ml",
-    key: "1",
-    type: "Container Type 1"
-  },
-  {
-    name: "Folding Container",
-    weight: 5,
-    capaity: "100ml",
-    key: "2",
-    type: "Container Type 2"
-  },
-  {
-    name: "Cardboard",
-    weight: 6,
-    capaity: "100ml",
-    key: "3",
-    type: "Container Type 3"
-  }
-];
+const data: ContainerType[] = [];
 export function getMockCollectionBase(): ContainerSelection[] {
   const res: ContainerSelection[] = [
     { value: 1, label: "Collection Base 1" },
@@ -77,13 +55,6 @@ export async function getListContainer(
 
 export function getContainerTypes(): ContainerType[] {
   const res: ContainerType[] = [];
-  for (let i = 0; i < 20; i++) {
-    res.push({
-      id: `v${i}`,
-      key: i,
-      name: `Container Type ${i}`
-    });
-  }
   return res;
 }
 

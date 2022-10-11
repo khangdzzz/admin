@@ -6,22 +6,23 @@
     >
       <template #action>
         <a-button
-          class="btn-action"
-          type="primary"
+          class="btn-action color-btn-delete"
           ghost
+          type="primary"
           @click="deleteVehicleType(undefined)"
           v-if="selectedKeys.length > 0"
         >
           <template #icon>
-            <img src="@/assets/icons/ic_delete.svg" class="btn-icon" />
+            <IcTrash class="btn-icon" :color="'#F54E4E'" />
           </template>
           {{ $t("delete_btn") }}
         </a-button>
+
         <a-button type="primary" class="btn-add-new" @click="onCreate">
           <template #icon>
             <img src="@/assets/icons/ic_plus.svg" class="btn-icon" />
           </template>
-          {{ $t("add_new_type_btn") }}
+          {{ $t("add_btn") }}
         </a-button>
       </template>
     </ListSearchHeader>
@@ -91,7 +92,9 @@
                   src="@/assets/icons/ic_prev.svg"
                   :class="[vehicleType.btnIconPrev]"
                 />
-                <span :class="[vehicleType.action]">Previous</span>
+                <span :class="[vehicleType.action]">{{
+                  $t("previous_btn")
+                }}</span>
               </a-button>
               <a-button
                 :class="[vehicleType.btnPagination, 'mt-10', 'mr-15']"
@@ -99,7 +102,7 @@
                 ghost
                 v-else-if="item.type === 'next' && isShowNextBtn()"
               >
-                <span :class="[vehicleType.action]">Next</span>
+                <span :class="[vehicleType.action]">{{ $t("next_btn") }}</span>
                 <img
                   src="@/assets/icons/ic_next.svg"
                   :class="[vehicleType.btnIconNext]"
@@ -139,6 +142,7 @@ import { service } from "@/services";
 import { debounce } from "lodash";
 import { computed, inject, onMounted, reactive, ref, watch } from "vue";
 import { VehicleTypeModel } from "../models";
+import IcTrash from "@/assets/icons/IcTrash.vue";
 
 //#endregion
 
@@ -255,6 +259,8 @@ const changeSort = (): void => {
 };
 
 const onSearchChange = debounce((): void => {
+  pageOption.currentPage = 1;
+  selectedKeys.value = [];
   initialize();
 }, 500);
 
@@ -302,6 +308,9 @@ const onDeleteVehicleType = async (deleteIds: number[]): Promise<void> => {
       initialize();
     }
   });
+  pageOption.currentPage = 1;
+  selectedKeys.value = [];
+  searchString.value = "";
 };
 
 const handleBackToList = (): void => {
@@ -378,7 +387,7 @@ watch(searchString, onSearchChange);
   line-height: $lineHeight;
 }
 .pagination {
-  text-align: end;
+  text-align: start;
   background-color: #fff;
   height: 60px;
   border-bottom-left-radius: 10px;

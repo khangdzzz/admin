@@ -1,22 +1,37 @@
 <template>
-  <ListSearchHeader :title="$t('vehicle_type')">
+  <ListSearchHeader
+    :title="$t('vehicle_type')"
+    v-model:model-value.sync="searchString"
+  >
     <template #action>
       <a-button
-        class="btn"
+        class="btn-action color-btn-delete"
         type="primary"
         ghost
-        v-if="selectedRowKeys.length > 0"
+        v-if="selectedKeys.length > 0"
       >
         <template #icon>
-          <img src="@/assets/icons/ic_delete.svg" class="btn-icon" />
+          <IcTrash class="btn-icon" :color="'#F54E4E'" />
         </template>
-        Delete
+        {{ $t("delete_btn") }}
+      </a-button>
+      <a-button class="btn btn-action" type="primary" ghost>
+        <template #icon>
+          <img src="@/assets/icons/ic_import.svg" class="btn-icon" />
+        </template>
+        {{ $t("import_btn") }}
+      </a-button>
+      <a-button class="btn btn-action" type="primary" ghost>
+        <template #icon>
+          <img src="@/assets/icons/ic_export.svg" class="btn-icon" />
+        </template>
+        {{ $t("export_btn") }}
       </a-button>
       <a-button type="primary" class="btn btn-add-new">
         <template #icon>
           <img src="@/assets/icons/ic_plus.svg" class="btn-icon" />
         </template>
-        Add new type
+        {{ $t("add_btn") }}
       </a-button>
     </template>
   </ListSearchHeader>
@@ -25,9 +40,10 @@
 <script setup lang="ts">
 //#region import
 import ListSearchHeader from "@/modules/base/components/ListSearchHeader.vue";
+import IcTrash from "@/assets/icons/IcTrash.vue";
+
 import { ref } from "vue";
 
-type Key = string | number;
 //#endregion
 
 //#region props
@@ -35,7 +51,8 @@ type Key = string | number;
 //#endregion
 
 //#region variables
-const selectedRowKeys = ref<Key[]>([]);
+const selectedKeys = ref<number[]>([]);
+const searchString = ref<string>("");
 
 //#endregion
 
@@ -59,22 +76,5 @@ const selectedRowKeys = ref<Key[]>([]);
 }
 .action-icon {
   margin-left: 20px;
-}
-.btn {
-  font-weight: 600;
-  font-size: 18px;
-  width: 120px;
-  height: 48px;
-  margin-left: 15px;
-  padding: 0 15px 0 15px;
-
-  .btn-icon {
-    margin-right: 10px;
-  }
-}
-
-.btn-add-new {
-  width: 170px;
-  height: 48px;
 }
 </style>

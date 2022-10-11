@@ -111,22 +111,18 @@ const getMessage = computed(() => {
     font-style: normal;
     font-weight: 400;
     font-size: 28px;
-    line-height: 33px;
+    line-height: 32.81px;
     color: $neutral-600;
     max-width: 70%;
     flex-wrap: wrap;
     word-break: break-all;
   }
 
-  &__value {
-    font-weight: 700;
-  }
-
   &__sub-message {
     font-style: normal;
     font-weight: 400;
     font-size: 22px;
-    line-height: 26px;
+    line-height: 25.78px;
     color: $neutral-400;
   }
 
@@ -154,6 +150,14 @@ const getMessage = computed(() => {
     font-size: 28px;
     line-height: 33px;
     color: $primary-400;
+  }
+}
+
+:deep() {
+  .no-data-container {
+    &__value {
+      font-weight: 700 !important;
+    }
   }
 }
 </style>
