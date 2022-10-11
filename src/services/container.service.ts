@@ -11,6 +11,7 @@ import { PaginationDto } from "./dtos/common/pagination.dto";
 import { CreateContainerTypeInputDto } from "./dtos/container-management/create-container-type.dto";
 import { ContainerTypeResponseDto } from "./dtos/container/create-container-type.dto";
 import getListContainerResponse from "./mocks/container/get-list-container.reponse.json";
+import { DEFAULT_SORT_ORDER } from "@/services/constants";
 
 const data: ContainerType[] = [];
 export function getMockCollectionBase(): ContainerSelection[] {
@@ -88,9 +89,12 @@ export async function getListContainerType(
     page_size: size,
     name__like: searchKeyword ? `%${searchKeyword}%` : undefined,
     order_by:
-      sort === Sort.None ? undefined : sort === Sort.Asc ? "name" : "-name"
+      sort === Sort.None
+        ? DEFAULT_SORT_ORDER
+        : sort === Sort.Asc
+        ? "name"
+        : "-name"
   };
-
   const [error, res] = await transformRequest<
     PaginationDto<ContainerTypeResponseDto>
   >({
@@ -99,9 +103,7 @@ export async function getListContainerType(
     params
   });
   if (error || !res) return undefined;
-
   if (!res) return Promise.resolve(undefined);
-
   const {
     results,
     current_page: currentPage = page,
@@ -109,7 +111,6 @@ export async function getListContainerType(
     count: total = 0,
     total_page: totalPage = 1
   } = res;
-
   return {
     currentPage,
     pageSize,

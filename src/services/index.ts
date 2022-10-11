@@ -6,6 +6,7 @@ import * as container from "./container.service";
 import * as vehicleType from "./vehicle-type.service";
 import * as staff from "./staff.service";
 import * as collectionBase from "./collection-base.service";
+import * as constants from "./constants";
 export const service = {
   auth,
   localStorage,
@@ -14,5 +15,6 @@ export const service = {
   container,
   vehicleType,
   staff,
-  collectionBase
+  collectionBase,
+  constants
 };

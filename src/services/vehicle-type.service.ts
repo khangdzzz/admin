@@ -7,6 +7,8 @@ import {
   CreateVehicleTypeInputDto,
   VehicleTypeResponseDto
 } from "./dtos/vehicle-management/create-vehicle-type.dto";
+import { DEFAULT_SORT_ORDER } from "@/services/constants";
+
 export async function createVehicleType(
   tenantId: number,
   name: string
@@ -41,7 +43,11 @@ export async function fetchListVehicleType(
     page_size: size,
     name__like: searchKeyword ? `%${searchKeyword}%` : undefined,
     order_by:
-      sort === Sort.None ? undefined : sort === Sort.Asc ? "name" : "-name"
+      sort === Sort.None
+        ? DEFAULT_SORT_ORDER
+        : sort === Sort.Asc
+        ? "name"
+        : "-name"
   };
 
   const [error, res] = await transformRequest<
