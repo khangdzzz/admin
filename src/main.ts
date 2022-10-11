@@ -15,6 +15,14 @@ import "vue3-openlayers/dist/vue3-openlayers.css";
 import { i18n } from "./i18n";
 import { router } from "./routes";
 
+const app = createApp(App);
+const pinia = createPinia();
+const emitter = mitt();
+const messenger = (param: MessengerParamModel): void => {
+  emitter.emit("ShowModal", param);
+};
+
+//antdesign global config
 Spin.setDefaultIndicator({
   indicator: h(LoadingSpinner, {
     style: {
@@ -24,16 +32,8 @@ Spin.setDefaultIndicator({
   })
 });
 
-const app = createApp(App);
-const pinia = createPinia();
-const emitter = mitt();
-const messenger = (param: MessengerParamModel): void => {
-  emitter.emit("ShowModal", param);
-};
-
 app.component(ScreenLayout.AUTH_LAYOUT, AuthLayout);
 app.component(ScreenLayout.DEFAULT_LAYOUT, DefaultLayout);
-
 app.use(i18n);
 app.use(Antd);
 app.use(pinia);
