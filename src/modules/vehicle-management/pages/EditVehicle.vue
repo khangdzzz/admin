@@ -3,13 +3,18 @@
     type="flex"
     justify="center"
     align="middle"
-    class="edit-vehicle-container">
+    class="edit-vehicle-container"
+  >
     <div class="edit-vehicle-content">
       <h2 class="title">{{ $t("vehicle_edit") }}</h2>
       <div class="create-form">
         <a-form :model="dynamicValidateForm" name="basic" autocomplete="off">
           <a-form-item name="formDatavalue" :validateFirst="false">
-            <a-radio-group v-model:value="ownerType" class="radio-group">
+            <a-radio-group
+              v-model:value="ownerType"
+              class="radio-group"
+              :disabled="true"
+            >
               <label class="label-radio"
                 >{{ $t("vehicle_owner_type") }}<span> *</span></label
               >
@@ -23,18 +28,20 @@
             :formData="dynamicValidateForm.formData"
             @change="handleOnChange"
             @onBlur="handleOnBlur"
-            @onFocus="handleOnFocus"></CustomForm>
+            @onFocus="handleOnFocus"
+          ></CustomForm>
         </a-form>
       </div>
       <a-row
         type="flex"
         justify="space-between"
         align="middle"
-        class="check-permision">
-        <a-col :span="20">
+        class="check-permision"
+      >
+        <a-col :span="19">
           <h3>{{ $t("vehicle_industrial_waste") }}</h3>
         </a-col>
-        <a-col :span="4">
+        <a-col :span="5" class="mr-2">
           <a-checkbox v-model:checked="checkPermission">
             {{ $t("vehicle_permission") }}
           </a-checkbox>
@@ -64,11 +71,12 @@
 //#region import
 import { i18n } from "@/i18n";
 import CustomForm from "@/modules/base/components/CustomForm.vue";
+import MessengerParamModel from "@/modules/base/models/messenger-param.model";
+import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
-import { message } from "ant-design-vue";
-import { onMounted, reactive, ref, watch } from "vue";
+import { inject, onMounted, reactive, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { Vehicle, VehicleSelection } from "../models/vehicle.model";
 
@@ -78,13 +86,15 @@ import { Vehicle, VehicleSelection } from "../models/vehicle.model";
 //#endregion
 
 //#region variables
-const vehicleTypes = ref<VehicleSelection[]>([]);
-const isValidated = ref<boolean>(false);
+const vehicleTypes = ref<VehicleSelection[]>();
+const isValidated = ref<boolean>(true);
 const checkPermission = ref<boolean>(false);
 const ownerType = ref<string>("collectionBase");
 const mockPartner = ref<VehicleSelection[]>([{ value: "", label: "" }]);
-const mockCollectionBase = ref<VehicleSelection[]>();
-
+const listCollectionBase = ref<VehicleSelection[]>();
+const messenger: (param: MessengerParamModel) => void =
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  inject("messenger")!;
 const route = useRoute();
 const { id } = route.params;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -97,8 +107,9 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
       label: "owner",
       name: "owner",
       required: true,
+      disabled: true,
       isFocus: false,
-      options: mockCollectionBase,
+      options: listCollectionBase,
       rules: [
         {
           required: true,
@@ -206,23 +217,6 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
       required: false,
       key: 3,
       isFocus: false
-    },
-    {
-      inputType: "AInput",
-      value: "",
-      placeHolder: "vehicle_code",
-      label: "vehicle_code",
-      name: "code",
-      disabled: false,
-      rules: [
-        {
-          max: 50,
-          message: i18n.global.t("max_length_input", { maxLength: 50 })
-        }
-      ],
-      required: false,
-      key: 4,
-      isFocus: false
     }
   ]
 });
@@ -232,32 +226,47 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
 onMounted(() => {
   fetchVehicleType();
   fetchMockData();
-  fetchVehhicleById();
+  fetchCollectionBase();
+  fetchVehicleById();
 });
 //#endregion
 
 //#region function
-const fetchVehhicleById = (): void => {
-  const res = service.vehicle.getVehicleById(id.toString());
-
+const fetchVehicleById = async (): Promise<void> => {
+  const res = await service.vehicle.getVehicleDetail(id.toString());
   if (res) {
     const toArrayRes = Object.values(res);
     dynamicValidateForm.formData.forEach((item, index) => {
       dynamicValidateForm.formData[index].value = toArrayRes[index];
     });
+    checkPermission.value = res.isHasPermission === 1 ? true : false;
+  }
+  isValidated.value = true;
+};
+
+const fetchVehicleType = async (): Promise<void> => {
+  const res = await service.vehicleType.fetchListVehicleType(
+    1,
+    "full",
+    undefined
+  );
+  if (res) {
+    vehicleTypes.value = res?.results?.map((item) => ({
+      value: item.id,
+      label: item.name
+    }));
   }
 };
-
-const fetchVehicleType = (): void => {
-  const res = service.vehicle.getVehicleTypes();
-  vehicleTypes.value = res.map((item) => ({
-    value: item.id,
-    label: item.name
-  }));
+const fetchCollectionBase = async (): Promise<void> => {
+  const res = await service.vehicle.getCollectionBase();
+  if (res) {
+    listCollectionBase.value = res?.map((item) => ({
+      value: item.id,
+      label: item.name
+    }));
+  }
 };
-
 const fetchMockData = (): void => {
-  mockCollectionBase.value = service.vehicle.getMockCollectionBase();
   mockPartner.value = service.vehicle.getMockPartner();
 };
 
@@ -299,13 +308,22 @@ const onCreate = async (): Promise<void> => {
     vehicleName: dynamicValidateForm.formData[1].value,
     vehiclePlate: dynamicValidateForm.formData[2].value,
     maxWeight: dynamicValidateForm.formData[3].value,
-    code: dynamicValidateForm.formData[4].value
+    isHasPermission: checkPermission.value ? 1 : 0
   };
   const res = await service.vehicle.updateVehicle(vehicleInfo);
   if (res) {
-    message.success("create");
+    messenger({
+      title: "vehicle_edit_successfully",
+      message: "",
+      type: MessengerType.Success
+    });
+    router.push({ name: routeNames.vehicle });
   } else {
-    message.error("error");
+    messenger({
+      title: "edit_failed",
+      message: "please_try_again",
+      type: MessengerType.Error
+    });
   }
 };
 //#endregion
@@ -315,29 +333,32 @@ const onCreate = async (): Promise<void> => {
 
 //#region reactive
 
-watch(dynamicValidateForm, () => {
-  const regex = /^\d*$/;
-  if (
-    dynamicValidateForm.formData[0].value &&
-    dynamicValidateForm.formData[1].value &&
-    handleValidateFields(dynamicValidateForm.formData[2].value, 50, true) &&
-    handleValidateFields(dynamicValidateForm.formData[3].value, 50, true) &&
-    handleValidateFields(dynamicValidateForm.formData[4].value, 10, false) &&
-    handleValidateFields(dynamicValidateForm.formData[5].value, 50, false) &&
-    regex.test(dynamicValidateForm.formData[4].value)
-  ) {
-    isValidated.value = true;
-  } else {
-    isValidated.value = false;
-  }
-});
+watch(
+  dynamicValidateForm,
+  () => {
+    const regex = /^\d*$/;
+    if (
+      regex.test(dynamicValidateForm.formData[4].value) &&
+      dynamicValidateForm.formData[0].value &&
+      dynamicValidateForm.formData[1].value &&
+      handleValidateFields(dynamicValidateForm.formData[2].value, 50, true) &&
+      handleValidateFields(dynamicValidateForm.formData[3].value, 50, true) &&
+      handleValidateFields(dynamicValidateForm.formData[4].value, 10, false)
+    ) {
+      isValidated.value = true;
+    } else {
+      isValidated.value = false;
+    }
+  },
+  { deep: true }
+);
 watch(
   ownerType,
   (oldVal) => {
     if (oldVal === "partner") {
       dynamicValidateForm.formData[0].options = mockPartner.value;
     } else {
-      dynamicValidateForm.formData[0].options = mockCollectionBase.value;
+      dynamicValidateForm.formData[0].options = listCollectionBase.value;
     }
   },
   { deep: true }

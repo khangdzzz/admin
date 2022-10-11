@@ -8,20 +8,24 @@ export interface VehicleSelection {
   label: string;
 }
 export interface Vehicle {
-  id: string | undefined;
-  ownerId?: string;
+  id: number | undefined | string;
+  ownerType?: string | undefined;
+  ownerId?: number;
+  ownerName?: string;
   vehicleType: number | string;
   vehicleName: string;
   vehiclePlate: string;
   maxWeight?: number;
   code?: string;
-  isHasPermission?: boolean;
+  isHasPermission?: number;
 }
 
 export interface VehicleDetail {
   key: string;
   type: string;
   name: string;
+  ownerId?: number;
+  ownerType?: string;
   numberPlate: string;
   maxWeight: number | null;
   code: string | null;
@@ -41,10 +45,10 @@ export interface ResVehicle {
   workplace_id: number;
   vehicle_type_id: number;
   plate_number: string;
-  name: string
+  name: string;
   ext_code: string;
   max_capacity: string;
   permission_flag: number;
-  workplace__name: string
-  vehicle_type___name:string
+  workplace__name: string;
+  vehicle_type___name: string;
 }

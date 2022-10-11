@@ -262,7 +262,9 @@ const filterOption = (input: string, option: any): boolean => {
     top: 27px;
     right: 13px;
   }
-
+  .ant-form-item-explain {
+    margin-top: 8px;
+  }
   .input-item {
     height: 60px;
     border: 1px solid $grey-1;
