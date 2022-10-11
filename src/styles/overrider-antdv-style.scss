@@ -230,7 +230,27 @@
     background-color: $neutral-50;
   }
 }
-.color-btn-delete.btn-action{
-  color: $red-500 !important;
-  border-color: $red-500 !important;
+
+.color-btn-delete.btn-action {
+  color: $red-500  !important;
+  border-color: $red-500  !important;
+}
+
+.ant-spin-nested-loading>div>.ant-spin {
+  .ant-spin-dot {
+
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin: 0;
+    transform: translate(-50%, -50%) !important;
+  }
+
+  .ant-spin-text {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    padding-top: 38px !important;
+    text-shadow: 0 1px 2px #fff;
+  }
 }
