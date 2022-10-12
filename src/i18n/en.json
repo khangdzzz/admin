@@ -138,9 +138,6 @@
   "create_vehicle_type_msg_create_fail_message": "Please try again later",
   "edit_vehicle_type_lbl_page_title": "Edit Vehicle type",
   "edit_vehicle_type_successfully": "Vehicle type is edited successfully",
-  "vehicle_type_msg_confirm_delete": "Are you sure you want to delete?",
-  "vehicle_type_delete_fail_lbl_title": "Delete failed",
-  "vehicle_type_delete_fail_lbl_message": "Please try again later",
   "vehicle_type_msg_delete_successfully": "Vehicle type is deleted successfully",
   "vehicle_create_success": "Vehicle is created successfully",
   "container_type_delete_successfully": "Container type is deleted successfully",
@@ -174,6 +171,7 @@
   "user_role": "User role",
   "tenant_collection_base": "Tenant/ Collection base",
   "customer": "Customer",
+  "customer_delete_successfully":"Customer is deleted successfully",
   "destination": "Destination",
   "tenant_admin": "Tenant Admin",
   "collection_base_admin": "Collection base admin",
@@ -185,7 +183,6 @@
   "partner_admin": "Partner admin",
   "partner_driver": "Partner driver",
   "consignee": "Consignee",
-  "add_new_customer": "Add",
   "postal_code": "Postal Code",
   "address": "Address",
   "phone_number": "Phone number",
@@ -200,5 +197,8 @@
   "delete_vehicle_successfully":"Vehicle is deleted successfully",
   "delete_vehicle_mutiple_successfully":"{length} Vehicle is deleted successfully",
   "yes":"Yes",
-  "no":"No"
+  "no":"No",
+  "popup_msg_confirm_delete": "Are you sure you want to delete?",
+  "popup_delete_fail_lbl_title": "Delete failed",
+  "popup_delete_fail_lbl_message": "Please try again later"
 }

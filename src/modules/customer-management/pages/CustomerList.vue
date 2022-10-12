@@ -1,6 +1,21 @@
 <template>
-  <ListSearchHeader :title="$t('customer')">
+  <ListSearchHeader
+    :title="$t('customer')"
+    v-model:model-value.sync="searchString"
+  >
     <template #action>
+      <a-button
+        class="btn-action color-btn-delete"
+        ghost
+        type="primary"
+        @click="deleteCustomer(undefined)"
+        v-if="selectedKeys.length > 0"
+      >
+        <template #icon>
+          <IcTrash class="btn-icon" :color="'#F54E4E'" />
+        </template>
+        {{ $t("delete_btn") }}
+      </a-button>
       <a-button class="btn" type="primary" ghost>
         <template #icon>
           <img src="@/assets/icons/ic_import.svg" class="btn-icon" />
@@ -17,7 +32,7 @@
         <template #icon>
           <img src="@/assets/icons/ic_plus.svg" class="btn-icon" />
         </template>
-        {{ $t("add_new_customer") }}
+        {{ $t("add_btn") }}
       </a-button>
     </template>
   </ListSearchHeader>
@@ -38,7 +53,9 @@
           <a>
             <img src="@/assets/icons/ic_btn_edit.svg" class="action-icon" />
           </a>
-          <img src="@/assets/icons/ic_btn_delete.svg" class="action-icon" />
+          <a @click="deleteCustomer(record.id)">
+            <img src="@/assets/icons/ic_btn_delete.svg" class="action-icon"
+          /></a>
         </template>
         <template v-if="column.key === 'name'">
           <a-tooltip placement="topLeft">
@@ -99,16 +116,26 @@
 
 <script setup lang="ts">
 //#region import
+import IcTrash from "@/assets/icons/IcTrash.vue";
 import ListSearchHeader from "@/modules/base/components/ListSearchHeader.vue";
-import { computed, onMounted, reactive, ref } from "vue";
+import { computed, onMounted, reactive, ref, inject } from "vue";
 import { columns } from "../models/CustomerListColumn";
 import { data } from "../models/CustomerListData";
+import MessengerParamModel from "@/modules/base/models/messenger-param.model";
+import { MessengerType } from "@/modules/base/models/messenger-type.enum";
+import { service } from "@/services";
+
 //#endregion
 
 //#region props
 //#endregion
 
 //#region variables
+const isLoading = ref<boolean>(false);
+const messenger: (param: MessengerParamModel) => void =
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  inject("messenger")!;
+const selectedKeys = ref<number[]>([]);
 const selectedRowKeys = ref([]);
 const innerHeight = ref<number>(0);
 const pageOption = reactive({
@@ -116,6 +143,7 @@ const pageOption = reactive({
   pageSize: 20,
   total: 1
 });
+const searchString = ref<string>("");
 //#endregion
 
 //#region hooks
@@ -157,6 +185,50 @@ const isShowNextBtn = (): boolean => {
 
 const totalPages = (): number => {
   return Math.ceil(Number(pageOption.total) / Number(pageOption.pageSize));
+};
+const deleteCustomer = (id?: number): void => {
+  messenger({
+    title: "popup_msg_confirm_delete",
+    message: "",
+    type: MessengerType.Confirm,
+    buttonOkTitle: "btn_delete",
+    callback: async (isConfirm: boolean): Promise<void> => {
+      if (!isConfirm) {
+        return;
+      }
+
+      if (!selectedKeys.value?.length && !id) {
+        return;
+      }
+      const selectedCustomerIds = id ? [id] : selectedKeys.value;
+      onDeleteCustomer(selectedCustomerIds);
+    }
+  });
+};
+const onDeleteCustomer = async (deleteIds: number[]): Promise<void> => {
+  isLoading.value = true;
+  const isSuccess = await service.container.deleteContainerTypeById(deleteIds);
+  isLoading.value = false;
+  if (!isSuccess) {
+    messenger({
+      title: "popup_delete_fail_lbl_title",
+      message: "popup_delete_fail_lbl_message",
+      type: MessengerType.Error
+    });
+    return;
+  }
+  messenger({
+    title: "customer_delete_successfully",
+    message: "",
+    type: MessengerType.Success,
+    callback: (isConfirm: boolean): void => {
+      isConfirm;
+      // initialize();
+    }
+  });
+  pageOption.currentPage = 1;
+  selectedKeys.value = [];
+  searchString.value = "";
 };
 //#endregion
 
