@@ -40,9 +40,13 @@
               <span>{{ $t(column.title) }}</span>
             </template>
             <template v-if="column.key === 'name'">
-              <div @click="changeSort">
+              <div @click="changeSort(column.key)">
                 <span>{{ $t(column.title) }}</span>
-                <SortView class="mx-12" :sort="sort" />
+                <SortView
+                  class="mx-12"
+                  :sort="sort"
+                  :isMatch="column.key === sortBy"
+                />
               </div>
             </template>
           </template>
@@ -176,6 +180,7 @@ const sort = ref<Sort>(Sort.None);
 const isLoading = ref<boolean>(false);
 const searchString = ref<string>("");
 const innerHeight = ref<number>(0);
+const sortBy = ref<string>("name");
 const pageOption = reactive<Pagination<VehicleTypeModel>>({
   currentPage: 1,
   pageSize: 20,
@@ -244,7 +249,8 @@ const editVehicleType = (id: string): void => {
   router.push(`edit-vehicle-type/${id}`);
 };
 
-const changeSort = (): void => {
+const changeSort = (key: string): void => {
+  sortBy.value = key;
   switch (sort.value) {
     case Sort.Asc:
       sort.value = Sort.Desc;

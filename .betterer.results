@@ -13,6 +13,11 @@ exports[`Better Code Quality !`] = {
     "src/modules/staff-management/pages/CreateNewStaff.vue:2488377755": [
       [124, 49, 3, "Unexpected any. Specify a different type.", "193409811"]
     ],
+    "src/modules/vehicle-management/pages/VehicleList.vue:596660525": [
+      [177, 5, 3, "\'Key\' is defined but never used.", "193457490"],
+      [188, 25, 3, "Unexpected any. Specify a different type.", "193409811"],
+      [348, 22, 16, "Missing return type on function.", "603831199"]
+    ],
     "src/services/base.service.ts:3213300086": [
       [51, 44, 3, "Unexpected any. Specify a different type.", "193409811"]
     ]
