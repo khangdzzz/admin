@@ -7,6 +7,7 @@ export const routeNames = {
   productManufacture: "PRODUCT_MANUFACTURE",
   traceability: "TRACEABILITY",
   customerManagement: "CUSTOMER_MANAGEMENT",
+  createNewCustomer: "CREATE_NEW_CUSTOMER",
   vehicleManagement: "VEHICLE_MANAGEMENT",
   realTimeDynamics: "REAL_TIME_DYNAMICS",
   vehicle: "VEHICLE",

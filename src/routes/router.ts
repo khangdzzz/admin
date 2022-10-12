@@ -105,12 +105,18 @@ const routes: RouteRecordRaw[] = [
   {
     path: "/customer-management",
     name: routeNames.customerManagement,
-    component: () =>
-      import("@/modules/customer-management/pages/CustomerManagement.vue"),
     beforeEnter: requireLoginGuard,
     meta: {
       layout: ScreenLayout.DEFAULT_LAYOUT
-    }
+    },
+    children: [
+      {
+        path: "create-new",
+        name: routeNames.createNewCustomer,
+        component: () =>
+          import("@/modules/customer-management/pages/CreateCustomer.vue")
+      }
+    ]
   },
   {
     path: "/vehicle-management",
