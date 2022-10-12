@@ -261,7 +261,7 @@ const fetchCollectionBase = async (): Promise<void> => {
   const res = await service.vehicle.getCollectionBase();
   if (res) {
     listCollectionBase.value = res?.map((item) => ({
-      value: item.id,
+      value: item.id || 0,
       label: item.name
     }));
     if (!isTenantAdmin() && listCollectionBase.value.length === 1) {
