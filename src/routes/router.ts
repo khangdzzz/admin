@@ -109,7 +109,19 @@ const routes: RouteRecordRaw[] = [
     meta: {
       layout: ScreenLayout.DEFAULT_LAYOUT
     },
+    redirect: {
+      name: routeNames.customerList
+    },
     children: [
+      {
+        path: "customer-list",
+        name: routeNames.customerList,
+        meta: {
+          layout: ScreenLayout.DEFAULT_LAYOUT
+        },
+        component: () =>
+          import("@/modules/customer-management/pages/CustomerList.vue")
+      },
       {
         path: "create-new",
         name: routeNames.createNewCustomer,
