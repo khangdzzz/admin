@@ -98,10 +98,6 @@
             trigger: ['change', 'blur']
           },
           {
-            validator: validator.validatePassword,
-            trigger: ['change', 'blur']
-          },
-          {
             validator: validateConfirmPass,
             trigger: ['change', 'blur']
           }
