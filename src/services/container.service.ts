@@ -12,6 +12,7 @@ import { CreateContainerTypeInputDto } from "./dtos/container-management/create-
 import { ContainerTypeResponseDto } from "./dtos/container/create-container-type.dto";
 import getListContainerResponse from "./mocks/container/get-list-container.reponse.json";
 import { DEFAULT_SORT_ORDER } from "@/services/constants";
+import { AxiosError } from "axios";
 
 const data: ContainerType[] = [];
 export function getMockCollectionBase(): ContainerSelection[] {
@@ -92,8 +93,8 @@ export async function getListContainerType(
       sort === Sort.None
         ? DEFAULT_SORT_ORDER
         : sort === Sort.Asc
-        ? "name"
-        : "-name"
+          ? "name"
+          : "-name"
   };
   const [error, res] = await transformRequest<
     PaginationDto<ContainerTypeResponseDto>
@@ -142,24 +143,16 @@ export async function getContainerTypeById(
 export async function createContainerType(
   tenantId: number,
   name: string
-): Promise<ContainerTypeModel | undefined> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+): Promise<[AxiosError<unknown, unknown>, null] | [null, ContainerTypeResponseDto] | any> {
   const data: CreateContainerTypeInputDto = {
     tenant_id: tenantId,
     name
   };
-  const [error, res] = await transformRequest<ContainerTypeResponseDto>({
+  return transformRequest<ContainerTypeResponseDto>({
     url: "/container_type",
     method: "post",
     data
-  });
-  if (error || !res) return undefined;
-  const { id, name: typeName, tenant_id } = res;
-
-  return Promise.resolve({
-    id,
-    tenantId: tenant_id,
-    name: typeName,
-    key: 0
   });
 }
 
@@ -179,16 +172,15 @@ export async function editContainerTypeById(
   id: string | string[],
   tenant_id: number | string | undefined,
   name: string
-): Promise<ContainerTypeModel | undefined> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+): Promise<[AxiosError<unknown, unknown>, null] | [null, ContainerTypeModel] | any> {
   const data = {
     tenant_id,
     name
   };
-  const [error, res] = await transformRequest<ContainerTypeModel>({
+  return transformRequest<ContainerTypeModel>({
     url: `/container_type/${id}`,
     method: "put",
     data
   });
-  if (error) return undefined;
-  return res;
 }

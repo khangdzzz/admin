@@ -8,28 +8,23 @@ import {
   VehicleTypeResponseDto
 } from "./dtos/vehicle-management/create-vehicle-type.dto";
 import { DEFAULT_SORT_ORDER } from "@/services/constants";
+import { AxiosError } from "axios";
 
 export async function createVehicleType(
   tenantId: number,
   name: string
-): Promise<VehicleTypeModel | undefined> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+): Promise<[AxiosError<unknown, unknown>, null] | [null, VehicleTypeResponseDto] | any> {
   const data: CreateVehicleTypeInputDto = {
     tenant_id: tenantId,
     name
   };
-  const [error, res] = await transformRequest<VehicleTypeResponseDto>({
+  return transformRequest<VehicleTypeResponseDto>({
     url: "/vehicle_type",
     method: "post",
     data
   });
-  if (error || !res) return undefined;
-  const { id, name: typeName, tenant_id } = res;
-  return {
-    id,
-    tenantId: tenant_id,
-    name: typeName,
-    key: 0
-  };
+
 }
 
 export async function fetchListVehicleType(
@@ -46,8 +41,8 @@ export async function fetchListVehicleType(
       sort === Sort.None
         ? DEFAULT_SORT_ORDER
         : sort === Sort.Asc
-        ? "name"
-        : "-name"
+          ? "name"
+          : "-name"
   };
 
   const [error, res] = await transformRequest<
@@ -98,18 +93,18 @@ export async function editVehicleTypeById(
   id: string | string[],
   tenant_id: number | string | undefined,
   name: string
-): Promise<VehicleTypeModel | undefined> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+): Promise<[AxiosError<unknown, unknown>, null] | [null, VehicleTypeModel] | any> {
   const data = {
     tenant_id,
     name
   };
-  const [error, res] = await transformRequest<VehicleTypeModel>({
+  return transformRequest<VehicleTypeModel>({
     url: `/vehicle_type/${id}`,
     method: "put",
     data
   });
-  if (error) return undefined;
-  return res;
+
 }
 
 export async function deleteVehicleTypeById(ids: number[]): Promise<boolean> {

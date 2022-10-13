@@ -140,13 +140,13 @@ const getVehicleTypeDetail = async (): Promise<void> => {
 const handleFinish = async (): Promise<void> => {
   isLoading.value = true;
   const ternantId = userStore.user?.tenantId;
-  const name = dynamicValidateForm.formData[0].value.trim();
-  const response = await service.vehicleType.editVehicleTypeById(
+  const name = dynamicValidateForm.formData[0].value;
+  const [err, res] = await service.vehicleType.editVehicleTypeById(
     vehicleTypeId.value,
     ternantId,
-    name
+    name.replace(/\s+/g, " ").trim()
   );
-  if (response) {
+  if (res) {
     messenger({
       title: "edit_vehicle_type_successfully",
       message: "",
@@ -157,8 +157,9 @@ const handleFinish = async (): Promise<void> => {
       }
     });
   } else {
+    const msg = err?.response?.data.details[0].msg;
     messenger({
-      title: "edit_failed",
+      title: msg.toString(),
       message: "please_try_again",
       type: MessengerType.Error,
       callback: (isConfirm: boolean) => {

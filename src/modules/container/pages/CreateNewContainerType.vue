@@ -117,16 +117,16 @@ const redirectToContainerType = (): void => {
 //#endregion===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌
 
 //#===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊Methods
+
 const createContainerType = async (): Promise<void> => {
-  const newContainerTypeName = dynamicValidateForm.formData[0].value.trim();
+  const newContainerTypeName = dynamicValidateForm.formData[0].value;
   if (!userStore.user || !newContainerTypeName?.length) return;
   isLoading.value = true;
-  const newContainerType = await service.container.createContainerType(
+  const [err, res] = await service.container.createContainerType(
     userStore.user?.tenantId,
-    newContainerTypeName
+    newContainerTypeName.replace(/\s+/g, " ").trim()
   );
-  isLoading.value = false;
-  if (newContainerType) {
+  if (res) {
     messenger({
       title: "create_container_type_msg_create_successfully",
       message: "",
@@ -137,12 +137,15 @@ const createContainerType = async (): Promise<void> => {
       }
     });
   } else {
+    const msg = err?.response?.data.details[0].msg;
+
     messenger({
-      title: "create_vehicle_type_msg_create_fail_title",
+      title: msg.toString(),
       message: "create_vehicle_type_msg_create_fail_message",
       type: MessengerType.Error
     });
   }
+  isLoading.value = false;
 };
 
 const goToContainerTypeListPage = (): void => {

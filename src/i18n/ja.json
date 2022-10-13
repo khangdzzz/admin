@@ -190,5 +190,6 @@
   "previous_btn": "前へ",
   "popup_msg_confirm_delete": "削除しますか？",
   "popup_delete_fail_lbl_title": "削除に失敗しました",
-  "popup_delete_fail_lbl_message": "後でやり直しください"
+  "popup_delete_fail_lbl_message": "後でやり直しください",
+  "error_unique_constraint": "名称 が存在しています"
 }

@@ -117,15 +117,14 @@ const redirectToVehicleType = (): void => {
 };
 
 const createVehicleType = async (): Promise<void> => {
-  const newVehicleTypeName = dynamicValidateForm.formData[0].value.trim();
+  const newVehicleTypeName = dynamicValidateForm.formData[0].value;
   if (!userStore.user || !newVehicleTypeName?.length) return;
   isLoading.value = true;
-  const newVehicleType = await service.vehicleType.createVehicleType(
+  const [err, res] = await service.vehicleType.createVehicleType(
     userStore.user?.tenantId,
-    newVehicleTypeName
+    newVehicleTypeName.replace(/\s+/g, " ").trim()
   );
-  isLoading.value = false;
-  if (newVehicleType) {
+  if (res) {
     messenger({
       title: "create_vehicle_type_msg_create_successfully",
       message: "",
@@ -136,12 +135,14 @@ const createVehicleType = async (): Promise<void> => {
       }
     });
   } else {
+    const msg = err?.response?.data.details[0].msg;
     messenger({
-      title: "create_vehicle_type_msg_create_fail_title",
+      title: msg.toString(),
       message: "create_vehicle_type_msg_create_fail_message",
       type: MessengerType.Error
     });
   }
+  isLoading.value = false;
 };
 
 const goToVehicleTypeListPage = (): void => {
