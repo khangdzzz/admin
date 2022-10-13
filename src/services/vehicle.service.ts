@@ -9,14 +9,16 @@ import {
 import { transformRequest } from "./base.service";
 import { PaginationDto } from "./dtos/common/pagination.dto";
 import { DEFAULT_SORT_ORDER } from "@/services/constants";
+import { VehicleResponseDto } from "./dtos/vehicle-management/vehicle-type.dto";
+import { CollectionBaseResponseDto } from "./dtos/collection-base/collection-base.dto";
 
 interface sortVehicleDto {
-  sortType: Sort
-  sortName: Sort
-  sortPlateNumber: Sort
-  sortWorkPlace: Sort
-  sortCapacity: Sort
-  sortPermission: Sort
+  sortType: Sort;
+  sortName: Sort;
+  sortPlateNumber: Sort;
+  sortWorkPlace: Sort;
+  sortCapacity: Sort;
+  sortPermission: Sort;
 }
 
 const data: VehicleDetail[] = [];
@@ -27,24 +29,68 @@ export async function getListVehicle(
   sort: sortVehicleDto,
   searchKeyword: string | null | undefined = ""
 ): Promise<PaginationDto<ResVehicle> | undefined> {
+  const {
+    sortType,
+    sortName,
+    sortPlateNumber,
+    sortWorkPlace,
+    sortCapacity,
+    sortPermission
+  } = sort;
 
-  const { sortType, sortName, sortPlateNumber, sortWorkPlace, sortCapacity, sortPermission } = sort
+  const orderSortType =
+    sortType === Sort.None
+      ? undefined
+      : sortType === Sort.Asc
+      ? "vehicle_type"
+      : `-vehicle_type`;
+  const orderSortName =
+    sortName === Sort.None
+      ? undefined
+      : sortName === Sort.Asc
+      ? "name"
+      : `-name`;
+  const orderSortPlateNumber =
+    sortPlateNumber === Sort.None
+      ? undefined
+      : sortPlateNumber === Sort.Asc
+      ? "plate_number"
+      : `-plate_number`;
+  const orderSortWorkPlace =
+    sortWorkPlace === Sort.None
+      ? undefined
+      : sortWorkPlace === Sort.Asc
+      ? "workplace___name"
+      : `-workplace___name`;
+  const orderSortCapacity =
+    sortCapacity === Sort.None
+      ? undefined
+      : sortCapacity === Sort.Asc
+      ? "max_capacity"
+      : `-max_capacity`;
+  const orderSortPermission =
+    sortPermission === Sort.None
+      ? undefined
+      : sortPermission === Sort.Asc
+      ? "permission_flag"
+      : `-permission_flag`;
 
-  const orderSortType = sortType === Sort.None ? undefined : sortType === Sort.Asc ? 'vehicle_type' : `-vehicle_type`
-  const orderSortName = sortName === Sort.None ? undefined : sortName === Sort.Asc ? 'name' : `-name`
-  const orderSortPlateNumber = sortPlateNumber === Sort.None ? undefined : sortPlateNumber === Sort.Asc ? 'plate_number' : `-plate_number`
-  const orderSortWorkPlace = sortWorkPlace === Sort.None ? undefined : sortWorkPlace === Sort.Asc ? 'workplace___name' : `-workplace___name`
-  const orderSortCapacity = sortCapacity === Sort.None ? undefined : sortCapacity === Sort.Asc ? 'max_capacity' : `-max_capacity`
-  const orderSortPermission = sortPermission === Sort.None ? undefined : sortPermission === Sort.Asc ? 'permission_flag' : `-permission_flag`
-  
-  const order_by = [orderSortType, orderSortName, orderSortPlateNumber, orderSortWorkPlace, orderSortCapacity, orderSortPermission].filter((item) => !!item).toString()
+  const order_by = [
+    orderSortType,
+    orderSortName,
+    orderSortPlateNumber,
+    orderSortWorkPlace,
+    orderSortCapacity,
+    orderSortPermission
+  ]
+    .filter((item) => !!item)
+    .toString();
 
   const params = {
     page,
     page_size: size,
     name__like: searchKeyword ? `%${searchKeyword}%` : undefined,
     order_by: order_by?.length ? order_by : DEFAULT_SORT_ORDER
-
   };
   const [err, res] = await transformRequest<PaginationDto<ResVehicle>>({
     url: "/vehicle",
@@ -53,7 +99,7 @@ export async function getListVehicle(
   });
   if (err) return undefined;
   res.current_page = page;
-  res.page_size = size
+  res.page_size = size;
   return res;
 }
 
@@ -69,9 +115,17 @@ export async function deleteVehicleById(ids: number[]): Promise<boolean> {
   return true;
 }
 
-export function getMockCollectionBase(): VehicleSelection[] {
-  const res: VehicleSelection[] = [];
-  return res;
+export async function getCollectionBase(): Promise<
+  CollectionBaseResponseDto[] | undefined
+> {
+  const [err, res] = await transformRequest<
+    PaginationDto<CollectionBaseResponseDto>
+  >({
+    url: `/workplace/collection_base`,
+    method: "get"
+  });
+  if (err) return undefined;
+  return res.results;
 }
 
 export function getMockPartner(): VehicleSelection[] {
@@ -105,40 +159,84 @@ export async function createVehicle(
 ): Promise<Vehicle | unknown> {
   const {
     ownerId,
+    ownerType,
     vehicleType,
     vehicleName,
     vehiclePlate,
     maxWeight,
-    code,
     isHasPermission
   } = vehicleInfo;
   const [error, res] = await transformRequest({
-    url: "",
+    url: "/vehicle",
     method: "post",
     data: {
-      ownerId,
-      vehicleType,
-      vehicleName,
-      vehiclePlate,
-      maxWeight,
-      code,
-      isHasPermission
+      workplace___workplace_type: ownerType,
+      workplace_id: ownerId,
+      vehicle_type_id: vehicleType,
+      name: vehicleName,
+      plate_number: vehiclePlate,
+      max_capacity: maxWeight,
+      permission_flag: isHasPermission
     }
   });
   if (error) return undefined;
   return res;
 }
 
+export async function getVehicleDetail(
+  vehicleId: string
+): Promise<Vehicle | undefined> {
+  const [error, res] = await transformRequest<VehicleResponseDto>({
+    url: `/vehicle/${vehicleId}`,
+    method: "get"
+  });
+  if (error || !res) return undefined;
+  if (!res) return Promise.resolve(undefined);
+  const {
+    id,
+    name,
+    workplace___name,
+    vehicle_type___name,
+    workplace___workplace_type,
+    plate_number,
+    permission_flag,
+    max_capacity
+  } = res;
+  const detail = {
+    ownerName: workplace___name,
+    vehicleType: vehicle_type___name,
+    vehicleName: name,
+    vehiclePlate: plate_number,
+    maxWeight: max_capacity,
+    isHasPermission: permission_flag,
+    ownerType: workplace___workplace_type,
+    id
+  };
+  return detail;
+}
+
 export async function updateVehicle(
   vehicleInfo: Vehicle
 ): Promise<Vehicle | unknown> {
-  const { vehicleType, vehicleName, vehiclePlate, maxWeight, code, id } =
-    vehicleInfo;
+  const {
+    vehicleType,
+    vehicleName,
+    vehiclePlate,
+    maxWeight,
+    id,
+    isHasPermission
+  } = vehicleInfo;
   const [error, res] = await transformRequest({
-    url: `update-vehicle/${id}`,
-    method: "patch",
+    url: `vehicle/${id}`,
+    method: "put",
     params: {},
-    data: { vehicleType, vehicleName, vehiclePlate, maxWeight, code }
+    data: {
+      vehicle_type_id: vehicleType,
+      name: vehicleName,
+      plate_number: vehiclePlate,
+      max_capacity: maxWeight,
+      permission_flag: isHasPermission
+    }
   });
   if (error) return undefined;
   return res;

@@ -27,9 +27,27 @@ export async function createVehicleType(
 
 }
 
+export async function getAllVehicleType(): Promise<
+  VehicleTypeResponseDto[] | undefined
+> {
+  const params = {
+    page: 1,
+    page_size: "full",
+    order_by: "-created_at"
+  };
+  const [err, res] = await transformRequest<VehicleTypeResponseDto[]>({
+    url: "/vehicle_type",
+    method: "get",
+    params
+  });
+
+  if (err || !res) return Promise.resolve(undefined);
+  return res;
+}
+
 export async function fetchListVehicleType(
   page: number,
-  size: number,
+  size: number | string,
   sort: Sort = Sort.None,
   searchKeyword: string | null | undefined = ""
 ): Promise<Pagination<VehicleTypeModel> | undefined> {

@@ -7,11 +7,13 @@
     centered
     :footer="null"
     :keyboard="false"
-    :maskClosable="false">
+    :maskClosable="false"
+  >
     <img
       src="@/assets/icons/ic_close.svg"
       :class="VehicleDetailModal.closeIcon"
-      @click="$emit('close')" />
+      @click="$emit('close')"
+    />
 
     <div :class="[VehicleDetailModal.wrap]" class="d-flex align-flex-start">
       <div
@@ -21,17 +23,20 @@
           'flex-column',
           'align-center',
           'justify-center'
-        ]">
+        ]"
+      >
         <img
           :class="[VehicleDetailModal.imgQr]"
           :src="urlQrCode"
           alt="Vehicle QR Code"
-          :srcset="urlQrCode" />
+          :srcset="urlQrCode"
+        />
         <a-button :class="[VehicleDetailModal.btn]" type="primary" ghost>
           <template #icon>
             <img
               src="@/assets/icons/ic_download.svg"
-              :class="[VehicleDetailModal.btnIcon, 'my-8']" />
+              :class="[VehicleDetailModal.btnIcon, 'my-8']"
+            />
           </template>
           {{ $t("download_btn") }}
         </a-button>
@@ -44,7 +49,8 @@
           <div :class="[VehicleDetailModal.value]">{{ item.value }}</div>
           <a-divider
             v-if="index < information.length - 1"
-            style="border-color: #e8e8e8; margin: 10px 0" />
+            style="border-color: #e8e8e8; margin: 10px 0"
+          />
         </div>
       </div>
     </div>
@@ -56,7 +62,7 @@
 import { i18n } from "@/i18n";
 import QRCode from "qrcode";
 import { onMounted, PropType, reactive, ref, toRefs } from "vue";
-import { VehicleDetail } from "../models/vehicle.model";
+import { Vehicle } from "../models/vehicle.model";
 
 interface Information {
   title: string;
@@ -67,11 +73,13 @@ interface Information {
 //#===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜Props
 const props = defineProps({
   currentVehicle: {
-    type: Object as PropType<VehicleDetail> | undefined,
+    type: Object as PropType<Vehicle> | undefined,
+    // eslint-disable-next-line vue/require-valid-default-prop
     default: {}
   }
 });
 
+// eslint-disable-next-line vue/no-setup-props-destructure
 const { currentVehicle } = props;
 //#endregion===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜Props
 
@@ -83,28 +91,33 @@ const urlQrCode = ref<string>("");
 const form = reactive<{ information: Information[] }>({
   information: [
     {
+      title: i18n.global.t("owner_type"),
+      value: currentVehicle.ownerType || null
+    },
+    {
+      title: i18n.global.t("owner"),
+      value: currentVehicle.ownerName || null
+    },
+    {
       title: i18n.global.t("vehicle_type"),
-      value: currentVehicle.type
+      value: currentVehicle.vehicleType
     },
     {
       title: i18n.global.t("vehicle_name"),
-      value: currentVehicle.name
+      value: currentVehicle.vehicleName
     },
     {
       title: i18n.global.t("vehicle_number_plate"),
-      value: currentVehicle.numberPlate
+      value: currentVehicle.vehiclePlate
     },
     {
       title: i18n.global.t("vehicle_max_loading_weight"),
       value: currentVehicle.maxWeight || null
     },
-    {
-      title: i18n.global.t("vehicle_code"),
-      value: currentVehicle.code || null
-    },
+
     {
       title: i18n.global.t("vehicle_industrial_waste"),
-      value: currentVehicle.industrial ? "Yes" : "No"
+      value: currentVehicle.isHasPermission ? "Yes" : "No"
     }
   ]
 });
@@ -125,6 +138,7 @@ onMounted(() => {
 //#endregion===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌
 
 //#===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊Methods
+
 //#endregion===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊
 
 //#===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏Computed

@@ -134,7 +134,7 @@
             <img
               src="@/assets/icons/ic_btn_qrcode.svg"
               :class="[vehicleList.actionIcon]"
-              @click="setVehicleId(record.id)"
+              @click="getVehicleDetail(record.id)"
             />
           </template>
         </template>
@@ -193,34 +193,31 @@
     </div>
   </div>
 
-  <!-- <VehicleDetailModal
+  <VehicleDetailModal
     v-if="!!vehicleId"
-    :currentVehicle="getVehicleById"
-    @close="vehicleId = ''" -->
-  <!-- /> -->
+    :currentVehicle="vehicleDetail"
+    @close="vehicleId = ''"
+  />
 </template>
 
 <script setup lang="ts">
 //#===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆import
-import IcTrash from "@/assets/icons/IcTrash.vue";
 import { i18n } from "@/i18n";
 import ListSearchHeader from "@/modules/base/components/ListSearchHeader.vue";
-import NoData from "@/modules/base/components/NoData.vue";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
-import HeaderRef from "@/modules/base/models/search-header.model";
-import SortView from "@/modules/common/components/SortView.vue";
-import { Pagination } from "@/modules/common/models";
+import { Pagination } from "@/modules/common/models/pagination.model";
 import { Sort } from "@/modules/common/models/sort.enum";
 import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
-import type { TableColumnType } from "ant-design-vue";
+import { TableColumnType } from "ant-design-vue/lib/components";
+import HeaderRef from "@/modules/base/models/search-header.model";
 import { debounce } from "lodash";
 import { computed, inject, onMounted, reactive, ref, watch } from "vue";
-import { ResVehicle, VehicleDetail } from "../models/vehicle.model";
-
-type Key = string | number;
+import { ResVehicle, Vehicle, VehicleDetail } from "../models/vehicle.model";
+import VehicleDetailModal from "./VehicleDetailModal.vue";
+import IcTrash from "@/assets/icons/IcTrash.vue";
 //#endregion===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆
 
 //#===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜Props
@@ -237,6 +234,8 @@ const sortWorkPlace = ref<Sort>(Sort.None);
 
 const sortCapacity = ref<Sort>(Sort.None);
 
+const vehicleDetail = ref<Vehicle>();
+
 const sortPermission = ref<Sort>(Sort.None);
 
 const selectedKeys = ref<any[]>([]);
@@ -246,7 +245,7 @@ const vehicleId = ref<string | undefined>(undefined);
 const columns: TableColumnType<VehicleDetail>[] = [
   {
     title: "vehicle_type",
-    dataIndex: "vehicle_type__name",
+    dataIndex: "vehicle_type___name",
     key: "vehicle_type"
   },
   {
@@ -261,7 +260,7 @@ const columns: TableColumnType<VehicleDetail>[] = [
   },
   {
     title: "work_place",
-    dataIndex: "workplace__name",
+    dataIndex: "workplace___name",
     key: "workplace_name"
   },
   {
@@ -496,9 +495,15 @@ const handleBackToList = (): void => {
 //#endregion===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊
 
 //#===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏Computed
-// const getVehicleById = computed(() =>
-//   data.value.find((vehicle) => vehicle.key === vehicleId.value)
-// );
+const getVehicleDetail = async (id: string): Promise<void> => {
+  isLoading.value = true;
+  const res = await service.vehicle.getVehicleDetail(id);
+  isLoading.value = false;
+  if (res) {
+    vehicleDetail.value = res;
+    setVehicleId(id);
+  }
+};
 //#endregion===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏
 
 //#===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍Emits
