@@ -134,6 +134,7 @@ const goHome = (): void => {
             >
               <span
                 v-if="isHasPermission(subMenu.requireUserType)"
+                :id="subMenu.qaAttr"
                 class="default-layout__menu-item-wrapper"
                 @click="handleClickMenuWhenCollapsed(subMenu)"
               >
@@ -149,10 +150,11 @@ const goHome = (): void => {
                     <component
                       :is="subMenu.icon"
                       class="default-layout__icon"
+                     
                     ></component>
                   </template>
                   <template #title v-if="!collapsed">
-                    <span class="default-layout__menu-title" v-if="$t">
+                    <span class="default-layout__menu-title" v-if="$t" :id="subMenu.qaAttr" >
                       {{ $t(subMenu.title) }}
                     </span>
                   </template>
@@ -174,6 +176,7 @@ const goHome = (): void => {
                           <span
                             class="default-layout__sub-menu-title"
                             v-if="$t"
+                            :id="subMenuItem.qaAttr"
                           >
                             {{ $t(subMenuItem.title) }}
                           </span>
