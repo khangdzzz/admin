@@ -17,7 +17,18 @@
           </template>
           {{ $t("delete_btn") }}
         </a-button>
-
+        <a-button class="btn btn-action" type="primary" ghost>
+          <template #icon>
+            <img src="@/assets/icons/ic_import.svg" class="btn-icon" />
+          </template>
+          {{ $t("import_btn") }}
+        </a-button>
+        <a-button class="btn btn-action" type="primary" ghost>
+          <template #icon>
+            <img src="@/assets/icons/ic_export.svg" class="btn-icon" />
+          </template>
+          {{ $t("export_btn") }}
+        </a-button>
         <a-button type="primary" class="btn-add-new" @click="onCreate">
           <template #icon>
             <img src="@/assets/icons/ic_plus.svg" class="btn-icon" />
