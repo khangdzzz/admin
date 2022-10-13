@@ -200,5 +200,6 @@
   "no":"No",
   "popup_msg_confirm_delete": "Are you sure you want to delete?",
   "popup_delete_fail_lbl_title": "Delete failed",
-  "popup_delete_fail_lbl_message": "Please try again later"
+  "popup_delete_fail_lbl_message": "Please try again later",
+  "error_unique_constraint": "Name has already existed"
 }

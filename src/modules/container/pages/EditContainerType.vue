@@ -136,13 +136,13 @@ const fetchContainerTypeById = async (): Promise<void> => {
 };
 
 const handleSubmit = async (): Promise<void> => {
-  const currentContainerType = dynamicValidateForm.formData[0].value.trim();
+  const currentContainerType = dynamicValidateForm.formData[0].value;
   if (!userStore.user || !currentContainerType?.length) return;
   isLoading.value = true;
-  const res = await service.container.editContainerTypeById(
+  const [err, res] = await service.container.editContainerTypeById(
     id,
     userStore.user?.tenantId,
-    currentContainerType
+    currentContainerType.replace(/\s+/g, " ").trim()
   );
   isLoading.value = false;
   if (res) {
@@ -156,8 +156,10 @@ const handleSubmit = async (): Promise<void> => {
       }
     });
   } else {
+    const msg = err?.response?.data.details[0].msg;
+    
     messenger({
-      title: "edit_failed",
+      title: msg.toString(),
       message: "create_vehicle_type_msg_create_fail_message",
       type: MessengerType.Error
     });

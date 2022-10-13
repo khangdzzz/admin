@@ -32,6 +32,7 @@ axiosIntance.interceptors.response.use(
   (respone) => handleResponse(respone.data),
   (error) => handleExpiredAccessToken(error)
 );
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const handleResponse = (data: any): any => {
   if (data?.message === "The incoming token has expired") {
@@ -40,10 +41,12 @@ const handleResponse = (data: any): any => {
   }
   return data;
 };
-const handleExpiredAccessToken = async (error: AxiosError): Promise<void> => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const handleExpiredAccessToken = async (error: AxiosError | AxiosError<any>): Promise<void | AxiosError | any> => {
   if (error.code == "ERR_NETWORK") {
     service.auth.refreshToken();
   }
+  return Promise.reject(error)
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -55,3 +58,4 @@ export function transformRequest<T>(
     (err: AxiosError) => [err, null] as [AxiosError, null]
   );
 }
+
