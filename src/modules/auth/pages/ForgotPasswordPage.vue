@@ -2,13 +2,15 @@
   <ForgotPasswordForm
     v-if="activeForgotPasswordForm"
     @handle-confirm="onHandleConfirm"
-    :is-loading="isLoading" />
+    :is-loading="isLoading"
+  />
   <SetNewPasswordForm
     v-else
     :email="email"
     :is-loading="isLoading"
     @submit="onSetNewPassword"
-    @resend="onHandleConfirm(email)" />
+    @resend="onHandleConfirm(email)"
+  />
 </template>
 
 <script setup lang="ts">
@@ -46,6 +48,23 @@ const isLoading = ref<boolean>(false);
 //#endregion
 
 //#region function
+const handlePopupErrorMsg = (errorName: string): void => {
+  switch (errorName) {
+    case "LimitExceededException":
+      messenger({
+        title: "forgot_password_attempt_limit_exceeded_title",
+        message: "forgot_password_attempt_limit_exceeded_msg",
+        type: MessengerType.Error
+      });
+      break;
+    default:
+      messenger({
+        title: "forgot_password_error_popup_lbl_title",
+        message: "forgot_password_error_popup_lbl_message",
+        type: MessengerType.Error
+      });
+  }
+};
 const onHandleConfirm = (value: string): void => {
   isLoading.value = true;
   email.value = value;
@@ -62,13 +81,7 @@ const onHandleConfirm = (value: string): void => {
       activeForgotPasswordForm.value = false;
     },
     onFailure: (err): void => {
-      if (err.name === "LimitExceededException") {
-        messenger({
-          title: "forgot_password_attempt_limit_exceeded_title",
-          message: "forgot_password_attempt_limit_exceeded_msg",
-          type: MessengerType.Error
-        });
-      }
+      handlePopupErrorMsg(err.name);
       isLoading.value = false;
     }
   });
@@ -98,13 +111,8 @@ const onSetNewPassword = (data: { code: string; password: string }): void => {
       });
     },
     onFailure: (err): void => {
-      err;
       isLoading.value = false;
-      messenger({
-        title: "forgot_password_error_popup_lbl_title",
-        message: "forgot_password_error_popup_lbl_message",
-        type: MessengerType.Error
-      });
+      handlePopupErrorMsg(err.name);
     }
   });
 };

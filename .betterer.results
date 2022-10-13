@@ -5,20 +5,22 @@
 //
 exports[`Better Code Quality !`] = {
   value: `{
-    "src/modules/base/components/CustomForm.vue:3817144310": [
-      [206, 16, 36, "Missing return type on function.", "3688369342"],
+    "src/modules/base/components/CustomForm.vue:3148704763": [
       [210, 29, 3, "Unexpected any. Specify a different type.", "193409811"],
       [230, 45, 3, "Unexpected any. Specify a different type.", "193409811"]
     ],
     "src/modules/staff-management/pages/CreateNewStaff.vue:2488377755": [
       [124, 49, 3, "Unexpected any. Specify a different type.", "193409811"]
     ],
-    "src/modules/vehicle-management/pages/VehicleList.vue:1716197642": [
+    "src/modules/vehicle-management/pages/VehicleList.vue:1182252927": [
       [222, 5, 3, "\'Key\' is defined but never used.", "193457490"],
       [241, 25, 3, "Unexpected any. Specify a different type.", "193409811"]
     ],
     "src/services/base.service.ts:3213300086": [
       [51, 44, 3, "Unexpected any. Specify a different type.", "193409811"]
+    ],
+    "src/services/collection-base.service.ts:3829907853": [
+      [6, 0, 95, "\'@/modules/staff-management/models/collection-base.model\' import is duplicated.", "3360350627"]
     ]
   }`
 };

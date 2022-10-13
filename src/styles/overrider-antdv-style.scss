@@ -3,13 +3,14 @@
   min-height: 12px !important;
 
   .ant-form-item-explain-error {
-    color: $red-500  !important;
+    color: $red-500 !important;
   }
 }
 
 .ant-btn[disabled] {
-  color: $neutral-0  !important;
-  background-color: $neutral-200  !important;
+  color: $neutral-0 !important;
+  background-color: $neutral-200 !important;
+  border: none !important;
 }
 
 .ant-btn {
@@ -17,7 +18,7 @@
 }
 
 .ant-input::placeholder {
-  color: $text-1  !important;
+  color: $text-1 !important;
 }
 
 .ant-table-row {
@@ -63,7 +64,7 @@
 .ant-table-cell {
   background-color: $white;
   color: $neutral-600;
-  border-bottom: 1px solid $grey-3  !important;
+  border-bottom: 1px solid $grey-3 !important;
   font-size: 16px;
   font-weight: 400;
 }
@@ -231,11 +232,6 @@
   }
 }
 
-.color-btn-delete.btn-action {
-  color: $red-500  !important;
-  border-color: $red-500  !important;
-}
-
 .ant-spin-nested-loading>div>.ant-spin {
   .ant-spin-dot {
 
@@ -258,4 +254,9 @@
     font-size: 28px;
     line-height: 33px;
   }
+}
+
+.color-btn-delete.btn-action {
+  color: $red-500 !important;
+  border-color: $red-500 !important;
 }
