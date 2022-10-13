@@ -37,6 +37,7 @@ export const routeNames = {
   collectionHistory: "COLLECTION_HISTORY",
   collectionPointManagement: "COLLECTION_POINT_MANAGEMENT",
   collectionBaseManagement: "COLLECTION_BASE_MANAGEMENT",
+  editCollectionBase:"EDIT_COLLECTION_BASE",
   partnerManagement: "PARTNER_MANAGEMENT",
   collectionManagement: "COLLECTION_MANAGEMENT",
   collectionTypeManagement: "COLLECTION_TYPE_MANAGEMENT",

@@ -307,6 +307,12 @@ const routes: RouteRecordRaw[] = [
         name: routeNames.createCollectionBase,
         component: () =>
           import("@/modules/staff-management/pages/CreateCollectionBase.vue")
+      },
+      {
+        path: "edit/:id",
+        name: routeNames.editCollectionBase,
+        component: () =>
+          import("@/modules/staff-management/pages/EditCollectionBase.vue")
       }
     ]
   },

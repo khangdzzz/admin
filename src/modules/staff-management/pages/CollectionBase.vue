@@ -53,7 +53,16 @@
           </template>
           <template v-if="column.key === 'action'">
             <img src="@/assets/icons/ic_user.svg" class="action-icon" />
-            <img src="@/assets/icons/ic_btn_edit.svg" class="action-icon" />
+            <router-link
+              :to="{
+                name: routeNames.editCollectionBase,
+                params: {
+                  id: record.id
+                }
+              }"
+            >
+              <img src="@/assets/icons/ic_btn_edit.svg" class="action-icon" />
+            </router-link>
             <img
               src="@/assets/icons/ic_btn_delete.svg"
               class="action-icon"
