@@ -427,7 +427,7 @@ const onSearchChange = debounce((): void => {
 
 const deleteVehicle = (id?: number): void => {
   messenger({
-    title: "vehicle_type_msg_confirm_delete",
+    title: "popup_msg_confirm_delete",
     message: "",
     type: MessengerType.Confirm,
     buttonOkTitle: "btn_delete",
@@ -454,8 +454,8 @@ const onDeleteVehicle = async (deleteIds: number[]): Promise<void> => {
   isLoading.value = false;
   if (!isSuccess) {
     messenger({
-      title: "vehicle_type_delete_fail_lbl_title",
-      message: "vehicle_type_delete_fail_lbl_message",
+      title: "popup_delete_fail_lbl_title",
+      message: "popup_delete_fail_lbl_message",
       type: MessengerType.Error
     });
     return;
