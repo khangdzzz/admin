@@ -4,13 +4,15 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
+    "dev-uat": "vite --mode qa",
     "build": "vue-tsc --noEmit && vite build",
     "build-only": "vite build",
+    "build-uat-only": "vite build --mode qa",
     "preview": "vite preview",
     "prepare": "husky install && npx @betterer/cli init",
     "betterer": "betterer --update",
     "release-dev": "npm run build-only && aws s3 sync ./dist/ s3://eco-value.jp && aws cloudfront create-invalidation --distribution-id E1MEU6Y19FXVBO --paths \"/*\"",
-    "release-uat": "npm run build-only && aws s3 rm s3://qa.eco-value.jp/assets/ --recursive && aws s3 sync ./dist/ s3://qa.eco-value.jp && aws cloudfront create-invalidation --distribution-id E1OYMW78KG68YQ --paths \"/*\""
+    "release-uat": "npm run build-uat-only && aws s3 rm s3://qa.eco-value.jp/assets/ --recursive && aws s3 sync ./dist/ s3://qa.eco-value.jp && aws cloudfront create-invalidation --distribution-id E1OYMW78KG68YQ --paths \"/*\""
   },
   "dependencies": {
     "amazon-cognito-identity-js": "^5.2.10",

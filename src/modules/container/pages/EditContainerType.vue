@@ -131,6 +131,7 @@ const fetchContainerTypeById = async (): Promise<void> => {
   if (data) {
     containerTypeDetail.value = data;
     dynamicValidateForm.formData[0].value = data.name;
+    isDisabled.value = true;
   }
 };
 

@@ -204,7 +204,7 @@ const styleContent = {
 
 //#region function
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const checked = (values: string[], value: string) => {
+const checked = (values: string[], value: string): boolean => {
   return (values || []).includes(value);
 };
 
@@ -396,7 +396,8 @@ const filterOption = (input: string, option: any): boolean => {
 .not-has-icon {
   .ant-input {
     position: relative;
-    left: 0px !important;
+    left: 0 !important;
+    padding-left: 0 !important;
     padding-top: 8px !important;
   }
 }
