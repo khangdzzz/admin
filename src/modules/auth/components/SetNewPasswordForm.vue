@@ -93,11 +93,6 @@
         name="confirmPassword"
         :rules="[
           {
-            required: true,
-            message: $t('forgot_password_msg_err_confirm_password_required'),
-            trigger: ['change', 'blur']
-          },
-          {
             validator: validateConfirmPass,
             trigger: ['change', 'blur']
           }
