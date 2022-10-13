@@ -65,7 +65,7 @@ const route = useRoute();
 
 const { id } = route.params;
 const containerTypeDetail = ref<ContainerTypeModel>();
-const isDisabled = ref<boolean>(true);
+const isDisabled = ref<boolean>(false);
 const isLoading = ref<boolean>(false);
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const dynamicValidateForm = reactive<{ formData: any[] }>({
@@ -131,6 +131,7 @@ const fetchContainerTypeById = async (): Promise<void> => {
   if (data) {
     containerTypeDetail.value = data;
     dynamicValidateForm.formData[0].value = data.name;
+    isDisabled.value = true;
   }
 };
 
