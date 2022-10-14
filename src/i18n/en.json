@@ -135,9 +135,10 @@
   "create_vehicle_type_edt_vehicle_name": "Name",
   "create_vehicle_type_msg_create_successfully": "Vehicle type is created successfully",
   "create_container_type_msg_create_successfully": "Container type is created successfully",
+  "create_collection_base_msg_create_successfully": "Collection base is created successfully",
+  "edit_vehicle_type_lbl_page_title": "Edit Vehicle type",
   "create_vehicle_type_msg_create_fail_title": "Create failed",
   "create_vehicle_type_msg_create_fail_message": "Please try again later",
-  "edit_vehicle_type_lbl_page_title": "Edit Vehicle type",
   "edit_vehicle_type_successfully": "Vehicle type is edited successfully",
   "vehicle_type_msg_delete_successfully": "Vehicle type is deleted successfully",
   "vehicle_create_success": "Vehicle is created successfully",
@@ -158,7 +159,7 @@
   "email": "Email",
   "staff_user_role": "User role",
   "tenant": "Tenant",
-  "staff_collection_base": "Collection base",
+  "collection_base_page_title": "Collection base",
   "name_lowercase": "name",
   "try_searching_for_another_term": "Try searching for another term",
   "no_data": "No data",
@@ -203,5 +204,7 @@
   "popup_msg_confirm_delete": "Are you sure you want to delete?",
   "popup_delete_fail_lbl_title": "Delete failed",
   "popup_delete_fail_lbl_message": "Please try again later",
-  "error_unique_constraint": "Name has already existed"
+  "error_unique_constraint": "Name has already existed",
+  "popup_create_fail_title": "Create failed",
+  "popup_create_fail_message": "Please try again later"
 }

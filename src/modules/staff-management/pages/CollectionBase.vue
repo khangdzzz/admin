@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex flex-column">
     <ListSearchHeader
-      :title="$t('staff_collection_base')"
+      :title="$t('collection_base_page_title')"
       v-model:model-value.sync="searchString"
     >
       <template #action>
@@ -38,12 +38,12 @@
       </template>
     </ListSearchHeader>
   </div>
-  <div class="collection-base-table mx-30">
-    <div v-if="listCollectionBase && listCollectionBase.length">
+  <div class="table-container mx-30 mb-30">
+    <div v-if="data && data.length">
       <a-table
         :row-selection="rowSelection"
         :columns="columns"
-        :data-source="listCollectionBase"
+        :data-source="data"
         :pagination="false"
         :scroll="{ y: tableMaxHeight }"
       >
@@ -87,7 +87,7 @@
           v-model:current="pageOption.currentPage"
           v-model:page-size="pageOption.pageSize"
           :total="pageOption.total"
-          :pageSizeOptions="['10', '25', '50']"
+          :pageSizeOptions="['20', '30', '40', '50']"
           show-size-changer
           @showSizeChange="onShowSizeChange"
           @change="onChange"
@@ -110,7 +110,9 @@
                 src="@/assets/icons/ic_prev.svg"
                 :class="[collectionBase.btnIconPrev]"
               />
-              <span :class="[collectionBase.action]">Previous</span>
+              <span :class="[collectionBase.action]">{{
+                $t("previous_btn")
+              }}</span>
             </a-button>
             <a-button
               :class="[collectionBase.btnPagination, 'mt-10', 'mr-15']"
@@ -118,7 +120,7 @@
               ghost
               v-else-if="item.type === 'next' && isShowNextBtn()"
             >
-              <span :class="[collectionBase.action]">Next</span>
+              <span :class="[collectionBase.action]">{{ $t("next_btn") }}</span>
               <img
                 src="@/assets/icons/ic_next.svg"
                 :class="[collectionBase.btnIconNext]"
@@ -151,13 +153,14 @@ import { Sort } from "@/modules/common/models/sort.enum";
 import { routeNames, router } from "@/routes";
 import SortView from "@/modules/common/components/SortView.vue";
 import { service } from "@/services";
-import { computed, inject, onMounted, reactive, ref } from "vue";
+import { computed, inject, onMounted, reactive, ref, watch } from "vue";
 import NoData from "@/modules/base/components/NoData.vue";
 import { CollectionBase } from "../models/collection-base.model";
 import { Pagination } from "@/modules/common/models/pagination.model";
 import IcTrash from "@/assets/icons/IcTrash.vue";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
+import { debounce } from "lodash";
 //#endregion
 
 //#region props
@@ -167,17 +170,19 @@ import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 const messenger: (param: MessengerParamModel) => void =
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   inject("messenger")!;
-const listCollectionBase = ref<CollectionBase[]>();
+const data = ref<CollectionBase[]>([]);
 const selectedKeys = ref<number[]>([]);
 const sort = ref<Sort>(Sort.None);
 const isLoading = ref<boolean>(false);
 const searchString = ref<string>("");
 const innerHeight = ref<number>(0);
+const sortBy = ref<string>("name");
 const pageOption = reactive<Pagination<CollectionBase>>({
   currentPage: 1,
-  pageSize: 10,
+  pageSize: 20,
   total: 0
 });
+let sourceData: CollectionBase[] = [];
 const columns = [
   {
     title: i18n.global.t("collection_name"),
@@ -187,8 +192,8 @@ const columns = [
   },
   {
     title: i18n.global.t("collection_postal_code"),
-    dataIndex: "postal_code",
-    key: "postal_code",
+    dataIndex: "postalCode",
+    key: "postalCode",
     isSort: true
   },
   {
@@ -199,8 +204,8 @@ const columns = [
   },
   {
     title: i18n.global.t("collection_phone_number"),
-    dataIndex: "phone_number",
-    key: "phone_number",
+    dataIndex: "telephone",
+    key: "telephone",
     isSort: true
   },
   {
@@ -215,6 +220,11 @@ const columns = [
 
 //#region hooks
 onMounted(() => {
+  innerHeight.value = window.innerHeight;
+  window.addEventListener("resize", () => {
+    innerHeight.value = window.innerHeight;
+  });
+
   initialize();
 });
 //#endregion
@@ -227,12 +237,22 @@ const handleBackToList = (): void => {
   searchString.value = "";
 };
 const initialize = async (): Promise<void> => {
-  const res = service.collectionBase.getMockCollectionBase();
-  listCollectionBase.value = res?.results;
-  pageOption.currentPage = res?.currentPage;
-  pageOption.pageSize = res?.pageSize || 10;
-  pageOption.total = res?.total;
-  pageOption.totalPage = res?.totalPage;
+  isLoading.value = true;
+  const result = await service.collectionBase.getListCollectionBase(
+    pageOption?.currentPage || 1,
+    pageOption.pageSize || 20,
+    sort.value,
+    searchString.value
+  );
+  isLoading.value = false;
+  sourceData = (result?.results || []).map((item, index) => {
+    return { ...item, key: item.id || index + 1 };
+  });
+  data.value = [...sourceData];
+  pageOption.currentPage = result?.currentPage;
+  pageOption.pageSize = result?.pageSize || 20;
+  pageOption.total = result?.total;
+  pageOption.totalPage = result?.totalPage;
 };
 
 const rowSelection = computed(() => {
@@ -249,7 +269,6 @@ const onShowSizeChange = (current: number, pageSize: number): void => {
   pageOption.pageSize = pageSize;
   initialize();
 };
-
 const onChange = (pageNumber: number): void => {
   pageOption.currentPage = pageNumber;
   initialize();
@@ -261,6 +280,11 @@ const isShowPrevBtn = (): boolean => {
   return true;
 };
 
+const onSearchChange = debounce((): void => {
+  pageOption.currentPage = 1;
+  selectedKeys.value = [];
+  initialize();
+}, 500);
 const isShowNextBtn = (): boolean => {
   const isLastPage =
     pageOption.currentPage ===
@@ -268,6 +292,9 @@ const isShowNextBtn = (): boolean => {
 
   if (totalPages() === 1 || isLastPage) return false;
   return true;
+};
+const totalPages = (): number => {
+  return Math.ceil(Number(pageOption.total) / Number(pageOption.pageSize));
 };
 const deleteCollectionBase = (id?: number): void => {
   messenger({
@@ -294,7 +321,7 @@ const onDeleteCollectionBase = async (deleteIds: number[]): Promise<void> => {
     return;
   }
   isLoading.value = true;
-  const isSuccess = await service.collectionBase.deleteCollectionBase(
+  const isSuccess = await service.collectionBase.deleteCollectionBaseById(
     deleteIds
   );
   isLoading.value = false;
@@ -333,9 +360,6 @@ const tableMaxHeight = computed(() => {
     marginBottom
   );
 });
-const totalPages = (): number => {
-  return Math.ceil(Number(pageOption.total) / Number(pageOption.pageSize));
-};
 
 //#endregion
 
@@ -343,10 +367,18 @@ const totalPages = (): number => {
 //#endregion
 
 //#region reactive
+watch(searchString, onSearchChange);
 //#endregion
 </script>
 
 <style lang="scss" scoped>
+.table-container {
+  flex-grow: 1;
+}
+.action-icon {
+  margin-left: 30px;
+  cursor: pointer;
+}
 :deep() {
   .ant-table-tbody > tr.ant-table-row-selected > td {
     background: $grey-2;
