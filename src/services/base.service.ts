@@ -29,33 +29,31 @@ axiosIntance.interceptors.request.use(
 );
 
 axiosIntance.interceptors.response.use(
-  (respone) => handleResponse(respone.data),
-  (error) => handleExpiredAccessToken(error)
+  (respone) => handleRequestResponse(respone.data),
+  (error) => handleRequestError(error)
 );
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const handleResponse = (data: any): any => {
+const handleRequestResponse = (data: any): any => {
   if (data?.message === "The incoming token has expired") {
     logout();
     return undefined;
   }
   return data;
 };
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const handleExpiredAccessToken = async (error: AxiosError | AxiosError<any>): Promise<void | AxiosError | any> => {
+const handleRequestError = async (error: AxiosError): Promise<void> => {
   if (error.code == "ERR_NETWORK") {
     service.auth.refreshToken();
   }
-  return Promise.reject(error)
+  return Promise.reject(error);
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function transformRequest<T>(
   config: AxiosRequestConfig
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): Promise<[null, T] | [AxiosError<unknown, any>, null]> {
   return axiosIntance.request(config).then(
     (val: AxiosResponse<T>) => [null, val || val] as unknown as [null, T],
     (err: AxiosError) => [err, null] as [AxiosError, null]
   );
 }
-

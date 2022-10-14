@@ -1,2 +1,3 @@
 import { Pagination } from "./pagination.model";
-export type { Pagination };
+import { ServiceResponse } from "./service-response.model";
+export type { Pagination, ServiceResponse };

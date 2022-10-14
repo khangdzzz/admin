@@ -235,7 +235,7 @@ const initialize = async (): Promise<void> => {
   isLoading.value = true;
   const res = await service.container.getListContainerType(
     pageOption?.currentPage || 1,
-    pageOption.pageSize || 20,
+    pageOption?.pageSize ? +pageOption?.pageSize : 20,
     sort.value,
     searchString.value
   );

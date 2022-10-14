@@ -37,44 +37,21 @@ export async function getListVehicle(
     sortCapacity,
     sortPermission
   } = sort;
-
-  const orderSortType =
-    sortType === Sort.None
-      ? undefined
-      : sortType === Sort.Asc
-      ? "vehicle_type"
-      : `-vehicle_type`;
-  const orderSortName =
-    sortName === Sort.None
-      ? undefined
-      : sortName === Sort.Asc
-      ? "name"
-      : `-name`;
-  const orderSortPlateNumber =
-    sortPlateNumber === Sort.None
-      ? undefined
-      : sortPlateNumber === Sort.Asc
-      ? "plate_number"
-      : `-plate_number`;
-  const orderSortWorkPlace =
-    sortWorkPlace === Sort.None
-      ? undefined
-      : sortWorkPlace === Sort.Asc
-      ? "workplace___name"
-      : `-workplace___name`;
-  const orderSortCapacity =
-    sortCapacity === Sort.None
-      ? undefined
-      : sortCapacity === Sort.Asc
-      ? "max_capacity"
-      : `-max_capacity`;
-  const orderSortPermission =
-    sortPermission === Sort.None
-      ? undefined
-      : sortPermission === Sort.Asc
-      ? "permission_flag"
-      : `-permission_flag`;
-
+  const orderSortType = calculateSortQuery("vehicle_type", sortType);
+  const orderSortName = calculateSortQuery("name", sortName);
+  const orderSortPlateNumber = calculateSortQuery(
+    "plate_number",
+    sortPlateNumber
+  );
+  const orderSortWorkPlace = calculateSortQuery(
+    "workplace___name",
+    sortWorkPlace
+  );
+  const orderSortCapacity = calculateSortQuery("max_capacity", sortCapacity);
+  const orderSortPermission = calculateSortQuery(
+    "permission_flag",
+    sortPermission
+  );
   const order_by = [
     orderSortType,
     orderSortName,
@@ -85,7 +62,6 @@ export async function getListVehicle(
   ]
     .filter((item) => !!item)
     .toString();
-
   const params = {
     page,
     page_size: size,
@@ -102,6 +78,10 @@ export async function getListVehicle(
   res.page_size = size;
   return res;
 }
+
+const calculateSortQuery = (name: string, sort: Sort): string | undefined => {
+  return sort === Sort.None ? undefined : sort === Sort.Asc ? name : `-${name}`;
+};
 
 export async function deleteVehicleById(ids: number[]): Promise<boolean> {
   const [error] = await transformRequest({
