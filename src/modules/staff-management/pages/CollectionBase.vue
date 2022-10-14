@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex flex-column">
     <ListSearchHeader
-      :title="$t('collection_base_page_title')"
+      :title="$t('staff_collection_base')"
       v-model:model-value.sync="searchString"
     >
       <template #action>

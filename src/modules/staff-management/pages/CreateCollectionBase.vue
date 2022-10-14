@@ -1,6 +1,8 @@
 <template>
   <div class="create-collection-base p-30 fill-height">
-    <div class="create-collection-base__title">Add new collection base</div>
+    <div class="create-collection-base__title">
+      {{ $t("add_collection_base_add_new") }}
+    </div>
     <div
       class="create-collection-base__content-wrapper d-flex justify-space-between gap-20 px-20 pt-20 my-20 fill-height"
     >
@@ -23,7 +25,7 @@
         </div>
         <div class="d-flex my-30 gap-40">
           <div class="create-collection-base__type-selector">
-            Type
+            {{ $t("type") }}
             <span class="create-collection-base__required-mark">&nbsp;* </span>
           </div>
           <div>
@@ -33,9 +35,9 @@
               size="large"
               class="create-collection-base__radio-group d-flex gap-40"
             >
-              <a-radio value="1">Collection</a-radio>
-              <a-radio value="2">Manufacture</a-radio>
-              <a-radio value="3">Both</a-radio>
+              <a-radio :value="1">{{ $t("collection") }}</a-radio>
+              <a-radio :value="2">{{ $t("manufacture") }}</a-radio>
+              <a-radio :value="3">{{ $t("both") }}</a-radio>
             </a-radio-group>
           </div>
         </div>
@@ -113,14 +115,14 @@
       <a-button
         type="secondary"
         class="create-collection-base__btn-style create-collection-base__cancel-btn"
-        >Cancel</a-button
+        >{{ $t("btn_cancel") }}</a-button
       >
       <a-button
         type="primary"
         class="create-collection-base__btn-style"
         :disabled="isButtonDisabled"
         @click="handleSubmit"
-        >Submit</a-button
+        >{{ $t("btn_submit") }}</a-button
       >
     </div>
   </div>
@@ -138,6 +140,7 @@ import { service } from "@/services";
 import { commonStore } from "@/stores";
 import { routeNames } from "@/routes/route-names";
 import { router } from "@/routes";
+import { makeUniqueName } from "@/utils/string.helper";
 //#region import
 //#endregion
 
@@ -148,7 +151,7 @@ import { router } from "@/routes";
 const userStore = commonStore();
 const isLoading = ref<boolean>(false);
 const formData = reactive<FormData>(reactiveFormData);
-const collectionBaseType = ref<string>("collection");
+const collectionBaseType = ref<string>("");
 const center = ref<number[]>([40, 40]);
 const projection = ref<string>("EPSG:4326");
 const zoom = ref<number>(20);
@@ -239,24 +242,24 @@ const isButtonDisabled = computed((): boolean => {
 const handleSubmit = async (): Promise<void> => {
   const { name, contact, coordinate, addressAndPhone } = formData;
   const data = {
-    name: name[0].value.toString().trim(),
-    shortName: name[1].value.toString().trim(),
-    kana: name[1].value.toString().trim(),
-    postalCode: contact[0].value.toString().trim(),
-    email: contact[1].value.toString().trim(),
-    representative: contact[2].value.toString().trim(),
-    latitude: coordinate[0].value.toString().trim(),
-    longitude: coordinate[1].value.toString().trim(),
-    address: addressAndPhone[0].value.toString().trim(),
-    telephone: addressAndPhone[1].value.toString().trim(),
-    collectionBaseType: collectionBaseType.value.toString().trim()
+    name: makeUniqueName(name[0].value.toString()),
+    shortName: makeUniqueName(name[1].value.toString()),
+    kana: makeUniqueName(name[1].value.toString()),
+    postalCode: makeUniqueName(contact[0].value.toString()),
+    email: makeUniqueName(contact[1].value.toString()),
+    representative: makeUniqueName(contact[2].value.toString()),
+    latitude: makeUniqueName(coordinate[0].value.toString()),
+    longitude: makeUniqueName(coordinate[1].value.toString()),
+    address: makeUniqueName(addressAndPhone[0].value.toString()),
+    telephone: makeUniqueName(addressAndPhone[1].value.toString()),
+    collectionBaseType: collectionBaseType.value
   };
   if (!userStore.user) return;
   isLoading.value = true;
   const [err, res] = await service.collectionBase.createCollectionBase(data);
-  if (res) {
+  if (res && !err) {
     messenger({
-      title: "create_vehicle_type_msg_create_successfully",
+      title: "create_collection_base_msg_create_successfully",
       message: "",
       type: MessengerType.Success,
       callback: (isConfirm: boolean) => {
@@ -265,9 +268,8 @@ const handleSubmit = async (): Promise<void> => {
       }
     });
   } else {
-    const msg = err?.response?.data.details[0].msg;
     messenger({
-      title: msg.toString(),
+      title: "popup_create_fail_title",
       message: "popup_create_fail_message",
       type: MessengerType.Error
     });
