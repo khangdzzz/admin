@@ -164,7 +164,7 @@
   "add_new_staff": "新規スタッフ追加",
   "name_kana": "カタカナ",
   "telephone": "電話番号",
-  "work_place": "職場",
+  "work_place": "所属",
   "type": "タイプ",
   "user_role": "ユーザーロール",
   "tenant_collection_base": "テナント/ 回収拠点",
@@ -197,5 +197,7 @@
   "popup_delete_fail_lbl_message": "後でやり直しください",
   "error_unique_constraint": "名称が存在しています",
   "popup_create_fail_title": "作成に失敗しました",
-  "popup_create_fail_message": "後でやり直しください "
+  "popup_create_fail_message": "後でやり直しください ",
+  "permission":"廃棄物許可",
+  "capacity":"最大積載量"
 }
