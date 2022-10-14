@@ -187,5 +187,5 @@
   "collection_base_msg_delete_successfully": "回収拠点が削除されました",
   "next_btn": "次へ",
   "previous_btn": "前へ",
-  "error_unique_constraint": "名称 が存在しています"
+  "error_unique_constraint": "名称が存在しています"
 }
