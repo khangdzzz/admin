@@ -18,6 +18,9 @@
             @onFocus="handleOnFocus"
           >
           </CustomForm>
+          <div class="create-new-vehicle-type-form__error" v-if="isExist">
+            {{ $t("error_unique_constraint") }}
+          </div>
           <div class="create-new-vehicle-type-form__action">
             <a-button
               class="create-new-vehicle-type-form__action--cancel"
@@ -69,6 +72,7 @@ const route = useRoute();
 const userStore = commonStore();
 const vehicleTypeId = ref<string | string[]>("");
 const vehicleTypeDetail = ref<VehicleTypeModel>();
+const isExist = ref(false);
 const messenger: (
   param: MessengerParamModel
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -112,6 +116,7 @@ const handleOnBlur = (
   value: number | boolean | Event,
   index: string | number | Event
 ): void => {
+  isExist.value = false;
   index = Number(index);
   dynamicValidateForm.formData[index].isFocus = false;
 };
@@ -140,13 +145,13 @@ const getVehicleTypeDetail = async (): Promise<void> => {
 const handleFinish = async (): Promise<void> => {
   isLoading.value = true;
   const ternantId = userStore.user?.tenantId;
-  const name = dynamicValidateForm.formData[0].value;
-  const [err, res] = await service.vehicleType.editVehicleTypeById(
+  const name = dynamicValidateForm.formData[0].value.trim();
+  const { error } = await service.vehicleType.editVehicleTypeById(
     vehicleTypeId.value,
     ternantId,
     name.replace(/\s+/g, " ").trim()
   );
-  if (res) {
+  if (!error) {
     messenger({
       title: "edit_vehicle_type_successfully",
       message: "",
@@ -157,9 +162,12 @@ const handleFinish = async (): Promise<void> => {
       }
     });
   } else {
-    const msg = err?.response?.data.details[0].msg;
+    if (error === "error_unique_constraint") {
+      isExist.value = true;
+      return;
+    }
     messenger({
-      title: msg.toString(),
+      title: "edit_vehicle_type_successfully",
       message: "please_try_again",
       type: MessengerType.Error,
       callback: (isConfirm: boolean) => {
@@ -205,7 +213,12 @@ onMounted(() => {
   transform: translateY(-50%);
   border-radius: 10px;
   padding: 10px;
-
+  &__error {
+    margin-top: -18px;
+    padding-bottom: 8px;
+    font-size: 12px;
+    color: $red-1;
+  }
   &__title {
     font-size: 22px;
     font-weight: 600;

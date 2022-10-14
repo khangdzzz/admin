@@ -81,16 +81,15 @@
 //#region import
 import { i18n } from "@/i18n";
 import CustomForm from "@/modules/base/components/CustomForm.vue";
-import { service } from "@/services";
-import { inject, onMounted, reactive, ref, watch } from "vue";
-import { VehicleSelection } from "../models/vehicle.model";
+import MessengerParamModel from "@/modules/base/models/messenger-param.model";
+import { MessengerType } from "@/modules/base/models/messenger-type.enum";
+import { UserType } from "@/modules/base/models/user-type.enum";
 import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
-import { MessengerType } from "@/modules/base/models/messenger-type.enum";
-import MessengerParamModel from "@/modules/base/models/messenger-param.model";
+import { service } from "@/services";
 import { commonStore } from "@/stores";
-import { UserType } from "@/modules/base/models/user-type.enum";
-import { VehicleResponseDto } from "@/services/dtos/vehicle-management/vehicle-type.dto";
+import { inject, onMounted, reactive, ref, watch } from "vue";
+import { VehicleSelection } from "../models/vehicle.model";
 //#endregion
 
 //#region props

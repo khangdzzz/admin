@@ -202,22 +202,22 @@
 
 <script setup lang="ts">
 //#===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆import
+import IcTrash from "@/assets/icons/IcTrash.vue";
 import { i18n } from "@/i18n";
 import ListSearchHeader from "@/modules/base/components/ListSearchHeader.vue";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
+import HeaderRef from "@/modules/base/models/search-header.model";
 import { Pagination } from "@/modules/common/models/pagination.model";
 import { Sort } from "@/modules/common/models/sort.enum";
 import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
 import { TableColumnType } from "ant-design-vue/lib/components";
-import HeaderRef from "@/modules/base/models/search-header.model";
 import { debounce } from "lodash";
 import { computed, inject, onMounted, reactive, ref, watch } from "vue";
 import { ResVehicle, Vehicle, VehicleDetail } from "../models/vehicle.model";
 import VehicleDetailModal from "./VehicleDetailModal.vue";
-import IcTrash from "@/assets/icons/IcTrash.vue";
 //#endregion===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆
 
 //#===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜Props
