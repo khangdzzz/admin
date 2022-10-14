@@ -152,8 +152,9 @@
   "email": "Eメール(ログインID)",
   "staff_user_role": "ユーザーロール",
   "tenant": "テナント",
-  "staff_collection_base": "回収拠点",
+  "collection_base_page_title": "回収拠点",
   "create_container_type_msg_create_successfully": "風袋種別が作成されました",
+  "create_collection_base_msg_create_successfully": "回収拠点が作成されました",
   "name_lowercase": "名称",
   "try_searching_for_another_term": "別のキーワードを試しください",
   "no_data": "データがありません。",
@@ -193,5 +194,7 @@
   "popup_msg_confirm_delete": "削除しますか？",
   "popup_delete_fail_lbl_title": "削除に失敗しました",
   "popup_delete_fail_lbl_message": "後でやり直しください",
-  "error_unique_constraint": "名称が存在しています"
+  "error_unique_constraint": "名称が存在しています",
+  "popup_create_fail_title": "作成に失敗しました",
+  "popup_create_fail_message": "後でやり直しください "
 }

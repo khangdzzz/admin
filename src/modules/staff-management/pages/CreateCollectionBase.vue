@@ -33,9 +33,9 @@
               size="large"
               class="create-collection-base__radio-group d-flex gap-40"
             >
-              <a-radio value="collection">Collection</a-radio>
-              <a-radio value="manufacture">Manufacture</a-radio>
-              <a-radio value="both">Both</a-radio>
+              <a-radio value="1">Collection</a-radio>
+              <a-radio value="2">Manufacture</a-radio>
+              <a-radio value="3">Both</a-radio>
             </a-radio-group>
           </div>
         </div>
@@ -129,11 +129,15 @@
 <script setup lang="ts">
 import locationIcon from "@/assets/icons/ic_collection_base.png";
 import CustomForm from "@/modules/base/components/CustomForm.vue";
-
+import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import { FormData } from "@/modules/staff-management/models/collection-base.model";
 import { formData as reactiveFormData } from "@/modules/staff-management/pages/create-collection-base-form";
-import { computed, reactive, ref } from "vue";
-
+import { computed, reactive, ref, inject } from "vue";
+import MessengerParamModel from "@/modules/base/models/messenger-param.model";
+import { service } from "@/services";
+import { commonStore } from "@/stores";
+import { routeNames } from "@/routes/route-names";
+import { router } from "@/routes";
 //#region import
 //#endregion
 
@@ -141,15 +145,21 @@ import { computed, reactive, ref } from "vue";
 //#endregion
 
 //#region variables
+const userStore = commonStore();
+const isLoading = ref<boolean>(false);
 const formData = reactive<FormData>(reactiveFormData);
 const collectionBaseType = ref<string>("collection");
-
 const center = ref<number[]>([40, 40]);
 const projection = ref<string>("EPSG:4326");
 const zoom = ref<number>(20);
 const rotation = ref<number>(0);
 const view = ref(null);
 const map = ref(null);
+
+const messenger: (
+  param: MessengerParamModel
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+) => void = inject("messenger")!;
 //#endregion
 
 //#region hooks
@@ -226,24 +236,47 @@ const isButtonDisabled = computed((): boolean => {
   );
 });
 
-const handleSubmit = (): void => {
+const handleSubmit = async (): Promise<void> => {
   const { name, contact, coordinate, addressAndPhone } = formData;
-
   const data = {
-    name: name[0].value,
-    shortName: name[1].value,
-    kana: name[1].value,
-    postalCode: contact[0].value,
-    email: contact[1].value,
-    representative: contact[2].value,
-    latitude: coordinate[0].value,
-    longitude: coordinate[1].value,
-    address: addressAndPhone[0].value,
-    telephone: addressAndPhone[1].value
+    name: name[0].value.toString().trim(),
+    shortName: name[1].value.toString().trim(),
+    kana: name[1].value.toString().trim(),
+    postalCode: contact[0].value.toString().trim(),
+    email: contact[1].value.toString().trim(),
+    representative: contact[2].value.toString().trim(),
+    latitude: coordinate[0].value.toString().trim(),
+    longitude: coordinate[1].value.toString().trim(),
+    address: addressAndPhone[0].value.toString().trim(),
+    telephone: addressAndPhone[1].value.toString().trim(),
+    collectionBaseType: collectionBaseType.value.toString().trim()
   };
-  data;
+  if (!userStore.user) return;
+  isLoading.value = true;
+  const [err, res] = await service.collectionBase.createCollectionBase(data);
+  if (res) {
+    messenger({
+      title: "create_vehicle_type_msg_create_successfully",
+      message: "",
+      type: MessengerType.Success,
+      callback: (isConfirm: boolean) => {
+        isConfirm;
+        goToCollectionBaseListPage();
+      }
+    });
+  } else {
+    const msg = err?.response?.data.details[0].msg;
+    messenger({
+      title: msg.toString(),
+      message: "popup_create_fail_message",
+      type: MessengerType.Error
+    });
+  }
+  isLoading.value = false;
 };
-
+const goToCollectionBaseListPage = (): void => {
+  router.push({ name: routeNames.listCollectionBase });
+};
 const geoLocChange = (loc: number[]): void => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (view?.value as any)?.fit([loc[0], loc[1], loc[0], loc[1]], {
