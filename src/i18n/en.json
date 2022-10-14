@@ -189,5 +189,6 @@
   "collection_postal_code": "Postal code",
   "collection_address": "Address",
   "collection_phone_number": "Phone number",
-  "collection_base_msg_delete_successfully": "Collection base is deleted successfully"
+  "collection_base_msg_delete_successfully": "Collection base is deleted successfully",
+  "error_unique_constraint": "Name has already existed"
 }

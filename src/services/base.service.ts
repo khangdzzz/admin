@@ -29,21 +29,22 @@ axiosIntance.interceptors.request.use(
 );
 
 axiosIntance.interceptors.response.use(
-  (respone) => handleResponse(respone.data),
-  (error) => handleExpiredAccessToken(error)
+  (respone) => handleRequestResponse(respone.data),
+  (error) => handleRequestError(error)
 );
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const handleResponse = (data: any): any => {
+const handleRequestResponse = (data: any): any => {
   if (data?.message === "The incoming token has expired") {
     logout();
     return undefined;
   }
   return data;
 };
-const handleExpiredAccessToken = async (error: AxiosError): Promise<void> => {
+const handleRequestError = async (error: AxiosError): Promise<void> => {
   if (error.code == "ERR_NETWORK") {
     service.auth.refreshToken();
   }
+  return Promise.reject(error);
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
