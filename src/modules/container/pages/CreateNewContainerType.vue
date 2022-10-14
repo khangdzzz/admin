@@ -12,6 +12,9 @@
           @onFocus="handleOnFocus"
         >
         </CustomForm>
+        <div class="create-new-container-type-form__error" v-if="isExist">
+          {{ $t("error_unique_constraint") }}
+        </div>
         <div class="create-new-container-type-form__action">
           <a-button
             class="create-new-container-type-form__action--cancel"
@@ -62,6 +65,7 @@ const messenger: (
 
 const isDisabled = ref<boolean>(false);
 const isLoading = ref<boolean>(false);
+const isExist = ref(false);
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const dynamicValidateForm = reactive<{ formData: any[] }>({
   formData: [
@@ -105,6 +109,7 @@ const handleOnBlur = (
   dynamicValidateForm.formData[index].isFocus = false;
 };
 const handleOnFocus = (index: number | boolean | Event): void => {
+  isExist.value = false;
   index = Number(index);
   dynamicValidateForm.formData[index].isFocus = true;
 };
@@ -121,12 +126,12 @@ const createContainerType = async (): Promise<void> => {
   const newContainerTypeName = dynamicValidateForm.formData[0].value.trim();
   if (!userStore.user || !newContainerTypeName?.length) return;
   isLoading.value = true;
-  const newContainerType = await service.container.createContainerType(
+  const { error } = await service.container.createContainerType(
     userStore.user?.tenantId,
     newContainerTypeName
   );
   isLoading.value = false;
-  if (newContainerType) {
+  if (!error) {
     messenger({
       title: "create_container_type_msg_create_successfully",
       message: "",
@@ -137,6 +142,10 @@ const createContainerType = async (): Promise<void> => {
       }
     });
   } else {
+    if (error === "error_unique_constraint") {
+      isExist.value = true;
+      return;
+    }
     messenger({
       title: "create_vehicle_type_msg_create_fail_title",
       message: "create_vehicle_type_msg_create_fail_message",
@@ -174,6 +183,12 @@ const goToContainerTypeListPage = (): void => {
   border-radius: 10px;
   padding: 6px 0;
 
+  &__error {
+    margin-top: -18px;
+    padding-bottom: 8px;
+    font-size: 12px;
+    color: $red-1;
+  }
   &__title {
     font-size: 22px;
     font-weight: 600;

@@ -1,4 +1,4 @@
-import { Pagination } from "@/modules/common/models";
+import { Pagination, ServiceResponse } from "@/modules/common/models";
 import { Sort } from "@/modules/common/models/sort.enum";
 import { VehicleTypeModel } from "@/modules/vehicle-management/models";
 import { transformRequest } from "./base.service";
@@ -8,27 +8,35 @@ import {
   VehicleTypeResponseDto
 } from "./dtos/vehicle-management/create-vehicle-type.dto";
 import { DEFAULT_SORT_ORDER } from "@/services/constants";
+import { makeUniqueName } from "@/utils/string.helper";
 
 export async function createVehicleType(
   tenantId: number,
   name: string
-): Promise<VehicleTypeModel | undefined> {
+): Promise<ServiceResponse<VehicleTypeModel>> {
   const data: CreateVehicleTypeInputDto = {
     tenant_id: tenantId,
-    name
+    name: makeUniqueName(name)
   };
   const [error, res] = await transformRequest<VehicleTypeResponseDto>({
     url: "/vehicle_type",
     method: "post",
     data
   });
-  if (error || !res) return undefined;
+  if (error || !res) {
+    return {
+      error: (error?.response?.data as { details: { msg: string }[] })
+        .details[0].msg
+    };
+  }
   const { id, name: typeName, tenant_id } = res;
   return {
-    id,
-    tenantId: tenant_id,
-    name: typeName,
-    key: 0
+    res: {
+      id,
+      tenantId: tenant_id,
+      name: typeName,
+      key: 0
+    }
   };
 }
 
@@ -98,18 +106,23 @@ export async function editVehicleTypeById(
   id: string | string[],
   tenant_id: number | string | undefined,
   name: string
-): Promise<VehicleTypeModel | undefined> {
+): Promise<ServiceResponse<VehicleTypeModel>> {
   const data = {
     tenant_id,
-    name
+    name: makeUniqueName(name)
   };
   const [error, res] = await transformRequest<VehicleTypeModel>({
     url: `/vehicle_type/${id}`,
     method: "put",
     data
   });
-  if (error) return undefined;
-  return res;
+  if (error || !res) {
+    return {
+      error: (error?.response?.data as { details: { msg: string }[] })
+        .details[0].msg
+    };
+  }
+  return { res };
 }
 
 export async function deleteVehicleTypeById(ids: number[]): Promise<boolean> {

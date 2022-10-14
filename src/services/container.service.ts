@@ -1,4 +1,4 @@
-import { Pagination } from "@/modules/common/models";
+import { Pagination, ServiceResponse } from "@/modules/common/models";
 import { Sort } from "@/modules/common/models/sort.enum";
 import {
   Container,
@@ -12,6 +12,7 @@ import { CreateContainerTypeInputDto } from "./dtos/container-management/create-
 import { ContainerTypeResponseDto } from "./dtos/container/create-container-type.dto";
 import getListContainerResponse from "./mocks/container/get-list-container.reponse.json";
 import { DEFAULT_SORT_ORDER } from "@/services/constants";
+import { makeUniqueName } from "@/utils/string.helper";
 
 const data: ContainerType[] = [];
 export function getMockCollectionBase(): ContainerSelection[] {
@@ -146,24 +147,31 @@ export async function getContainerTypeById(
 export async function createContainerType(
   tenantId: number,
   name: string
-): Promise<ContainerTypeModel | undefined> {
+): Promise<ServiceResponse<ContainerTypeModel>> {
   const data: CreateContainerTypeInputDto = {
     tenant_id: tenantId,
-    name
+    name: makeUniqueName(name)
   };
   const [error, res] = await transformRequest<ContainerTypeResponseDto>({
     url: "/container_type",
     method: "post",
     data
   });
-  if (error || !res) return undefined;
+  if (error || !res) {
+    return {
+      error: (error?.response?.data as { details: { msg: string }[] })
+        .details[0].msg
+    };
+  }
   const { id, name: typeName, tenant_id } = res;
 
   return Promise.resolve({
-    id,
-    tenantId: tenant_id,
-    name: typeName,
-    key: 0
+    res: {
+      id,
+      tenantId: tenant_id,
+      name: typeName,
+      key: 0
+    }
   });
 }
 
@@ -183,16 +191,23 @@ export async function editContainerTypeById(
   id: string | string[],
   tenant_id: number | string | undefined,
   name: string
-): Promise<ContainerTypeModel | undefined> {
+): Promise<ServiceResponse<ContainerTypeModel>> {
   const data = {
     tenant_id,
-    name
+    name: makeUniqueName(name)
   };
   const [error, res] = await transformRequest<ContainerTypeModel>({
     url: `/container_type/${id}`,
     method: "put",
     data
   });
-  if (error) return undefined;
-  return res;
+  if (error || !res) {
+    return {
+      error: (error?.response?.data as { details: { msg: string }[] })
+        .details[0].msg
+    };
+  }
+  return {
+    res
+  };
 }
