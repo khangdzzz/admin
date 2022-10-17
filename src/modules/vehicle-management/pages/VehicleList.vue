@@ -72,27 +72,39 @@
           </template>
 
           <template v-if="column.key === 'plate_number'">
-            <div :class="[vehicleList.headerTitle]" @click="changeSortPlateNumber()">
+            <div
+              :class="[vehicleList.headerTitle]"
+              @click="changeSortPlateNumber()"
+            >
               <span>{{ $t(column.title) }}</span>
               <SortView class="mx-12" :sort="sortPlateNumber" />
             </div>
           </template>
           <template v-if="column.key === 'workplace_name'">
-            <div :class="[vehicleList.headerTitle]" @click="changeSortWorkPlace()">
+            <div
+              :class="[vehicleList.headerTitle]"
+              @click="changeSortWorkPlace()"
+            >
               <span>{{ $t(column.title) }}</span>
               <SortView class="mx-12" :sort="sortWorkPlace" />
             </div>
           </template>
 
           <template v-if="column.key === 'max_capacity'">
-            <div :class="[vehicleList.headerTitle]" @click="changeSortCapacity()">
+            <div
+              :class="[vehicleList.headerTitle]"
+              @click="changeSortCapacity()"
+            >
               <span>{{ $t(column.title) }}</span>
               <SortView class="mx-12" :sort="sortCapacity" />
             </div>
           </template>
 
           <template v-if="column.key === 'permission_flag'">
-            <div :class="[vehicleList.headerTitle]" @click="changeSortPermission()">
+            <div
+              :class="[vehicleList.headerTitle]"
+              @click="changeSortPermission()"
+            >
               <span>{{ $t(column.title) }}</span>
               <SortView class="mx-12" :sort="sortPermission" />
             </div>
@@ -142,7 +154,10 @@
           </template>
         </template>
       </a-table>
-      <div :class="vehicleList.pagination">
+      <div
+        v-if="!isLoading && data && data.length"
+        :class="vehicleList.pagination"
+      >
         <a-pagination
           v-model:current="pageOption.currentPage"
           v-model:page-size="pageOption.pageSize"
@@ -221,6 +236,7 @@ import { debounce } from "lodash";
 import { computed, inject, onMounted, reactive, ref, watch } from "vue";
 import { ResVehicle, Vehicle, VehicleDetail } from "../models/vehicle.model";
 import VehicleDetailModal from "./VehicleDetailModal.vue";
+import NoData from "@/modules/base/components/NoData.vue";
 //#endregion===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆
 
 //#===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜Props
@@ -539,9 +555,9 @@ watch(searchString, onSearchChange);
 
 .tableContainer {
   flex-grow: 1;
-.headerTitle{
-  font-size: 14px;
-}
+  .headerTitle {
+    font-size: 14px;
+  }
   .actionIcon {
     margin-left: 20px;
     cursor: pointer;
