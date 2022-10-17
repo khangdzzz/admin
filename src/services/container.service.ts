@@ -16,10 +16,10 @@ import { ResContainer } from "@/modules/container/models/container.model";
 import { AxiosError } from "axios";
 import { calculateSortQuery } from "@/modules/common/helpers";
 interface sortContainerDto {
-  sortType: Sort
-  sortName: Sort
-  sortWeight: Sort
-  sortCapacity: Sort
+  sortType: Sort;
+  sortName: Sort;
+  sortWeight: Sort;
+  sortCapacity: Sort;
 }
 
 const data: ContainerType[] = [];
@@ -38,14 +38,21 @@ export async function getListContainer(
   sort: sortContainerDto,
   searchKeyword: string | null | undefined = ""
 ): Promise<PaginationDto<ResContainer> | undefined> {
-  const { sortType, sortName, sortWeight, sortCapacity } = sort
+  const { sortType, sortName, sortWeight, sortCapacity } = sort;
 
-  const orderSortType = calculateSortQuery('container_type___name', sortType)
-  const orderSortName = calculateSortQuery('name', sortName)
-  const orderSortWeight = calculateSortQuery('weight', sortWeight)
-  const orderSortCapacity = calculateSortQuery('capacity', sortCapacity)
+  const orderSortType = calculateSortQuery("container_type___name", sortType);
+  const orderSortName = calculateSortQuery("name", sortName);
+  const orderSortWeight = calculateSortQuery("weight", sortWeight);
+  const orderSortCapacity = calculateSortQuery("capacity", sortCapacity);
 
-  const order_by = [orderSortType, orderSortName, orderSortWeight, orderSortCapacity].filter((item) => !!item).toString()
+  const order_by = [
+    orderSortType,
+    orderSortName,
+    orderSortWeight,
+    orderSortCapacity
+  ]
+    .filter((item) => !!item)
+    .toString();
 
   const params = {
     page,
@@ -61,7 +68,7 @@ export async function getListContainer(
 
   if (err) return undefined;
   res.current_page = page;
-  res.page_size = size
+  res.page_size = size;
   return res;
 }
 
@@ -103,8 +110,8 @@ export async function getListContainerType(
       sort === Sort.None
         ? DEFAULT_SORT_ORDER
         : sort === Sort.Asc
-          ? "name"
-          : "-name"
+        ? "name"
+        : "-name"
   };
   const [error, res] = await transformRequest<
     PaginationDto<ContainerTypeResponseDto>
@@ -142,7 +149,7 @@ export async function getListContainerType(
 export async function getContainerTypeById(
   id: string | string[]
 ): Promise<ServiceResponse<ContainerTypeModel>> {
-  const [error, res] = await transformRequest<ServiceResponse<ContainerTypeModel>>({
+  const [error, res] = await transformRequest<ContainerTypeModel>({
     url: `/container_type/${id}`,
     method: "get"
   });
@@ -152,14 +159,18 @@ export async function getContainerTypeById(
         .details[0].msg
     };
   }
-  return res;
+  return {
+    res
+  };
 }
 
 export async function createContainerType(
   tenantId: number,
   name: string
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): Promise<[AxiosError<unknown, unknown>, null] | [null, ContainerTypeResponseDto] | any> {
+): Promise<
+  [AxiosError<unknown, unknown>, null] | [null, ContainerTypeResponseDto] | any
+> {
   const data: CreateContainerTypeInputDto = {
     tenant_id: tenantId,
     name: makeUniqueName(name)
@@ -204,7 +215,9 @@ export async function editContainerTypeById(
   tenant_id: number | string | undefined,
   name: string
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): Promise<[AxiosError<unknown, unknown>, null] | [null, ContainerTypeModel] | any> {
+): Promise<
+  [AxiosError<unknown, unknown>, null] | [null, ContainerTypeModel] | any
+> {
   const data = {
     tenant_id,
     name: makeUniqueName(name)

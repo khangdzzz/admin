@@ -1,40 +1,42 @@
 <template>
   <div class="edit-container-type-form">
-    <a-card :bordered="false">
-      <h3 class="edit-container-type-form__title">
-        {{ $t("edit_container_type") }}
-      </h3>
-      <a-form :model="dynamicValidateForm" name="basic" autocomplete="off">
-        <CustomForm
-          :formData="dynamicValidateForm.formData"
-          @change="handleOnChange"
-          @onBlur="handleOnBlur"
-          @onFocus="handleOnFocus"
-        >
-        </CustomForm>
-        <div class="edit-container-type-form__error" v-if="isExist">
-          {{ $t("error_unique_constraint") }}
-        </div>
-        <div class="edit-container-type-form__action">
-          <a-button
-            class="edit-container-type-form__action--cancel"
-            :disabled="isLoading"
-            @click="redirectToContainerType"
+    <a-spin :tip="$t('common_loading')" :spinning="isLoadingInfo">
+      <a-card :bordered="false">
+        <h3 class="edit-container-type-form__title">
+          {{ $t("edit_container_type") }}
+        </h3>
+        <a-form :model="dynamicValidateForm" name="basic" autocomplete="off">
+          <CustomForm
+            :formData="dynamicValidateForm.formData"
+            @change="handleOnChange"
+            @onBlur="handleOnBlur"
+            @onFocus="handleOnFocus"
           >
-            {{ $t("btn_cancel") }}
-          </a-button>
-          <a-button
-            type="primary"
-            class="edit-container-type-form__action--submit"
-            :disabled="!isDisabled"
-            :loading="isLoading"
-            @click="handleSubmit"
-          >
-            {{ $t("btn_save") }}
-          </a-button>
-        </div>
-      </a-form>
-    </a-card>
+          </CustomForm>
+          <div class="edit-container-type-form__error" v-if="isExist">
+            {{ $t("error_unique_constraint") }}
+          </div>
+          <div class="edit-container-type-form__action">
+            <a-button
+              class="edit-container-type-form__action--cancel"
+              :disabled="isLoading"
+              @click="redirectToContainerType"
+            >
+              {{ $t("btn_cancel") }}
+            </a-button>
+            <a-button
+              type="primary"
+              class="edit-container-type-form__action--submit"
+              :disabled="!isDisabled"
+              :loading="isLoading"
+              @click="handleSubmit"
+            >
+              {{ $t("btn_save") }}
+            </a-button>
+          </div>
+        </a-form>
+      </a-card>
+    </a-spin>
   </div>
 </template>
 
@@ -69,6 +71,7 @@ const route = useRoute();
 const { id } = route.params;
 const containerTypeDetail = ref<ContainerTypeModel>();
 const isDisabled = ref<boolean>(true);
+const isLoadingInfo = ref<boolean>(false);
 const isLoading = ref<boolean>(false);
 const isExist = ref(false);
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -132,10 +135,13 @@ onMounted(() => {
 
 //#===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊Methods
 const fetchContainerTypeById = async (): Promise<void> => {
+  isLoadingInfo.value = true;
   const data = await service.container.getContainerTypeById(id.toString());
-  if (data) {
-    containerTypeDetail.value = data;
-    dynamicValidateForm.formData[0].value = data.name;
+  isLoadingInfo.value = false;
+  if (data.res) {
+    const { name } = data.res;
+    containerTypeDetail.value = data.res;
+    dynamicValidateForm.formData[0].value = name;
     isDisabled.value = true;
   }
 };
