@@ -5,11 +5,11 @@
 //
 exports[`Better Code Quality !`] = {
   value: `{
-    "src/modules/base/components/CustomForm.vue:4124131827": [
+    "src/modules/base/components/CustomForm.vue:2157047560": [
       [211, 29, 3, "Unexpected any. Specify a different type.", "193409811"],
       [231, 45, 3, "Unexpected any. Specify a different type.", "193409811"]
     ],
-    "src/modules/staff-management/pages/CollectionBase.vue:610036886": [
+    "src/modules/staff-management/pages/CollectionBase.vue:2498401558": [
       [178, 6, 6, "\'sortBy\' is assigned a value but never used.", "2170032388"]
     ],
     "src/modules/staff-management/pages/CreateNewStaff.vue:2488377755": [
@@ -20,9 +20,10 @@ exports[`Better Code Quality !`] = {
       [83, 66, 3, "Unexpected any. Specify a different type.", "193409811"],
       [104, 77, 3, "Unexpected any. Specify a different type.", "193409811"]
     ],
-    "src/services/container.service.ts:84820171": [
-      [171, 76, 3, "Unexpected any. Specify a different type.", "193409811"],
-      [218, 70, 3, "Unexpected any. Specify a different type.", "193409811"]
+    "src/services/container.service.ts:3992190803": [
+      [116, 7, 1264, "Async function \'getListContainerType\' has too many lines (59). Maximum allowed is 50.", "1040648870"],
+      [199, 76, 3, "Unexpected any. Specify a different type.", "193409811"],
+      [281, 70, 3, "Unexpected any. Specify a different type.", "193409811"]
     ],
     "src/services/vehicle.service.ts:886860264": [
       [25, 7, 1429, "Async function \'getListVehicle\' has too many lines (55). Maximum allowed is 50.", "100078105"]

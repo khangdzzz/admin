@@ -109,7 +109,7 @@
             <img
               src="@/assets/icons/ic_btn_qrcode.svg"
               :class="[containerList.actionIcon]"
-              @click="setContainerId(record.id)"
+              @click="fetchContainerDetail(record.id)"
             />
           </template>
         </template>
@@ -167,6 +167,11 @@
       </div>
     </div>
   </div>
+  <ContainerDetailModal
+    v-if="!!containerDetail"
+    :detail="containerDetail"
+    @close="containerDetail = undefined"
+  />
 </template>
 
 <script setup lang="ts">
@@ -187,7 +192,12 @@ import { service } from "@/services";
 import type { TableColumnType } from "ant-design-vue";
 import { debounce } from "lodash";
 import { computed, inject, onMounted, reactive, ref, watch } from "vue";
-import { ContainerDetail, ResContainer } from "../models/container.model";
+import {
+  Container,
+  ContainerDetail,
+  ResContainer
+} from "../models/container.model";
+import ContainerDetailModal from "./ContainerDetailModal.vue";
 
 //#endregion===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆
 
@@ -205,7 +215,7 @@ const sortCapacity = ref<Sort>(Sort.None);
 
 const selectedKeys = ref<number[]>([]);
 
-const containerId = ref<string | undefined>(undefined);
+const containerDetail = ref<Container | undefined>();
 
 const columns: TableColumnType<ContainerDetail>[] = [
   {
@@ -317,10 +327,6 @@ const totalPages = (): number => {
   return Math.ceil(Number(pageOption.total) / Number(pageOption.pageSize));
 };
 
-const setContainerId = (id: string): void => {
-  containerId.value = id;
-};
-
 const rowSelection = computed(() => {
   return {
     selectedRowKeys: selectedKeys.value,
@@ -430,6 +436,14 @@ const handleBackToList = (): void => {
   }
 };
 
+const fetchContainerDetail = async (id: string): Promise<void> => {
+  isLoading.value = true;
+  const res = await service.container.getContainerById(id);
+  isLoading.value = false;
+  if (res) {
+    containerDetail.value = res;
+  }
+};
 //#endregion===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊
 
 //#===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏Computed

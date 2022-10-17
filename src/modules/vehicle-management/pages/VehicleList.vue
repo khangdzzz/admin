@@ -520,9 +520,6 @@ const handleBackToList = (): void => {
   }
 };
 
-//#endregion===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊
-
-//#===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏Computed
 const getVehicleDetail = async (id: string): Promise<void> => {
   isLoading.value = true;
   const res = await service.vehicle.getVehicleDetail(id);
@@ -532,6 +529,10 @@ const getVehicleDetail = async (id: string): Promise<void> => {
     setVehicleId(id);
   }
 };
+//#endregion===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊
+
+//#===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏Computed
+
 //#endregion===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏
 
 //#===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍Emits
