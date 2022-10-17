@@ -29,7 +29,7 @@
   background-color: $white;
 }
 
-.ant-table-thead > tr > th {
+.ant-table-thead>tr>th {
   font-weight: 700 !important;
   line-height: 18px;
   height: 58px !important;
@@ -56,7 +56,7 @@
   border-bottom-right-radius: 10px !important;
 }
 
-.ant-table-tbody > tr.ant-table-row-selected > td {
+.ant-table-tbody>tr.ant-table-row-selected>td {
   background: $grey-2;
   border-color: rgba(0, 0, 0, 0.03);
 }
@@ -69,7 +69,7 @@
   font-weight: 400;
 }
 
-.ant-table-thead > tr > th {
+.ant-table-thead>tr>th {
   font-weight: 700;
 }
 
@@ -85,27 +85,27 @@
   background-color: $neutral-50;
 }
 
-.ant-table-container table > thead > tr > th {
+.ant-table-container table>thead>tr>th {
   background-color: $white;
 }
 
-.ant-table-container table > thead > tr:first-child th {
+.ant-table-container table>thead>tr:first-child th {
   color: $text-1;
 }
 
-.ant-table-container table > thead > tr:first-child th:first-child {
+.ant-table-container table>thead>tr:first-child th:first-child {
   border-top-left-radius: 10px !important;
 }
 
-.ant-table-container table > thead > tr:first-child th:last-child {
+.ant-table-container table>thead>tr:first-child th:last-child {
   border-top-right-radius: 10px !important;
 }
 
-.ant-table-container table > tbody > tr:last-child td:first-child {
+.ant-table-container table>tbody>tr:last-child td:first-child {
   border-bottom-left-radius: 0px;
 }
 
-.ant-table-container table > tbody > tr:last-child td:last-child {
+.ant-table-container table>tbody>tr:last-child td:last-child {
   border-bottom-right-radius: 0px;
 }
 
@@ -113,9 +113,7 @@
   background: $white;
 }
 
-.ant-table-thead
-  > tr
-  > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
+.ant-table-thead>tr>th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
   height: 0 !important;
 }
 
@@ -128,11 +126,11 @@
   .ant-spin-nested-loading {
     .ant-spin-container {
       .ant-table {
-        .ant-table-container table > tbody > tr:last-child td:last-child {
+        .ant-table-container table>tbody>tr:last-child td:last-child {
           border-bottom-right-radius: 0px;
         }
 
-        .ant-table-container table > tbody > tr:last-child td:first-child {
+        .ant-table-container table>tbody>tr:last-child td:first-child {
           border-bottom-left-radius: 0px;
         }
       }
@@ -233,7 +231,32 @@
     background-color: $neutral-50;
   }
 }
+
 .color-btn-delete.btn-action {
   color: $red-500 !important;
   border-color: $red-500 !important;
+}
+
+.ant-spin-nested-loading>div>.ant-spin {
+  .ant-spin-dot {
+
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin: 0;
+    transform: translate(-50%, -50%) !important;
+  }
+
+  .ant-spin-text {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    padding-top: 38px !important;
+    text-shadow: 0 1px 2px #fff;
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 28px;
+    line-height: 33px;
+  }
 }
