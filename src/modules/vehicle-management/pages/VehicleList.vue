@@ -59,60 +59,63 @@
       >
         <template #headerCell="{ column }">
           <template v-if="column.key === 'vehicle_type'">
-            <div @click="changeSortType()">
+            <div :class="[vehicleList.headerTitle]" @click="changeSortType()">
               <span>{{ $t(column.title) }}</span>
               <SortView class="mx-12" :sort="sortType" />
             </div>
           </template>
           <template v-if="column.key === 'name'">
-            <div @click="changeSortName()">
+            <div :class="[vehicleList.headerTitle]" @click="changeSortName()">
               <span>{{ $t(column.title) }}</span>
               <SortView class="mx-12" :sort="sortName" />
             </div>
           </template>
 
           <template v-if="column.key === 'plate_number'">
-            <div @click="changeSortPlateNumber()">
+            <div :class="[vehicleList.headerTitle]" @click="changeSortPlateNumber()">
               <span>{{ $t(column.title) }}</span>
               <SortView class="mx-12" :sort="sortPlateNumber" />
             </div>
           </template>
           <template v-if="column.key === 'workplace_name'">
-            <div @click="changeSortWorkPlace()">
+            <div :class="[vehicleList.headerTitle]" @click="changeSortWorkPlace()">
               <span>{{ $t(column.title) }}</span>
               <SortView class="mx-12" :sort="sortWorkPlace" />
             </div>
           </template>
 
           <template v-if="column.key === 'max_capacity'">
-            <div @click="changeSortCapacity()">
+            <div :class="[vehicleList.headerTitle]" @click="changeSortCapacity()">
               <span>{{ $t(column.title) }}</span>
               <SortView class="mx-12" :sort="sortCapacity" />
             </div>
           </template>
 
           <template v-if="column.key === 'permission_flag'">
-            <div @click="changeSortPermission()">
+            <div :class="[vehicleList.headerTitle]" @click="changeSortPermission()">
               <span>{{ $t(column.title) }}</span>
               <SortView class="mx-12" :sort="sortPermission" />
             </div>
           </template>
         </template>
 
-        <template #bodyCell="{ column, record }">
-          <template v-if="column.dataIndex === 'type'">
-            <span>{{ record.type }}</span>
+        <template #bodyCell="{ column, record, text }">
+          <template v-if="dataIndexColumns.includes(column.dataIndex)">
+            <span v-if="text" class="has-value"
+              >{{ !!text ? text : "---" }}
+            </span>
+            <span class="null-value" v-else>---</span>
           </template>
+
           <template v-if="column.dataIndex === 'permission_flag'">
             <a-tag
               :class="[
-                !!record.permission_flag ? 'permisson-yes' : 'permisson-no'
+                !!record.permission_flag ? 'permisson-yes' : 'permisson-no',
+                'd-flex justify-center align-center'
               ]"
             >
-              <span>
-                {{ !!record.permission_flag ? $t("yes") : $t("no") }}
-              </span></a-tag
-            >
+              {{ !!record.permission_flag ? $t("yes") : $t("no") }}
+            </a-tag>
           </template>
           <template v-if="column.dataIndex === 'action'">
             <router-link
@@ -238,7 +241,7 @@ const vehicleDetail = ref<Vehicle>();
 
 const sortPermission = ref<Sort>(Sort.None);
 
-const selectedKeys = ref<any[]>([]);
+const selectedKeys = ref<number[]>([]);
 
 const vehicleId = ref<string | undefined>(undefined);
 
@@ -386,6 +389,14 @@ const rowSelection = computed(() => {
   };
 });
 
+const dataIndexColumns = computed(() => [
+  "vehicle_type__name",
+  "name",
+  "plate_number",
+  "workplace___name",
+  "max_capacity"
+]);
+
 const fetchVehicleList = async (): Promise<void> => {
   const sort = {
     sortType: sortType.value,
@@ -528,7 +539,9 @@ watch(searchString, onSearchChange);
 
 .tableContainer {
   flex-grow: 1;
-
+.headerTitle{
+  font-size: 14px;
+}
   .actionIcon {
     margin-left: 20px;
     cursor: pointer;
@@ -572,23 +585,22 @@ watch(searchString, onSearchChange);
   border-radius: 6px;
 }
 
-@mixin permission($background, $borderColor, $color) {
-  padding: 3px 10px;
+@mixin permission($background, $borderColor, $color, $width) {
   background: $background;
   border: 1px solid $borderColor;
   border-radius: 22px;
-  span {
-    @include text(400, 16px, 16px);
-    color: $color;
-  }
+  width: $width;
+  height: 22px;
+  @include text(400, 16px, 100%);
+  color: $color;
 }
 
 .permisson-no {
-  @include permission(#feeded, rgba(245, 78, 78, 0.5), $red-1);
+  @include permission(#feeded, rgba(245, 78, 78, 0.5), $red-1, 41px);
 }
 
 .permisson-yes {
-  @include permission(#f0f8fa, rgba(7, 160, 184, 0.5), $primary);
+  @include permission(#f0f8fa, rgba(7, 160, 184, 0.5), $primary, 46px);
 }
 
 @mixin size-btn($width, $height) {
@@ -619,6 +631,14 @@ watch(searchString, onSearchChange);
     background: $grey-2;
     border-color: rgba(0, 0, 0, 0.03);
   }
+}
+.has-value,
+.null-value {
+  @include text(400, 16px, 20px);
+  color: $neutral-600;
+}
+.options-text {
+  color: $neutral-600;
 }
 </style>
 
