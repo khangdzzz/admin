@@ -46,35 +46,23 @@ export async function getListCollectionBase(
     pageSize,
     total,
     totalPage,
-    results: results.map((collectionBaseDto) => {
+    results: results.map((collectionBaseDto, index) => {
       const {
-        id,
-        name,
-        short_name,
-        name_kana,
-        base_type,
-        postal_code,
-        mail,
-        representative,
-        latitude,
-        longitude,
-        address,
-        telephone
+        short_name: shortName,
+        name_kana: kana,
+        base_type: collectionBaseType,
+        postal_code: postalCode,
+        mail: email,
+        ...rest
       } = collectionBaseDto;
       return {
-        id,
-        name,
-        shortName: short_name,
-        kana: name_kana,
-        collectionBaseType: base_type,
-        postalCode: postal_code,
-        email: mail,
-        representative,
-        latitude,
-        longitude,
-        address,
-        telephone,
-        key: 0
+        ...rest,
+        key: index,
+        shortName,
+        kana,
+        collectionBaseType,
+        postalCode,
+        email
       };
     })
   };
@@ -112,27 +100,30 @@ export function getMockCollectionBaseById(id: string | string[]): any {
   return res;
 }
 export async function createCollectionBase(
-  dataFe: CollectionBase
+  collectionBase: CollectionBase
 ): Promise<
   [AxiosError<unknown, unknown>, null] | [null, CollectionBaseResponseDto] | any
 > {
   const data: CollectionBaseResponseDto = {
-    name: dataFe.name,
-    short_name: dataFe.shortName,
-    name_kana: dataFe.kana,
-    base_type: dataFe.collectionBaseType,
-    postal_code: dataFe.postalCode,
-    mail: dataFe.email,
-    representative: dataFe.representative,
-    latitude: dataFe.latitude,
-    longitude: dataFe.longitude,
-    address: dataFe.address,
-    telephone: dataFe.telephone
+    ...collectionBase,
+    short_name: collectionBase.shortName,
+    name_kana: collectionBase.kana,
+    base_type: collectionBase.collectionBaseType,
+    postal_code: collectionBase.postalCode,
+    mail: collectionBase.email
   };
-
-  return transformRequest<CollectionBaseResponseDto>({
+  const [error, res] = await transformRequest<CollectionBaseResponseDto>({
     url: "/workplace/collection_base",
     method: "post",
     data
   });
+  if (error || !res) {
+    return {
+      error: (error?.response?.data as { details: { msg: string }[] })
+        .details[0].msg
+    };
+  }
+  return {
+    res
+  };
 }
