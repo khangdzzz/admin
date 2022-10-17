@@ -107,7 +107,7 @@
   "vehicle_type": "車両種別",
   "vehicle_name": "車両名称",
   "vehicle_number_plate": "ナンバーフレート",
-  "vehicle_max_loading_weight": "最大積載量(T)",
+  "vehicle_max_loading_weight": "最大積載量(kg)",
   "vehicle_code": "コード",
   "vehicle_add_new": "新車両追加",
   "vehicle_edit": "新規車両追加",
