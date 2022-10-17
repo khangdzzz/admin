@@ -31,7 +31,12 @@
           alt="Vehicle QR Code"
           :srcset="urlQrCode"
         />
-        <a-button :class="[VehicleDetailModal.btn]" type="primary" ghost>
+        <a-button
+          :class="[VehicleDetailModal.btn]"
+          type="primary"
+          ghost
+          @click="downloadQR"
+        >
           <template #icon>
             <img
               src="@/assets/icons/ic_download.svg"
@@ -63,6 +68,7 @@ import { i18n } from "@/i18n";
 import QRCode from "qrcode";
 import { onMounted, PropType, reactive, ref, toRefs } from "vue";
 import { Vehicle } from "../models/vehicle.model";
+import { Base64 } from "js-base64";
 
 interface Information {
   title: string;
@@ -126,19 +132,26 @@ const { information } = toRefs(form);
 //#endregion===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎
 
 //#===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌Hooks
-onMounted(() => {
-  const data = Object.values(currentVehicle).toString();
-  QRCode.toDataURL(data, (error: Error | null | undefined, url: string) => {
-    if (error) {
-      throw new Error(error.message);
-    }
-    urlQrCode.value = url;
-  });
+onMounted(async () => {
+  const qrValue = {
+    sys: "EVP",
+    type: "vehicle",
+    id: currentVehicle.id
+  };
+  const data = Base64.encode(JSON.stringify(qrValue));
+  urlQrCode.value = await QRCode.toDataURL(data, { width: 500, margin: 2 });
 });
 //#endregion===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌
 
 //#===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊Methods
-
+const downloadQR = async (): Promise<void> => {
+  const anchor = document.createElement("a");
+  anchor.href = urlQrCode.value;
+  anchor.download = `${currentVehicle.vehicleName} - ${currentVehicle.id}`;
+  document.body.appendChild(anchor);
+  anchor.click();
+  document.body.removeChild(anchor);
+};
 //#endregion===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊
 
 //#===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏Computed
@@ -189,12 +202,15 @@ onMounted(() => {
   }
   .qrCode {
     margin-right: 20px;
+
     .imgQr {
-      min-width: 200px;
-      min-height: 200px;
+      width: 200px;
+      height: 200px;
+      object-fit: contain;
     }
 
     .btn {
+      margin-top: 20px;
       padding: 0px 15px;
       width: 140px;
       height: 32px;
