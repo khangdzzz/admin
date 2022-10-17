@@ -134,7 +134,7 @@ const { information } = toRefs(form);
 onMounted(async () => {
   const qrValue = {
     sys: "EVP",
-    type: "vehicle",
+    type: "container ¥",
     id: detail.id
   };
   const data = Base64.encode(JSON.stringify(qrValue));
