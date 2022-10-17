@@ -3,6 +3,8 @@ export interface Container {
   key?: number;
   containerName: string;
   containerType: string;
+  weight?: number;
+  capacity?: string;
 }
 
 export interface ContainerSelection {
@@ -19,27 +21,27 @@ export interface ContainerType {
 }
 
 export interface ContainerDetail {
-  weight: number
+  weight: number;
   key?: number;
   name: string;
   container_type___name: string;
-  capacity: number
+  capacity: number;
 }
 
 export interface ResContainer {
   capacity: number;
   container_type___name: string;
-  container_type_id: number
+  container_type_id: number;
   created_at: Date;
   created_by: number;
-  deleted_at: Date | null
-  deleted_by: number | null
+  deleted_at: Date | null;
+  deleted_by: number | null;
   extension_code: string;
   id: number;
-  name: string
+  name: string;
   tag_id: string | null;
   tenant_id: number;
   updated_at: Date | null;
   updated_by: number | null;
-  weight: number
+  weight: number;
 }

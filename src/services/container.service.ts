@@ -16,14 +16,13 @@ import { ResContainer } from "@/modules/container/models/container.model";
 import { AxiosError } from "axios";
 import { calculateSortQuery } from "@/modules/common/helpers";
 import { Container as ContainerDTO } from "@/services/dtos/container/container.dto";
+import { ContainerDetailResponseDto } from "./dtos/container/container-detail-response.dto";
 interface sortContainerDto {
   sortType: Sort;
   sortName: Sort;
   sortWeight: Sort;
   sortCapacity: Sort;
 }
-
-const data: ContainerType[] = [];
 
 export function getMockCollectionBase(): ContainerSelection[] {
   const res: ContainerSelection[] = [
@@ -92,9 +91,27 @@ export async function updateContainer(
   return res;
 }
 
-export function getContainerById(id: string): ContainerType | undefined {
-  const container = data.find((item) => item.key === id) || undefined;
-  return container;
+export async function getContainerById(
+  id: string
+): Promise<Container | undefined> {
+  const [error, res] = await transformRequest<ContainerDetailResponseDto>({
+    url: `/container/${id}`,
+    method: "get"
+  });
+  if (!res || error) return undefined;
+  const {
+    name: containerName,
+    container_type___name: containerType,
+    weight,
+    capacity
+  } = res;
+  return {
+    id,
+    containerName,
+    containerType,
+    weight,
+    capacity: capacity?.toString() || "0"
+  };
 }
 
 export async function getListContainerType(

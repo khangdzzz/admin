@@ -55,7 +55,7 @@
   "search_input": "Search",
   "edit_container_type": "Edit container type",
   "container_weight": "Weight (kg)",
-  "container_capacity": "Capacity",
+  "container_capacity": "Capacity (m3)",
   "add_new_container_type": "Add new container type",
   "delete_container_msg_delete_successfully": "Container is deleted successfully",
   "menu_lbl_hello": "Hello, {name}",
