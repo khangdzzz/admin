@@ -8,6 +8,7 @@ import * as staff from "./staff.service";
 import * as collectionBase from "./collection-base.service";
 import * as customer from "./customer.service";
 import * as constants from "./constants";
+import * as customerManagement from "./customer-management.service";
 export const service = {
   auth,
   localStorage,
@@ -18,5 +19,6 @@ export const service = {
   staff,
   collectionBase,
   constants,
-  customer
+  customer,
+  customerManagement
 };

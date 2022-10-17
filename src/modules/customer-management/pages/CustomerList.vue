@@ -51,7 +51,11 @@
       <template #bodyCell="{ column, record }">
         <template v-if="column.key === 'action'">
           <a>
-            <img src="@/assets/icons/ic_btn_edit.svg" class="action-icon" />
+            <img
+              src="@/assets/icons/ic_btn_edit.svg"
+              class="action-icon"
+              @click="handleClickEdit(record.key)"
+            />
           </a>
           <a @click="deleteCustomer(record.id)">
             <img src="@/assets/icons/ic_btn_delete.svg" class="action-icon"
@@ -118,6 +122,7 @@
 //#region import
 import IcTrash from "@/assets/icons/IcTrash.vue";
 import ListSearchHeader from "@/modules/base/components/ListSearchHeader.vue";
+import { routeNames, router } from "@/routes";
 import { computed, onMounted, reactive, ref, inject } from "vue";
 import { columns } from "../models/CustomerListColumn";
 import { data } from "../models/CustomerListData";
@@ -229,6 +234,10 @@ const onDeleteCustomer = async (deleteIds: number[]): Promise<void> => {
   pageOption.currentPage = 1;
   selectedKeys.value = [];
   searchString.value = "";
+};
+
+const handleClickEdit = (id: string): void => {
+  router.push({ name: routeNames.editCustomer, params: { id } });
 };
 //#endregion
 
