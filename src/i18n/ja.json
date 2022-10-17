@@ -204,5 +204,7 @@
   "popup_create_fail_message": "後でやり直しください ",
   "permission": "廃棄物許可",
   "capacity": "最大積載量",
-  "common_lbl_coming_soon": "近日公開"
+  "common_lbl_coming_soon": "近日公開",
+  "container_successfully_created": "風袋が作成されました",
+  "container_create_failed": "作成に失敗しました"
 }

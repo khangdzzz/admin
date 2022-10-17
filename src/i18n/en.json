@@ -212,5 +212,7 @@
   "error_unique_constraint": "Name has already existed",
   "popup_create_fail_title": "Create failed",
   "popup_create_fail_message": "Please try again later",
+  "container_successfully_created": "Container is created successfully",
+  "container_create_failed": "Create failed",
   "common_lbl_coming_soon": "Coming soon"
 }

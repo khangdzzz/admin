@@ -400,7 +400,6 @@ const filterOption = (input: string, option: any): boolean => {
   .ant-input {
     position: relative;
     left: 0 !important;
-    padding-left: 0 !important;
     padding-top: 8px !important;
   }
 }

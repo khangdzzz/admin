@@ -15,6 +15,7 @@ import { makeUniqueName } from "@/utils/string.helper";
 import { ResContainer } from "@/modules/container/models/container.model";
 import { AxiosError } from "axios";
 import { calculateSortQuery } from "@/modules/common/helpers";
+import { Container as ContainerDTO } from "@/services/dtos/container/container.dto";
 interface sortContainerDto {
   sortType: Sort;
   sortName: Sort;
@@ -98,7 +99,7 @@ export function getContainerById(id: string): ContainerType | undefined {
 
 export async function getListContainerType(
   page: number,
-  size: number,
+  size: number | string,
   sort: Sort = Sort.None,
   searchKeyword: string | null | undefined = ""
 ): Promise<Pagination<ContainerTypeModel> | undefined> {
@@ -121,7 +122,17 @@ export async function getListContainerType(
     params
   });
   if (error || !res) return undefined;
-  if (!res) return Promise.resolve(undefined);
+
+  if (size === "full" && Array.isArray(res)) {
+    return {
+      currentPage: 1,
+      pageSize: "full",
+      total: 1,
+      totalPage: 1,
+      results: res
+    };
+  }
+
   const {
     results,
     current_page: currentPage = page,
@@ -196,6 +207,41 @@ export async function createContainerType(
       key: 0
     }
   });
+}
+
+export async function createContainer(
+  name: string,
+  container_type_id: number,
+  extension_code: string,
+  tag_id: string,
+  weight: number,
+  capacity: number
+): Promise<ServiceResponse<ContainerDTO>> {
+  const data = {
+    name,
+    container_type_id,
+    extension_code,
+    tag_id,
+    weight,
+    capacity
+  };
+
+  const [error, res] = await transformRequest<ContainerDTO>({
+    url: "container",
+    method: "post",
+    data
+  });
+
+  if (error || !res) {
+    return {
+      error: (error?.response?.data as { details: { msg: string }[] })
+        .details[0].msg
+    };
+  }
+
+  return {
+    res
+  };
 }
 
 export async function deleteContainerTypeById(ids: number[]): Promise<boolean> {
