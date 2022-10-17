@@ -104,13 +104,9 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: "/customer-management",
-    name: routeNames.customerManagement,
     beforeEnter: requireLoginGuard,
     meta: {
       layout: ScreenLayout.DEFAULT_LAYOUT
-    },
-    redirect: {
-      name: routeNames.customerList
     },
     children: [
       {

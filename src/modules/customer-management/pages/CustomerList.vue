@@ -62,9 +62,17 @@
           /></a>
         </template>
         <template v-if="column.key === 'name'">
-          <a-tooltip placement="topLeft">
+          <a-tooltip
+            overlayClassName="tooltip-name-container"
+            placement="topLeft"
+          >
             <template #title>
-              <span>External code: {{ record.externalCode }}</span>
+              <span class="tooltip-name-style">
+                <span class="tooltip-name-title">External code: </span>
+                <span class="tooltip-name-description">{{
+                  record.externalCode
+                }}</span>
+              </span>
             </template>
             {{ record.name }}
           </a-tooltip>
@@ -333,5 +341,26 @@ const tableMaxHeight = computed(() => {
       }
     }
   }
+}
+.tooltip-name-container .tooltip-name-style {
+  color: $neutral-0;
+}
+.tooltip-name-container .ant-tooltip-inner {
+  border-radius: 8px !important;
+  background: rgba(0, 0, 0, 0.9);
+  padding: 9px 8px;
+}
+.tooltip-name-container .tooltip-name-title {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+}
+.tooltip-name-container .tooltip-name-description {
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 20px;
+}
+.ant-tooltip-content {
+  display: block !important;
 }
 </style>
