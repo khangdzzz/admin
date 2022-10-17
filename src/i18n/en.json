@@ -211,5 +211,6 @@
   "popup_delete_fail_lbl_message": "Please try again later",
   "error_unique_constraint": "Name has already existed",
   "popup_create_fail_title": "Create failed",
-  "popup_create_fail_message": "Please try again later"
+  "popup_create_fail_message": "Please try again later",
+  "common_lbl_coming_soon": "Coming soon"
 }

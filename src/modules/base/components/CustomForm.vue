@@ -68,6 +68,7 @@
       :style="item.style"
       :dropdownClassName="item.dropdownClassName"
       :mode="item.mode"
+      :type="item.keyboardType || ''"
       autocomplete="new-password"
       show-search
       :filter-option="filterOption"

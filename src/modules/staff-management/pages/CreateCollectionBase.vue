@@ -368,30 +368,6 @@ const geoLocChange = (loc: number[]): void => {
         border-radius: 10px;
       }
     }
-
-    &__radio-group {
-      .ant-radio-wrapper {
-        font-style: normal;
-        font-weight: 400;
-        font-size: 18px;
-        line-height: 100%;
-        color: $neutral-600;
-        .ant-radio {
-          font-size: 0px;
-          .ant-radio-inner {
-            width: 24px;
-            height: 24px;
-
-            &::after {
-              width: 24px;
-              height: 24px;
-              margin-top: -12px;
-              margin-left: -12px;
-            }
-          }
-        }
-      }
-    }
   }
 
   @media only screen and (max-width: 1382px) {

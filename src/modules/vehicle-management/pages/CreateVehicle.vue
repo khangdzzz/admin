@@ -5,75 +5,84 @@
     align="middle"
     class="create-vehicle-container"
   >
-    <div class="create-vehicle-content">
-      <h2 class="title">{{ $t("vehicle_add_new") }}</h2>
-      <div class="create-form">
-        <a-form :model="dynamicValidateForm" name="basic" autocomplete="off">
-          <a-form-item
-            name="formData0value"
-            :validateFirst="false"
-            v-if="isTenantAdmin()"
-          >
-            <a-radio-group
-              v-model:value="ownerType"
-              class="radio-group"
-              :disabled="isLoading"
+    <a-spin :tip="$t('common_loading')" :spinning="isFetchingMasterData">
+      <div class="create-vehicle-content">
+        <h2 class="title">{{ $t("vehicle_add_new") }}</h2>
+        <div class="create-form">
+          <a-form :model="dynamicValidateForm" name="basic" autocomplete="off">
+            <a-form-item
+              name="formData0value"
+              :validateFirst="false"
+              v-if="isTenantAdmin()"
             >
-              <label class="label-radio"
-                >{{ $t("vehicle_owner_type") }}<span> *</span></label
+              <a-radio-group
+                v-model:value="ownerType"
+                class="radio-group"
+                :disabled="isLoading"
               >
-              <a-radio value="collectionBase">{{
-                $t("collection_base")
-              }}</a-radio>
-              <a-radio value="partner">{{ $t("partner") }}</a-radio>
-            </a-radio-group>
-          </a-form-item>
-          <CustomForm
-            :formData="dynamicValidateForm.formData"
-            @change="handleOnChange"
-            @onBlur="handleOnBlur"
-            @onFocus="handleOnFocus"
-          ></CustomForm>
-        </a-form>
+                <label class="label-radio"
+                  >{{ $t("vehicle_owner_type") }}<span> *</span></label
+                >
+                <a-radio value="collectionBase">{{
+                  $t("collection_base")
+                }}</a-radio>
+                <a-tooltip placement="top">
+                  <template #title>
+                    <span>{{ $t("common_lbl_coming_soon") }}</span>
+                  </template>
+                  <a-radio value="partner" class="px-16" disabled>{{
+                    $t("partner")
+                  }}</a-radio>
+                </a-tooltip>
+              </a-radio-group>
+            </a-form-item>
+            <CustomForm
+              :formData="dynamicValidateForm.formData"
+              @change="handleOnChange"
+              @onBlur="handleOnBlur"
+              @onFocus="handleOnFocus"
+            ></CustomForm>
+          </a-form>
+        </div>
+        <a-row
+          type="flex"
+          justify="space-between"
+          align="middle"
+          class="check-permision"
+        >
+          <a-col :span="19">
+            <h3>{{ $t("vehicle_industrial_waste") }}</h3>
+          </a-col>
+          <a-col :span="5" class="mr-2">
+            <a-checkbox v-model:checked="checkPermission" :disabled="isLoading">
+              {{ $t("vehicle_permission") }}
+            </a-checkbox>
+          </a-col>
+        </a-row>
+        <a-row type="flex" justify="center" align="middle" :gutter="20">
+          <a-col :span="12">
+            <a-button
+              type="primary"
+              @click="onCancel"
+              :disabled="isLoading"
+              ghost
+              class="btn"
+              >{{ $t("btn_cancel") }}</a-button
+            >
+          </a-col>
+          <a-col :span="12">
+            <a-button
+              type="primary"
+              class="btn"
+              :loading="isLoading"
+              :disabled="!isValidated"
+              @click="onCreate"
+              >{{ $t("btn_submit") }}</a-button
+            >
+          </a-col>
+        </a-row>
       </div>
-      <a-row
-        type="flex"
-        justify="space-between"
-        align="middle"
-        class="check-permision"
-      >
-        <a-col :span="19">
-          <h3>{{ $t("vehicle_industrial_waste") }}</h3>
-        </a-col>
-        <a-col :span="5" class="mr-2">
-          <a-checkbox v-model:checked="checkPermission" :disabled="isLoading">
-            {{ $t("vehicle_permission") }}
-          </a-checkbox>
-        </a-col>
-      </a-row>
-      <a-row type="flex" justify="center" align="middle" :gutter="20">
-        <a-col :span="12">
-          <a-button
-            type="primary"
-            @click="onCancel"
-            :disabled="isLoading"
-            ghost
-            class="btn"
-            >{{ $t("btn_cancel") }}</a-button
-          >
-        </a-col>
-        <a-col :span="12">
-          <a-button
-            type="primary"
-            class="btn"
-            :loading="isLoading"
-            :disabled="!isValidated"
-            @click="onCreate"
-            >{{ $t("btn_submit") }}</a-button
-          >
-        </a-col>
-      </a-row>
-    </div>
+    </a-spin>
   </a-row>
 </template>
 
@@ -103,6 +112,7 @@ const vehicleTypes = ref<VehicleSelection[]>();
 const isValidated = ref<boolean>(false);
 const checkPermission = ref<boolean>(false);
 const isLoading = ref<boolean>(false);
+const isFetchingMasterData = ref<boolean>(false);
 const userStore = commonStore();
 const ownerType = ref<string>("collectionBase");
 const mockPartner = ref<VehicleSelection[]>([{ value: "", label: "" }]);
@@ -222,7 +232,7 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
           message: i18n.global.t("max_length_input", { maxLength: 10 })
         },
         {
-          pattern: /^\d*$/,
+          pattern: /[\d.]/,
           message: i18n.global.t("allow_input_number")
         }
       ],
@@ -235,10 +245,14 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
 //#endregion
 
 //#region hooks
-onMounted(() => {
-  fetchVehicleType();
-  fetchCollectionBase();
-  fetchMockData();
+onMounted(async () => {
+  isFetchingMasterData.value = true;
+  await Promise.all([
+    fetchVehicleType(),
+    fetchCollectionBase(),
+    fetchMockData()
+  ]);
+  isFetchingMasterData.value = false;
 });
 //#endregion
 
@@ -314,7 +328,7 @@ const onCreate = async (): Promise<void> => {
     vehicleType: dynamicValidateForm.formData[1].value,
     vehicleName: dynamicValidateForm.formData[2].value,
     vehiclePlate: dynamicValidateForm.formData[3].value,
-    maxWeight: dynamicValidateForm.formData[4].value,
+    maxWeight: +dynamicValidateForm.formData[4].value,
     isHasPermission: checkPermission.value ? 1 : 0
   };
   const res = await service.vehicle.createVehicle(vehicleInfo);
@@ -343,7 +357,7 @@ const onCreate = async (): Promise<void> => {
 //#region reactive
 
 watch(dynamicValidateForm, () => {
-  const regex = /^\d*$/;
+  const regex = /[\d.]/;
   if (
     dynamicValidateForm.formData[0].value &&
     dynamicValidateForm.formData[1].value &&
@@ -463,6 +477,17 @@ watch(
     .ant-checkbox-inner {
       width: 22px;
       height: 22px;
+    }
+  }
+
+  .ant-input-number {
+    width: 100% !important;
+    .ant-input-number-input-wrap {
+      height: 100% !important;
+      .ant-input-number-input {
+        margin-top: 8px;
+        height: 50px !important;
+      }
     }
   }
 }
