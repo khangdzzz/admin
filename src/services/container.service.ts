@@ -10,11 +10,20 @@ import { transformRequest } from "./base.service";
 import { PaginationDto } from "./dtos/common/pagination.dto";
 import { CreateContainerTypeInputDto } from "./dtos/container-management/create-container-type.dto";
 import { ContainerTypeResponseDto } from "./dtos/container/create-container-type.dto";
-import getListContainerResponse from "./mocks/container/get-list-container.reponse.json";
 import { DEFAULT_SORT_ORDER } from "@/services/constants";
 import { makeUniqueName } from "@/utils/string.helper";
+import { ResContainer } from "@/modules/container/models/container.model";
+import { AxiosError } from "axios";
+import { calculateSortQuery } from "@/modules/common/helpers";
+interface sortContainerDto {
+  sortType: Sort
+  sortName: Sort
+  sortWeight: Sort
+  sortCapacity: Sort
+}
 
 const data: ContainerType[] = [];
+
 export function getMockCollectionBase(): ContainerSelection[] {
   const res: ContainerSelection[] = [
     { value: 1, label: "Collection Base 1" },
@@ -24,35 +33,36 @@ export function getMockCollectionBase(): ContainerSelection[] {
 }
 
 export async function getListContainer(
-  page: 1,
-  size: 10
-): Promise<Pagination<ContainerType> | undefined> {
-  page;
-  size;
-  const res: PaginationDto<ContainerTypeResponseDto> = getListContainerResponse;
-  if (!res) return Promise.resolve(undefined);
-  const {
-    current_page: currentPage,
-    page_size: pageSize,
-    count: total,
-    total_page: totalPage,
-    results
-  } = res;
-  return {
-    currentPage,
-    pageSize,
-    total,
-    totalPage,
-    results: results.map((vehicleTypeDto) => {
-      const { id, name, tenant_id: tenantId } = vehicleTypeDto;
-      return {
-        key: id,
-        id,
-        name,
-        tenantId
-      };
-    })
+  page: number,
+  size: number,
+  sort: sortContainerDto,
+  searchKeyword: string | null | undefined = ""
+): Promise<PaginationDto<ResContainer> | undefined> {
+  const { sortType, sortName, sortWeight, sortCapacity } = sort
+
+  const orderSortType = calculateSortQuery('container_type___name', sortType)
+  const orderSortName = calculateSortQuery('name', sortName)
+  const orderSortWeight = calculateSortQuery('weight', sortWeight)
+  const orderSortCapacity = calculateSortQuery('capacity', sortCapacity)
+
+  const order_by = [orderSortType, orderSortName, orderSortWeight, orderSortCapacity].filter((item) => !!item).toString()
+
+  const params = {
+    page,
+    page_size: size,
+    name__like: searchKeyword ? `%${searchKeyword}%` : undefined,
+    order_by: order_by?.length ? order_by : DEFAULT_SORT_ORDER
   };
+  const [err, res] = await transformRequest<PaginationDto<ResContainer>>({
+    url: "/container",
+    method: "get",
+    params
+  });
+
+  if (err) return undefined;
+  res.current_page = page;
+  res.page_size = size
+  return res;
 }
 
 export function getContainerTypes(): ContainerType[] {
@@ -93,8 +103,8 @@ export async function getListContainerType(
       sort === Sort.None
         ? DEFAULT_SORT_ORDER
         : sort === Sort.Asc
-        ? "name"
-        : "-name"
+          ? "name"
+          : "-name"
   };
   const [error, res] = await transformRequest<
     PaginationDto<ContainerTypeResponseDto>
@@ -131,19 +141,25 @@ export async function getListContainerType(
 
 export async function getContainerTypeById(
   id: string | string[]
-): Promise<ContainerTypeModel | undefined> {
-  const [error, res] = await transformRequest<ContainerTypeModel>({
+): Promise<ServiceResponse<ContainerTypeModel>> {
+  const [error, res] = await transformRequest<ServiceResponse<ContainerTypeModel>>({
     url: `/container_type/${id}`,
     method: "get"
   });
-  if (error) return undefined;
+  if (error || !res) {
+    return {
+      error: (error?.response?.data as { details: { msg: string }[] })
+        .details[0].msg
+    };
+  }
   return res;
 }
 
 export async function createContainerType(
   tenantId: number,
   name: string
-): Promise<ServiceResponse<ContainerTypeModel>> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+): Promise<[AxiosError<unknown, unknown>, null] | [null, ContainerTypeResponseDto] | any> {
   const data: CreateContainerTypeInputDto = {
     tenant_id: tenantId,
     name: makeUniqueName(name)
@@ -187,7 +203,8 @@ export async function editContainerTypeById(
   id: string | string[],
   tenant_id: number | string | undefined,
   name: string
-): Promise<ServiceResponse<ContainerTypeModel>> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+): Promise<[AxiosError<unknown, unknown>, null] | [null, ContainerTypeModel] | any> {
   const data = {
     tenant_id,
     name: makeUniqueName(name)
@@ -206,4 +223,16 @@ export async function editContainerTypeById(
   return {
     res
   };
+}
+
+export async function deleteContainer(ids: number[]): Promise<boolean> {
+  const [error] = await transformRequest({
+    url: `/container`,
+    method: "delete",
+    data: {
+      ids
+    }
+  });
+  if (error) return false;
+  return true;
 }

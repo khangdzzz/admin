@@ -46,6 +46,7 @@
   "container_weight": "重量(kg)",
   "container_capacity": "容量(m3)",
   "add_new_container_type": "風袋新規種別の追加",
+  "delete_container_msg_delete_successfully": "風袋が削除されました",
   "name": "名称",
   "delete_btn": "Delete",
   "search_input": "Search",

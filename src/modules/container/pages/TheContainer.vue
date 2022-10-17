@@ -1,133 +1,326 @@
 <template>
-  <ListSearchHeader
-    :title="$t('container_container')"
-    v-model:model-value.sync="searchString"
-  >
-    <template #action>
-      <a-button
-        class="btn-action color-btn-delete"
-        type="primary"
-        ghost
-        v-if="selectedKeys.length > 0"
-      >
-        <template #icon>
-          <IcTrash class="btn-icon" :color="'#F54E4E'" />
-        </template>
-        {{ $t("delete_btn") }}
-      </a-button>
-      <a-button class="btn-action" type="primary" ghost>
-        <template #icon>
-          <img src="@/assets/icons/ic_import.svg" class="btn-icon" />
-        </template>
-        {{ $t("import_btn") }}
-      </a-button>
-      <a-button class="btn-action" type="primary" ghost>
-        <template #icon>
-          <img src="@/assets/icons/ic_export.svg" class="btn-icon" />
-        </template>
-        {{ $t("export_btn") }}
-      </a-button>
-      <a-button type="primary" class="btn-add-new" @click="handleAddContainer">
-        <template #icon>
-          <img src="@/assets/icons/ic_plus.svg" class="btn-icon" />
-        </template>
-        {{ $t("add_btn") }}
-      </a-button>
-    </template>
-  </ListSearchHeader>
-  <div class="table-container">
-    <a-table
-      :row-selection="rowSelection"
-      :columns="columns"
-      :data-source="data"
-      :scroll="{ y: 700 }"
+  <div class="fill-height d-flex flex-column">
+    <ListSearchHeader
+      ref="searchHeader"
+      :title="$t('container')"
+      :colTitle="3"
+      :colAction="21"
+      v-model:model-value.sync="searchString"
+      @onChange="handleSearchChange"
     >
-      <template #headerCell="{ column }">
-        <template v-if="column.key === 'index'">
-          <span>{{ $t(column.title) }}</span>
-        </template>
-        <template
-          v-if="['containerName', 'containerType'].includes(column.key)"
+      <template #action>
+        <a-button
+          class="btn-action color-btn-delete"
+          ghost
+          type="primary"
+          v-if="selectedKeys.length > 0"
+          @click="deleteContainer(undefined)"
         >
-          <div>
-            <span>{{ $t(column.title) }}</span>
-            <SortView class="mx-12" :sort="sort" />
-          </div>
-        </template>
+          <template #icon>
+            <IcTrash class="btn-icon" :color="'#F54E4E'" />
+          </template>
+          {{ $t("delete_btn") }}
+        </a-button>
+        <a-button class="btn-action" type="primary">
+          <template #icon>
+            <img src="@/assets/icons/ic_import.svg" class="btn-icon" />
+          </template>
+          {{ $t("import_btn") }}
+        </a-button>
+        <a-button class="btn-action" type="primary">
+          <template #icon>
+            <img src="@/assets/icons/ic_export.svg" class="btn-icon" />
+          </template>
+          {{ $t("export_btn") }}
+        </a-button>
+        <a-button type="primary" class="btn-add-new" @click="onCreate">
+          <template #icon>
+            <img src="@/assets/icons/ic_plus.svg" class="btn-icon" />
+          </template>
+          {{ $t("add_new_type_btn") }}
+        </a-button>
       </template>
-      <template #bodyCell="{ column, record, index }">
-        <template v-if="column.key === 'index'">
-          <span>{{ index + 1 }}</span>
+    </ListSearchHeader>
+    <div :class="[containerList.tableContainer, 'mx-30 mb-30']">
+      <NoData
+        :value="searchValue"
+        :is-loading="isLoading"
+        @onClick="handleBackToList"
+        v-if="isLoading || !data || !data.length"
+      />
+
+      <a-table
+        :row-selection="rowSelection"
+        :columns="columns"
+        :data-source="data"
+        :pagination="false"
+        v-if="!isLoading && data && data.length > 0"
+        :scroll="{ y: 700 }"
+      >
+        <template #headerCell="{ column }">
+          <template v-if="column.key === 'name'">
+            <div @click="changeSortName()">
+              <span>{{ $t(column.title) }}</span>
+              <SortView class="mx-12" :sort="sortName" />
+            </div>
+          </template>
+          <template v-if="column.key === 'type'">
+            <div @click="changeSortType()">
+              <span>{{ $t(column.title) }}</span>
+              <SortView class="mx-12" :sort="sortType" />
+            </div>
+          </template>
+
+          <template v-if="column.key === 'capacity'">
+            <div @click="changeSortCapacity()">
+              <span>{{ $t(column.title) }}</span>
+              <SortView class="mx-12" :sort="sortCapacity" />
+            </div>
+          </template>
+          <template v-if="column.key === 'weight'">
+            <div @click="changeSortWeight()">
+              <span>{{ $t(column.title) }}</span>
+              <SortView class="mx-12" :sort="sortWeight" />
+            </div>
+          </template>
         </template>
-        <template v-if="column.key === 'action'">
-          <a @click="onEditContainer(record.key)">
-            <img src="@/assets/icons/ic_btn_edit.svg" class="action-icon" />
-          </a>
-          <img src="@/assets/icons/ic_btn_delete.svg" class="action-icon" />
-          <img src="@/assets/icons/ic_btn_qrcode.svg" class="action-icon" />
+
+        <template #bodyCell="{ column, record }">
+          <template v-if="column.dataIndex === 'type'">
+            <span>{{ record.type }}</span>
+          </template>
+          <template v-if="column.dataIndex === 'action'">
+            <router-link
+              :to="{
+                name: routeNames.editContainer,
+                params: { id: record.id }
+              }"
+            >
+              <img
+                src="@/assets/icons/ic_btn_edit.svg"
+                :class="[containerList.actionIcon]"
+              />
+            </router-link>
+            <img
+              src="@/assets/icons/ic_btn_delete.svg"
+              :class="[containerList.actionIcon]"
+              @click="deleteContainer(record.id)"
+            />
+            <img
+              src="@/assets/icons/ic_btn_qrcode.svg"
+              :class="[containerList.actionIcon]"
+              @click="setContainerId(record.id)"
+            />
+          </template>
         </template>
-      </template>
-    </a-table>
+      </a-table>
+      <div :class="containerList.pagination">
+        <a-pagination
+          v-model:current="pageOption.currentPage"
+          v-model:page-size="pageOption.pageSize"
+          :total="pageOption.total"
+          :pageSizeOptions="['20', '30', '40', '50']"
+          show-size-changer
+          @showSizeChange="onShowSizeChange"
+          @change="onChange"
+          :class="['ant-pagination', 'd-flex', 'justify-end']"
+        >
+          <template #itemRender="item">
+            <a-button
+              :class="[containerList.btnPagination, 'mt-10']"
+              type="primary"
+              ghost
+              v-if="item.type === 'prev' && isShowPrevBtn()"
+            >
+              <img
+                src="@/assets/icons/ic_prev.svg"
+                :class="[containerList.btnIconPrev]"
+              />
+              <span :class="[containerList.action]">Previous</span>
+            </a-button>
+            <a-button
+              :class="[containerList.btnPagination, 'mt-10', 'mr-15']"
+              type="primary"
+              ghost
+              v-else-if="item.type === 'next' && isShowNextBtn()"
+            >
+              <span :class="[containerList.action]">Next</span>
+              <img
+                src="@/assets/icons/ic_next.svg"
+                :class="[containerList.btnIconNext]"
+              />
+            </a-button>
+
+            <component
+              v-else-if="item.type === 'page'"
+              :is="item.originalElement"
+            ></component>
+          </template>
+
+          <template #buildOptionText="{ value }">
+            <div class="options-text">
+              <span class="mr-13">{{ value }} </span>
+              <img src="@/assets/icons/ic_arrow.svg" />
+            </div>
+          </template>
+        </a-pagination>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-//#region import
-import { i18n } from "@/i18n";
-import SortView from "@/modules/common/components/SortView.vue";
-import ListSearchHeader from "@/modules/base/components/ListSearchHeader.vue";
-import { routeNames, router } from "@/routes";
-import { computed, ref } from "vue";
-import { Container } from "@/modules/container/models";
-import { Sort } from "@/modules/common/models/sort.enum";
+//#===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆import
 import IcTrash from "@/assets/icons/IcTrash.vue";
+import { i18n } from "@/i18n";
+import ListSearchHeader from "@/modules/base/components/ListSearchHeader.vue";
+import NoData from "@/modules/base/components/NoData.vue";
+import MessengerParamModel from "@/modules/base/models/messenger-param.model";
+import { MessengerType } from "@/modules/base/models/messenger-type.enum";
+import HeaderRef from "@/modules/base/models/search-header.model";
+import SortView from "@/modules/common/components/SortView.vue";
+import { Pagination } from "@/modules/common/models";
+import { Sort } from "@/modules/common/models/sort.enum";
+import { router } from "@/routes";
+import { routeNames } from "@/routes/route-names";
+import { service } from "@/services";
+import type { TableColumnType } from "ant-design-vue";
+import { debounce } from "lodash";
+import { computed, inject, onMounted, reactive, ref, watch } from "vue";
+import { ContainerDetail, ResContainer } from "../models/container.model";
 
-//#endregion
+//#endregion===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆
 
-//#region props
+//#===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜Props
+//#endregion===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜Props
 
-//#endregion
+//#===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎Variables
+const sortType = ref<Sort>(Sort.None);
 
-//#region variables
-const sort = ref<Sort>(Sort.None);
-const columns = [
+const sortName = ref<Sort>(Sort.None);
+
+const sortWeight = ref<Sort>(Sort.None);
+
+const sortCapacity = ref<Sort>(Sort.None);
+
+const selectedKeys = ref<number[]>([]);
+
+const containerId = ref<string | undefined>(undefined);
+
+const columns: TableColumnType<ContainerDetail>[] = [
   {
     title: i18n.global.t("container_container_name"),
-    dataIndex: "containerName",
-    key: "containerName",
-    width: "40%"
+    dataIndex: "name",
+    key: "name"
   },
   {
     title: i18n.global.t("container_container_type"),
-    dataIndex: "containerType",
-    key: "containerType",
-    width: "40%"
+    dataIndex: "container_type___name",
+    key: "type"
   },
   {
-    title: "",
+    title: i18n.global.t("container_weight"),
+    dataIndex: "weight",
+    key: "weight"
+  },
+  {
+    title: i18n.global.t("capacity"),
+    dataIndex: "capacity",
+    key: "capacity"
+  },
+  {
     dataIndex: "action",
-    key: "action",
-    width: "15%"
+    width: "180px"
   }
 ];
-const selectedKeys = ref<number[]>([]);
-const data: Container[] = [];
-
-
+const messenger: (param: MessengerParamModel) => void =
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  inject("messenger")!;
+const data = ref<ResContainer[]>([]);
+const searchValue = ref<string>("");
+const searchHeader = ref<HeaderRef | null>(null);
+const isLoading = ref<boolean>(false);
 const searchString = ref<string>("");
-for (let i = 0; i < 20; i++) {
-  data.push({
-    key: i,
-    containerName: `Basket trolley No. ${i}`,
-    containerType: `Folding Container ${i}`
-  });
-}
-//#endregion
+const pageOption = reactive<Pagination<ResContainer>>({
+  currentPage: 1,
+  pageSize: 20,
+  total: 0
+});
+//#endregion===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎
 
-//#region hooks
-//#endregion
+//#===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌Hooks
+onMounted(() => {
+  fetchContainerList();
+});
+//#endregion===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌
 
-//#region function
+//#===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊Methods
+const calculateNextSortStatus = (currentSort: Sort): Sort => {
+  switch (currentSort) {
+    case Sort.Asc:
+      return Sort.Desc;
+    case Sort.Desc:
+      return Sort.None;
+    default:
+      return Sort.Asc;
+  }
+};
+
+const changeSortType = (): void => {
+  sortType.value = calculateNextSortStatus(sortType.value);
+  fetchContainerList();
+};
+
+const changeSortName = (): void => {
+  sortName.value = calculateNextSortStatus(sortName.value);
+  fetchContainerList();
+};
+
+const changeSortCapacity = (): void => {
+  sortCapacity.value = calculateNextSortStatus(sortCapacity.value);
+  fetchContainerList();
+};
+
+const changeSortWeight = (): void => {
+  sortWeight.value = calculateNextSortStatus(sortWeight.value);
+  fetchContainerList();
+};
+
+const onShowSizeChange = (current: number, pageSize: number): void => {
+  pageOption.currentPage = current;
+  pageOption.pageSize = pageSize;
+  fetchContainerList();
+};
+
+const onChange = (pageNumber: number): void => {
+  pageOption.currentPage = pageNumber;
+  fetchContainerList();
+};
+
+const isShowPrevBtn = (): boolean => {
+  const isFirtPage = pageOption.currentPage === 1;
+  if (totalPages() === 1 || isFirtPage) return false;
+
+  return true;
+};
+
+const isShowNextBtn = (): boolean => {
+  const isLastPage =
+    pageOption.currentPage ===
+    Math.ceil(Number(pageOption.total) / Number(pageOption?.pageSize));
+
+  if (totalPages() === 1 || isLastPage) return false;
+  return true;
+};
+
+const totalPages = (): number => {
+  return Math.ceil(Number(pageOption.total) / Number(pageOption.pageSize));
+};
+
+const setContainerId = (id: string): void => {
+  containerId.value = id;
+};
+
 const rowSelection = computed(() => {
   return {
     selectedRowKeys: selectedKeys.value,
@@ -138,33 +331,233 @@ const rowSelection = computed(() => {
   };
 });
 
-const handleAddContainer = (): void => {
+const fetchContainerList = async (): Promise<void> => {
+  const sort = {
+    sortType: sortType.value,
+    sortName: sortName.value,
+    sortCapacity: sortCapacity.value,
+    sortWeight: sortWeight.value
+  };
+
+  isLoading.value = true;
+  const res = await service.container.getListContainer(
+    Number(pageOption.currentPage),
+    Number(pageOption.pageSize),
+    sort,
+    searchString.value
+  );
+  isLoading.value = false;
+
+  if (res) {
+    data.value = res.results.map((item) => {
+      return {
+        ...item,
+        key: item.id
+      };
+    });
+
+    pageOption.currentPage = res.current_page || 0;
+    pageOption.total = res.count;
+  }
+};
+
+const onSearchChange = debounce((): void => {
+  pageOption.currentPage = 1;
+  selectedKeys.value = [];
+  fetchContainerList();
+}, 500);
+
+const deleteContainer = (id?: number): void => {
+  messenger({
+    title: "popup_msg_confirm_delete",
+    message: "",
+    type: MessengerType.Confirm,
+    buttonOkTitle: "btn_delete",
+    callback: async (isConfirm: boolean): Promise<void> => {
+      if (!isConfirm) {
+        return;
+      }
+
+      if (!selectedKeys.value?.length && !id) {
+        return;
+      }
+      const selectedContainerIds = id ? [id] : selectedKeys.value;
+      onDeleteContainer(selectedContainerIds);
+    }
+  });
+};
+
+const onDeleteContainer = async (deleteIds: number[]): Promise<void> => {
+  if (!deleteIds.length) {
+    return;
+  }
+  isLoading.value = true;
+  const isSuccess = await service.container.deleteContainer(deleteIds);
+  isLoading.value = false;
+  if (!isSuccess) {
+    messenger({
+      title: "popup_delete_fail_lbl_title",
+      message: "popup_delete_fail_lbl_message",
+      type: MessengerType.Error
+    });
+    return;
+  }
+  messenger({
+    title: "delete_container_msg_delete_successfully",
+    message: "",
+    type: MessengerType.Success,
+    callback: (isConfirm: boolean): void => {
+      isConfirm;
+      fetchContainerList();
+    }
+  });
+  pageOption.currentPage = 1;
+  selectedKeys.value = [];
+  searchString.value = "";
+};
+
+const onCreate = (): void => {
   router.push({ name: routeNames.createNewContainer });
 };
-const onEditContainer = (id: string): void => {
-  router.push({ name: routeNames.editContainer, params: { id: id } });
+
+const handleSearchChange = (currentSearchValue: string): void => {
+  searchValue.value = currentSearchValue;
 };
-//#endregion
 
-//#region computed
-//#endregion
+const handleBackToList = (): void => {
+  if (searchHeader.value) {
+    searchHeader.value.clearInput();
+  }
+};
 
-//#region reactive
-//#endregion
+//#endregion===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊
+
+//#===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏Computed
+//#endregion===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏
+
+//#===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍Emits
+//#endregion===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍
+
+//===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀Watchers
+watch(searchString, onSearchChange);
+//#endregion===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀
 </script>
 
-<style lang="scss" scoped>
-.table-container {
-  margin: 30px;
+<style lang="scss" module="containerList">
+@mixin size-btn($width, $height) {
+  min-width: $width;
+  height: $height;
 }
-.action-icon {
-  margin-left: 20px;
+
+@mixin text($fontWeight, $fontSize, $lineHeight) {
+  font-weight: $fontWeight;
+  font-size: $fontSize;
+  line-height: $lineHeight;
+}
+
+.tableContainer {
+  flex-grow: 1;
+
+  .actionIcon {
+    margin-left: 20px;
+    cursor: pointer;
+  }
+  .ant-table-cell {
+    text-align: center;
+  }
+
+  .pagination {
+    text-align: end;
+    background-color: #fff;
+    height: 60px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    .btnPagination {
+      @include size-btn(82px, 40px);
+      border-color: #eaeaea;
+      background-color: #fff;
+
+      .btnIconPrev {
+        margin-right: 8px;
+      }
+
+      .btnIconNext {
+        margin-left: 8px;
+      }
+    }
+
+    .action {
+      @include text(700, 14px, 18px);
+      text-align: center;
+      color: $neutral-600;
+    }
+  }
+}
+</style>
+
+<style scoped lang="scss">
+.border {
+  border: 1px solid #eaeaea;
+  border-radius: 6px;
+}
+
+@mixin permission($background, $borderColor, $color) {
+  padding: 3px 10px;
+  background: $background;
+  border: 1px solid $borderColor;
+  border-radius: 22px;
+  span {
+    @include text(400, 16px, 16px);
+    color: $color;
+  }
+}
+
+.permisson-no {
+  @include permission(#feeded, rgba(245, 78, 78, 0.5), $red-1);
+}
+
+.permisson-yes {
+  @include permission(#f0f8fa, rgba(7, 160, 184, 0.5), $primary);
+}
+
+@mixin size-btn($width, $height) {
+  min-width: $width;
+  height: $height;
+}
+
+@mixin pagination-item($color) {
+  background-color: $color;
+  @extend .border;
+}
+
+@mixin text($fontWeight, $fontSize, $lineHeight) {
+  font-weight: $fontWeight;
+  font-size: $fontSize;
+  line-height: $lineHeight;
+}
+
+//extend
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 :deep() {
-  .ant-table {
-    box-shadow: 4px 2px 8px rgba(0, 0, 0, 0.02);
-    border: none;
+  .ant-table-tbody > tr.ant-table-row-selected > td {
+    background: $grey-2;
+    border-color: rgba(0, 0, 0, 0.03);
+  }
+}
+</style>
+
+<style lang="scss">
+.tableContainer {
+  .ant-checkbox-inner {
+    &::after {
+      top: 45%;
+      left: 30%;
+    }
   }
 }
 </style>
