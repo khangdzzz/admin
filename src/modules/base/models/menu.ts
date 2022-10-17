@@ -121,7 +121,7 @@ const sideMenuItems: SideMenuItems[] = [
       },
       {
         title: "menu_lbl_customer_management",
-        pathName: routeNames.customerManagement,
+        pathName: routeNames.customerList,
         qaAttr: 'qa_menu_customer_management',
         requireUserType: [UserType.TenantAdmin]
       },
