@@ -202,6 +202,7 @@
   "error_unique_constraint": "名称が存在しています",
   "popup_create_fail_title": "作成に失敗しました",
   "popup_create_fail_message": "後でやり直しください ",
-  "permission":"廃棄物許可",
-  "capacity":"最大積載量"
+  "permission": "廃棄物許可",
+  "capacity": "最大積載量",
+  "common_lbl_coming_soon": "近日公開"
 }
