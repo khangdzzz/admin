@@ -9,14 +9,19 @@ exports[`Better Code Quality !`] = {
       [210, 29, 3, "Unexpected any. Specify a different type.", "193409811"],
       [230, 45, 3, "Unexpected any. Specify a different type.", "193409811"]
     ],
+    "src/modules/staff-management/pages/CollectionBase.vue:2337938204": [
+      [178, 6, 6, "\'sortBy\' is assigned a value but never used.", "2170032388"]
+    ],
     "src/modules/staff-management/pages/CreateNewStaff.vue:2488377755": [
       [124, 49, 3, "Unexpected any. Specify a different type.", "193409811"]
     ],
     "src/modules/vehicle-management/pages/VehicleList.vue:2922583558": [
       [240, 25, 3, "Unexpected any. Specify a different type.", "193409811"]
     ],
-    "src/services/collection-base.service.ts:3829907853": [
-      [6, 0, 95, "\'@/modules/staff-management/models/collection-base.model\' import is duplicated.", "3360350627"]
+    "src/services/collection-base.service.ts:326246760": [
+      [10, 7, 1573, "Async function \'getListCollectionBase\' has too many lines (71). Maximum allowed is 50.", "2869350541"],
+      [95, 66, 3, "Unexpected any. Specify a different type.", "193409811"],
+      [116, 77, 3, "Unexpected any. Specify a different type.", "193409811"]
     ],
     "src/services/vehicle.service.ts:886860264": [
       [25, 7, 1429, "Async function \'getListVehicle\' has too many lines (55). Maximum allowed is 50.", "100078105"]
