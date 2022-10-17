@@ -237,6 +237,7 @@ import { computed, inject, onMounted, reactive, ref, watch } from "vue";
 import { ResVehicle, Vehicle, VehicleDetail } from "../models/vehicle.model";
 import VehicleDetailModal from "./VehicleDetailModal.vue";
 import NoData from "@/modules/base/components/NoData.vue";
+import SortView from "@/modules/common/components/SortView.vue";
 //#endregion===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆
 
 //#===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜Props
