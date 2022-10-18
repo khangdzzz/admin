@@ -39,7 +39,7 @@
     </ListSearchHeader>
   </div>
   <div class="table-container mx-30 mb-30">
-    <div v-if="data && data.length">
+    <div v-if="!isLoading && data && data.length">
       <a-table
         :row-selection="rowSelection"
         :columns="columns"
@@ -342,6 +342,9 @@ const onDeleteCollectionBase = async (deleteIds: number[]): Promise<void> => {
       initialize();
     }
   });
+  pageOption.currentPage = 1;
+  selectedKeys.value = [];
+  searchString.value = "";
 };
 //#endregion
 
