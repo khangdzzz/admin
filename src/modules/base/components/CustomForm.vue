@@ -271,13 +271,11 @@ const filterOption = (input: string, option: any): boolean => {
     border: 1px solid $grey-1;
     outline: none;
     border-radius: 10px;
-    padding: 0px 12px 0px 12px;
     background: #f7f7f7;
 
     .ant-input {
       background: transparent;
       border-radius: 10px;
-      padding: 0px 12px 0px 12px;
     }
 
     .not-has-label {
@@ -393,21 +391,6 @@ const filterOption = (input: string, option: any): boolean => {
       margin-bottom: 6px;
       @include text(400, 14px, 100%);
     }
-  }
-}
-
-.not-has-icon {
-  .ant-input {
-    position: relative;
-    left: 0 !important;
-    padding-top: 8px !important;
-  }
-}
-
-.has-icon-input {
-  .ant-input {
-    padding-left: 8px !important;
-    padding-top: 10px !important;
   }
 }
 

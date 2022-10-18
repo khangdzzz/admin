@@ -346,7 +346,6 @@ const isAllowSubmit = computed(() => {
         .ant-form-item-control-input {
           .ant-form-item-control-input-content {
             .input-item {
-              padding: 0px;
               width: 620px;
             }
             .inline {

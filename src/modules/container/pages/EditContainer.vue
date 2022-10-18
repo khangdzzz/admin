@@ -212,7 +212,7 @@ const handleOnFocus = (index: number | boolean | Event): void => {
 };
 
 const onCancel = (): void => {
-  router.push({ name: routeNames.vehicle });
+  router.push({ name: routeNames.containerChild });
 };
 const onCreate = async (): Promise<void> => {
   const containerInfo = {
