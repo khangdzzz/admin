@@ -81,24 +81,44 @@ export async function deleteCollectionBaseById(
   if (error) return false;
   return true;
 }
-export function getMockCollectionBaseById(id: string | string[]): any {
-  id;
-  const res = {
-    key: collectionBaseDetail.id,
-    id: collectionBaseDetail.id,
-    name: collectionBaseDetail.name,
-    shortName: collectionBaseDetail.short_name,
-    kana: collectionBaseDetail.name_kana,
-    postalCode: collectionBaseDetail.postal_code,
-    email: collectionBaseDetail.mail,
-    representative: collectionBaseDetail.representative,
-    latitude: collectionBaseDetail.latitude,
-    longitude: collectionBaseDetail.longitude,
-    address: collectionBaseDetail.address,
-    telephone: collectionBaseDetail.telephone
+export const getCollectionBaseById = async (
+  collectionBaseId: number
+): Promise<CollectionBase | undefined> => {
+  const [error, res] = await transformRequest<CollectionBaseResponseDto>({
+    url: `/workplace/collection_base/${collectionBaseId}`
+  });
+  if (error || !res) return undefined;
+  const {
+    id,
+    name,
+    name_kana: kana,
+    latitude,
+    longitude,
+    short_name: shortName,
+    address,
+    mail,
+    postal_code: postalCode,
+    telephone,
+    representative
+  } = res;
+  return {
+    id,
+    collectionBaseType: "",
+    kana,
+    latitude,
+    longitude,
+    name,
+    representative,
+    shortName,
+    address,
+    email: mail,
+    key: 0,
+    mail,
+    postalCode,
+    telephone
   };
-  return res;
-}
+};
+
 export async function createCollectionBase(
   collectionBase: CollectionBase
 ): Promise<

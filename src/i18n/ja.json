@@ -49,6 +49,7 @@
   "delete_container_msg_delete_successfully": "風袋が削除されました",
   "name": "名称",
   "delete_btn": "Delete",
+  "edit_btn": "Edit",
   "search_input": "Search",
   "import_btn": "Import",
   "export_btn": "Export",
@@ -209,5 +210,14 @@
   "container_create_failed": "作成に失敗しました",
   "common_msg_copied_to_clipboard": "コピー済",
   "collection_email": "Eメール",
-  "representative": "代表者"
+  "representative": "代表者",
+  "collection_base_lbl_name": "名称",
+  "collection_base_lbl_short_name": "略称",
+  "collection_base_lbl_name_kana": "名称 (かな)",
+  "collection_base_lbl_type": "タイプ",
+  "collection_base_lbl_postal_code": "郵便番号",
+  "collection_base_lbl_address": "住所",
+  "collection_base_lbl_phone_number": "電話番号",
+  "collection_base_lbl_email": "Eメール",
+  "collection_base_lbl_representative": "代表者"
 }

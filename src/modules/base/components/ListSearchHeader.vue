@@ -1,10 +1,16 @@
 <template>
   <div class="d-flex justify-space-between mx-30 mt-30 mb-20 header">
-    <div>
-      <div class="header__title">{{ title }}</div>
+    <div class="header__content">
+      <img
+        src="@/assets/icons/ic_back.svg"
+        @click="$emit('goBack')"
+        v-if="enableBack"
+      />
+      <div class="header__content__title">{{ title }}</div>
     </div>
     <div class="d-flex gap-15">
       <a-input
+        v-if="enableSearch"
         :value="modelValue"
         :placeholder="$t('search_input')"
         class="search-input"
@@ -40,6 +46,14 @@ defineProps({
   modelValue: {
     type: String,
     default: ""
+  },
+  enableSearch: {
+    type: Boolean,
+    default: true
+  },
+  enableBack: {
+    type: Boolean,
+    default: false
   }
 });
 
@@ -75,14 +89,25 @@ defineExpose({ clearInput });
 <style lang="scss" scoped>
 .header {
   margin: 36px 30px;
-  &__title {
-    margin: 0 !important;
-    font-family: "Roboto";
-    font-style: normal;
-    font-weight: 600;
-    color: $neutral-600;
-    font-size: 28px;
-    line-height: 32.81px;
+  &__content {
+    display: flex;
+    align-items: center;
+    img {
+      width: 20px;
+      height: 20px;
+      object-fit: fill;
+      margin-right: 20px;
+      cursor: pointer;
+    }
+    &__title {
+      margin: 0 !important;
+      font-family: "Roboto";
+      font-style: normal;
+      font-weight: 600;
+      color: $neutral-600;
+      font-size: 28px;
+      line-height: 32.81px;
+    }
   }
   .ant-input {
     font-size: 20px;

@@ -41,6 +41,7 @@
   "vehicle": "Vehicle",
   "number_plate": "Number Plate",
   "delete_btn": "Delete",
+  "edit_btn": "Edit",
   "import_btn": "Import",
   "export_btn": "Export",
   "add_btn": "Add",
@@ -217,5 +218,14 @@
   "common_lbl_coming_soon": "Coming soon",
   "common_msg_copied_to_clipboard": "Copied to clipboard",
   "collection_email": "E-mail",
-  "representative": "Representative"
+  "representative": "Representative",
+  "collection_base_lbl_name": "Name",
+  "collection_base_lbl_short_name": "Short name",
+  "collection_base_lbl_name_kana": "Name (Kana)",
+  "collection_base_lbl_type": "Type",
+  "collection_base_lbl_postal_code": "Postal code",
+  "collection_base_lbl_address": "Address",
+  "collection_base_lbl_phone_number": "Phone number",
+  "collection_base_lbl_email": "E-mail",
+  "collection_base_lbl_representative": "Representative"
 }

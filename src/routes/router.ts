@@ -315,6 +315,14 @@ const routes: RouteRecordRaw[] = [
         name: routeNames.editCollectionBase,
         component: () =>
           import("@/modules/staff-management/pages/EditCollectionBase.vue")
+      },
+      {
+        path: "detail/:id",
+        name: routeNames.collectionBaseDetail,
+        component: () =>
+          import(
+            "@/modules/staff-management/pages/CollectionBaseDetailPage.vue"
+          )
       }
     ]
   },
