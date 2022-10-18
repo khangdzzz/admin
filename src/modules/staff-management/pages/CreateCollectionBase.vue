@@ -7,20 +7,11 @@
       class="create-collection-base__content-wrapper d-flex justify-space-between gap-20 px-20 pt-20 my-20 fill-height"
     >
       <a-form class="create-collection-base__form-wrapper" :model="formData">
-        <div
-          class="create-collection-base__custom-input-wrapper d-flex justify-space-between gap-20"
-        >
+        <div>
           <CustomForm
             :form-data="formData.name"
             @on-focus="handleOnNameFocus"
             @on-blur="handleOnNameBlur"
-          />
-        </div>
-        <div>
-          <CustomForm
-            :form-data="formData.japaneseName"
-            @on-focus="handleOnJapaneseNameFocus"
-            @on-blur="handleOnJapaneseNameBlur"
           />
         </div>
         <div class="d-flex my-30 gap-40">
@@ -46,22 +37,6 @@
             :form-data="formData.contact"
             @on-focus="handleOnContactFocus"
             @on-blur="handleOnContactBlur"
-          />
-        </div>
-        <div
-          class="create-collection-base__custom-input-wrapper d-flex justify-space-between gap-20"
-        >
-          <CustomForm
-            :form-data="formData.coordinate"
-            @on-focus="handleOnCoordinateFocus"
-            @on-blur="handleOnCoordinateBlur"
-          />
-        </div>
-        <div>
-          <CustomForm
-            :form-data="formData.addressAndPhone"
-            @on-focus="handleOnAddressAndPhoneFocus"
-            @on-blur="handleOnAddressAndPhoneBlur"
           />
         </div>
       </a-form>
@@ -224,23 +199,8 @@ const messenger: (
 const handleOnNameFocus = (index: number | boolean | Event): void => {
   formData.name[Number(index)].isFocus = true;
 };
-
-const handleOnJapaneseNameFocus = (index: number | boolean | Event): void => {
-  formData.japaneseName[Number(index)].isFocus = true;
-};
-
 const handleOnContactFocus = (index: number | boolean | Event): void => {
   formData.contact[Number(index)].isFocus = true;
-};
-
-const handleOnCoordinateFocus = (index: number | boolean | Event): void => {
-  formData.coordinate[Number(index)].isFocus = true;
-};
-
-const handleOnAddressAndPhoneFocus = (
-  index: number | boolean | Event
-): void => {
-  formData.addressAndPhone[Number(index)].isFocus = true;
 };
 
 const handleOnNameBlur = (
@@ -250,13 +210,6 @@ const handleOnNameBlur = (
   formData.name[Number(index)].isFocus = false;
 };
 
-const handleOnJapaneseNameBlur = (
-  value: number | boolean | Event,
-  index: string | number | Event
-): void => {
-  formData.japaneseName[Number(index)].isFocus = false;
-};
-
 const handleOnContactBlur = (
   value: number | boolean | Event,
   index: string | number | Event
@@ -264,46 +217,32 @@ const handleOnContactBlur = (
   formData.contact[Number(index)].isFocus = false;
 };
 
-const handleOnCoordinateBlur = (
-  value: number | boolean | Event,
-  index: string | number | Event
-): void => {
-  formData.coordinate[Number(index)].isFocus = false;
-};
-
-const handleOnAddressAndPhoneBlur = (
-  value: number | boolean | Event,
-  index: string | number | Event
-): void => {
-  formData.addressAndPhone[Number(index)].isFocus = false;
-};
-
 const isButtonDisabled = computed((): boolean => {
-  const { name, contact, coordinate } = formData;
+  const { name, contact } = formData;
 
   return (
     !name[0].value ||
     !name[1].value ||
     !collectionBaseType.value ||
     !contact[2].value ||
-    !coordinate[0].value ||
-    !coordinate[1].value
+    !geoLocations.value[0][0] ||
+    !geoLocations.value[0][1]
   );
 });
 
 const handleSubmit = async (): Promise<void> => {
-  const { name, contact, coordinate, addressAndPhone } = formData;
+  const { name, contact } = formData;
   const data = {
     name: makeUniqueName(name[0].value.toString()),
     shortName: makeUniqueName(name[1].value.toString()),
-    kana: makeUniqueName(name[1].value.toString()),
+    kana: makeUniqueName(name[2].value.toString()),
     postalCode: makeUniqueName(contact[0].value.toString()),
-    email: makeUniqueName(contact[1].value.toString()),
-    representative: makeUniqueName(contact[2].value.toString()),
-    latitude: makeUniqueName(coordinate[0].value.toString()),
-    longitude: makeUniqueName(coordinate[1].value.toString()),
-    address: makeUniqueName(addressAndPhone[0].value.toString()),
-    telephone: makeUniqueName(addressAndPhone[1].value.toString()),
+    address: makeUniqueName(contact[1].value.toString()),
+    telephone: makeUniqueName(contact[2].value.toString()),
+    email: makeUniqueName(contact[3].value.toString()),
+    representative: makeUniqueName(contact[4].value.toString()),
+    latitude: geoLocations.value[0][0],
+    longitude: geoLocations.value[0][1],
     collectionBaseType: collectionBaseType.value
   };
   if (!userStore.user) return;
