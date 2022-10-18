@@ -33,8 +33,8 @@ export const formData: FormData = {
     {
       inputType: "AInput",
       value: "",
-      placeHolder: "Short Name",
-      label: "Short Name",
+      placeHolder: "Short name",
+      label: "Short name",
       name: "shortName",
       disabled: false,
       required: true,
@@ -55,9 +55,7 @@ export const formData: FormData = {
         }
       ],
       parent: "name"
-    }
-  ],
-  japaneseName: [
+    },
     {
       inputType: "AInput",
       value: "",
@@ -79,11 +77,18 @@ export const formData: FormData = {
       label: "Postal code",
       name: "postalCode",
       disabled: false,
-      required: false,
+      required: true,
       key: 4,
       isFocus: false,
       parent: "contact",
       rules: [
+        {
+          required: true,
+          message: i18n.global.t("please_enter_input", {
+            fieldName: i18n.global.t("postal_code")
+          }),
+          trigger: "blur"
+        },
         {
           validator: validator.validateNumber,
           trigger: "blur"
@@ -93,8 +98,48 @@ export const formData: FormData = {
     {
       inputType: "AInput",
       value: "",
-      placeHolder: "Email",
-      label: "Email",
+      placeHolder: "Address",
+      label: "Address",
+      name: "address",
+      disabled: false,
+      required: true,
+      key: 9,
+      isFocus: false,
+      rules: [
+        {
+          required: true,
+          message: i18n.global.t("please_enter_input", {
+            fieldName: i18n.global.t("address")
+          }),
+          trigger: "blur"
+        }
+      ],
+      parent: "contact"
+    },
+    {
+      inputType: "AInput",
+      value: "",
+      placeHolder: "Phone number",
+      label: "Phone number",
+      name: "telephone",
+      disabled: false,
+      required: false,
+      key: 10,
+      isFocus: false,
+      parent: "contact",
+      rules: [
+        {
+          max: 11,
+          message: i18n.global.t("max_length_input", { maxLength: 11 }),
+          trigger: "blur"
+        }
+      ]
+    },
+    {
+      inputType: "AInput",
+      value: "",
+      placeHolder: "E-mail",
+      label: "E-mail",
       name: "email",
       disabled: false,
       required: false,
@@ -115,17 +160,10 @@ export const formData: FormData = {
       label: "Representative",
       name: "representative",
       disabled: false,
-      required: true,
+      required: false,
       key: 6,
       isFocus: false,
       rules: [
-        {
-          required: true,
-          message: i18n.global.t("please_enter_input", {
-            fieldName: i18n.global.t("representative")
-          }),
-          trigger: "blur"
-        },
         {
           max: 50,
           message: i18n.global.t("max_length_input", { maxLength: 50 }),
@@ -191,39 +229,6 @@ export const formData: FormData = {
         }
       ],
       parent: "coordinate"
-    }
-  ],
-  addressAndPhone: [
-    {
-      inputType: "AInput",
-      value: "",
-      placeHolder: "Address",
-      label: "Address",
-      name: "address",
-      disabled: false,
-      required: false,
-      key: 9,
-      isFocus: false,
-      parent: "addressAndPhone"
-    },
-    {
-      inputType: "AInput",
-      value: "",
-      placeHolder: "Telephone",
-      label: "Telephone",
-      name: "telephone",
-      disabled: false,
-      required: false,
-      key: 10,
-      isFocus: false,
-      parent: "addressAndPhone",
-      rules: [
-        {
-          max: 11,
-          message: i18n.global.t("max_length_input", { maxLength: 11 }),
-          trigger: "blur"
-        }
-      ]
     }
   ]
 };
