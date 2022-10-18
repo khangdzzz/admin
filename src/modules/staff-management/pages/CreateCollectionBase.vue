@@ -100,6 +100,28 @@
                     <ol-style>
                       <ol-style-icon
                         :src="locationIcon"
+                        :scale="1"
+                      ></ol-style-icon>
+                    </ol-style>
+                  </ol-feature>
+                </ol-source-vector>
+              </ol-vector-layer>
+            </template>
+          </ol-geolocation>
+
+          <ol-geolocation
+            :projection="projection"
+            v-for="(geoLocation, index) in geoLocations"
+            :key="index"
+          >
+            <template v-slot>
+              <ol-vector-layer :zIndex="2">
+                <ol-source-vector>
+                  <ol-feature ref="positionFeature">
+                    <ol-geom-point :coordinates="geoLocation"></ol-geom-point>
+                    <ol-style>
+                      <ol-style-icon
+                        :src="locationIcon"
                         :scale="0.7"
                       ></ol-style-icon>
                     </ol-style>
@@ -108,7 +130,35 @@
               </ol-vector-layer>
             </template>
           </ol-geolocation>
+
+          <ol-vector-layer>
+            <ol-source-vector :projection="projection">
+              <ol-interaction-draw
+                type="Point"
+                @drawend="drawend"
+                @drawstart="drawstart"
+              >
+              </ol-interaction-draw>
+            </ol-source-vector>
+
+            <ol-style>
+              <ol-style-circle :radius="7">
+                <ol-style-fill color="transparent"></ol-style-fill>
+                <ol-style-stroke color="transparent"></ol-style-stroke>
+              </ol-style-circle>
+            </ol-style>
+          </ol-vector-layer>
         </ol-map>
+        <div
+          class="create-collection-base__map-wrapper__position-detail"
+          v-if="geoLocations.length"
+        >
+          {{ geoLocations[0][0] }}, {{ geoLocations[0][1] }}
+          <img
+            src="@/assets/icons/ic_btn_copy.svg"
+            @click="copyLocationToClipboard"
+          />
+        </div>
       </div>
     </div>
     <div class="d-flex justify-center gap-20">
@@ -141,6 +191,8 @@ import { commonStore } from "@/stores";
 import { routeNames } from "@/routes/route-names";
 import { router } from "@/routes";
 import { makeUniqueName } from "@/utils/string.helper";
+import { message } from "ant-design-vue";
+import { i18n } from "@/i18n";
 //#region import
 //#endregion
 
@@ -158,7 +210,7 @@ const zoom = ref<number>(20);
 const rotation = ref<number>(0);
 const view = ref(null);
 const map = ref(null);
-
+const geoLocations = ref<number[][]>([]);
 const messenger: (
   param: MessengerParamModel
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -285,6 +337,23 @@ const geoLocChange = (loc: number[]): void => {
     maxZoom: 14
   });
 };
+
+const drawstart = (_event: { target: { sketchCoords_: number[] } }): void => {
+  geoLocations.value = [];
+};
+
+const drawend = (event: { target: { sketchCoords_: number[] } }): void => {
+  geoLocations.value.push(event.target.sketchCoords_);
+};
+
+const copyLocationToClipboard = (): void => {
+  if (geoLocations.value.length) {
+    navigator.clipboard.writeText(
+      `${geoLocations.value[0][0]}, ${geoLocations.value[0][1]}`
+    );
+    message.success(i18n.global.t("common_msg_copied_to_clipboard"));
+  }
+};
 //#endregion
 
 //#region computed
@@ -315,8 +384,36 @@ const geoLocChange = (loc: number[]): void => {
   }
 
   &__map-wrapper {
+    position: relative;
     width: 50%;
     height: calc(100% - 20px);
+    &__position-detail {
+      position: absolute;
+      display: flex;
+      bottom: 10px;
+      left: 10px;
+      width: auto;
+      padding-left: 10px;
+      padding-right: 10px;
+      height: 40px;
+      background-color: white;
+      border-radius: 6px;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 16px;
+      line-height: 20px;
+      align-items: center;
+      color: $neutral-800;
+      text-align: center;
+      img {
+        width: 20px;
+        height: 20px;
+        object-fit: fill;
+        vertical-align: middle;
+        margin-left: 16px;
+        cursor: pointer;
+      }
+    }
   }
 
   &__btn-style {

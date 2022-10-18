@@ -214,5 +214,6 @@
   "popup_create_fail_message": "Please try again later",
   "container_successfully_created": "Container is created successfully",
   "container_create_failed": "Create failed",
-  "common_lbl_coming_soon": "Coming soon"
+  "common_lbl_coming_soon": "Coming soon",
+  "common_msg_copied_to_clipboard": "Copied to clipboard"
 }

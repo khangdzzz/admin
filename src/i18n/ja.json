@@ -206,5 +206,6 @@
   "capacity": "最大積載量",
   "common_lbl_coming_soon": "近日公開",
   "container_successfully_created": "風袋が作成されました",
-  "container_create_failed": "作成に失敗しました"
+  "container_create_failed": "作成に失敗しました",
+  "common_msg_copied_to_clipboard": "コピー済"
 }
