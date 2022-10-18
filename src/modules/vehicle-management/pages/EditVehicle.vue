@@ -5,65 +5,67 @@
     align="middle"
     class="edit-vehicle-container"
   >
-    <div class="edit-vehicle-content">
-      <h2 class="title">{{ $t("vehicle_edit") }}</h2>
-      <div class="create-form">
-        <a-form :model="dynamicValidateForm" name="basic" autocomplete="off">
-          <a-form-item name="formDatavalue" :validateFirst="false">
-            <a-radio-group
-              v-model:value="ownerType"
-              class="radio-group"
-              :disabled="true"
-            >
-              <label class="label-radio"
-                >{{ $t("vehicle_owner_type") }}<span> *</span></label
+    <a-spin :tip="$t('common_loading')" :spinning="isLoading">
+      <div class="edit-vehicle-content">
+        <h2 class="title">{{ $t("vehicle_edit") }}</h2>
+        <div class="create-form">
+          <a-form :model="dynamicValidateForm" name="basic" autocomplete="off">
+            <a-form-item name="formDatavalue" :validateFirst="false">
+              <a-radio-group
+                v-model:value="ownerType"
+                class="radio-group"
+                :disabled="true"
               >
-              <a-radio value="collectionBase">{{
-                $t("collection_base")
-              }}</a-radio>
-              <a-radio value="partner">{{ $t("partner") }}</a-radio>
-            </a-radio-group>
-          </a-form-item>
-          <CustomForm
-            :formData="dynamicValidateForm.formData"
-            @change="handleOnChange"
-            @onBlur="handleOnBlur"
-            @onFocus="handleOnFocus"
-          ></CustomForm>
-        </a-form>
+                <label class="label-radio"
+                  >{{ $t("vehicle_owner_type") }}<span> *</span></label
+                >
+                <a-radio value="collectionBase">{{
+                  $t("collection_base")
+                }}</a-radio>
+                <a-radio value="partner">{{ $t("partner") }}</a-radio>
+              </a-radio-group>
+            </a-form-item>
+            <CustomForm
+              :formData="dynamicValidateForm.formData"
+              @change="handleOnChange"
+              @onBlur="handleOnBlur"
+              @onFocus="handleOnFocus"
+            ></CustomForm>
+          </a-form>
+        </div>
+        <a-row
+          type="flex"
+          justify="space-between"
+          align="middle"
+          class="check-permision"
+        >
+          <a-col :span="19">
+            <h3>{{ $t("vehicle_industrial_waste") }}</h3>
+          </a-col>
+          <a-col :span="5" class="mr-2">
+            <a-checkbox v-model:checked="checkPermission">
+              {{ $t("vehicle_permission") }}
+            </a-checkbox>
+          </a-col>
+        </a-row>
+        <a-row type="flex" justify="center" align="middle" gutter="20">
+          <a-col :span="12">
+            <a-button type="primary" @click="onCancel" ghost class="btn">{{
+              $t("btn_cancel")
+            }}</a-button>
+          </a-col>
+          <a-col :span="12">
+            <a-button
+              type="primary"
+              class="btn"
+              :disabled="!isValidated"
+              @click="onCreate"
+              >{{ $t("btn_submit") }}</a-button
+            >
+          </a-col>
+        </a-row>
       </div>
-      <a-row
-        type="flex"
-        justify="space-between"
-        align="middle"
-        class="check-permision"
-      >
-        <a-col :span="19">
-          <h3>{{ $t("vehicle_industrial_waste") }}</h3>
-        </a-col>
-        <a-col :span="5" class="mr-2">
-          <a-checkbox v-model:checked="checkPermission">
-            {{ $t("vehicle_permission") }}
-          </a-checkbox>
-        </a-col>
-      </a-row>
-      <a-row type="flex" justify="center" align="middle" gutter="20">
-        <a-col :span="12">
-          <a-button type="primary" @click="onCancel" ghost class="btn">{{
-            $t("btn_cancel")
-          }}</a-button>
-        </a-col>
-        <a-col :span="12">
-          <a-button
-            type="primary"
-            class="btn"
-            :disabled="!isValidated"
-            @click="onCreate"
-            >{{ $t("btn_submit") }}</a-button
-          >
-        </a-col>
-      </a-row>
-    </div>
+    </a-spin>
   </a-row>
 </template>
 
@@ -76,6 +78,7 @@ import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
+import { makeUniqueName } from "@/utils/string.helper";
 import { inject, onMounted, reactive, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { Vehicle, VehicleSelection } from "../models/vehicle.model";
@@ -97,6 +100,7 @@ const messenger: (param: MessengerParamModel) => void =
   inject("messenger")!;
 const route = useRoute();
 const { id } = route.params;
+const isLoading = ref<boolean>(false);
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const dynamicValidateForm = reactive<{ formData: any[] }>({
   formData: [
@@ -223,11 +227,15 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
 //#endregion
 
 //#region hooks
-onMounted(() => {
-  fetchVehicleType();
+onMounted(async () => {
+  isLoading.value = true;
   fetchMockData();
-  fetchCollectionBase();
-  fetchVehicleById();
+  await Promise.all([
+    fetchVehicleType(),
+    fetchCollectionBase(),
+    fetchVehicleById()
+  ]);
+  isLoading.value = false;
 });
 //#endregion
 
@@ -239,19 +247,23 @@ const fetchVehicleById = async (): Promise<void> => {
     dynamicValidateForm.formData.forEach((item, index) => {
       dynamicValidateForm.formData[index].value = toArrayRes[index];
     });
+    const foundVehicleType = vehicleTypes.value?.find(
+      (vt) => vt.label === res.vehicleType
+    );
+
+    if (foundVehicleType) {
+      dynamicValidateForm.formData[1].value = foundVehicleType.value;
+    }
+
     checkPermission.value = res.isHasPermission === 1 ? true : false;
   }
   isValidated.value = true;
 };
 
 const fetchVehicleType = async (): Promise<void> => {
-  const res = await service.vehicleType.fetchListVehicleType(
-    1,
-    "full",
-    undefined
-  );
+  const res = await service.vehicleType.getAllVehicleType();
   if (res) {
-    vehicleTypes.value = res?.results?.map((item) => ({
+    vehicleTypes.value = res?.map((item) => ({
       value: item.id,
       label: item.name
     }));
@@ -304,10 +316,10 @@ const onCancel = (): void => {
 const onCreate = async (): Promise<void> => {
   const vehicleInfo: Vehicle = {
     id: id.toString(),
-    vehicleType: dynamicValidateForm.formData[0].value,
-    vehicleName: dynamicValidateForm.formData[1].value,
-    vehiclePlate: dynamicValidateForm.formData[2].value,
-    maxWeight: dynamicValidateForm.formData[3].value,
+    vehicleType: dynamicValidateForm.formData[1].value,
+    vehicleName: makeUniqueName(dynamicValidateForm.formData[2].value),
+    vehiclePlate: dynamicValidateForm.formData[3].value,
+    maxWeight: dynamicValidateForm.formData[4].value,
     isHasPermission: checkPermission.value ? 1 : 0
   };
   const res = await service.vehicle.updateVehicle(vehicleInfo);
