@@ -113,9 +113,14 @@
 
         <template #bodyCell="{ column, record, text }">
           <template v-if="dataIndexColumns.includes(column.dataIndex)">
-            <span v-if="text" class="has-value"
-              >{{ !!text ? text : "---" }}
-            </span>
+            <a-tooltip
+              v-if="text"
+              placement="topLeft"
+              :title="text"
+              arrow-point-at-center
+            >
+              <span class="has-value">{{ text }} </span>
+            </a-tooltip>
             <span class="null-value" v-else>---</span>
           </template>
 
@@ -407,7 +412,7 @@ const rowSelection = computed(() => {
 });
 
 const dataIndexColumns = computed(() => [
-  "vehicle_type__name",
+  "vehicle_type___name",
   "name",
   "plate_number",
   "workplace___name",
