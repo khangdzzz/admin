@@ -5,7 +5,7 @@
       :title="$t('container')"
       :colTitle="3"
       :colAction="21"
-      v-model:model-value.sync="searchString"
+      v-model:model-value.sync="searchValue"
       @onChange="handleSearchChange"
     >
       <template #action>
@@ -194,7 +194,6 @@ import { debounce } from "lodash";
 import { computed, inject, onMounted, reactive, ref, watch } from "vue";
 import {
   Container,
-  ContainerDetail,
   ResContainer
 } from "../models/container.model";
 import ContainerDetailModal from "./ContainerDetailModal.vue";
@@ -217,7 +216,7 @@ const selectedKeys = ref<number[]>([]);
 
 const containerDetail = ref<Container | undefined>();
 
-const columns: TableColumnType<ContainerDetail>[] = [
+const columns: TableColumnType<ResContainer>[] = [
   {
     title: i18n.global.t("container_container_name"),
     dataIndex: "name",
@@ -250,7 +249,6 @@ const data = ref<ResContainer[]>([]);
 const searchValue = ref<string>("");
 const searchHeader = ref<HeaderRef | null>(null);
 const isLoading = ref<boolean>(false);
-const searchString = ref<string>("");
 const pageOption = reactive<Pagination<ResContainer>>({
   currentPage: 1,
   pageSize: 20,
@@ -350,7 +348,7 @@ const fetchContainerList = async (): Promise<void> => {
     Number(pageOption.currentPage),
     Number(pageOption.pageSize),
     sort,
-    searchString.value
+    searchValue.value
   );
   isLoading.value = false;
 
@@ -419,7 +417,7 @@ const onDeleteContainer = async (deleteIds: number[]): Promise<void> => {
   });
   pageOption.currentPage = 1;
   selectedKeys.value = [];
-  searchString.value = "";
+  searchValue.value = "";
 };
 
 const onCreate = (): void => {
@@ -453,7 +451,7 @@ const fetchContainerDetail = async (id: string): Promise<void> => {
 //#endregion===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍
 
 //===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀Watchers
-watch(searchString, onSearchChange);
+watch(searchValue, onSearchChange);
 //#endregion===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀
 </script>
 

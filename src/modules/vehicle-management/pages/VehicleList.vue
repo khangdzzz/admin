@@ -5,7 +5,7 @@
       :title="$t('vehicle')"
       :colTitle="3"
       :colAction="21"
-      v-model:model-value.sync="searchString"
+      v-model:model-value.sync="searchValue"
       @onChange="handleSearchChange"
     >
       <template #action>
@@ -310,7 +310,6 @@ const data = ref<ResVehicle[]>([]);
 const searchValue = ref<string>("");
 const searchHeader = ref<HeaderRef | null>(null);
 const isLoading = ref<boolean>(false);
-const searchString = ref<string>("");
 const pageOption = reactive<Pagination<ResVehicle>>({
   currentPage: 1,
   pageSize: 20,
@@ -434,7 +433,7 @@ const fetchVehicleList = async (): Promise<void> => {
     Number(pageOption.currentPage),
     Number(pageOption.pageSize),
     sort,
-    searchString.value
+    searchValue.value
   );
   isLoading.value = false;
 
@@ -508,7 +507,7 @@ const onDeleteVehicle = async (deleteIds: number[]): Promise<void> => {
   });
   pageOption.currentPage = 1;
   selectedKeys.value = [];
-  searchString.value = "";
+  searchValue.value = "";
 };
 
 const onCreate = (): void => {
@@ -544,7 +543,7 @@ const getVehicleDetail = async (id: string): Promise<void> => {
 //#endregion===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍
 
 //===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀Watchers
-watch(searchString, onSearchChange);
+watch(searchValue, onSearchChange);
 //#endregion===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀
 </script>
 
@@ -583,6 +582,7 @@ watch(searchString, onSearchChange);
       @include size-btn(82px, 40px);
       border-color: #eaeaea;
       background-color: #fff;
+      border-radius: 6px;
 
       .btnIconPrev {
         margin-right: 8px;
