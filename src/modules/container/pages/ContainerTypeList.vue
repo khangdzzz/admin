@@ -40,15 +40,16 @@
             <span>{{ $t(column.title) }}</span>
           </template>
           <template v-if="['name'].includes(column.key)">
-            <div @click="changeSort">
+            <div :class="[containerTypeList.headerTitle]" @click="changeSort">
               <span>{{ $t(column.title) }}</span>
               <SortView class="mx-12" :sort="sort" />
             </div>
           </template>
         </template>
-        <template #bodyCell="{ column, record }">
+        <template #bodyCell="{ column, record, text }">
           <template v-if="column.dataIndex === 'type'">
-            <span>{{ record.type }}</span>
+            <span v-if="text" class="has-value">{{ text }} </span>
+            <span class="null-value" v-else>---</span>
           </template>
           <template v-if="column.dataIndex === 'action'">
             <center>
@@ -74,77 +75,22 @@
           </template>
         </template>
       </a-table>
-      <div
-        :class="[containerTypeList.pagination, 'mb-30']"
-        v-if="!isLoading && data && data.length"
-      >
-        <a-pagination
-          v-model:current="pageOption.currentPage"
-          v-model:page-size="pageOption.pageSize"
-          :total="pageOption.total"
-          :pageSizeOptions="['20', '30', '40', '50']"
-          show-size-changer
-          @showSizeChange="onShowSizeChange"
-          @change="onChange"
-          :class="['ant-pagination', 'd-flex', 'justify-end']"
-        >
-          <template #buildOptionText="{ value }">
-            <div class="options-text">
-              <span class="mr-13">{{ value }} </span>
-              <img src="@/assets/icons/ic_arrow.svg" />
-            </div>
-          </template>
-          <template #itemRender="{ type, originalElement }">
-            <a-button
-              :class="[
-                containerTypeList.btnPagination,
-                'btn-pagination',
-                'mt-10'
-              ]"
-              type="primary"
-              v-if="type === 'prev'"
-              v-show="isShowPrevBtn()"
-            >
-              <template #icon>
-                <img
-                  src="@/assets/icons/ic_prev.svg"
-                  :class="[containerTypeList.btnIconPrev]"
-                />
-                <span :class="[containerTypeList.action]">{{
-                  $t("previous_btn")
-                }}</span>
-              </template>
-            </a-button>
-            <a-button
-              :class="[
-                containerTypeList.btnPagination,
-                'btn-pagination',
-                'mt-10',
-                'mr-15'
-              ]"
-              type="primary"
-              v-else-if="type === 'next'"
-              v-show="isShowNextBtn()"
-            >
-              <template #icon>
-                <span :class="[containerTypeList.action]">{{
-                  $t("next_btn")
-                }}</span>
-                <img
-                  src="@/assets/icons/ic_next.svg"
-                  :class="[containerTypeList.btnIconNext]"
-                />
-              </template>
-            </a-button>
-            <component :is="originalElement" v-else></component>
-          </template>
-        </a-pagination>
-      </div>
+
+      <ThePagination
+        :isShowPagination="!isLoading && data && !!data.length"
+        :currentPage="pageOption.currentPage"
+        :pageSize="pageOption.pageSize"
+        :total="pageOption.total"
+        :isShowPrevBtn="isShowPrevBtn()"
+        :isShowNextBtn="isShowNextBtn()"
+        @onShowSizeChange="onShowSizeChange"
+        @onChange="onChange"
+      />
       <NoData
         :value="searchString"
         :is-loading="isLoading"
         @onClick="handleBackToList"
-        v-else
+        v-if="isLoading || !data || !data.length"
       />
     </div>
   </div>
@@ -156,6 +102,7 @@ import ListSearchHeader from "@/modules/base/components/ListSearchHeader.vue";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import SortView from "@/modules/common/components/SortView.vue";
+import ThePagination from "@/modules/common/components/ThePagination.vue";
 import { Sort } from "@/modules/common/models/sort.enum";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
@@ -390,6 +337,9 @@ watch(searchString, onSearchChange);
 
 .tableContainer {
   flex-grow: 1;
+  .headerTitle {
+    font-size: 14px;
+  }
 
   .actionIcon {
     margin-left: 30px;
@@ -400,32 +350,6 @@ watch(searchString, onSearchChange);
     text-align: center;
   }
 
-  .pagination {
-    text-align: start;
-    background-color: #fff;
-    height: 60px;
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-    .btnPagination {
-      @include size-btn(108px, 40px);
-      padding: 0px 15px;
-      background-color: #fff;
-
-      .btnIconPrev {
-        margin-right: 8px;
-      }
-
-      .btnIconNext {
-        margin-left: 8px;
-      }
-    }
-
-    .action {
-      @include text(700, 14px, 18px);
-      text-align: center;
-      color: $neutral-600;
-    }
-  }
 }
 </style>
 
@@ -438,11 +362,6 @@ watch(searchString, onSearchChange);
 @mixin size-btn($width, $height) {
   min-width: $width;
   height: $height;
-}
-
-@mixin pagination-item($color) {
-  background-color: $color;
-  @extend .border;
 }
 
 @mixin text($fontWeight, $fontSize, $lineHeight) {
@@ -459,6 +378,15 @@ watch(searchString, onSearchChange);
   }
   .btn-pagination.ant-btn[disabled] {
     background-color: $neutral-0 !important;
+  }
+
+  .has-value,
+  .null-value {
+    @include text(400, 16px, 20px);
+    color: $neutral-600;
+  }
+  .options-text {
+    color: $neutral-600;
   }
 }
 </style>

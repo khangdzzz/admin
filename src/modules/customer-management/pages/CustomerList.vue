@@ -79,50 +79,16 @@
         </template>
       </template>
     </a-table>
-  </div>
-  <div class="customer-list__pagination mx-30">
-    <a-pagination
-      v-model:current="pageOption.currentPage"
-      v-model:page-size="pageOption.pageSize"
+    <ThePagination
+      :isShowPagination="!isLoading && data && !!data.length"
+      :currentPage="pageOption.currentPage"
+      :pageSize="pageOption.pageSize"
       :total="pageOption.total"
-      :pageSizeOptions="['20', '30', '40', '50']"
-      show-size-changer
-      @showSizeChange="onShowSizeChange"
-      @change="onChange"
-      :class="['ant-pagination', 'd-flex', 'justify-end']"
-    >
-      <template #buildOptionText="{ value }">
-        <div class="options-text">
-          <span class="mr-13">{{ value }} </span>
-          <img src="@/assets/icons/ic_arrow.svg" />
-        </div>
-      </template>
-      <template #itemRender="{ type, originalElement }">
-        <a-button
-          class="btnPagination btn-pagination mt-10"
-          type="primary"
-          v-if="type === 'prev'"
-          v-show="isShowPrevBtn()"
-        >
-          <template #icon>
-            <img src="@/assets/icons/ic_prev.svg" class="btnIconPrev" />
-            <span class="action">{{ $t("previous_btn") }}</span>
-          </template>
-        </a-button>
-        <a-button
-          class="btnPagination btn-pagination mt-10 mr-15"
-          type="primary"
-          v-else-if="type === 'next'"
-          v-show="isShowNextBtn()"
-        >
-          <template #icon>
-            <span class="action">{{ $t("next_btn") }}</span>
-            <img src="@/assets/icons/ic_next.svg" class="btnIconNext" />
-          </template>
-        </a-button>
-        <component :is="originalElement" v-else></component>
-      </template>
-    </a-pagination>
+      :isShowPrevBtn="isShowPrevBtn()"
+      :isShowNextBtn="isShowNextBtn()"
+      @onShowSizeChange="onShowSizeChange"
+      @onChange="onChange"
+    />
   </div>
 </template>
 
@@ -137,6 +103,7 @@ import { data } from "../models/CustomerListData";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import { service } from "@/services";
+import ThePagination from "@/modules/common/components/ThePagination.vue";
 
 //#endregion
 

@@ -14,6 +14,11 @@ exports[`Better Code Quality !`] = {
     ],
     "src/modules/staff-management/pages/CreateCollectionBase.vue:2774982795": [
       [304, 19, 47, "\'_event\' is defined but never used.", "3077278115"]
+    "src/modules/staff-management/pages/CollectionBase.vue:236015247": [
+      [136, 6, 6, "\'sortBy\' is assigned a value but never used.", "2170032388"]
+    ],
+    "src/modules/staff-management/pages/CreateCollectionBase.vue:1896100077": [
+      [279, 19, 47, "\'_event\' is defined but never used.", "3077278115"]
     ],
     "src/modules/staff-management/pages/CreateNewStaff.vue:2488377755": [
       [124, 49, 3, "Unexpected any. Specify a different type.", "193409811"]

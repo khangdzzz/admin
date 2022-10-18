@@ -80,65 +80,22 @@
           </template>
         </template>
       </a-table>
-      <div :class="collectionBase.pagination">
-        <a-pagination
-          v-model:current="pageOption.currentPage"
-          v-model:page-size="pageOption.pageSize"
-          :total="pageOption.total"
-          :pageSizeOptions="['20', '30', '40', '50']"
-          show-size-changer
-          @showSizeChange="onShowSizeChange"
-          @change="onChange"
-          :class="['ant-pagination', 'd-flex', 'justify-end']"
-        >
-          <template #buildOptionText="{ value }">
-            <div class="options-text">
-              <span class="mr-13">{{ value }} </span>
-              <img src="@/assets/icons/ic_arrow.svg" />
-            </div>
-          </template>
-          <template #itemRender="item">
-            <a-button
-              :class="[collectionBase.btnPagination, 'mt-10']"
-              type="primary"
-              ghost
-              v-if="item.type === 'prev' && isShowPrevBtn()"
-            >
-              <img
-                src="@/assets/icons/ic_prev.svg"
-                :class="[collectionBase.btnIconPrev]"
-              />
-              <span :class="[collectionBase.action]">{{
-                $t("previous_btn")
-              }}</span>
-            </a-button>
-            <a-button
-              :class="[collectionBase.btnPagination, 'mt-10', 'mr-15']"
-              type="primary"
-              ghost
-              v-else-if="item.type === 'next' && isShowNextBtn()"
-            >
-              <span :class="[collectionBase.action]">{{ $t("next_btn") }}</span>
-              <img
-                src="@/assets/icons/ic_next.svg"
-                :class="[collectionBase.btnIconNext]"
-              />
-            </a-button>
-
-            <component
-              v-else-if="item.type === 'page'"
-              :is="item.originalElement"
-            ></component>
-          </template>
-        </a-pagination>
-      </div>
+      <ThePagination
+        :isShowPagination="!isLoading && data && !!data.length"
+        :currentPage="pageOption.currentPage"
+        :pageSize="pageOption.pageSize"
+        :total="pageOption.total"
+        :isShowPrevBtn="isShowPrevBtn()"
+        :isShowNextBtn="isShowNextBtn()"
+        @onShowSizeChange="onShowSizeChange"
+        @onChange="onChange"
+      />
     </div>
-
     <NoData
       :value="searchString"
       :is-loading="isLoading"
       @onClick="handleBackToList"
-      v-else
+      v-if="isLoading || !data || !data.length"
     />
   </div>
 </template>
@@ -150,6 +107,7 @@ import ListSearchHeader from "@/modules/base/components/ListSearchHeader.vue";
 import { Sort } from "@/modules/common/models/sort.enum";
 import { routeNames, router } from "@/routes";
 import SortView from "@/modules/common/components/SortView.vue";
+import ThePagination from "@/modules/common/components/ThePagination.vue";
 import { service } from "@/services";
 import { computed, inject, onMounted, reactive, ref, watch } from "vue";
 import NoData from "@/modules/base/components/NoData.vue";
