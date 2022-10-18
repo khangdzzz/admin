@@ -1,22 +1,24 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { calculateSortQuery } from "@/modules/common/helpers";
 import { Pagination, ServiceResponse } from "@/modules/common/models";
 import { Sort } from "@/modules/common/models/sort.enum";
-import {
-  Container,
-  ContainerSelection,
-  ContainerType
-} from "@/modules/container/models";
+import { ContainerSelection, ContainerType } from "@/modules/container/models";
 import ContainerTypeModel from "@/modules/container/models/container-type.models";
+import {
+  EditContainerDto,
+  ResContainer
+} from "@/modules/container/models/container.model";
+import { DEFAULT_SORT_ORDER } from "@/services/constants";
+import { makeUniqueName } from "@/utils/string.helper";
+
+import { AxiosError } from "axios";
 import { transformRequest } from "./base.service";
 import { PaginationDto } from "./dtos/common/pagination.dto";
 import { CreateContainerTypeInputDto } from "./dtos/container-management/create-container-type.dto";
 import { ContainerTypeResponseDto } from "./dtos/container/create-container-type.dto";
-import { DEFAULT_SORT_ORDER } from "@/services/constants";
-import { makeUniqueName } from "@/utils/string.helper";
-import { ResContainer } from "@/modules/container/models/container.model";
-import { AxiosError } from "axios";
-import { calculateSortQuery } from "@/modules/common/helpers";
+
 import { Container as ContainerDTO } from "@/services/dtos/container/container.dto";
-import { ContainerDetailResponseDto } from "./dtos/container/container-detail-response.dto";
+
 interface sortContainerDto {
   sortType: Sort;
   sortName: Sort;
@@ -33,33 +35,41 @@ export function getMockCollectionBase(): ContainerSelection[] {
 }
 
 export async function getListContainer(
-  page: number,
-  size: number,
-  sort: sortContainerDto,
+  page?: number,
+  size?: number,
+  sort?: sortContainerDto,
   searchKeyword: string | null | undefined = ""
 ): Promise<PaginationDto<ResContainer> | undefined> {
-  const { sortType, sortName, sortWeight, sortCapacity } = sort;
-
-  const orderSortType = calculateSortQuery("container_type___name", sortType);
-  const orderSortName = calculateSortQuery("name", sortName);
-  const orderSortWeight = calculateSortQuery("weight", sortWeight);
-  const orderSortCapacity = calculateSortQuery("capacity", sortCapacity);
-
-  const order_by = [
-    orderSortType,
-    orderSortName,
-    orderSortWeight,
-    orderSortCapacity
-  ]
-    .filter((item) => !!item)
-    .toString();
-
-  const params = {
+  let params: {
+    page: number | undefined;
+    page_size: number | undefined;
+    name__like: string | undefined;
+    order_by?: string | undefined;
+  } = {
     page,
     page_size: size,
-    name__like: searchKeyword ? `%${searchKeyword}%` : undefined,
-    order_by: order_by?.length ? order_by : DEFAULT_SORT_ORDER
+    name__like: searchKeyword ? `%${searchKeyword}%` : undefined
   };
+  if (sort) {
+    const { sortType, sortName, sortWeight, sortCapacity } = sort;
+    const orderSortType = calculateSortQuery("container_type___name", sortType);
+    const orderSortName = calculateSortQuery("name", sortName);
+    const orderSortWeight = calculateSortQuery("weight", sortWeight);
+    const orderSortCapacity = calculateSortQuery("capacity", sortCapacity);
+    const order_by = [
+      orderSortType,
+      orderSortName,
+      orderSortWeight,
+      orderSortCapacity
+    ]
+      .filter((item) => !!item)
+      .toString();
+    params = {
+      ...params,
+      order_by: order_by?.length ? order_by : DEFAULT_SORT_ORDER
+    };
+  }
+
   const [err, res] = await transformRequest<PaginationDto<ResContainer>>({
     url: "/container",
     method: "get",
@@ -67,8 +77,8 @@ export async function getListContainer(
   });
 
   if (err) return undefined;
-  res.current_page = page;
-  res.page_size = size;
+  res.current_page = page || 1;
+  res.page_size = size || 20;
   return res;
 }
 
@@ -77,46 +87,40 @@ export function getContainerTypes(): ContainerType[] {
   return res;
 }
 
-export async function updateContainer(
-  containerInfo: Container
-): Promise<Container | unknown> {
-  const { id, containerType, containerName } = containerInfo;
-  const [error, res] = await transformRequest({
-    url: `update-container/${id}`,
-    method: "patch",
-    params: {},
-    data: { id, containerType, containerName }
+export async function getContainerById(
+  id: string
+): Promise<ResContainer | undefined> {
+  const [err, res] = await transformRequest<ResContainer>({
+    url: `container/${id}`,
+    method: "get"
   });
-  if (error) return undefined;
+  if (err) return undefined;
   return res;
 }
 
-export async function getContainerById(
-  id: string
-): Promise<Container | undefined> {
-  const [error, res] = await transformRequest<ContainerDetailResponseDto>({
-    url: `/container/${id}`,
-    method: "get"
+export async function editContainer(
+  containerInfo: EditContainerDto
+): Promise<
+  [AxiosError<unknown, unknown>, null] | [null, ContainerTypeModel] | any
+> {
+  const { id } = containerInfo;
+  const [error, res] = await transformRequest<ResContainer>({
+    url: `container/${id}`,
+    method: "put",
+    data: { ...containerInfo, id }
   });
-  if (!res || error) return undefined;
-  const {
-    name: containerName,
-    container_type___name: containerType,
-    weight,
-    capacity
-  } = res;
-  return {
-    id,
-    containerName,
-    containerType,
-    weight,
-    capacity: capacity?.toString() || "0"
-  };
+  if (error || !res) {
+    return {
+      error: (error?.response?.data as { details: { msg: string }[] })
+        .details[0].msg
+    };
+  }
+  return res;
 }
 
 export async function getListContainerType(
-  page: number,
-  size: number | string,
+  page?: number,
+  size?: number | string,
   sort: Sort = Sort.None,
   searchKeyword: string | null | undefined = ""
 ): Promise<Pagination<ContainerTypeModel> | undefined> {

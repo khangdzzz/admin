@@ -32,6 +32,7 @@
                     class="create-staff__radio-title"
                     v-for="item in formState.typeOptions"
                     :value="item.value"
+                    :key="item.value"
                     >{{ $t(item.text) }}</a-radio
                   >
                 </a-radio-group>
@@ -47,11 +48,15 @@
                 <span class="create-staff__require-mark">*</span>
               </div>
               <div class="d-flex gap-24">
-                <a-radio-group v-model:value="formState.userRole" :disabled="formState.type === TypeOptions.DESTINATION">
+                <a-radio-group
+                  v-model:value="formState.userRole"
+                  :disabled="formState.type === TypeOptions.DESTINATION"
+                >
                   <a-radio
                     class="create-staff__radio-title"
                     v-for="item in formState.userRoleOptions"
                     :value="item.value"
+                    :key="item.value"
                     >{{ $t(item.text) }}</a-radio
                   >
                 </a-radio-group>
@@ -81,7 +86,7 @@
 
 <script setup lang="ts">
 //#region import
-import { onMounted, reactive, watch } from "vue";
+import { onMounted, reactive, watch, computed } from "vue";
 
 import CustomForm from "@/modules/base/components/CustomForm.vue";
 import { UserType } from "@/modules/base/models/user-type.enum";
@@ -91,7 +96,6 @@ import {
 } from "@/modules/staff-management/models/create-new-staff.model";
 import { routeNames, router } from "@/routes";
 import { commonStore } from "@/stores";
-import { computed } from "@vue/reactivity";
 import radioOptions from "./create-new-staff-variables";
 //#endregion
 
@@ -143,13 +147,13 @@ const handleOnFocus = (index: number | boolean | Event): void => {
   dynamicValidateForm.formData[Number(index)].isFocus = true;
 };
 
-const handleOnClose = (index: number, value: string) :void => {
+const handleOnClose = (index: number, value: string): void => {
   dynamicValidateForm.formData[index].value = dynamicValidateForm.formData[
     index
   ].value.filter((item: string) => item !== value);
 };
 
-const handleOnChange = (value: string, index: number) :void=> {
+const handleOnChange = (value: string, index: number): void => {
   dynamicValidateForm.formData[index].value = value;
 };
 
@@ -183,7 +187,7 @@ const setUserRoleOptions = (): void => {
         formState.userRoleOptions = [];
     }
   } else if (userStore.user?.userType === UserType.CollectionBaseAdmin) {
-    if (!!formState.type) {
+    if (formState.type) {
       formState.userRoleOptions = radioOptions.userRoleByTenantAdmim.filter(
         (item) => item.value !== UserRoleOptions.TENANT_ADMIN
       );
