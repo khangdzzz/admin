@@ -72,7 +72,7 @@ export async function deleteCollectionBaseById(
   ids: number[]
 ): Promise<boolean> {
   const [error] = await transformRequest<CollectionBase>({
-    url: ` /workplace/collection_base`,
+    url: `/workplace/collection_base`,
     method: "delete",
     data: {
       ids
