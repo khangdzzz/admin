@@ -75,7 +75,7 @@ const formData = ref([
       {
         required: true,
         message: i18n.global.t("please_enter_input", {
-          fieldName: i18n.global.t("container_container_name")
+          fieldName: i18n.global.t("container_container_name").toLowerCase()
         }),
         trigger: "blur"
       },
@@ -105,7 +105,7 @@ const formData = ref([
       {
         required: true,
         message: i18n.global.t("please_enter_input", {
-          fieldName: i18n.global.t("container_container_type")
+          fieldName: i18n.global.t("container_container_type").toLowerCase()
         }),
         trigger: "blur"
       }
@@ -133,14 +133,14 @@ const formData = ref([
       {
         pattern: /(?<=^| )\d+(\.\d+)?(?=$| )/g,
         message: i18n.global.t("invalid_field_name", {
-          fieldName: i18n.global.t("container_weight")
+          fieldName: i18n.global.t("container_weight").toLowerCase()
         }),
         trigger: "blur"
       },
       {
         required: true,
         message: i18n.global.t("please_enter_input", {
-          fieldName: i18n.global.t("container_weight")
+          fieldName: i18n.global.t("container_weight").toLowerCase()
         }),
         trigger: "blur"
       }
@@ -166,7 +166,7 @@ const formData = ref([
       {
         pattern: /(?<=^| )\d+(\.\d+)?(?=$| )/g,
         message: i18n.global.t("invalid_field_name", {
-          fieldName: i18n.global.t("container_capacity")
+          fieldName: i18n.global.t("container_capacity").toLowerCase()
         }),
         trigger: "blur"
       }

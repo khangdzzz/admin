@@ -94,7 +94,7 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
         {
           required: true,
           message: i18n.global.t("please_enter_input", {
-            fieldName: i18n.global.t("owner")
+            fieldName: i18n.global.t("owner").toLowerCase()
           })
         }
       ],
@@ -117,7 +117,7 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
         {
           required: true,
           message: i18n.global.t("please_enter_input", {
-            fieldName: i18n.global.t("container_container_name")
+            fieldName: i18n.global.t("container_container_name").toLowerCase()
           })
         },
         {
@@ -142,7 +142,7 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
         {
           required: true,
           message: i18n.global.t("please_enter_input", {
-            fieldName: i18n.global.t("container_container_type")
+            fieldName: i18n.global.t("container_container_type").toLowerCase()
           })
         }
       ],
