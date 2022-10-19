@@ -10,12 +10,11 @@ export interface CollectionBase {
   shortName: string;
   kana: string;
   postalCode?: string;
-  email?: string;
-  mail?: string;
+  email?: string | null;
   representative: string;
   latitude: string | number;
   longitude: string | number;
   address?: string;
-  telephone?: string;
+  telephone?: string | null;
   collectionBaseType: number | string;
 }

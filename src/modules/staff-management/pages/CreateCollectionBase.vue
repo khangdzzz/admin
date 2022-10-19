@@ -1,12 +1,16 @@
 <template>
   <div class="create-collection-base p-30 fill-height">
-    <div class="create-collection-base__title">
+    <div class="create-collection-base__title mb-20">
       {{ $t("add_collection_base_add_new") }}
     </div>
     <div
-      class="create-collection-base__content-wrapper d-flex justify-space-between gap-20 px-20 pt-20 my-20 fill-height"
+      class="create-collection-base__content-wrapper d-flex justify-space-between gap-20 px-20 pt-20"
     >
-      <a-form class="create-collection-base__form-wrapper" :model="formData">
+      <a-form
+        class="create-collection-base__form-wrapper"
+        :model="formData"
+        ref="createCollectionBaseRef"
+      >
         <div>
           <CustomForm
             :form-data="formData.name"
@@ -44,7 +48,7 @@
         <ol-map
           :loadTilesWhileAnimating="true"
           :loadTilesWhileInteracting="true"
-          style="height: 100%"
+          style="height: calc(100% - 24px)"
           ref="map"
         >
           <ol-view
@@ -66,12 +70,6 @@
               <ol-vector-layer :zIndex="2">
                 <ol-source-vector>
                   <ol-feature ref="positionFeature">
-                    <ol-geom-point
-                      :coordinates="[
-                        formData.coordinate[0].value || 50,
-                        formData.coordinate[1].value || 50
-                      ]"
-                    ></ol-geom-point>
                     <ol-style>
                       <ol-style-icon
                         :src="locationIcon"
@@ -136,10 +134,11 @@
         </div>
       </div>
     </div>
-    <div class="d-flex justify-center gap-20">
+    <div class="d-flex justify-center gap-20 mt-20 pb-20">
       <a-button
         type="secondary"
         class="create-collection-base__btn-style create-collection-base__cancel-btn"
+        @click="handleCancel"
         >{{ $t("btn_cancel") }}</a-button
       >
       <a-button
@@ -159,7 +158,7 @@ import CustomForm from "@/modules/base/components/CustomForm.vue";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import { FormData } from "@/modules/staff-management/models/collection-base.model";
 import { formData as reactiveFormData } from "@/modules/staff-management/pages/create-collection-base-form";
-import { computed, reactive, ref, inject } from "vue";
+import { computed, reactive, ref, inject, onMounted } from "vue";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { service } from "@/services";
 import { commonStore } from "@/stores";
@@ -190,9 +189,16 @@ const messenger: (
   param: MessengerParamModel
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 ) => void = inject("messenger")!;
+const innerHeight = ref<number>(window.innerHeight);
+const createCollectionBaseRef = ref();
 //#endregion
 
 //#region hooks
+onMounted(() => {
+  window.addEventListener("resize", () => {
+    innerHeight.value = window.innerHeight;
+  });
+});
 //#endregion
 
 //#region function
@@ -224,11 +230,21 @@ const isButtonDisabled = computed((): boolean => {
     !name[0].value ||
     !name[1].value ||
     !collectionBaseType.value ||
-    !contact[2].value ||
+    !contact[0].value ||
+    !contact[1].value ||
     !geoLocations.value[0][0] ||
     !geoLocations.value[0][1]
   );
 });
+
+const clearInputs = (): void => {
+  createCollectionBaseRef.value.resetFields();
+};
+
+const handleCancel = (): void => {
+  router.push({ name: routeNames.listCollectionBase });
+  clearInputs();
+};
 
 const handleSubmit = async (): Promise<void> => {
   const { name, contact } = formData;
@@ -247,8 +263,10 @@ const handleSubmit = async (): Promise<void> => {
   };
   if (!userStore.user) return;
   isLoading.value = true;
-  const [err, res] = await service.collectionBase.createCollectionBase(data);
-  if (res && !err) {
+  const { error, res } = await service.collectionBase.createCollectionBase(
+    data
+  );
+  if (res && !error) {
     messenger({
       title: "create_collection_base_msg_create_successfully",
       message: "",
@@ -256,20 +274,27 @@ const handleSubmit = async (): Promise<void> => {
       callback: (isConfirm: boolean) => {
         isConfirm;
         goToCollectionBaseListPage();
+        router.push({ name: routeNames.listCollectionBase });
+        clearInputs();
       }
     });
   } else {
     messenger({
       title: "popup_create_fail_title",
       message: "popup_create_fail_message",
-      type: MessengerType.Error
+      type: MessengerType.Error,
+      callback: () => {
+        clearInputs();
+      }
     });
   }
   isLoading.value = false;
 };
+
 const goToCollectionBaseListPage = (): void => {
   router.push({ name: routeNames.listCollectionBase });
 };
+
 const geoLocChange = (loc: number[]): void => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (view?.value as any)?.fit([loc[0], loc[1], loc[0], loc[1]], {
@@ -306,8 +331,6 @@ const copyLocationToClipboard = (): void => {
 .create-collection-base {
   &__content-wrapper {
     background-color: $white;
-    max-height: 747px;
-    min-height: 747px;
   }
 
   &__title {
@@ -325,11 +348,11 @@ const copyLocationToClipboard = (): void => {
   &__map-wrapper {
     position: relative;
     width: 50%;
-    height: calc(100% - 20px);
+    height: auto;
     &__position-detail {
       position: absolute;
       display: flex;
-      bottom: 10px;
+      bottom: 34px;
       left: 10px;
       width: auto;
       padding-left: 10px;
@@ -402,17 +425,19 @@ const copyLocationToClipboard = (): void => {
     &__map-wrapper {
       .ol-viewport {
         border-radius: 10px;
+        .ol-layers {
+          .ol-layer {
+            canvas {
+              height: 100% !important;
+            }
+          }
+        }
       }
     }
   }
 
   @media only screen and (max-width: 1382px) {
     .create-collection-base {
-      &__content-wrapper {
-        min-height: 816px;
-        max-height: 816px;
-      }
-
       &__radio-group {
         flex-direction: column;
         gap: 10px;

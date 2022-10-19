@@ -13,11 +13,11 @@ export interface CollectionBaseResponseDto {
   workplace_type?: number;
   base_type: number | string;
   postal_code?: string;
-  mail?: string;
+  mail?: string | null;
   representative: string;
   latitude: number | string;
   longitude: number | string;
   address?: string;
-  telephone?: string;
+  telephone?: string | null;
   report_to?: number;
 }
