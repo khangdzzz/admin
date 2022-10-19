@@ -6,7 +6,7 @@
       <div
         class="create-container__title d-flex justify-center align-center mb-30"
       >
-        Add new container
+        {{ $t("container_add_new_container") }}
       </div>
       <a-form
         :model="{ formData }"
@@ -75,7 +75,7 @@ const formData = ref([
       {
         required: true,
         message: i18n.global.t("please_enter_input", {
-          fieldName: i18n.global.t("container_container_name")
+          fieldName: i18n.global.t("container_container_name").toLowerCase()
         }),
         trigger: "blur"
       },
@@ -105,7 +105,7 @@ const formData = ref([
       {
         required: true,
         message: i18n.global.t("please_enter_input", {
-          fieldName: i18n.global.t("container_container_type")
+          fieldName: i18n.global.t("container_container_type").toLowerCase()
         }),
         trigger: "blur"
       }
@@ -133,14 +133,14 @@ const formData = ref([
       {
         pattern: /(?<=^| )\d+(\.\d+)?(?=$| )/g,
         message: i18n.global.t("invalid_field_name", {
-          fieldName: i18n.global.t("container_weight")
+          fieldName: i18n.global.t("container_weight").toLowerCase()
         }),
         trigger: "blur"
       },
       {
         required: true,
         message: i18n.global.t("please_enter_input", {
-          fieldName: i18n.global.t("container_weight")
+          fieldName: i18n.global.t("container_weight").toLowerCase()
         }),
         trigger: "blur"
       }
@@ -166,7 +166,7 @@ const formData = ref([
       {
         pattern: /(?<=^| )\d+(\.\d+)?(?=$| )/g,
         message: i18n.global.t("invalid_field_name", {
-          fieldName: i18n.global.t("container_capacity")
+          fieldName: i18n.global.t("container_capacity").toLowerCase()
         }),
         trigger: "blur"
       }
@@ -230,7 +230,10 @@ const handleSubmit = async (): Promise<void> => {
   const name = formData.value[0].value;
   const containerType = +formData.value[1].value;
   const weight = +formData.value[2].value;
-  const capacity = +formData.value[3].value;
+  let capacity = null;
+  if (formData.value[3].value !== "") {
+    capacity = +formData.value[3].value;
+  }
   const { error, res } = await service.container.createContainer(
     name,
     containerType,

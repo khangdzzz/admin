@@ -103,6 +103,7 @@
   "container_add_container": "Add",
   "container_container_name": "風袋名称",
   "container_owner_type": "利用先",
+  "container_add_new_container": "新規風袋の追加 ",
   "vehicle_column_no": "号.",
   "vehicle_column_name": "名称",
   "vehicle_type": "車両種別",

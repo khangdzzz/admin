@@ -90,10 +90,17 @@
       @onChange="onChange"
     />
   </div>
+  <NoData
+    :value="searchValue"
+    :is-loading="isLoading"
+    @onClick="handleBackToList"
+    v-if="isLoading || !data || !data.length"
+  />
 </template>
 
 <script setup lang="ts">
 //#region import
+import NoData from "@/modules/base/components/NoData.vue";
 import IcTrash from "@/assets/icons/IcTrash.vue";
 import ListSearchHeader from "@/modules/base/components/ListSearchHeader.vue";
 import { routeNames, router } from "@/routes";
@@ -105,12 +112,14 @@ import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import { service } from "@/services";
 import ThePagination from "@/modules/common/components/ThePagination.vue";
 
+import HeaderRef from "@/modules/base/models/search-header.model";
 //#endregion
 
 //#region props
 //#endregion
 
 //#region variables
+const searchValue = ref<string>("");
 const isLoading = ref<boolean>(false);
 const messenger: (param: MessengerParamModel) => void =
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -124,6 +133,8 @@ const pageOption = reactive({
   total: 1
 });
 const searchString = ref<string>("");
+const searchHeader = ref<HeaderRef | null>(null);
+
 //#endregion
 
 //#region hooks
@@ -136,6 +147,11 @@ onMounted(() => {
 //#endregion
 
 //#region function
+const handleBackToList = (): void => {
+  if (searchHeader.value) {
+    searchHeader.value.clearInput();
+  }
+};
 const onSelectChange = (rowSelect: []): void => {
   selectedRowKeys.value = rowSelect;
 };

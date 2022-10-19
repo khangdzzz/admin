@@ -2,7 +2,7 @@
   <div
     class="no-data-container fill-height fill-width d-flex flex-column justify-center align-center"
   >
-    <div class="mb-40" v-if="!isLoading">
+    <div class="mb-60" v-if="!isLoading">
       <ImNotFound
         dashed-file="#07A0B8"
         background-color="#E6F6F9"
