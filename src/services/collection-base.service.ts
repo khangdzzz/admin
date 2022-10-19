@@ -104,14 +104,34 @@ export async function createCollectionBase(
 ): Promise<
   [AxiosError<unknown, unknown>, null] | [null, CollectionBaseResponseDto] | any
 > {
+  const {
+    name,
+    address,
+    latitude,
+    longitude,
+    shortName,
+    kana,
+    collectionBaseType,
+    postalCode,
+    email,
+    representative,
+    telephone
+  } = collectionBase;
+
   const data: CollectionBaseResponseDto = {
-    ...collectionBase,
-    short_name: collectionBase.shortName,
-    name_kana: collectionBase.kana,
-    base_type: collectionBase.collectionBaseType,
-    postal_code: collectionBase.postalCode,
-    mail: collectionBase.email
+    name,
+    address,
+    latitude,
+    longitude,
+    short_name: shortName,
+    name_kana: kana,
+    base_type: collectionBaseType,
+    postal_code: postalCode,
+    mail: email || null,
+    representative,
+    telephone
   };
+
   const [error, res] = await transformRequest<CollectionBaseResponseDto>({
     url: "/workplace/collection_base",
     method: "post",

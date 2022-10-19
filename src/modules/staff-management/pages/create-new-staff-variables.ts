@@ -1,24 +1,27 @@
 import { i18n } from "@/i18n";
 import validator from "@/modules/base/components/validator/validator";
-import { TypeOptions, UserRoleOptions } from "@/modules/staff-management/models/create-new-staff.model"
+import {
+  TypeOptions,
+  UserRoleOptions
+} from "@/modules/staff-management/models/create-new-staff.model";
 import { SelectProps } from "ant-design-vue";
 
 const options: SelectProps["options"] = [
   {
     value: "collection_base_1",
     label: "Collection base",
-    content:"Collection base 1"
+    content: "Collection base 1"
   },
   {
     value: "collection_base_2",
     label: "Collection base",
-    content:"Collection base 2"
+    content: "Collection base 2"
   },
   {
     value: "partner1",
     label: "Partner",
-    content:"Partner 1"
-  },
+    content: "Partner 1"
+  }
 ];
 
 const radioOptions = {
@@ -86,7 +89,7 @@ const radioOptions = {
     {
       text: i18n.global.t("consignee"),
       value: UserRoleOptions.CONSIGNEE
-    },
+    }
   ],
   formData: [
     {
@@ -183,7 +186,7 @@ const radioOptions = {
           message: i18n.global.t("max_length_input", { maxLength: 15 })
         },
         {
-          pattern: /([0-9|\+]{1})([0-9])/g,
+          pattern: /\+[0-9]{6,12}/,
           message: i18n.global.t("allow_input_number")
         }
       ]

@@ -145,7 +145,7 @@
   "edit_failed": "編集に失敗しました",
   "common_loading": "処理中...",
   "invalid_field_name": "{fieldName}を正しく入力してください。 ",
-  "short_name": "Short name",
+  "short_name": "略称",
   "staff": "スタッフ",
   "staff_add_staff": "スタッフ追加",
   "staff_employee_code": "社員番号",
@@ -207,5 +207,7 @@
   "common_lbl_coming_soon": "近日公開",
   "container_successfully_created": "風袋が作成されました",
   "container_create_failed": "作成に失敗しました",
-  "common_msg_copied_to_clipboard": "コピー済"
+  "common_msg_copied_to_clipboard": "コピー済",
+  "collection_email": "Eメール",
+  "representative": "代表者"
 }
