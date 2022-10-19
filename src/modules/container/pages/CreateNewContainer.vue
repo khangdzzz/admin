@@ -55,6 +55,7 @@ import { i18n } from "@/i18n";
 import { service } from "@/services";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
+import { inputValidDecimalOnly } from "@/utils/input-behaviours.helper";
 //#endregion
 
 //#region props
@@ -154,7 +155,7 @@ const formData = ref([
       },
 
       {
-        pattern: /(?<=^| )\d+(\.\d+)?(?=$| )/g,
+        pattern: /^[1-9][0-9]*[.]?[0-9]{0,2}$/,
         message: i18n.global.t("invalid_field_name", {
           fieldName: i18n.global.t("container_weight").toLowerCase()
         }),
@@ -170,7 +171,8 @@ const formData = ref([
     ],
     required: true,
     key: 3,
-    isFocus: false
+    isFocus: false,
+    inputBehaviour: inputValidDecimalOnly
   },
   {
     inputType: "AInput",
@@ -196,7 +198,8 @@ const formData = ref([
     ],
     required: false,
     key: 4,
-    isFocus: false
+    isFocus: false,
+    inputBehaviour: inputValidDecimalOnly
   }
 ]);
 //#endregion
@@ -300,15 +303,28 @@ const handleSubmit = async (): Promise<void> => {
     });
   }
 };
+
 //#endregion
 
 //#region computed
 const isAllowSubmit = computed(() => {
-  return (
-    formData.value[0].value &&
-    formData.value[1].value &&
-    formData.value[2].value
-  );
+  if (!formData.value[0].value || formData.value[0].value.length >= 50) {
+    return false;
+  }
+  if (
+    !formData.value[2].value ||
+    formData.value[2].value.length > 10 ||
+    !/^[1-9][0-9]*[.]?[0-9]{0,2}$/.test(formData.value[2].value)
+  ) {
+    return false;
+  }
+  if (
+    formData.value[3].value?.length &&
+    !/(?<=^| )\d+(\.\d+)?(?=$| )/g.test(formData.value[3].value)
+  ) {
+    return false;
+  }
+  return formData.value[1].value;
 });
 //#endregion
 
