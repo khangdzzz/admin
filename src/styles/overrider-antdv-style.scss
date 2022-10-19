@@ -29,7 +29,7 @@
   background-color: $white;
 }
 
-.ant-table-thead > tr > th {
+.ant-table-thead>tr>th {
   font-weight: 700 !important;
   line-height: 18px;
   height: 58px !important;
@@ -56,7 +56,7 @@
   border-bottom-right-radius: 10px !important;
 }
 
-.ant-table-tbody > tr.ant-table-row-selected > td {
+.ant-table-tbody>tr.ant-table-row-selected>td {
   background: $grey-2;
   border-color: rgba(0, 0, 0, 0.03);
 }
@@ -67,12 +67,12 @@
   border-bottom: 1px solid $grey-3 !important;
   font-size: 16px;
   font-weight: 400;
-  white-space: nowrap; 
+  white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis; 
+  text-overflow: ellipsis;
 }
 
-.ant-table-thead > tr > th {
+.ant-table-thead>tr>th {
   font-weight: 700;
 }
 
@@ -88,27 +88,27 @@
   background-color: $neutral-50;
 }
 
-.ant-table-container table > thead > tr > th {
+.ant-table-container table>thead>tr>th {
   background-color: $white;
 }
 
-.ant-table-container table > thead > tr:first-child th {
+.ant-table-container table>thead>tr:first-child th {
   color: $text-1;
 }
 
-.ant-table-container table > thead > tr:first-child th:first-child {
+.ant-table-container table>thead>tr:first-child th:first-child {
   border-top-left-radius: 10px !important;
 }
 
-.ant-table-container table > thead > tr:first-child th:last-child {
+.ant-table-container table>thead>tr:first-child th:last-child {
   border-top-right-radius: 10px !important;
 }
 
-.ant-table-container table > tbody > tr:last-child td:first-child {
+.ant-table-container table>tbody>tr:last-child td:first-child {
   border-bottom-left-radius: 0px;
 }
 
-.ant-table-container table > tbody > tr:last-child td:last-child {
+.ant-table-container table>tbody>tr:last-child td:last-child {
   border-bottom-right-radius: 0px;
 }
 
@@ -116,9 +116,7 @@
   background: $white;
 }
 
-.ant-table-thead
-  > tr
-  > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
+.ant-table-thead>tr>th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
   height: 0 !important;
 }
 
@@ -131,11 +129,11 @@
   .ant-spin-nested-loading {
     .ant-spin-container {
       .ant-table {
-        .ant-table-container table > tbody > tr:last-child td:last-child {
+        .ant-table-container table>tbody>tr:last-child td:last-child {
           border-bottom-right-radius: 0px;
         }
 
-        .ant-table-container table > tbody > tr:last-child td:first-child {
+        .ant-table-container table>tbody>tr:last-child td:first-child {
           border-bottom-left-radius: 0px;
         }
       }
@@ -237,7 +235,7 @@
   }
 }
 
-.ant-spin-nested-loading > div > .ant-spin {
+.ant-spin-nested-loading>div>.ant-spin {
   max-height: 100% !important;
 
   .ant-spin-dot {

@@ -1,135 +1,142 @@
 <template>
-  <div class="d-flex flex-column fill-height collection-base-detail">
-    <ListSearchHeader
-      :title="$t('container_type')"
-      :enable-search="false"
-      :enable-back="true"
-      @goBack="goToCollectionBaseListPage"
-    >
-      <template #action>
-        <a-button
-          class="btn-action"
-          ghost
-          type="primary"
-          @click="editCollectionBase"
-        >
-          <template #icon>
-            <img src="@/assets/icons/ic_btn_edit.svg" class="btn-icon" />
-          </template>
-          {{ $t("edit_btn") }}
-        </a-button>
-        <a-button
-          class="btn-action color-btn-delete"
-          ghost
-          type="primary"
-          @click="deleteCollectionBase"
-        >
-          <template #icon>
-            <IcTrash class="btn-icon" :color="'#F54E4E'" />
-          </template>
-          {{ $t("delete_btn") }}
-        </a-button>
-      </template>
-    </ListSearchHeader>
-    <div
-      class="collection-base-detail__content-wrapper d-flex justify-space-between gap-20 fill-height"
-    >
-      <div class="collection-base-detail__form-wrapper">
-        <div
-          v-for="(item, index) in informations"
-          :key="index"
-          class="collection-base-detail__form-wrapper__row"
-        >
-          <div class="collection-base-detail__form-wrapper__title">
-            {{ $t(item.key) }}
-          </div>
-          <a-tooltip placement="top">
-            <template #title>
-              <span>{{ item.value }}</span>
+  <a-spin
+    :spinning="isLoading"
+    :tip="$t('common_loading')"
+    class="collection-base-detail__spin"
+  >
+    <div class="d-flex flex-column collection-base-detail">
+      <ListSearchHeader
+        :title="$t('container_type')"
+        :enable-search="false"
+        :enable-back="true"
+        @goBack="goToCollectionBaseListPage"
+      >
+        <template #action>
+          <a-button
+            class="btn-action"
+            ghost
+            type="primary"
+            @click="editCollectionBase"
+          >
+            <template #icon>
+              <img src="@/assets/icons/ic_btn_edit.svg" class="btn-icon" />
             </template>
-            <div class="collection-base-detail__form-wrapper__value">
-              {{ item.value }}
+            {{ $t("edit_btn") }}
+          </a-button>
+          <a-button
+            class="btn-action color-btn-delete"
+            ghost
+            type="primary"
+            @click="deleteCollectionBase"
+          >
+            <template #icon>
+              <IcTrash class="btn-icon" :color="'#F54E4E'" />
+            </template>
+            {{ $t("delete_btn") }}
+          </a-button>
+        </template>
+      </ListSearchHeader>
+      <div
+        class="collection-base-detail__content-wrapper d-flex justify-space-between gap-20 fill-height"
+      >
+        <div class="collection-base-detail__form-wrapper">
+          <div
+            v-for="(item, index) in informations"
+            :key="index"
+            class="collection-base-detail__form-wrapper__row"
+          >
+            <div class="collection-base-detail__form-wrapper__title">
+              {{ $t(item.key) }}
             </div>
-          </a-tooltip>
-
-          <a-divider style="border-color: #e8e8e8; margin: 10px 0" />
-        </div>
-      </div>
-      <div class="collection-base-detail__map-wrapper">
-        <ol-map
-          :loadTilesWhileAnimating="true"
-          :loadTilesWhileInteracting="true"
-          ref="map"
-          class="fill-height"
-        >
-          <ol-view
-            ref="view"
-            :center="center"
-            :rotation="rotation"
-            :zoom="zoom"
-            :projection="projection"
-          />
-
-          <ol-tile-layer>
-            <ol-source-osm />
-          </ol-tile-layer>
-
-          <ol-geolocation
-            :projection="projection"
-            v-for="(geoLocation, index) in geoLocations"
-            :key="index"
-          >
-            <template v-slot>
-              <ol-vector-layer :zIndex="2">
-                <ol-source-vector>
-                  <ol-feature ref="positionFeature">
-                    <ol-geom-point :coordinates="geoLocation"></ol-geom-point>
-                    <ol-style>
-                      <ol-style-icon
-                        :src="locationIcon"
-                        :scale="1"
-                      ></ol-style-icon>
-                    </ol-style>
-                  </ol-feature>
-                </ol-source-vector>
-              </ol-vector-layer>
-            </template>
-          </ol-geolocation>
-
-          <ol-overlay
-            v-for="(geoLocation, index) in geoLocations"
-            :key="index"
-            :position="geoLocation"
-          >
-            <template v-slot="slotProps">
-              <div
-                class="collection-base-detail__map-wrapper__overlay-content"
-                v-if="slotProps && collectionBaseAddress"
-              >
-                {{ collectionBaseAddress }}
+            <a-tooltip placement="top">
+              <template #title>
+                <span>{{ item.value }}</span>
+              </template>
+              <div class="collection-base-detail__form-wrapper__value">
+                {{ item.value }}
               </div>
-            </template>
-          </ol-overlay>
-        </ol-map>
-        <div
-          class="collection-base-detail__map-wrapper__position-detail"
-          v-if="geoLocations.length"
-        >
-          {{ geoLocations[0][0] }}, {{ geoLocations[0][1] }}
-          <img
-            src="@/assets/icons/ic_btn_copy.svg"
-            @click="copyLocationToClipboard"
-          />
+            </a-tooltip>
+
+            <a-divider style="border-color: #e8e8e8; margin: 10px 0" />
+          </div>
         </div>
-        <a-btn
-          class="collection-base-detail__map-wrapper__current-location-button"
-          @click="focusCurrentLocation"
-        >
-          <img src="@/assets/icons/ic_btn_current_location.svg" />
-        </a-btn>
+        <div class="collection-base-detail__map-wrapper">
+          <ol-map
+            v-if="geoLocations.length"
+            :loadTilesWhileAnimating="true"
+            :loadTilesWhileInteracting="true"
+            ref="map"
+            class="collection-base-detail__map-wrapper__map"
+          >
+            <ol-view
+              ref="view"
+              :center="center"
+              :rotation="rotation"
+              :zoom="zoom"
+              :projection="projection"
+            />
+
+            <ol-tile-layer>
+              <ol-source-osm />
+            </ol-tile-layer>
+
+            <ol-geolocation
+              :projection="projection"
+              v-for="(geoLocation, index) in geoLocations"
+              :key="index"
+            >
+              <template v-slot>
+                <ol-vector-layer :zIndex="2">
+                  <ol-source-vector>
+                    <ol-feature ref="positionFeature">
+                      <ol-geom-point :coordinates="geoLocation"></ol-geom-point>
+                      <ol-style>
+                        <ol-style-icon
+                          :src="locationIcon"
+                          :scale="1"
+                        ></ol-style-icon>
+                      </ol-style>
+                    </ol-feature>
+                  </ol-source-vector>
+                </ol-vector-layer>
+              </template>
+            </ol-geolocation>
+
+            <ol-overlay
+              v-for="(geoLocation, index) in geoLocations"
+              :key="index"
+              :position="geoLocation"
+            >
+              <template v-slot="slotProps">
+                <div
+                  class="collection-base-detail__map-wrapper__overlay-content"
+                  v-if="slotProps && collectionBaseAddress"
+                >
+                  {{ collectionBaseAddress }}
+                </div>
+              </template>
+            </ol-overlay>
+          </ol-map>
+          <div
+            class="collection-base-detail__map-wrapper__position-detail"
+            v-if="geoLocations.length"
+          >
+            {{ geoLocations[0][0] }}, {{ geoLocations[0][1] }}
+            <img
+              src="@/assets/icons/ic_btn_copy.svg"
+              @click="copyLocationToClipboard"
+            />
+          </div>
+          <a-btn
+            class="collection-base-detail__map-wrapper__current-location-button"
+            @click="focusCurrentLocation"
+          >
+            <img src="@/assets/icons/ic_btn_current_location.svg" />
+          </a-btn>
+        </div>
       </div>
     </div>
-  </div>
+  </a-spin>
 </template>
 
 <script setup lang="ts">
@@ -185,16 +192,18 @@ onMounted(async (): Promise<void> => {
         postalCode,
         address,
         telephone,
-        mail,
+        email: mail,
         representative
       } = detail;
       const lat = latitude ? +latitude : 0;
       const long = longitude ? +longitude : 0;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (view?.value as any)?.fit([lat, long, lat, long], {
-        maxZoom: 14
-      });
       geoLocations.value.push([lat, long]);
+      setTimeout(() => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (view?.value as any)?.fit([lat, long, lat, long], {
+          maxZoom: 14
+        });
+      }, 300);
       collectionBaseAddress.value = address || "";
       informations.value = [
         { key: "collection_base_lbl_name", value: name },
@@ -202,7 +211,9 @@ onMounted(async (): Promise<void> => {
         { key: "collection_base_lbl_name_kana", value: kana },
         {
           key: "collection_base_lbl_type",
-          value: collectionBaseType?.toString()
+          value: i18n.global.t(
+            `collection_base_lbl_type_${collectionBaseType?.toString()}`
+          )
         },
         { key: "collection_base_lbl_postal_code", value: postalCode || "" },
         { key: "collection_base_lbl_address", value: address || "" },
@@ -313,7 +324,16 @@ const focusCurrentLocation = (): void => {
 </script>
 
 <style lang="scss" scoped>
+.ant-spin-nested-loading {
+  height: 100%;
+}
+.collection-base-detail__spin {
+  height: 100vh;
+  width: 100%;
+}
 .collection-base-detail {
+  height: 100% !important;
+  width: 100% !important;
   padding-bottom: 30px;
   &__content-wrapper {
     margin-left: 30px;
@@ -333,6 +353,7 @@ const focusCurrentLocation = (): void => {
 
   &__form-wrapper {
     width: 50%;
+    height: auto;
     &__row {
       min-height: 60px;
       height: 60px;
@@ -367,6 +388,9 @@ const focusCurrentLocation = (): void => {
   &__map-wrapper {
     position: relative;
     width: 50%;
+    &__map {
+      height: 100%;
+    }
     &__position-detail {
       position: absolute;
       display: flex;
@@ -422,13 +446,14 @@ const focusCurrentLocation = (): void => {
       color: #f54e4e;
       margin-top: -20px;
       margin-left: 20px;
-      max-lines: 2;
       max-width: 133px;
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
       text-overflow: ellipsis;
+      min-height: 38px;
+      word-wrap: break-word;
     }
   }
 
@@ -479,20 +504,6 @@ const focusCurrentLocation = (): void => {
     &__map-wrapper {
       .ol-viewport {
         border-radius: 10px;
-      }
-    }
-  }
-
-  @media only screen and (max-width: 1382px) {
-    .collection-base-detail {
-      &__content-wrapper {
-        min-height: 816px;
-        max-height: 816px;
-      }
-
-      &__radio-group {
-        flex-direction: column;
-        gap: 10px;
       }
     }
   }

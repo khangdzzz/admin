@@ -227,5 +227,8 @@
   "collection_base_lbl_address": "Address",
   "collection_base_lbl_phone_number": "Phone number",
   "collection_base_lbl_email": "E-mail",
-  "collection_base_lbl_representative": "Representative"
+  "collection_base_lbl_representative": "Representative",
+  "collection_base_lbl_type_1": "Collection",
+  "collection_base_lbl_type_2": "Manufacture",
+  "collection_base_lbl_type_3": "Both"
 }

@@ -99,11 +99,12 @@ export const getCollectionBaseById = async (
     mail,
     postal_code: postalCode,
     telephone,
-    representative
+    representative,
+    base_type: collectionBaseType
   } = res;
   return {
     id,
-    collectionBaseType: "",
+    collectionBaseType: collectionBaseType,
     kana,
     latitude,
     longitude,
@@ -113,7 +114,6 @@ export const getCollectionBaseById = async (
     address,
     email: mail,
     key: 0,
-    mail,
     postalCode,
     telephone
   };
