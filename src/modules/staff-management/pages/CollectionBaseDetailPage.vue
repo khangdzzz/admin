@@ -119,7 +119,7 @@
           </ol-map>
           <div
             class="collection-base-detail__map-wrapper__position-detail"
-            v-if="geoLocations.length"
+            v-if="geoLocations.length && !isLoading"
           >
             {{ geoLocations[0][0] }}, {{ geoLocations[0][1] }}
             <img
@@ -130,6 +130,7 @@
           <a-btn
             class="collection-base-detail__map-wrapper__current-location-button"
             @click="focusCurrentLocation"
+            v-if="!isLoading"
           >
             <img src="@/assets/icons/ic_btn_current_location.svg" />
           </a-btn>
