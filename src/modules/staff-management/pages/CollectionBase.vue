@@ -46,6 +46,7 @@
         :data-source="data"
         :pagination="false"
         :scroll="{ y: tableMaxHeight }"
+        :customRow="customRow"
       >
         <template #headerCell="{ column }">
           <template v-if="column.key === 'index'">
@@ -58,10 +59,7 @@
             </div>
           </template>
         </template>
-        <template #bodyCell="{ column, record, index }">
-          <template v-if="column.key === 'index'">
-            <span>{{ index + 1 }}</span>
-          </template>
+        <template #bodyCell="{ column, record }">
           <template v-if="column.key === 'action'">
             <img src="@/assets/icons/ic_user.svg" class="action-icon" />
             <router-link
@@ -345,6 +343,22 @@ const onDeleteCollectionBase = async (deleteIds: number[]): Promise<void> => {
   pageOption.currentPage = 1;
   selectedKeys.value = [];
   searchString.value = "";
+};
+
+const customRow = (
+  record: CollectionBase
+): { onClick: (_event: PointerEvent) => void } => {
+  return {
+    onClick: (_event: PointerEvent): void => {
+      _event;
+      router.push({
+        name: routeNames.collectionBaseDetail,
+        params: {
+          id: record.id
+        }
+      });
+    }
+  };
 };
 //#endregion
 

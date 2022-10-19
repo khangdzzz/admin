@@ -416,6 +416,7 @@ const filterOption = (input: string, option: any): boolean => {
 
 .has-icon {
   left: 44px !important;
+  margin-left: 0px;
 }
 
 .rc-virtual-list-scrollbar-thumb {
