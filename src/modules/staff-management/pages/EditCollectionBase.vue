@@ -1,41 +1,38 @@
 <template>
-  <div class="edit-collection-base p-30 fill-height">
-    <div class="edit-collection-base__title">Edit collection base</div>
+  <div class="create-collection-base p-30 fill-height">
+    <div class="create-collection-base__title mb-20">
+      {{ $t("edit_collection_base") }}
+    </div>
     <div
-      class="edit-collection-base__content-wrapper d-flex justify-space-between gap-20 px-20 pt-20 my-20 fill-height"
+      class="create-collection-base__content-wrapper d-flex justify-space-between gap-20 px-20 pt-20"
     >
-      <a-form class="edit-collection-base__form-wrapper" :model="formData">
-        <div
-          class="edit-collection-base__custom-input-wrapper d-flex justify-space-between gap-20"
-        >
+      <a-form
+        class="create-collection-base__form-wrapper"
+        :model="formData"
+        ref="createCollectionBaseRef"
+      >
+        <div>
           <CustomForm
             :form-data="formData.name"
             @on-focus="handleOnNameFocus"
             @on-blur="handleOnNameBlur"
           />
         </div>
-        <div>
-          <CustomForm
-            :form-data="formData.japaneseName"
-            @on-focus="handleOnJapaneseNameFocus"
-            @on-blur="handleOnJapaneseNameBlur"
-          />
-        </div>
         <div class="d-flex my-30 gap-40">
-          <div class="edit-collection-base__type-selector">
-            Type
-            <span class="edit-collection-base__required-mark">&nbsp;* </span>
+          <div class="create-collection-base__type-selector">
+            {{ $t("type") }}
+            <span class="create-collection-base__required-mark">&nbsp;* </span>
           </div>
           <div>
             <a-radio-group
               v-model:value="collectionBaseType"
               name="radioGroup"
               size="large"
-              class="edit-collection-base__radio-group d-flex gap-40"
+              class="create-collection-base__radio-group d-flex gap-40"
             >
-              <a-radio value="collection">Collection</a-radio>
-              <a-radio value="manufacture">Manufacture</a-radio>
-              <a-radio value="both">Both</a-radio>
+              <a-radio :value="1">{{ $t("collection") }}</a-radio>
+              <a-radio :value="2">{{ $t("manufacture") }}</a-radio>
+              <a-radio :value="3">{{ $t("both") }}</a-radio>
             </a-radio-group>
           </div>
         </div>
@@ -46,28 +43,12 @@
             @on-blur="handleOnContactBlur"
           />
         </div>
-        <div
-          class="edit-collection-base__custom-input-wrapper d-flex justify-space-between gap-20"
-        >
-          <CustomForm
-            :form-data="formData.coordinate"
-            @on-focus="handleOnCoordinateFocus"
-            @on-blur="handleOnCoordinateBlur"
-          />
-        </div>
-        <div>
-          <CustomForm
-            :form-data="formData.addressAndPhone"
-            @on-focus="handleOnAddressAndPhoneFocus"
-            @on-blur="handleOnAddressAndPhoneBlur"
-          />
-        </div>
       </a-form>
-      <div class="edit-collection-base__map-wrapper">
+      <div class="create-collection-base__map-wrapper">
         <ol-map
           :loadTilesWhileAnimating="true"
           :loadTilesWhileInteracting="true"
-          style="height: 100%"
+          style="height: calc(100% - 24px)"
           ref="map"
         >
           <ol-view
@@ -81,20 +62,17 @@
           <ol-tile-layer>
             <ol-source-osm />
           </ol-tile-layer>
+
           <ol-geolocation
             :projection="projection"
-            @positionChanged="geoLocChange"
+            v-for="(geoLocation, index) in geoLocations"
+            :key="index"
           >
             <template v-slot>
               <ol-vector-layer :zIndex="2">
                 <ol-source-vector>
                   <ol-feature ref="positionFeature">
-                    <ol-geom-point
-                      :coordinates="[
-                        formData.coordinate[0].value || 50,
-                        formData.coordinate[1].value || 50
-                      ]"
-                    ></ol-geom-point>
+                    <ol-geom-point :coordinates="geoLocation"></ol-geom-point>
                     <ol-style>
                       <ol-style-icon
                         :src="locationIcon"
@@ -106,21 +84,50 @@
               </ol-vector-layer>
             </template>
           </ol-geolocation>
+
+          <ol-vector-layer>
+            <ol-source-vector :projection="projection">
+              <ol-interaction-draw
+                type="Point"
+                @drawend="drawend"
+                @drawstart="drawstart"
+              >
+              </ol-interaction-draw>
+            </ol-source-vector>
+
+            <ol-style>
+              <ol-style-circle :radius="7">
+                <ol-style-fill color="transparent"></ol-style-fill>
+                <ol-style-stroke color="transparent"></ol-style-stroke>
+              </ol-style-circle>
+            </ol-style>
+          </ol-vector-layer>
         </ol-map>
+        <div
+          class="create-collection-base__map-wrapper__position-detail"
+          v-if="geoLocations.length"
+        >
+          {{ geoLocations[0][0] }}, {{ geoLocations[0][1] }}
+          <img
+            src="@/assets/icons/ic_btn_copy.svg"
+            @click="copyLocationToClipboard"
+          />
+        </div>
       </div>
     </div>
-    <div class="d-flex justify-center gap-20">
+    <div class="d-flex justify-center gap-20 mt-20 pb-20">
       <a-button
         type="secondary"
-        class="edit-collection-base__btn-style edit-collection-base__cancel-btn"
-        >Cancel</a-button
+        class="create-collection-base__btn-style create-collection-base__cancel-btn"
+        @click="handleCancel"
+        >{{ $t("btn_cancel") }}</a-button
       >
       <a-button
         type="primary"
-        class="edit-collection-base__btn-style"
+        class="create-collection-base__btn-style"
         :disabled="isButtonDisabled"
-        @click="handleSave"
-        >Save</a-button
+        @click="handleSubmit"
+        >{{ $t("btn_submit") }}</a-button
       >
     </div>
   </div>
@@ -129,12 +136,21 @@
 <script setup lang="ts">
 import locationIcon from "@/assets/icons/ic_collection_base.png";
 import CustomForm from "@/modules/base/components/CustomForm.vue";
-import { service } from "@/services";
-import { FormData } from "@/modules/staff-management/models/collection-base.model";
+import { MessengerType } from "@/modules/base/models/messenger-type.enum";
+import {
+  CollectionBase,
+  FormData
+} from "@/modules/staff-management/models/collection-base.model";
 import { formData as reactiveFormData } from "@/modules/staff-management/pages/create-collection-base-form";
-import { computed, reactive, ref, onMounted } from "vue";
-import { useRoute } from "vue-router";
-
+import { computed, reactive, ref, inject, onMounted } from "vue";
+import MessengerParamModel from "@/modules/base/models/messenger-param.model";
+import { service } from "@/services";
+import { commonStore } from "@/stores";
+import { routeNames } from "@/routes/route-names";
+import { router } from "@/routes";
+import { makeUniqueName } from "@/utils/string.helper";
+import { message } from "ant-design-vue";
+import { i18n } from "@/i18n";
 //#region import
 //#endregion
 
@@ -142,45 +158,92 @@ import { useRoute } from "vue-router";
 //#endregion
 
 //#region variables
-const route = useRoute();
-const { id } = route.params;
+const userStore = commonStore();
+const isLoading = ref<boolean>(false);
 const formData = reactive<FormData>(reactiveFormData);
-const collectionBaseType = ref<string>("collection");
+const collectionBaseType = ref<number>();
 const center = ref<number[]>([40, 40]);
 const projection = ref<string>("EPSG:4326");
 const zoom = ref<number>(20);
 const rotation = ref<number>(0);
 const view = ref(null);
 const map = ref(null);
+const geoLocations = ref<number[][]>([]);
+const messenger: (
+  param: MessengerParamModel
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+) => void = inject("messenger")!;
+const createCollectionBaseRef = ref();
 //#endregion
 
 //#region hooks
-onMounted(() => {
-  fetchCollectionBaseById();
+onMounted(async () => {
+  await initialize();
 });
 //#endregion
 
 //#region function
+const initialize = async (): Promise<void> => {
+  const collectionBase = await fetchCollectionBaseById();
+  const { name, contact } = formData;
+
+  if (collectionBase && name && contact) {
+    const {
+      name: cbName,
+      shortName,
+      kana,
+      latitude,
+      longitude,
+      address,
+      telephone,
+      email,
+      representative,
+      postalCode,
+      collectionBaseType: cbType
+    } = collectionBase;
+
+    name[0].value = cbName;
+    name[1].value = shortName;
+    name[2].value = kana;
+    contact[0].value = postalCode;
+    contact[1].value = address || "";
+    contact[2].value = telephone || "";
+    contact[3].value = email || "";
+    contact[4].value = representative;
+    collectionBaseType.value = cbType;
+
+    geoLocations.value.push([longitude, latitude]);
+
+    setTimeout(() => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (view?.value as any)?.fit([latitude, longitude, latitude, longitude], {
+        maxZoom: 14
+      });
+    }, 300);
+  }
+};
+
+const fetchCollectionBaseById = async (): Promise<
+  CollectionBase | undefined
+> => {
+  const collectionBaseId = router.currentRoute.value.params.id;
+  if (collectionBaseId) {
+    const res = await service.collectionBase.getCollectionBaseById(
+      +collectionBaseId
+    );
+
+    return res;
+  }
+
+  return undefined;
+};
+
 const handleOnNameFocus = (index: number | boolean | Event): void => {
   formData.name[Number(index)].isFocus = true;
 };
 
-const handleOnJapaneseNameFocus = (index: number | boolean | Event): void => {
-  formData.japaneseName[Number(index)].isFocus = true;
-};
-
 const handleOnContactFocus = (index: number | boolean | Event): void => {
   formData.contact[Number(index)].isFocus = true;
-};
-
-const handleOnCoordinateFocus = (index: number | boolean | Event): void => {
-  formData.coordinate[Number(index)].isFocus = true;
-};
-
-const handleOnAddressAndPhoneFocus = (
-  index: number | boolean | Event
-): void => {
-  formData.addressAndPhone[Number(index)].isFocus = true;
 };
 
 const handleOnNameBlur = (
@@ -190,13 +253,6 @@ const handleOnNameBlur = (
   formData.name[Number(index)].isFocus = false;
 };
 
-const handleOnJapaneseNameBlur = (
-  value: number | boolean | Event,
-  index: string | number | Event
-): void => {
-  formData.japaneseName[Number(index)].isFocus = false;
-};
-
 const handleOnContactBlur = (
   value: number | boolean | Event,
   index: string | number | Event
@@ -204,70 +260,99 @@ const handleOnContactBlur = (
   formData.contact[Number(index)].isFocus = false;
 };
 
-const handleOnCoordinateBlur = (
-  value: number | boolean | Event,
-  index: string | number | Event
-): void => {
-  formData.coordinate[Number(index)].isFocus = false;
-};
-
-const handleOnAddressAndPhoneBlur = (
-  value: number | boolean | Event,
-  index: string | number | Event
-): void => {
-  formData.addressAndPhone[Number(index)].isFocus = false;
-};
-
 const isButtonDisabled = computed((): boolean => {
-  const { name, contact, coordinate } = formData;
+  const { name, contact } = formData;
 
   return (
     !name[0].value ||
     !name[1].value ||
     !collectionBaseType.value ||
-    !contact[2].value ||
-    !coordinate[0].value ||
-    !coordinate[1].value
+    !contact[0].value ||
+    !contact[1].value ||
+    !geoLocations.value[0][0] ||
+    !geoLocations.value[0][1]
   );
 });
 
-const handleSave = (): void => {
-  const { name, contact, coordinate, addressAndPhone } = formData;
+const clearInputs = (): void => {
+  createCollectionBaseRef.value.resetFields();
+};
+
+const handleCancel = (): void => {
+  router.push({ name: routeNames.listCollectionBase });
+  clearInputs();
+};
+
+const handleSubmit = async (): Promise<void> => {
+  const { name, contact } = formData;
+  const collectionBaseId = router.currentRoute.value.params.id;
+
+  if (!collectionBaseId) return;
 
   const data = {
-    name: name[0].value,
-    shortName: name[1].value,
-    kana: name[1].value,
-    postalCode: contact[0].value,
-    email: contact[1].value,
-    representative: contact[2].value,
-    latitude: coordinate[0].value,
-    longitude: coordinate[1].value,
-    address: addressAndPhone[0].value,
-    telephone: addressAndPhone[1].value
+    id: +collectionBaseId,
+    name: makeUniqueName(name[0].value.toString()),
+    shortName: makeUniqueName(name[1].value.toString()),
+    kana: makeUniqueName(name[2].value.toString()),
+    postalCode: makeUniqueName(contact[0].value.toString()),
+    address: makeUniqueName(contact[1].value.toString()),
+    telephone: makeUniqueName(contact[2].value.toString()),
+    email: makeUniqueName(contact[3].value.toString()),
+    representative: makeUniqueName(contact[4].value.toString()),
+    latitude: geoLocations.value[0][0],
+    longitude: geoLocations.value[0][1],
+    collectionBaseType: collectionBaseType.value || 1
   };
-  data;
-};
-const fetchCollectionBaseById = async (): Promise<void> => {
-  const data = await service.collectionBase.getMockCollectionBaseById(
-    id.toString()
-  );
-  formData.name[0].value = data.name;
-  formData.name[1].value = data.shortName;
-  formData.contact[0].value = data.postalCode;
-  formData.contact[1].value = data.email;
-  formData.contact[2].value = data.representative;
-  formData.coordinate[0].value = data.latitude;
-  formData.coordinate[1].value = data.longitude;
-  formData.addressAndPhone[0].value = data.address;
-  formData.addressAndPhone[1].value = data.telephone;
+
+  if (!userStore.user) return;
+
+  isLoading.value = true;
+  const { error, res } = await service.collectionBase.editCollectionBase(data);
+
+  if (res && !error) {
+    messenger({
+      title: "collection_base_msg_edited_successfully",
+      message: "",
+      type: MessengerType.Success,
+      callback: (isConfirm: boolean) => {
+        isConfirm;
+        goToCollectionBaseListPage();
+        router.push({ name: routeNames.listCollectionBase });
+        clearInputs();
+      }
+    });
+  } else {
+    messenger({
+      title: "popup_edit_fail_title",
+      message: "popup_create_fail_message",
+      type: MessengerType.Error,
+      callback: () => {
+        clearInputs();
+      }
+    });
+  }
+  isLoading.value = false;
 };
 
-const geoLocChange = (loc: number[]): void => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (view?.value as any)?.fit([loc[0], loc[1], loc[0], loc[1]], {
-    maxZoom: 14
-  });
+const goToCollectionBaseListPage = (): void => {
+  router.push({ name: routeNames.listCollectionBase });
+};
+
+const drawstart = (_event: { target: { sketchCoords_: number[] } }): void => {
+  geoLocations.value = [];
+};
+
+const drawend = (event: { target: { sketchCoords_: number[] } }): void => {
+  geoLocations.value.push(event.target.sketchCoords_);
+};
+
+const copyLocationToClipboard = (): void => {
+  if (geoLocations.value.length) {
+    navigator.clipboard.writeText(
+      `${geoLocations.value[0][0]}, ${geoLocations.value[0][1]}`
+    );
+    message.success(i18n.global.t("common_msg_copied_to_clipboard"));
+  }
 };
 //#endregion
 
@@ -279,11 +364,9 @@ const geoLocChange = (loc: number[]): void => {
 </script>
 
 <style lang="scss" scoped>
-.edit-collection-base {
+.create-collection-base {
   &__content-wrapper {
     background-color: $white;
-    max-height: 747px;
-    min-height: 747px;
   }
 
   &__title {
@@ -299,8 +382,36 @@ const geoLocChange = (loc: number[]): void => {
   }
 
   &__map-wrapper {
+    position: relative;
     width: 50%;
-    height: calc(100% - 20px);
+    height: auto;
+    &__position-detail {
+      position: absolute;
+      display: flex;
+      bottom: 34px;
+      left: 10px;
+      width: auto;
+      padding-left: 10px;
+      padding-right: 10px;
+      height: 40px;
+      background-color: white;
+      border-radius: 6px;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 16px;
+      line-height: 20px;
+      align-items: center;
+      color: $neutral-800;
+      text-align: center;
+      img {
+        width: 20px;
+        height: 20px;
+        object-fit: fill;
+        vertical-align: middle;
+        margin-left: 16px;
+        cursor: pointer;
+      }
+    }
   }
 
   &__btn-style {
@@ -340,7 +451,7 @@ const geoLocChange = (loc: number[]): void => {
 }
 
 :deep() {
-  .edit-collection-base {
+  .create-collection-base {
     &__custom-input-wrapper {
       .ant-form-item {
         width: 100%;
@@ -350,27 +461,10 @@ const geoLocChange = (loc: number[]): void => {
     &__map-wrapper {
       .ol-viewport {
         border-radius: 10px;
-      }
-    }
-
-    &__radio-group {
-      .ant-radio-wrapper {
-        font-style: normal;
-        font-weight: 400;
-        font-size: 18px;
-        line-height: 100%;
-        color: $neutral-600;
-        .ant-radio {
-          font-size: 0px;
-          .ant-radio-inner {
-            width: 24px;
-            height: 24px;
-
-            &::after {
-              width: 24px;
-              height: 24px;
-              margin-top: -12px;
-              margin-left: -12px;
+        .ol-layers {
+          .ol-layer {
+            canvas {
+              height: 100% !important;
             }
           }
         }
@@ -379,12 +473,7 @@ const geoLocChange = (loc: number[]): void => {
   }
 
   @media only screen and (max-width: 1382px) {
-    .edit-collection-base {
-      &__content-wrapper {
-        min-height: 816px;
-        max-height: 816px;
-      }
-
+    .create-collection-base {
       &__radio-group {
         flex-direction: column;
         gap: 10px;

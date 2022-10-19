@@ -199,6 +199,7 @@
   "collection_address": "Address",
   "collection_phone_number": "Phone number",
   "collection_base_msg_delete_successfully": "Collection base is deleted successfully",
+  "collection_base_msg_edited_successfully": "Collection base is edited successfully",
   "change_password": "Change password",
   "capacity": "Capacity",
   "permission": "Permission",
@@ -212,6 +213,7 @@
   "popup_delete_fail_lbl_message": "Please try again later",
   "error_unique_constraint": "Name has already existed",
   "popup_create_fail_title": "Create failed",
+  "popup_edit_fail_title": "Edit failed",
   "popup_create_fail_message": "Please try again later",
   "container_successfully_created": "Container is created successfully",
   "container_create_failed": "Create failed",
@@ -230,5 +232,6 @@
   "collection_base_lbl_representative": "Representative",
   "collection_base_lbl_type_1": "Collection",
   "collection_base_lbl_type_2": "Manufacture",
-  "collection_base_lbl_type_3": "Both"
+  "collection_base_lbl_type_3": "Both",
+  "edit_collection_base": "Edit collection base"
 }

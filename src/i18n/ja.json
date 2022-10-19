@@ -190,6 +190,7 @@
   "collection_address": "住所",
   "collection_phone_number": "電話番号",
   "collection_base_msg_delete_successfully": "回収拠点が削除されました",
+  "collection_base_msg_edited_successfully": "回収拠点が編集されました",
   "add_collection_base_add_new": "回収拠点が作成されました ",
   "collection": "収集",
   "manufacture": "生産",
@@ -202,6 +203,7 @@
   "popup_delete_fail_lbl_message": "後でやり直しください",
   "error_unique_constraint": "名称が存在しています",
   "popup_create_fail_title": "作成に失敗しました",
+  "popup_edit_fail_title": "編集に失敗しました",
   "popup_create_fail_message": "後でやり直しください ",
   "permission": "廃棄物許可",
   "capacity": "最大積載量",
@@ -222,5 +224,6 @@
   "collection_base_lbl_representative": "代表者",
   "collection_base_lbl_type_1": "収集",
   "collection_base_lbl_type_2": "生産",
-  "collection_base_lbl_type_3": "収集・生産"
+  "collection_base_lbl_type_3": "収集・生産",
+  "edit_collection_base": "回収拠点の編集"
 }

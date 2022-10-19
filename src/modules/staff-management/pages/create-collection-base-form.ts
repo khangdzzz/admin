@@ -20,7 +20,7 @@ export const formData: FormData = {
           message: i18n.global.t("please_enter_input", {
             fieldName: i18n.global.t("name")
           }),
-          trigger: "change"
+          trigger: "blur"
         },
         {
           max: 50,
@@ -46,7 +46,7 @@ export const formData: FormData = {
           message: i18n.global.t("please_enter_input", {
             fieldName: i18n.global.t("short_name")
           }),
-          trigger: "change"
+          trigger: "blur"
         },
         {
           max: 50,
@@ -87,7 +87,7 @@ export const formData: FormData = {
           message: i18n.global.t("please_enter_input", {
             fieldName: i18n.global.t("postal_code")
           }),
-          trigger: "change"
+          trigger: "blur"
         },
         {
           validator: validator.validateNumber,
@@ -111,6 +111,11 @@ export const formData: FormData = {
           message: i18n.global.t("please_enter_input", {
             fieldName: i18n.global.t("address")
           }),
+          trigger: "blur"
+        },
+        {
+          max: 255,
+          message: i18n.global.t("max_length_input", { maxLength: 255 }),
           trigger: "change"
         }
       ],
@@ -129,8 +134,8 @@ export const formData: FormData = {
       parent: "contact",
       rules: [
         {
-          max: 11,
-          message: i18n.global.t("max_length_input", { maxLength: 11 }),
+          max: 15,
+          message: i18n.global.t("max_length_input", { maxLength: 15 }),
           trigger: "change"
         },
         {
