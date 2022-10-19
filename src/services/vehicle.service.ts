@@ -12,61 +12,28 @@ import { DEFAULT_SORT_ORDER } from "@/services/constants";
 import { VehicleResponseDto } from "./dtos/vehicle-management/vehicle-type.dto";
 import { CollectionBaseResponseDto } from "./dtos/collection-base/collection-base.dto";
 
-interface sortVehicleDto {
-  sortType: Sort;
-  sortName: Sort;
-  sortPlateNumber: Sort;
-  sortWorkPlace: Sort;
-  sortCapacity: Sort;
-  sortPermission: Sort;
-}
 
 const data: VehicleDetail[] = [];
 
 export async function getListVehicle(
   page: number,
   size: number,
-  sort: sortVehicleDto,
+  sort: Sort = Sort.None,
+  sortBy: string,
   searchKeyword: string | null | undefined = ""
 ): Promise<PaginationDto<ResVehicle> | undefined> {
-  const {
-    sortType,
-    sortName,
-    sortPlateNumber,
-    sortWorkPlace,
-    sortCapacity,
-    sortPermission
-  } = sort;
-  const orderSortType = calculateSortQuery("vehicle_type", sortType);
-  const orderSortName = calculateSortQuery("name", sortName);
-  const orderSortPlateNumber = calculateSortQuery(
-    "plate_number",
-    sortPlateNumber
-  );
-  const orderSortWorkPlace = calculateSortQuery(
-    "workplace___name",
-    sortWorkPlace
-  );
-  const orderSortCapacity = calculateSortQuery("max_capacity", sortCapacity);
-  const orderSortPermission = calculateSortQuery(
-    "permission_flag",
-    sortPermission
-  );
-  const order_by = [
-    orderSortType,
-    orderSortName,
-    orderSortPlateNumber,
-    orderSortWorkPlace,
-    orderSortCapacity,
-    orderSortPermission
-  ]
-    .filter((item) => !!item)
-    .toString();
+
+  const order_by = sort === Sort.None
+    ? DEFAULT_SORT_ORDER
+    : sort === Sort.Asc
+      ? `${sortBy}`
+      : `-${sortBy}`
+
   const params = {
     page,
     page_size: size,
     name__like: searchKeyword ? `%${searchKeyword}%` : undefined,
-    order_by: order_by?.length ? order_by : DEFAULT_SORT_ORDER
+    order_by
   };
   const [err, res] = await transformRequest<PaginationDto<ResVehicle>>({
     url: "/vehicle",
@@ -78,10 +45,6 @@ export async function getListVehicle(
   res.page_size = size;
   return res;
 }
-
-const calculateSortQuery = (name: string, sort: Sort): string | undefined => {
-  return sort === Sort.None ? undefined : sort === Sort.Asc ? name : `-${name}`;
-};
 
 export async function deleteVehicleById(ids: number[]): Promise<boolean> {
   const [error] = await transformRequest({

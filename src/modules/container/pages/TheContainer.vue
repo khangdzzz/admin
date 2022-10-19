@@ -52,26 +52,26 @@
       >
         <template #headerCell="{ column }">
           <template v-if="column.key === 'name'">
-            <div @click="changeSortName()">
+            <div @click="changeSortName(column.key)">
               <span>{{ $t(column.title) }}</span>
               <SortView class="mx-12" :sort="sortName" />
             </div>
           </template>
-          <template v-if="column.key === 'type'">
-            <div @click="changeSortType()">
+          <template v-if="column.key === 'container_type___name'">
+            <div @click="changeSortType(column.key)">
               <span>{{ $t(column.title) }}</span>
               <SortView class="mx-12" :sort="sortType" />
             </div>
           </template>
 
           <template v-if="column.key === 'capacity'">
-            <div @click="changeSortCapacity()">
+            <div @click="changeSortCapacity(column.key)">
               <span>{{ $t(column.title) }}</span>
               <SortView class="mx-12" :sort="sortCapacity" />
             </div>
           </template>
           <template v-if="column.key === 'weight'">
-            <div @click="changeSortWeight()">
+            <div @click="changeSortWeight(column.key)">
               <span>{{ $t(column.title) }}</span>
               <SortView class="mx-12" :sort="sortWeight" />
             </div>
@@ -187,7 +187,7 @@ const columns: TableColumnType<ResContainer>[] = [
   {
     title: i18n.global.t("container_container_type"),
     dataIndex: "container_type___name",
-    key: "type"
+    key: "container_type___name"
   },
   {
     title: i18n.global.t("container_weight"),
@@ -216,6 +216,8 @@ const pageOption = reactive<Pagination<ResContainer>>({
   pageSize: 20,
   total: 0
 });
+
+const sortBy = ref<string>("");
 //#endregion===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎
 
 //#===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌Hooks
@@ -225,7 +227,15 @@ onMounted(() => {
 //#endregion===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌
 
 //#===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊Methods
-const calculateNextSortStatus = (currentSort: Sort): Sort => {
+const resetSort = (): void => {
+  sortType.value = Sort.None;
+  sortName.value = Sort.None;
+  sortWeight.value = Sort.None;
+  sortCapacity.value = Sort.None;
+};
+
+const calculateNextSortStatus = (currentSort: Sort, key: string): Sort => {
+  sortBy.value = key;
   switch (currentSort) {
     case Sort.Asc:
       return Sort.Desc;
@@ -236,23 +246,31 @@ const calculateNextSortStatus = (currentSort: Sort): Sort => {
   }
 };
 
-const changeSortType = (): void => {
-  sortType.value = calculateNextSortStatus(sortType.value);
+const changeSortType = (key: string): void => {
+  const backupSortType = sortType.value;
+  resetSort();
+  sortType.value = calculateNextSortStatus(backupSortType, key);
   fetchContainerList();
 };
 
-const changeSortName = (): void => {
-  sortName.value = calculateNextSortStatus(sortName.value);
+const changeSortName = (key: string): void => {
+  const backupSortName = sortName.value;
+  resetSort();
+  sortName.value = calculateNextSortStatus(backupSortName, key);
   fetchContainerList();
 };
 
-const changeSortCapacity = (): void => {
-  sortCapacity.value = calculateNextSortStatus(sortCapacity.value);
+const changeSortCapacity = (key: string): void => {
+  const backupSortCapacity = sortCapacity.value;
+  resetSort();
+  sortCapacity.value = calculateNextSortStatus(backupSortCapacity, key);
   fetchContainerList();
 };
 
-const changeSortWeight = (): void => {
-  sortWeight.value = calculateNextSortStatus(sortWeight.value);
+const changeSortWeight = (key: string): void => {
+  const backupSortWeight = sortWeight.value;
+  resetSort();
+  sortWeight.value = calculateNextSortStatus(backupSortWeight, key);
   fetchContainerList();
 };
 
@@ -298,18 +316,12 @@ const rowSelection = computed(() => {
 });
 
 const fetchContainerList = async (): Promise<void> => {
-  const sort = {
-    sortType: sortType.value,
-    sortName: sortName.value,
-    sortCapacity: sortCapacity.value,
-    sortWeight: sortWeight.value
-  };
-
   isLoading.value = true;
   const res = await service.container.getListContainer(
     Number(pageOption.currentPage),
     Number(pageOption.pageSize),
-    sort,
+    sortPayload(),
+    sortBy.value,
     searchValue.value
   );
   isLoading.value = false;
@@ -407,6 +419,12 @@ const fetchContainerDetail = async (id: string): Promise<void> => {
 //#endregion===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊
 
 //#===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏Computed
+
+const sortPayload = (): Sort =>
+  ([sortType.value, sortName.value, sortCapacity.value, sortWeight.value]
+    .find((item) => item !== Sort.None)
+    ?.toString() as Sort) || Sort.None;
+
 //#endregion===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏
 
 //#===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍Emits

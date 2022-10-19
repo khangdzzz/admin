@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Pagination, ServiceResponse } from "@/modules/common/models";
 import { Sort } from "@/modules/common/models/sort.enum";
 import {
@@ -6,24 +7,16 @@ import {
   ContainerType
 } from "@/modules/container/models";
 import ContainerTypeModel from "@/modules/container/models/container-type.models";
+import { ResContainer } from "@/modules/container/models/container.model";
+import { DEFAULT_SORT_ORDER } from "@/services/constants";
+import { Container as ContainerDTO } from "@/services/dtos/container/container.dto";
+import { makeUniqueName } from "@/utils/string.helper";
+import { AxiosError } from "axios";
 import { transformRequest } from "./base.service";
 import { PaginationDto } from "./dtos/common/pagination.dto";
 import { CreateContainerTypeInputDto } from "./dtos/container-management/create-container-type.dto";
-import { ContainerTypeResponseDto } from "./dtos/container/create-container-type.dto";
-import { DEFAULT_SORT_ORDER } from "@/services/constants";
-import { makeUniqueName } from "@/utils/string.helper";
-import { ResContainer } from "@/modules/container/models/container.model";
-import { AxiosError } from "axios";
-import { calculateSortQuery } from "@/modules/common/helpers";
-import { Container as ContainerDTO } from "@/services/dtos/container/container.dto";
 import { ContainerDetailResponseDto } from "./dtos/container/container-detail-response.dto";
-interface sortContainerDto {
-  sortType: Sort;
-  sortName: Sort;
-  sortWeight: Sort;
-  sortCapacity: Sort;
-}
-
+import { ContainerTypeResponseDto } from "./dtos/container/create-container-type.dto";
 export function getMockCollectionBase(): ContainerSelection[] {
   const res: ContainerSelection[] = [
     { value: 1, label: "Collection Base 1" },
@@ -35,24 +28,16 @@ export function getMockCollectionBase(): ContainerSelection[] {
 export async function getListContainer(
   page: number,
   size: number,
-  sort: sortContainerDto,
+  sort: Sort = Sort.None,
+  sortBy: string,
   searchKeyword: string | null | undefined = ""
 ): Promise<PaginationDto<ResContainer> | undefined> {
-  const { sortType, sortName, sortWeight, sortCapacity } = sort;
 
-  const orderSortType = calculateSortQuery("container_type___name", sortType);
-  const orderSortName = calculateSortQuery("name", sortName);
-  const orderSortWeight = calculateSortQuery("weight", sortWeight);
-  const orderSortCapacity = calculateSortQuery("capacity", sortCapacity);
-
-  const order_by = [
-    orderSortType,
-    orderSortName,
-    orderSortWeight,
-    orderSortCapacity
-  ]
-    .filter((item) => !!item)
-    .toString();
+  const order_by = sort === Sort.None
+    ? DEFAULT_SORT_ORDER
+    : sort === Sort.Asc
+      ? `${sortBy}`
+      : `-${sortBy}`
 
   const params = {
     page,
@@ -128,8 +113,8 @@ export async function getListContainerType(
       sort === Sort.None
         ? DEFAULT_SORT_ORDER
         : sort === Sort.Asc
-        ? "name"
-        : "-name"
+          ? "name"
+          : "-name"
   };
   const [error, res] = await transformRequest<
     PaginationDto<ContainerTypeResponseDto>

@@ -9,6 +9,7 @@
     "src/modules/auth/models/auth.model.ts",
     "src/modules/auth/models/index.ts",
     "src/modules/base/components/validator/validator.ts",
+    "src/modules/common/helpers.ts",
     "src/modules/vehicle-management/pages/VehicleDetailModal.vue",
     "src/stores/common.store.ts",
     "src/stores/index.ts",

@@ -55,7 +55,7 @@
           <template v-if="column.isSort">
             <div>
               <span>{{ $t(column.title) }}</span>
-              <SortView class="mx-12" :sort="sort" />
+              <SortView class="mx-12" :sort="sort"/>
             </div>
           </template>
         </template>
