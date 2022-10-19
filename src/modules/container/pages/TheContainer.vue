@@ -2,7 +2,7 @@
   <div class="fill-height d-flex flex-column">
     <ListSearchHeader
       ref="searchHeader"
-      :title="$t('container')"
+      :title="$t('container_container')"
       :colTitle="3"
       :colAction="21"
       v-model:model-value.sync="searchValue"
@@ -42,13 +42,6 @@
       </template>
     </ListSearchHeader>
     <div :class="[containerList.tableContainer, 'mx-30 mb-30']">
-      <NoData
-        :value="searchValue"
-        :is-loading="isLoading"
-        @onClick="handleBackToList"
-        v-if="isLoading || !data || !data.length"
-      />
-
       <a-table
         :row-selection="rowSelection"
         :columns="columns"
@@ -123,6 +116,12 @@
         :isShowNextBtn="isShowNextBtn()"
         @onShowSizeChange="onShowSizeChange"
         @onChange="onChange"
+      />
+      <NoData
+        :value="searchValue"
+        :is-loading="isLoading"
+        @onClick="handleBackToList"
+        v-if="isLoading || !data || !data.length"
       />
     </div>
   </div>

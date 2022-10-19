@@ -6,7 +6,7 @@
       <div
         class="create-container__title d-flex justify-center align-center mb-30"
       >
-        Add new container
+        {{ $t("container_add_new_container") }}
       </div>
       <a-form
         :model="{ formData }"

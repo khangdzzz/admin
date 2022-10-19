@@ -108,6 +108,7 @@
   "container_container_type": "Container type",
   "container_add_container": "Add container",
   "container_container_name": "Container name",
+  "container_add_new_container": "Add new container",
   "vehicle_column_no": "No.",
   "vehicle_column_name": "Name",
   "vehicle_type": "Vehicle type",
