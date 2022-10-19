@@ -225,6 +225,13 @@ onMounted(() => {
 //#endregion===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌
 
 //#===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊Methods
+const resetSort = (): void => {
+  sortType.value = Sort.None;
+  sortName.value = Sort.None;
+  sortWeight.value = Sort.None;
+  sortCapacity.value = Sort.None;
+};
+
 const calculateNextSortStatus = (currentSort: Sort): Sort => {
   switch (currentSort) {
     case Sort.Asc:
@@ -237,22 +244,30 @@ const calculateNextSortStatus = (currentSort: Sort): Sort => {
 };
 
 const changeSortType = (): void => {
-  sortType.value = calculateNextSortStatus(sortType.value);
+  const backupSortType = sortType.value;
+  resetSort();
+  sortType.value = calculateNextSortStatus(backupSortType);
   fetchContainerList();
 };
 
 const changeSortName = (): void => {
-  sortName.value = calculateNextSortStatus(sortName.value);
+  const backupSortName = sortName.value;
+  resetSort();
+  sortName.value = calculateNextSortStatus(backupSortName);
   fetchContainerList();
 };
 
 const changeSortCapacity = (): void => {
-  sortCapacity.value = calculateNextSortStatus(sortCapacity.value);
+  const backupSortCapacity = sortCapacity.value;
+  resetSort();
+  sortCapacity.value = calculateNextSortStatus(backupSortCapacity);
   fetchContainerList();
 };
 
 const changeSortWeight = (): void => {
-  sortWeight.value = calculateNextSortStatus(sortWeight.value);
+  const backupSortWeight = sortWeight.value;
+  resetSort();
+  sortWeight.value = calculateNextSortStatus(backupSortWeight);
   fetchContainerList();
 };
 

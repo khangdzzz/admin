@@ -95,7 +95,7 @@
                     <ol-style>
                       <ol-style-icon
                         :src="locationIcon"
-                        :scale="0.7"
+                        :scale="1"
                       ></ol-style-icon>
                     </ol-style>
                   </ol-feature>
@@ -138,6 +138,7 @@
       <a-button
         type="secondary"
         class="create-collection-base__btn-style create-collection-base__cancel-btn"
+        :disabled="isSubmitting"
         @click="handleCancel"
         >{{ $t("btn_cancel") }}</a-button
       >
@@ -145,6 +146,7 @@
         type="primary"
         class="create-collection-base__btn-style"
         :disabled="isButtonDisabled"
+        :loading="isSubmitting"
         @click="handleSubmit"
         >{{ $t("btn_submit") }}</a-button
       >
@@ -175,7 +177,6 @@ import { i18n } from "@/i18n";
 
 //#region variables
 const userStore = commonStore();
-const isLoading = ref<boolean>(false);
 const formData = reactive<FormData>(reactiveFormData);
 const collectionBaseType = ref<number>(1);
 const center = ref<number[]>([40, 40]);
@@ -190,6 +191,7 @@ const messenger: (
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 ) => void = inject("messenger")!;
 const createCollectionBaseRef = ref();
+const isSubmitting = ref<boolean>(false);
 //#endregion
 
 //#region hooks
@@ -256,7 +258,7 @@ const handleSubmit = async (): Promise<void> => {
     collectionBaseType: collectionBaseType.value || 1
   };
   if (!userStore.user) return;
-  isLoading.value = true;
+  isSubmitting.value = true;
   const { error, res } = await service.collectionBase.createCollectionBase(
     data
   );
@@ -267,8 +269,12 @@ const handleSubmit = async (): Promise<void> => {
       type: MessengerType.Success,
       callback: (isConfirm: boolean) => {
         isConfirm;
-        goToCollectionBaseListPage();
-        router.push({ name: routeNames.listCollectionBase });
+        router.push({
+          name: routeNames.collectionBaseDetail,
+          params: {
+            id: res.id
+          }
+        });
         clearInputs();
       }
     });
@@ -276,17 +282,10 @@ const handleSubmit = async (): Promise<void> => {
     messenger({
       title: "popup_create_fail_title",
       message: "popup_create_fail_message",
-      type: MessengerType.Error,
-      callback: () => {
-        clearInputs();
-      }
+      type: MessengerType.Error
     });
   }
-  isLoading.value = false;
-};
-
-const goToCollectionBaseListPage = (): void => {
-  router.push({ name: routeNames.listCollectionBase });
+  isSubmitting.value = false;
 };
 
 const geoLocChange = (loc: number[]): void => {

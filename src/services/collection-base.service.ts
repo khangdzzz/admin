@@ -6,23 +6,53 @@ import { CollectionBaseResponseDto } from "./dtos/collection-base/collection-bas
 import { PaginationDto } from "./dtos/common/pagination.dto";
 import { DEFAULT_SORT_ORDER } from "@/services/constants";
 import { AxiosError } from "axios";
+import { calculateSortQuery } from "@/modules/common/helpers";
+
+interface SortCollectionBaseDto {
+  sortName: Sort;
+  sortPostalCode: Sort;
+  sortAddress: Sort;
+  sortTelephone: Sort;
+}
 
 export async function getListCollectionBase(
   page: number,
   size: number | string,
-  sort: Sort = Sort.None,
+  sort: SortCollectionBaseDto,
   searchKeyword: string | null | undefined = ""
 ): Promise<Pagination<CollectionBase> | undefined> {
+  const {
+    sortName,
+    sortPostalCode,
+    sortAddress,
+    sortTelephone,
+  } = sort;
+
+  const orderSortName = calculateSortQuery("name", sortName);
+  const orderSortAddress = calculateSortQuery(
+    "address",
+    sortAddress
+  );
+  const orderSortWPostalCode = calculateSortQuery(
+    "postal_code",
+    sortPostalCode
+  );
+  const orderSortPhone = calculateSortQuery("telephone", sortTelephone);
+
+  const order_by = [
+    orderSortName,
+    orderSortAddress,
+    orderSortWPostalCode,
+    orderSortPhone,
+  ]
+    .filter((item) => !!item)
+    .toString();
+
   const params = {
     page,
     page_size: size,
     name__like: searchKeyword ? `%${searchKeyword}%` : undefined,
-    order_by:
-      sort === Sort.None
-        ? DEFAULT_SORT_ORDER
-        : sort === Sort.Asc
-        ? "name"
-        : "-name"
+    order_by: order_by?.length ? order_by : DEFAULT_SORT_ORDER
   };
   const [error, res] = await transformRequest<
     PaginationDto<CollectionBaseResponseDto>
@@ -151,7 +181,7 @@ export async function createCollectionBase(
     postal_code: postalCode,
     mail: email || null,
     representative,
-    telephone
+    telephone: telephone || null
   };
 
   const [error, res] = await transformRequest<CollectionBaseResponseDto>({
@@ -202,7 +232,7 @@ export async function editCollectionBase(
     postal_code: postalCode,
     mail: email || null,
     representative,
-    telephone
+    telephone: telephone || null
   };
 
   const [error, res] = await transformRequest<CollectionBaseResponseDto>({

@@ -52,10 +52,28 @@
           <template v-if="column.key === 'index'">
             <span>{{ $t(column.title) }}</span>
           </template>
-          <template v-if="column.isSort">
-            <div>
+          <template v-if="column.key === 'name'">
+            <div @click="changeSortName()">
               <span>{{ $t(column.title) }}</span>
-              <SortView class="mx-12" :sort="sort"/>
+              <SortView class="mx-12" :sort="sortName" />
+            </div>
+          </template>
+          <template v-if="column.key === 'postal_code'">
+            <div @click="changeSortPostalCode()">
+              <span>{{ $t(column.title) }}</span>
+              <SortView class="mx-12" :sort="sortPostalCode" />
+            </div>
+          </template>
+          <template v-if="column.key === 'address'">
+            <div @click="changeSortAdress()">
+              <span>{{ $t(column.title) }}</span>
+              <SortView class="mx-12" :sort="sortAddress" />
+            </div>
+          </template>
+          <template v-if="column.key === 'telephone'">
+            <div @click="changeSortTelephone()">
+              <span>{{ $t(column.title) }}</span>
+              <SortView class="mx-12" :sort="sortTelephone" />
             </div>
           </template>
         </template>
@@ -123,7 +141,14 @@ const messenger: (param: MessengerParamModel) => void =
   inject("messenger")!;
 const data = ref<CollectionBase[]>([]);
 const selectedKeys = ref<number[]>([]);
-const sort = ref<Sort>(Sort.None);
+const sortName = ref<Sort>(Sort.None);
+
+const sortPostalCode = ref<Sort>(Sort.None);
+
+const sortAddress = ref<Sort>(Sort.None);
+
+const sortTelephone = ref<Sort>(Sort.None);
+
 const isLoading = ref<boolean>(false);
 const searchString = ref<string>("");
 const innerHeight = ref<number>(0);
@@ -137,26 +162,22 @@ const columns = [
   {
     title: i18n.global.t("collection_name"),
     dataIndex: "name",
-    key: "name",
-    isSort: true
+    key: "name"
   },
   {
     title: i18n.global.t("collection_postal_code"),
     dataIndex: "postalCode",
-    key: "postalCode",
-    isSort: true
+    key: "postal_code"
   },
   {
     title: i18n.global.t("collection_address"),
     dataIndex: "address",
-    key: "address",
-    isSort: true
+    key: "address"
   },
   {
     title: i18n.global.t("collection_phone_number"),
     dataIndex: "telephone",
-    key: "telephone",
-    isSort: true
+    key: "telephone"
   },
   {
     title: "",
@@ -180,6 +201,52 @@ onMounted(() => {
 //#endregion
 
 //#region function
+const resetSort = (): void => {
+  sortName.value = Sort.None;
+  sortPostalCode.value = Sort.None;
+  sortAddress.value = Sort.None;
+  sortTelephone.value = Sort.None;
+};
+
+const calculateNextSortStatus = (currentSort: Sort): Sort => {
+  switch (currentSort) {
+    case Sort.Asc:
+      return Sort.Desc;
+    case Sort.Desc:
+      return Sort.None;
+    default:
+      return Sort.Asc;
+  }
+};
+
+const changeSortName = (): void => {
+  const backupSortName = sortName.value;
+  resetSort();
+  sortName.value = calculateNextSortStatus(backupSortName);
+  initialize();
+};
+
+const changeSortPostalCode = (): void => {
+  const backupSortPostalCode = sortPostalCode.value;
+  resetSort();
+  sortPostalCode.value = calculateNextSortStatus(backupSortPostalCode);
+  initialize();
+};
+
+const changeSortAdress = (): void => {
+  const backupSortAddress = sortAddress.value;
+  resetSort();
+  sortAddress.value = calculateNextSortStatus(backupSortAddress);
+  initialize();
+};
+
+const changeSortTelephone = (): void => {
+  const backupSortPhone = sortTelephone.value;
+  resetSort();
+  sortTelephone.value = calculateNextSortStatus(backupSortPhone);
+  initialize();
+};
+
 const onCreate = (): void => {
   router.push({ name: routeNames.createCollectionBase });
 };
@@ -190,10 +257,17 @@ const handleBackToList = (): void => {
 
 const initialize = async (): Promise<void> => {
   isLoading.value = true;
+  const sort = {
+    sortName: sortName.value,
+    sortPostalCode: sortPostalCode.value,
+    sortAddress: sortAddress.value,
+    sortTelephone: sortTelephone.value
+  };
+
   const result = await service.collectionBase.getListCollectionBase(
     pageOption?.currentPage || 1,
     pageOption.pageSize || 20,
-    sort.value,
+    sort,
     searchString.value
   );
   isLoading.value = false;
