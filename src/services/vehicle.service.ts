@@ -11,6 +11,7 @@ import { PaginationDto } from "./dtos/common/pagination.dto";
 import { DEFAULT_SORT_ORDER } from "@/services/constants";
 import { VehicleResponseDto } from "./dtos/vehicle-management/vehicle-type.dto";
 import { CollectionBaseResponseDto } from "./dtos/collection-base/collection-base.dto";
+import { calculateSortQuery } from "@/modules/common/helpers";
 
 interface sortVehicleDto {
   sortType: Sort;
@@ -37,6 +38,7 @@ export async function getListVehicle(
     sortCapacity,
     sortPermission
   } = sort;
+
   const orderSortType = calculateSortQuery("vehicle_type", sortType);
   const orderSortName = calculateSortQuery("name", sortName);
   const orderSortPlateNumber = calculateSortQuery(
@@ -52,6 +54,8 @@ export async function getListVehicle(
     "permission_flag",
     sortPermission
   );
+
+
   const order_by = [
     orderSortType,
     orderSortName,
@@ -62,6 +66,7 @@ export async function getListVehicle(
   ]
     .filter((item) => !!item)
     .toString();
+
   const params = {
     page,
     page_size: size,
@@ -78,10 +83,6 @@ export async function getListVehicle(
   res.page_size = size;
   return res;
 }
-
-const calculateSortQuery = (name: string, sort: Sort): string | undefined => {
-  return sort === Sort.None ? undefined : sort === Sort.Asc ? name : `-${name}`;
-};
 
 export async function deleteVehicleById(ids: number[]): Promise<boolean> {
   const [error] = await transformRequest({

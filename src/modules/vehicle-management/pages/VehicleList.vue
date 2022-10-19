@@ -282,6 +282,15 @@ onMounted(() => {
 //#endregion===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌
 
 //#===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊Methods
+const resetSort = (): void => {
+  sortType.value = Sort.None;
+  sortName.value = Sort.None;
+  sortPlateNumber.value = Sort.None;
+  sortWorkPlace.value = Sort.None;
+  sortCapacity.value = Sort.None;
+  sortPermission.value = Sort.None;
+};
+
 const calculateNextSortStatus = (currentSort: Sort): Sort => {
   switch (currentSort) {
     case Sort.Asc:
@@ -294,32 +303,44 @@ const calculateNextSortStatus = (currentSort: Sort): Sort => {
 };
 
 const changeSortType = (): void => {
-  sortType.value = calculateNextSortStatus(sortType.value);
+  const backupSortType = sortType.value;
+  resetSort();
+  sortType.value = calculateNextSortStatus(backupSortType);
   fetchVehicleList();
 };
 
 const changeSortName = (): void => {
-  sortName.value = calculateNextSortStatus(sortName.value);
+  const backupSortName = sortName.value;
+  resetSort();
+  sortName.value = calculateNextSortStatus(backupSortName);
   fetchVehicleList();
 };
 
 const changeSortCapacity = (): void => {
-  sortCapacity.value = calculateNextSortStatus(sortCapacity.value);
+  const backupSortCapacity = sortCapacity.value;
+  resetSort();
+  sortCapacity.value = calculateNextSortStatus(backupSortCapacity);
   fetchVehicleList();
 };
 
 const changeSortPlateNumber = (): void => {
-  sortPlateNumber.value = calculateNextSortStatus(sortPlateNumber.value);
+  const backupSortPlateNumber = sortPlateNumber.value;
+  resetSort();
+  sortPlateNumber.value = calculateNextSortStatus(backupSortPlateNumber);
   fetchVehicleList();
 };
 
 const changeSortWorkPlace = (): void => {
-  sortWorkPlace.value = calculateNextSortStatus(sortWorkPlace.value);
+  const backupSortWorkPlace = sortWorkPlace.value;
+  resetSort();
+  sortWorkPlace.value = calculateNextSortStatus(backupSortWorkPlace);
   fetchVehicleList();
 };
 
 const changeSortPermission = (): void => {
-  sortPermission.value = calculateNextSortStatus(sortPermission.value);
+  const backupSortPermission = sortPermission.value;
+  resetSort();
+  sortPermission.value = calculateNextSortStatus(backupSortPermission);
   fetchVehicleList();
 };
 

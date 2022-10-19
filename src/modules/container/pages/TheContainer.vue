@@ -42,7 +42,7 @@
       </template>
     </ListSearchHeader>
     <div :class="[containerList.tableContainer, 'mx-30 mb-30']">
-      <a-table 
+      <a-table
         :row-selection="rowSelection"
         :columns="columns"
         :data-source="data"
