@@ -5,20 +5,20 @@
 //
 exports[`Better Code Quality !`] = {
   value: `{
-    "src/modules/base/components/CustomForm.vue:1957775411": [
+    "src/modules/base/components/CustomForm.vue:3494348616": [
       [211, 29, 3, "Unexpected any. Specify a different type.", "193409811"],
       [231, 45, 3, "Unexpected any. Specify a different type.", "193409811"]
     ],
     "src/modules/staff-management/pages/CollectionBase.vue:2330031901": [
       [176, 6, 6, "\'sortBy\' is assigned a value but never used.", "2170032388"]
     ],
-    "src/modules/staff-management/pages/CreateCollectionBase.vue:1896100077": [
-      [279, 19, 47, "\'_event\' is defined but never used.", "3077278115"]
+    "src/modules/staff-management/pages/CreateCollectionBase.vue:2774982795": [
+      [304, 19, 47, "\'_event\' is defined but never used.", "3077278115"]
     ],
     "src/modules/staff-management/pages/CreateNewStaff.vue:2488377755": [
       [124, 49, 3, "Unexpected any. Specify a different type.", "193409811"]
     ],
-    "src/services/collection-base.service.ts:3286962623": [
+    "src/services/collection-base.service.ts:155855216": [
       [5, 7, 20, "\'collectionBaseDetail\' is defined but never used.", "3739969015"],
       [10, 7, 1375, "Async function \'getListCollectionBase\' has too many lines (59). Maximum allowed is 50.", "1287529989"],
       [124, 77, 3, "Unexpected any. Specify a different type.", "193409811"]

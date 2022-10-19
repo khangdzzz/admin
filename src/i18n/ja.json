@@ -219,5 +219,8 @@
   "collection_base_lbl_address": "住所",
   "collection_base_lbl_phone_number": "電話番号",
   "collection_base_lbl_email": "Eメール",
-  "collection_base_lbl_representative": "代表者"
+  "collection_base_lbl_representative": "代表者",
+  "collection_base_lbl_type_1": "収集",
+  "collection_base_lbl_type_2": "生産",
+  "collection_base_lbl_type_3": "収集・生産"
 }
