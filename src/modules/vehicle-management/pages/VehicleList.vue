@@ -59,19 +59,13 @@
       >
         <template #headerCell="{ column }">
           <template v-if="column.key === 'vehicle_type'">
-            <div
-              :class="[vehicleList.headerTitle]"
-              @click="changeSortType(column.key)"
-            >
+            <div :class="[vehicleList.headerTitle]" @click="changeSortType()">
               <span>{{ $t(column.title) }}</span>
               <SortView class="mx-12" :sort="sortType" />
             </div>
           </template>
           <template v-if="column.key === 'name'">
-            <div
-              :class="[vehicleList.headerTitle]"
-              @click="changeSortName(column.key)"
-            >
+            <div :class="[vehicleList.headerTitle]" @click="changeSortName()">
               <span>{{ $t(column.title) }}</span>
               <SortView class="mx-12" :sort="sortName" />
             </div>
@@ -80,7 +74,7 @@
           <template v-if="column.key === 'plate_number'">
             <div
               :class="[vehicleList.headerTitle]"
-              @click="changeSortPlateNumber(column.key)"
+              @click="changeSortPlateNumber()"
             >
               <span>{{ $t(column.title) }}</span>
               <SortView class="mx-12" :sort="sortPlateNumber" />
@@ -89,7 +83,7 @@
           <template v-if="column.key === 'workplace_name'">
             <div
               :class="[vehicleList.headerTitle]"
-              @click="changeSortWorkPlace(column.key)"
+              @click="changeSortWorkPlace()"
             >
               <span>{{ $t(column.title) }}</span>
               <SortView class="mx-12" :sort="sortWorkPlace" />
@@ -99,7 +93,7 @@
           <template v-if="column.key === 'max_capacity'">
             <div
               :class="[vehicleList.headerTitle]"
-              @click="changeSortCapacity(column.key)"
+              @click="changeSortCapacity()"
             >
               <span>{{ $t(column.title) }}</span>
               <SortView class="mx-12" :sort="sortCapacity" />
@@ -109,7 +103,7 @@
           <template v-if="column.key === 'permission_flag'">
             <div
               :class="[vehicleList.headerTitle]"
-              @click="changeSortPermission(column.key)"
+              @click="changeSortPermission()"
             >
               <span>{{ $t(column.title) }}</span>
               <SortView class="mx-12" :sort="sortPermission" />
@@ -227,8 +221,6 @@ const vehicleDetail = ref<Vehicle>();
 
 const sortPermission = ref<Sort>(Sort.None);
 
-const sortBy = ref<string>("");
-
 const selectedKeys = ref<number[]>([]);
 
 const vehicleId = ref<string | undefined>(undefined);
@@ -299,8 +291,7 @@ const resetSort = (): void => {
   sortPermission.value = Sort.None;
 };
 
-const calculateNextSortStatus = (currentSort: Sort, key: string): Sort => {
-  sortBy.value = key;
+const calculateNextSortStatus = (currentSort: Sort): Sort => {
   switch (currentSort) {
     case Sort.Asc:
       return Sort.Desc;
@@ -311,45 +302,45 @@ const calculateNextSortStatus = (currentSort: Sort, key: string): Sort => {
   }
 };
 
-const changeSortType = (key: string): void => {
+const changeSortType = (): void => {
   const backupSortType = sortType.value;
   resetSort();
-  sortType.value = calculateNextSortStatus(backupSortType, key);
+  sortType.value = calculateNextSortStatus(backupSortType);
   fetchVehicleList();
 };
 
-const changeSortName = (key: string): void => {
+const changeSortName = (): void => {
   const backupSortName = sortName.value;
   resetSort();
-  sortName.value = calculateNextSortStatus(backupSortName, key);
+  sortName.value = calculateNextSortStatus(backupSortName);
   fetchVehicleList();
 };
 
-const changeSortCapacity = (key: string): void => {
+const changeSortCapacity = (): void => {
   const backupSortCapacity = sortCapacity.value;
   resetSort();
-  sortCapacity.value = calculateNextSortStatus(backupSortCapacity, key);
+  sortCapacity.value = calculateNextSortStatus(backupSortCapacity);
   fetchVehicleList();
 };
 
-const changeSortPlateNumber = (key: string): void => {
+const changeSortPlateNumber = (): void => {
   const backupSortPlateNumber = sortPlateNumber.value;
   resetSort();
-  sortPlateNumber.value = calculateNextSortStatus(backupSortPlateNumber, key);
+  sortPlateNumber.value = calculateNextSortStatus(backupSortPlateNumber);
   fetchVehicleList();
 };
 
-const changeSortWorkPlace = (key: string): void => {
+const changeSortWorkPlace = (): void => {
   const backupSortWorkPlace = sortWorkPlace.value;
   resetSort();
-  sortWorkPlace.value = calculateNextSortStatus(backupSortWorkPlace, key);
+  sortWorkPlace.value = calculateNextSortStatus(backupSortWorkPlace);
   fetchVehicleList();
 };
 
-const changeSortPermission = (key: string): void => {
+const changeSortPermission = (): void => {
   const backupSortPermission = sortPermission.value;
   resetSort();
-  sortPermission.value = calculateNextSortStatus(backupSortPermission, key);
+  sortPermission.value = calculateNextSortStatus(backupSortPermission);
   fetchVehicleList();
 };
 
@@ -407,12 +398,20 @@ const dataIndexColumns = computed(() => [
 ]);
 
 const fetchVehicleList = async (): Promise<void> => {
+  const sort = {
+    sortType: sortType.value,
+    sortName: sortName.value,
+    sortPlateNumber: sortPlateNumber.value,
+    sortWorkPlace: sortWorkPlace.value,
+    sortCapacity: sortCapacity.value,
+    sortPermission: sortPermission.value
+  };
+
   isLoading.value = true;
   const res = await service.vehicle.getListVehicle(
     Number(pageOption.currentPage),
     Number(pageOption.pageSize),
-    sortPayload(),
-    sortBy.value,
+    sort,
     searchValue.value
   );
   isLoading.value = false;
@@ -516,17 +515,6 @@ const getVehicleDetail = async (id: string): Promise<void> => {
 //#endregion===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊
 
 //#===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏Computed
-const sortPayload = (): Sort =>
-  ([
-    sortType.value,
-    sortName.value,
-    sortPlateNumber.value,
-    sortWorkPlace.value,
-    sortCapacity.value,
-    sortPermission.value
-  ]
-    .find((item) => item !== Sort.None)
-    ?.toString() as Sort) || Sort.None;
 
 //#endregion===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏
 
