@@ -42,7 +42,7 @@
       </template>
     </ListSearchHeader>
     <div :class="[containerList.tableContainer, 'mx-30 mb-30']">
-      <a-table
+      <a-table 
         :row-selection="rowSelection"
         :columns="columns"
         :data-source="data"
@@ -82,6 +82,11 @@
           <template v-if="column.dataIndex === 'type'">
             <span>{{ record.type }}</span>
           </template>
+          <template v-if="column.dataIndex === 'capacity'">
+            <span class="null-value" v-if="record.capacity == null">{{
+              NULL_VALUE_DISPLAY
+            }}</span>
+          </template>
           <template v-if="column.dataIndex === 'action'">
             <router-link
               :to="{
@@ -91,7 +96,7 @@
             >
               <img
                 src="@/assets/icons/ic_btn_edit.svg"
-                :class="[containerList.actionIcon]"
+                :class="[containerList.actionIcon, 'ml-0']"
               />
             </router-link>
             <img
@@ -134,6 +139,7 @@
 
 <script setup lang="ts">
 //#===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆import
+import { NULL_VALUE_DISPLAY } from "@/utils/constants";
 import IcTrash from "@/assets/icons/IcTrash.vue";
 import { i18n } from "@/i18n";
 import ListSearchHeader from "@/modules/base/components/ListSearchHeader.vue";
@@ -189,7 +195,7 @@ const columns: TableColumnType<ResContainer>[] = [
     key: "weight"
   },
   {
-    title: i18n.global.t("capacity"),
+    title: i18n.global.t("container_capacity"),
     dataIndex: "capacity",
     key: "capacity"
   },
@@ -427,7 +433,7 @@ watch(searchValue, onSearchChange);
   flex-grow: 1;
 
   .actionIcon {
-    margin-left: 20px;
+    margin-left: 30px;
     cursor: pointer;
   }
   .ant-table-cell {
@@ -516,6 +522,11 @@ watch(searchValue, onSearchChange);
     background: $grey-2;
     border-color: rgba(0, 0, 0, 0.03);
   }
+}
+.has-value,
+.null-value {
+  @include text(400, 16px, 20px);
+  color: $neutral-600;
 }
 </style>
 

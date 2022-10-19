@@ -230,7 +230,10 @@ const handleSubmit = async (): Promise<void> => {
   const name = formData.value[0].value;
   const containerType = +formData.value[1].value;
   const weight = +formData.value[2].value;
-  const capacity = +formData.value[3].value;
+  let capacity = null;
+  if (formData.value[3].value !== "") {
+    capacity = +formData.value[3].value;
+  }
   const { error, res } = await service.container.createContainer(
     name,
     containerType,

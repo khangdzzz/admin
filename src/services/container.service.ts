@@ -232,7 +232,7 @@ export async function createContainer(
   extension_code: string,
   tag_id: string,
   weight: number,
-  capacity: number
+  capacity: number | null
 ): Promise<ServiceResponse<ContainerDTO>> {
   const data = {
     name,

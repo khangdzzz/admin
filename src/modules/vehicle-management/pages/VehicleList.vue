@@ -121,7 +121,7 @@
             >
               <span class="has-value">{{ text }} </span>
             </a-tooltip>
-            <span class="null-value" v-else>---</span>
+            <span class="null-value" v-else>{{ NULL_VALUE_DISPLAY }}</span>
           </template>
 
           <template v-if="column.dataIndex === 'permission_flag'">
@@ -200,6 +200,7 @@ import VehicleDetailModal from "./VehicleDetailModal.vue";
 import NoData from "@/modules/base/components/NoData.vue";
 import SortView from "@/modules/common/components/SortView.vue";
 import ThePagination from "@/modules/common/components/ThePagination.vue";
+import { NULL_VALUE_DISPLAY } from "@/utils/constants";
 //#endregion===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆
 
 //#===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜Props
