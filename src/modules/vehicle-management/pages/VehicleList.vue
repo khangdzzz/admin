@@ -159,60 +159,16 @@
           </template>
         </template>
       </a-table>
-      <div
-        v-if="!isLoading && data && data.length"
-        :class="vehicleList.pagination"
-      >
-        <a-pagination
-          v-model:current="pageOption.currentPage"
-          v-model:page-size="pageOption.pageSize"
-          :total="pageOption.total"
-          :pageSizeOptions="['20', '30', '40', '50']"
-          show-size-changer
-          @showSizeChange="onShowSizeChange"
-          @change="onChange"
-          :class="['ant-pagination', 'd-flex', 'justify-end']"
-        >
-          <template #itemRender="item">
-            <a-button
-              :class="[vehicleList.btnPagination, 'mt-10']"
-              type="primary"
-              ghost
-              v-if="item.type === 'prev' && isShowPrevBtn()"
-            >
-              <img
-                src="@/assets/icons/ic_prev.svg"
-                :class="[vehicleList.btnIconPrev]"
-              />
-              <span :class="[vehicleList.action]">Previous</span>
-            </a-button>
-            <a-button
-              :class="[vehicleList.btnPagination, 'mt-10', 'mr-15']"
-              type="primary"
-              ghost
-              v-else-if="item.type === 'next' && isShowNextBtn()"
-            >
-              <span :class="[vehicleList.action]">Next</span>
-              <img
-                src="@/assets/icons/ic_next.svg"
-                :class="[vehicleList.btnIconNext]"
-              />
-            </a-button>
-
-            <component
-              v-else-if="item.type === 'page'"
-              :is="item.originalElement"
-            ></component>
-          </template>
-
-          <template #buildOptionText="{ value }">
-            <div class="options-text">
-              <span class="mr-13">{{ value }} </span>
-              <img src="@/assets/icons/ic_arrow.svg" />
-            </div>
-          </template>
-        </a-pagination>
-      </div>
+      <ThePagination
+        :isShowPagination="!isLoading && data && !!data.length"
+        :currentPage="pageOption.currentPage"
+        :pageSize="pageOption.pageSize"
+        :total="pageOption.total"
+        :isShowPrevBtn="isShowPrevBtn()"
+        :isShowNextBtn="isShowNextBtn()"
+        @onShowSizeChange="onShowSizeChange"
+        @onChange="onChange"
+      />
     </div>
   </div>
 
@@ -243,6 +199,7 @@ import { ResVehicle, Vehicle, VehicleDetail } from "../models/vehicle.model";
 import VehicleDetailModal from "./VehicleDetailModal.vue";
 import NoData from "@/modules/base/components/NoData.vue";
 import SortView from "@/modules/common/components/SortView.vue";
+import ThePagination from "@/modules/common/components/ThePagination.vue";
 //#endregion===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆
 
 //#===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜Props
@@ -571,34 +528,6 @@ watch(searchValue, onSearchChange);
   .ant-table-cell {
     text-align: center;
   }
-
-  .pagination {
-    text-align: end;
-    background-color: #fff;
-    height: 60px;
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-    .btnPagination {
-      @include size-btn(82px, 40px);
-      border-color: #eaeaea;
-      background-color: #fff;
-      border-radius: 6px;
-
-      .btnIconPrev {
-        margin-right: 8px;
-      }
-
-      .btnIconNext {
-        margin-left: 8px;
-      }
-    }
-
-    .action {
-      @include text(700, 14px, 18px);
-      text-align: center;
-      color: $neutral-600;
-    }
-  }
 }
 </style>
 
@@ -631,11 +560,6 @@ watch(searchValue, onSearchChange);
   height: $height;
 }
 
-@mixin pagination-item($color) {
-  background-color: $color;
-  @extend .border;
-}
-
 @mixin text($fontWeight, $fontSize, $lineHeight) {
   font-weight: $fontWeight;
   font-size: $fontSize;
@@ -658,9 +582,6 @@ watch(searchValue, onSearchChange);
 .has-value,
 .null-value {
   @include text(400, 16px, 20px);
-  color: $neutral-600;
-}
-.options-text {
   color: $neutral-600;
 }
 </style>

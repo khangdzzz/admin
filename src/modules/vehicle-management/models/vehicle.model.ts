@@ -2,6 +2,7 @@ export interface PageOption {
   pageSize: number;
   pageIndex: number;
   totalItems: number;
+  currentPage:number
 }
 export interface VehicleSelection {
   value: string | number;

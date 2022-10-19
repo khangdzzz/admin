@@ -114,57 +114,16 @@
           </template>
         </template>
       </a-table>
-      <div :class="containerList.pagination">
-        <a-pagination
-          v-model:current="pageOption.currentPage"
-          v-model:page-size="pageOption.pageSize"
-          :total="pageOption.total"
-          :pageSizeOptions="['20', '30', '40', '50']"
-          show-size-changer
-          @showSizeChange="onShowSizeChange"
-          @change="onChange"
-          :class="['ant-pagination', 'd-flex', 'justify-end']"
-        >
-          <template #itemRender="item">
-            <a-button
-              :class="[containerList.btnPagination, 'mt-10']"
-              type="primary"
-              ghost
-              v-if="item.type === 'prev' && isShowPrevBtn()"
-            >
-              <img
-                src="@/assets/icons/ic_prev.svg"
-                :class="[containerList.btnIconPrev]"
-              />
-              <span :class="[containerList.action]">Previous</span>
-            </a-button>
-            <a-button
-              :class="[containerList.btnPagination, 'mt-10', 'mr-15']"
-              type="primary"
-              ghost
-              v-else-if="item.type === 'next' && isShowNextBtn()"
-            >
-              <span :class="[containerList.action]">Next</span>
-              <img
-                src="@/assets/icons/ic_next.svg"
-                :class="[containerList.btnIconNext]"
-              />
-            </a-button>
-
-            <component
-              v-else-if="item.type === 'page'"
-              :is="item.originalElement"
-            ></component>
-          </template>
-
-          <template #buildOptionText="{ value }">
-            <div class="options-text">
-              <span class="mr-13">{{ value }} </span>
-              <img src="@/assets/icons/ic_arrow.svg" />
-            </div>
-          </template>
-        </a-pagination>
-      </div>
+      <ThePagination
+        :isShowPagination="!isLoading && data && !!data.length"
+        :currentPage="pageOption.currentPage"
+        :pageSize="pageOption.pageSize"
+        :total="pageOption.total"
+        :isShowPrevBtn="isShowPrevBtn()"
+        :isShowNextBtn="isShowNextBtn()"
+        @onShowSizeChange="onShowSizeChange"
+        @onChange="onChange"
+      />
     </div>
   </div>
   <ContainerDetailModal
@@ -184,6 +143,7 @@ import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import HeaderRef from "@/modules/base/models/search-header.model";
 import SortView from "@/modules/common/components/SortView.vue";
+import ThePagination from "@/modules/common/components/ThePagination.vue";
 import { Pagination } from "@/modules/common/models";
 import { Sort } from "@/modules/common/models/sort.enum";
 import { router } from "@/routes";
@@ -192,10 +152,7 @@ import { service } from "@/services";
 import type { TableColumnType } from "ant-design-vue";
 import { debounce } from "lodash";
 import { computed, inject, onMounted, reactive, ref, watch } from "vue";
-import {
-  Container,
-  ResContainer
-} from "../models/container.model";
+import { Container, ResContainer } from "../models/container.model";
 import ContainerDetailModal from "./ContainerDetailModal.vue";
 
 //#endregion===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆
