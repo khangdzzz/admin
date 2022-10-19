@@ -8,7 +8,7 @@
         <a-button
           class="btn-action color-btn-delete"
           type="primary"
-          @click="deleteCollectionBase(undefined)"
+          @click="($event: MouseEvent) => deleteCollectionBase($event, undefined)"
           ghost
           v-if="selectedKeys.length > 0"
         >
@@ -62,20 +62,15 @@
         <template #bodyCell="{ column, record }">
           <template v-if="column.key === 'action'">
             <img src="@/assets/icons/ic_user.svg" class="action-icon" />
-            <router-link
-              :to="{
-                name: routeNames.editCollectionBase,
-                params: {
-                  id: record.id
-                }
-              }"
-            >
-              <img src="@/assets/icons/ic_btn_edit.svg" class="action-icon" />
-            </router-link>
+            <img
+              src="@/assets/icons/ic_btn_edit.svg"
+              class="action-icon"
+              @click="($event) => handleClickEdit($event, record.id)"
+            />
             <img
               src="@/assets/icons/ic_btn_delete.svg"
               class="action-icon"
-              @click="deleteCollectionBase(record.id)"
+              @click="($event) => deleteCollectionBase($event, record.id)"
             />
           </template>
         </template>
@@ -132,7 +127,6 @@ const sort = ref<Sort>(Sort.None);
 const isLoading = ref<boolean>(false);
 const searchString = ref<string>("");
 const innerHeight = ref<number>(0);
-const sortBy = ref<string>("name");
 const pageOption = reactive<Pagination<CollectionBase>>({
   currentPage: 1,
   pageSize: 20,
@@ -189,9 +183,11 @@ onMounted(() => {
 const onCreate = (): void => {
   router.push({ name: routeNames.createCollectionBase });
 };
+
 const handleBackToList = (): void => {
   searchString.value = "";
 };
+
 const initialize = async (): Promise<void> => {
   isLoading.value = true;
   const result = await service.collectionBase.getListCollectionBase(
@@ -220,15 +216,18 @@ const rowSelection = computed(() => {
     columnWidth: "50px"
   };
 });
+
 const onShowSizeChange = (current: number, pageSize: number): void => {
   pageOption.currentPage = current;
   pageOption.pageSize = pageSize;
   initialize();
 };
+
 const onChange = (pageNumber: number): void => {
   pageOption.currentPage = pageNumber;
   initialize();
 };
+
 const isShowPrevBtn = (): boolean => {
   const isFirstPage = pageOption.currentPage === 1;
   if (totalPages() === 1 || isFirstPage) return false;
@@ -241,6 +240,7 @@ const onSearchChange = debounce((): void => {
   selectedKeys.value = [];
   initialize();
 }, 500);
+
 const isShowNextBtn = (): boolean => {
   const isLastPage =
     pageOption.currentPage ===
@@ -249,10 +249,13 @@ const isShowNextBtn = (): boolean => {
   if (totalPages() === 1 || isLastPage) return false;
   return true;
 };
+
 const totalPages = (): number => {
   return Math.ceil(Number(pageOption.total) / Number(pageOption.pageSize));
 };
-const deleteCollectionBase = (id?: number): void => {
+
+const deleteCollectionBase = (e: MouseEvent, id?: number): void => {
+  if (e && e.stopPropagation) e.stopPropagation();
   messenger({
     title: "popup_msg_confirm_delete",
     message: "",
@@ -317,6 +320,17 @@ const customRow = (
       });
     }
   };
+};
+
+const handleClickEdit = (e: MouseEvent, id: string): void => {
+  if (e && e.stopPropagation) e.stopPropagation();
+
+  router.push({
+    name: routeNames.editCollectionBase,
+    params: {
+      id
+    }
+  });
 };
 //#endregion
 

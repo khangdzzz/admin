@@ -3,7 +3,6 @@ import { Sort } from "@/modules/common/models/sort.enum";
 import { CollectionBase } from "@/modules/staff-management/models/collection-base.model";
 import { transformRequest } from "./base.service";
 import { CollectionBaseResponseDto } from "./dtos/collection-base/collection-base.dto";
-import collectionBaseDetail from "./mocks/collection-base/collection-base-detail.response.json";
 import { PaginationDto } from "./dtos/common/pagination.dto";
 import { DEFAULT_SORT_ORDER } from "@/services/constants";
 import { AxiosError } from "axios";
@@ -87,7 +86,9 @@ export const getCollectionBaseById = async (
   const [error, res] = await transformRequest<CollectionBaseResponseDto>({
     url: `/workplace/collection_base/${collectionBaseId}`
   });
+
   if (error || !res) return undefined;
+
   const {
     id,
     name,
@@ -102,6 +103,7 @@ export const getCollectionBaseById = async (
     representative,
     base_type: collectionBaseType
   } = res;
+
   return {
     id,
     collectionBaseType: collectionBaseType,
@@ -157,6 +159,58 @@ export async function createCollectionBase(
     method: "post",
     data
   });
+  if (error || !res) {
+    return {
+      error: (error?.response?.data as { details: { msg: string }[] })
+        .details[0].msg
+    };
+  }
+  return {
+    res
+  };
+}
+
+export async function editCollectionBase(
+  collectionBase: CollectionBase
+): Promise<
+  [AxiosError<unknown, unknown>, null] | [null, CollectionBaseResponseDto] | any
+> {
+  const {
+    id,
+    name,
+    address,
+    latitude,
+    longitude,
+    shortName,
+    kana,
+    collectionBaseType,
+    postalCode,
+    email,
+    representative,
+    telephone
+  } = collectionBase;
+
+  const data: CollectionBaseResponseDto = {
+    id,
+    name,
+    address,
+    latitude,
+    longitude,
+    short_name: shortName,
+    name_kana: kana,
+    base_type: collectionBaseType,
+    postal_code: postalCode,
+    mail: email || null,
+    representative,
+    telephone
+  };
+
+  const [error, res] = await transformRequest<CollectionBaseResponseDto>({
+    url: `/workplace/collection_base/${id}`,
+    method: "put",
+    data
+  });
+
   if (error || !res) {
     return {
       error: (error?.response?.data as { details: { msg: string }[] })

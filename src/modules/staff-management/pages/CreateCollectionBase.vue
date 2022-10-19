@@ -158,7 +158,7 @@ import CustomForm from "@/modules/base/components/CustomForm.vue";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import { FormData } from "@/modules/staff-management/models/collection-base.model";
 import { formData as reactiveFormData } from "@/modules/staff-management/pages/create-collection-base-form";
-import { computed, reactive, ref, inject, onMounted } from "vue";
+import { computed, reactive, ref, inject } from "vue";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { service } from "@/services";
 import { commonStore } from "@/stores";
@@ -177,7 +177,7 @@ import { i18n } from "@/i18n";
 const userStore = commonStore();
 const isLoading = ref<boolean>(false);
 const formData = reactive<FormData>(reactiveFormData);
-const collectionBaseType = ref<string>("");
+const collectionBaseType = ref<number>(1);
 const center = ref<number[]>([40, 40]);
 const projection = ref<string>("EPSG:4326");
 const zoom = ref<number>(20);
@@ -189,16 +189,10 @@ const messenger: (
   param: MessengerParamModel
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 ) => void = inject("messenger")!;
-const innerHeight = ref<number>(window.innerHeight);
 const createCollectionBaseRef = ref();
 //#endregion
 
 //#region hooks
-onMounted(() => {
-  window.addEventListener("resize", () => {
-    innerHeight.value = window.innerHeight;
-  });
-});
 //#endregion
 
 //#region function
@@ -259,7 +253,7 @@ const handleSubmit = async (): Promise<void> => {
     representative: makeUniqueName(contact[4].value.toString()),
     latitude: geoLocations.value[0][0],
     longitude: geoLocations.value[0][1],
-    collectionBaseType: collectionBaseType.value
+    collectionBaseType: collectionBaseType.value || 1
   };
   if (!userStore.user) return;
   isLoading.value = true;

@@ -317,3 +317,10 @@ watch(
   }
 }
 </style>
+<style lang="scss">
+.login-container {
+  .ant-input-prefix {
+    margin-right: 12px;
+  }
+}
+</style>

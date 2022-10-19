@@ -9,12 +9,12 @@ export interface CollectionBase {
   name: string;
   shortName: string;
   kana: string;
-  postalCode?: string;
+  postalCode: string;
   email?: string | null;
   representative: string;
-  latitude: string | number;
-  longitude: string | number;
+  latitude: number;
+  longitude: number;
   address?: string;
   telephone?: string | null;
-  collectionBaseType: number | string;
+  collectionBaseType: number;
 }

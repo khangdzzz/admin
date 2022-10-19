@@ -11,12 +11,12 @@ export interface CollectionBaseResponseDto {
   name_kana: string;
   short_name: string;
   workplace_type?: number;
-  base_type: number | string;
-  postal_code?: string;
+  base_type: number;
+  postal_code: string;
   mail?: string | null;
   representative: string;
-  latitude: number | string;
-  longitude: number | string;
+  latitude: number;
+  longitude: number;
   address?: string;
   telephone?: string | null;
   report_to?: number;
