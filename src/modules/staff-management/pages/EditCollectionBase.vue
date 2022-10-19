@@ -1,135 +1,154 @@
 <template>
   <div class="create-collection-base p-30 fill-height">
-    <div class="create-collection-base__title mb-20">
-      {{ $t("edit_collection_base") }}
-    </div>
-    <div
-      class="create-collection-base__content-wrapper d-flex justify-space-between gap-20 px-20 pt-20"
-    >
-      <a-form
-        class="create-collection-base__form-wrapper"
-        :model="formData"
-        ref="createCollectionBaseRef"
+    <a-spin :tip="$t('common_loading')" :spinning="isLoading">
+      <div class="create-collection-base__title mb-20">
+        {{ $t("edit_collection_base") }}
+      </div>
+      <div
+        class="create-collection-base__content-wrapper d-flex justify-space-between gap-20 px-20 pt-20"
       >
-        <div>
-          <CustomForm
-            :form-data="formData.name"
-            @on-focus="handleOnNameFocus"
-            @on-blur="handleOnNameBlur"
-          />
-        </div>
-        <div class="d-flex my-30 gap-40">
-          <div class="create-collection-base__type-selector">
-            {{ $t("type") }}
-            <span class="create-collection-base__required-mark">&nbsp;* </span>
+        <a-form
+          class="create-collection-base__form-wrapper"
+          :model="formData"
+          ref="createCollectionBaseRef"
+        >
+          <div>
+            <CustomForm
+              :form-data="formData.name"
+              @on-focus="handleOnNameFocus"
+              @on-blur="handleOnNameBlur"
+            />
+          </div>
+          <div class="d-flex my-30 gap-40">
+            <div class="create-collection-base__type-selector">
+              {{ $t("type") }}
+              <span class="create-collection-base__required-mark"
+                >&nbsp;*
+              </span>
+            </div>
+            <div>
+              <a-radio-group
+                v-model:value="collectionBaseType"
+                name="radioGroup"
+                size="large"
+                class="create-collection-base__radio-group d-flex gap-40"
+              >
+                <a-radio :value="1">{{ $t("collection") }}</a-radio>
+                <a-radio :value="2">{{ $t("manufacture") }}</a-radio>
+                <a-radio :value="3">{{ $t("both") }}</a-radio>
+              </a-radio-group>
+            </div>
           </div>
           <div>
-            <a-radio-group
-              v-model:value="collectionBaseType"
-              name="radioGroup"
-              size="large"
-              class="create-collection-base__radio-group d-flex gap-40"
+            <CustomForm
+              :form-data="formData.contact"
+              @on-focus="handleOnContactFocus"
+              @on-blur="handleOnContactBlur"
+            />
+          </div>
+        </a-form>
+        <div class="create-collection-base__map-wrapper">
+          <ol-map
+            :loadTilesWhileAnimating="true"
+            :loadTilesWhileInteracting="true"
+            style="height: calc(100% - 24px)"
+            ref="map"
+          >
+            <ol-view
+              ref="view"
+              :center="center"
+              :rotation="rotation"
+              :zoom="zoom"
+              :projection="projection"
+            />
+
+            <ol-tile-layer>
+              <ol-source-osm />
+            </ol-tile-layer>
+
+            <ol-geolocation
+              :projection="projection"
+              v-for="(geoLocation, index) in geoLocations"
+              :key="index"
             >
-              <a-radio :value="1">{{ $t("collection") }}</a-radio>
-              <a-radio :value="2">{{ $t("manufacture") }}</a-radio>
-              <a-radio :value="3">{{ $t("both") }}</a-radio>
-            </a-radio-group>
+              <template v-slot>
+                <ol-vector-layer :zIndex="2">
+                  <ol-source-vector>
+                    <ol-feature ref="positionFeature">
+                      <ol-geom-point :coordinates="geoLocation"></ol-geom-point>
+                      <ol-style>
+                        <ol-style-icon
+                          :src="locationIcon"
+                          :scale="0.7"
+                        ></ol-style-icon>
+                      </ol-style>
+                    </ol-feature>
+                  </ol-source-vector>
+                </ol-vector-layer>
+              </template>
+            </ol-geolocation>
+
+            <ol-vector-layer>
+              <ol-source-vector :projection="projection">
+                <ol-interaction-draw
+                  type="Point"
+                  @drawend="drawend"
+                  @drawstart="drawstart"
+                >
+                </ol-interaction-draw>
+              </ol-source-vector>
+
+              <ol-style>
+                <ol-style-circle :radius="7">
+                  <ol-style-fill color="transparent"></ol-style-fill>
+                  <ol-style-stroke color="transparent"></ol-style-stroke>
+                </ol-style-circle>
+              </ol-style>
+            </ol-vector-layer>
+
+            <ol-overlay
+              v-for="(geoLocation, index) in geoLocations"
+              :key="index"
+              :position="geoLocation"
+            >
+              <template v-slot="slotProps">
+                <div
+                  class="create-collection-base__map-wrapper__overlay-content"
+                  v-if="slotProps && collectionBaseAddress"
+                >
+                  {{ collectionBaseAddress }}
+                </div>
+              </template>
+            </ol-overlay>
+          </ol-map>
+          <div
+            class="create-collection-base__map-wrapper__position-detail"
+            v-if="geoLocations.length"
+          >
+            {{ geoLocations[0][0] }}, {{ geoLocations[0][1] }}
+            <img
+              src="@/assets/icons/ic_btn_copy.svg"
+              @click="copyLocationToClipboard"
+            />
           </div>
         </div>
-        <div>
-          <CustomForm
-            :form-data="formData.contact"
-            @on-focus="handleOnContactFocus"
-            @on-blur="handleOnContactBlur"
-          />
-        </div>
-      </a-form>
-      <div class="create-collection-base__map-wrapper">
-        <ol-map
-          :loadTilesWhileAnimating="true"
-          :loadTilesWhileInteracting="true"
-          style="height: calc(100% - 24px)"
-          ref="map"
-        >
-          <ol-view
-            ref="view"
-            :center="center"
-            :rotation="rotation"
-            :zoom="zoom"
-            :projection="projection"
-          />
-
-          <ol-tile-layer>
-            <ol-source-osm />
-          </ol-tile-layer>
-
-          <ol-geolocation
-            :projection="projection"
-            v-for="(geoLocation, index) in geoLocations"
-            :key="index"
-          >
-            <template v-slot>
-              <ol-vector-layer :zIndex="2">
-                <ol-source-vector>
-                  <ol-feature ref="positionFeature">
-                    <ol-geom-point :coordinates="geoLocation"></ol-geom-point>
-                    <ol-style>
-                      <ol-style-icon
-                        :src="locationIcon"
-                        :scale="0.7"
-                      ></ol-style-icon>
-                    </ol-style>
-                  </ol-feature>
-                </ol-source-vector>
-              </ol-vector-layer>
-            </template>
-          </ol-geolocation>
-
-          <ol-vector-layer>
-            <ol-source-vector :projection="projection">
-              <ol-interaction-draw
-                type="Point"
-                @drawend="drawend"
-                @drawstart="drawstart"
-              >
-              </ol-interaction-draw>
-            </ol-source-vector>
-
-            <ol-style>
-              <ol-style-circle :radius="7">
-                <ol-style-fill color="transparent"></ol-style-fill>
-                <ol-style-stroke color="transparent"></ol-style-stroke>
-              </ol-style-circle>
-            </ol-style>
-          </ol-vector-layer>
-        </ol-map>
-        <div
-          class="create-collection-base__map-wrapper__position-detail"
-          v-if="geoLocations.length"
-        >
-          {{ geoLocations[0][0] }}, {{ geoLocations[0][1] }}
-          <img
-            src="@/assets/icons/ic_btn_copy.svg"
-            @click="copyLocationToClipboard"
-          />
-        </div>
       </div>
-    </div>
-    <div class="d-flex justify-center gap-20 mt-20 pb-20">
-      <a-button
-        type="secondary"
-        class="create-collection-base__btn-style create-collection-base__cancel-btn"
-        @click="handleCancel"
-        >{{ $t("btn_cancel") }}</a-button
-      >
-      <a-button
-        type="primary"
-        class="create-collection-base__btn-style"
-        :disabled="isButtonDisabled"
-        @click="handleSubmit"
-        >{{ $t("btn_submit") }}</a-button
-      >
-    </div>
+      <div class="d-flex justify-center gap-20 mt-20 pb-20">
+        <a-button
+          type="secondary"
+          class="create-collection-base__btn-style create-collection-base__cancel-btn"
+          @click="handleCancel"
+          >{{ $t("btn_cancel") }}</a-button
+        >
+        <a-button
+          type="primary"
+          class="create-collection-base__btn-style"
+          :disabled="isButtonDisabled"
+          @click="handleSubmit"
+          >{{ $t("btn_submit") }}</a-button
+        >
+      </div>
+    </a-spin>
   </div>
 </template>
 
@@ -174,11 +193,15 @@ const messenger: (
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 ) => void = inject("messenger")!;
 const createCollectionBaseRef = ref();
+const isSubmitting = ref<boolean>(false);
+const collectionBaseAddress = ref<string>("");
 //#endregion
 
 //#region hooks
 onMounted(async () => {
+  isLoading.value = true;
   await initialize();
+  isLoading.value = false;
 });
 //#endregion
 
@@ -213,6 +236,7 @@ const initialize = async (): Promise<void> => {
     collectionBaseType.value = cbType;
 
     geoLocations.value.push([longitude, latitude]);
+    collectionBaseAddress.value = address || "";
 
     setTimeout(() => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -306,7 +330,7 @@ const handleSubmit = async (): Promise<void> => {
 
   if (!userStore.user) return;
 
-  isLoading.value = true;
+  isSubmitting.value = true;
   const { error, res } = await service.collectionBase.editCollectionBase(data);
 
   if (res && !error) {
@@ -317,7 +341,12 @@ const handleSubmit = async (): Promise<void> => {
       callback: (isConfirm: boolean) => {
         isConfirm;
         goToCollectionBaseListPage();
-        router.push({ name: routeNames.listCollectionBase });
+        router.push({
+          name: routeNames.collectionBaseDetail,
+          params: {
+            id: res.id
+          }
+        });
         clearInputs();
       }
     });
@@ -325,13 +354,10 @@ const handleSubmit = async (): Promise<void> => {
     messenger({
       title: "popup_edit_fail_title",
       message: "popup_create_fail_message",
-      type: MessengerType.Error,
-      callback: () => {
-        clearInputs();
-      }
+      type: MessengerType.Error
     });
   }
-  isLoading.value = false;
+  isSubmitting.value = false;
 };
 
 const goToCollectionBaseListPage = (): void => {
@@ -344,6 +370,7 @@ const drawstart = (_event: { target: { sketchCoords_: number[] } }): void => {
 
 const drawend = (event: { target: { sketchCoords_: number[] } }): void => {
   geoLocations.value.push(event.target.sketchCoords_);
+  collectionBaseAddress.value = "";
 };
 
 const copyLocationToClipboard = (): void => {
@@ -385,6 +412,7 @@ const copyLocationToClipboard = (): void => {
     position: relative;
     width: 50%;
     height: auto;
+
     &__position-detail {
       position: absolute;
       display: flex;
@@ -411,6 +439,29 @@ const copyLocationToClipboard = (): void => {
         margin-left: 16px;
         cursor: pointer;
       }
+    }
+
+    &__overlay-content {
+      text-shadow: 2px 0 #fff, -2px 0 #fff, 0 2px #fff, 0 -2px #fff,
+        1px 1px #fff, -1px -1px #fff, 1px -1px #fff, -1px 1px #fff;
+      font-family: "Roboto";
+      font-style: normal;
+      font-weight: 700;
+      font-size: 16px;
+      line-height: 19px;
+      display: flex;
+      align-items: center;
+      color: #f54e4e;
+      margin-top: -15px;
+      margin-left: 30px;
+      max-width: 133px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-height: 38px;
+      word-wrap: break-word;
     }
   }
 

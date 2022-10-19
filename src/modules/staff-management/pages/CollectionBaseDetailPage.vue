@@ -446,7 +446,7 @@ const focusCurrentLocation = (): void => {
       align-items: center;
       color: #f54e4e;
       margin-top: -20px;
-      margin-left: 20px;
+      margin-left: 30px;
       max-width: 133px;
       display: -webkit-box;
       -webkit-line-clamp: 2;

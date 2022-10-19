@@ -151,7 +151,7 @@ export async function createCollectionBase(
     postal_code: postalCode,
     mail: email || null,
     representative,
-    telephone
+    telephone: telephone || null
   };
 
   const [error, res] = await transformRequest<CollectionBaseResponseDto>({
@@ -202,7 +202,7 @@ export async function editCollectionBase(
     postal_code: postalCode,
     mail: email || null,
     representative,
-    telephone
+    telephone: telephone || null
   };
 
   const [error, res] = await transformRequest<CollectionBaseResponseDto>({
