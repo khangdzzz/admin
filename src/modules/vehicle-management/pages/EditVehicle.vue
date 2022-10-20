@@ -3,7 +3,8 @@
     type="flex"
     justify="center"
     align="middle"
-    class="edit-vehicle-container">
+    class="edit-vehicle-container"
+  >
     <div class="edit-vehicle-content">
       <h2 class="title">{{ $t("vehicle_edit") }}</h2>
       <div class="create-form">
@@ -23,14 +24,16 @@
             :formData="dynamicValidateForm.formData"
             @change="handleOnChange"
             @onBlur="handleOnBlur"
-            @onFocus="handleOnFocus"></CustomForm>
+            @onFocus="handleOnFocus"
+          ></CustomForm>
         </a-form>
       </div>
       <a-row
         type="flex"
         justify="space-between"
         align="middle"
-        class="check-permision">
+        class="check-permision"
+      >
         <a-col :span="20">
           <h3>{{ $t("vehicle_industrial_waste") }}</h3>
         </a-col>
@@ -156,7 +159,7 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
         },
         {
           max: 50,
-          message: i18n.global.t("max_length_input", { maxLength: 50 })
+          message: i18n.global.t("max_length_input_text", { maxLength: 50 })
         }
       ],
       required: true,
@@ -180,7 +183,7 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
         },
         {
           max: 50,
-          message: i18n.global.t("max_length_input", { maxLength: 50 })
+          message: i18n.global.t("max_length_input_text", { maxLength: 50 })
         }
       ],
       key: 2,
@@ -196,7 +199,7 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
       rules: [
         {
           max: 10,
-          message: i18n.global.t("max_length_input", { maxLength: 10 })
+          message: i18n.global.t("max_length_input_number", { maxLength: 10 })
         },
         {
           pattern: /^\d*$/,
@@ -217,7 +220,7 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
       rules: [
         {
           max: 50,
-          message: i18n.global.t("max_length_input", { maxLength: 50 })
+          message: i18n.global.t("max_length_input_text", { maxLength: 50 })
         }
       ],
       required: false,
