@@ -179,7 +179,7 @@ import { i18n } from "@/i18n";
 //#region variables
 const userStore = commonStore();
 const isLoading = ref<boolean>(false);
-const formData = reactive<FormData>(reactiveFormData);
+const formData = reactive<FormData>(reactiveFormData());
 const collectionBaseType = ref<number>();
 const center = ref<number[]>([40, 40]);
 const projection = ref<string>("EPSG:4326");
