@@ -160,7 +160,7 @@ import CustomForm from "@/modules/base/components/CustomForm.vue";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import { FormData } from "@/modules/staff-management/models/collection-base.model";
 import { formData as reactiveFormData } from "@/modules/staff-management/pages/create-collection-base-form";
-import { computed, reactive, ref, inject } from "vue";
+import { computed, reactive, ref, inject, onBeforeUnmount } from "vue";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { service } from "@/services";
 import { commonStore } from "@/stores";
@@ -195,6 +195,9 @@ const isSubmitting = ref<boolean>(false);
 //#endregion
 
 //#region hooks
+onBeforeUnmount(() => {
+  clearInputs();
+});
 //#endregion
 
 //#region function
@@ -228,9 +231,7 @@ const isButtonDisabled = computed((): boolean => {
     !collectionBaseType.value ||
     !contact[0].value ||
     !contact[1].value ||
-    !geoLocations.value?.length ||
-    !geoLocations.value[0][0] ||
-    !geoLocations.value[0][1]
+    !geoLocations.value.length
   );
 });
 
