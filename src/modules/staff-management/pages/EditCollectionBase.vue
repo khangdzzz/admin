@@ -293,6 +293,7 @@ const isButtonDisabled = computed((): boolean => {
     !collectionBaseType.value ||
     !contact[0].value ||
     !contact[1].value ||
+    !geoLocations.value?.length ||
     !geoLocations.value[0][0] ||
     !geoLocations.value[0][1]
   );
