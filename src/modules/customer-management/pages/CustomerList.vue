@@ -1,140 +1,182 @@
 <template>
-  <ListSearchHeader
-    :title="$t('customer')"
-    v-model:model-value.sync="searchString"
-  >
-    <template #action>
-      <a-button
-        class="btn-action color-btn-delete"
-        ghost
-        type="primary"
-        @click="deleteCustomer(undefined)"
-        v-if="selectedKeys.length > 0"
-      >
-        <template #icon>
-          <IcTrash class="btn-icon" :color="'#F54E4E'" />
-        </template>
-        {{ $t("delete_btn") }}
-      </a-button>
-      <a-button class="btn" type="primary" ghost>
-        <template #icon>
-          <img src="@/assets/icons/ic_import.svg" class="btn-icon" />
-        </template>
-        {{ $t("import_btn") }}
-      </a-button>
-      <a-button class="btn" type="primary" ghost>
-        <template #icon>
-          <img src="@/assets/icons/ic_export.svg" class="btn-icon" />
-        </template>
-        {{ $t("export_btn") }}
-      </a-button>
-      <a-button type="primary" class="btn btn-add-new" @click="handleClickAdd">
-        <template #icon>
-          <img src="@/assets/icons/ic_plus.svg" class="btn-icon" />
-        </template>
-        {{ $t("add_btn") }}
-      </a-button>
-    </template>
-  </ListSearchHeader>
-  <div class="customer-list__table-container mx-30">
-    <a-table
-      :row-selection="{
-        selectedRowKeys: selectedRowKeys,
-        onChange: onSelectChange,
-        columnWidth: '50px'
-      }"
-      :scroll="{ y: tableMaxHeight }"
-      :columns="columns"
-      :data-source="data"
-      :pagination="false"
+  <div class="fill-height d-flex flex-column">
+    <ListSearchHeader
+      :title="$t('customer')"
+      v-model:model-value.sync="searchString"
     >
-      <template #bodyCell="{ column, record }">
-        <template v-if="column.key === 'action'">
-          <a>
-            <img
-              src="@/assets/icons/ic_btn_edit.svg"
-              class="action-icon"
-              @click="handleClickEdit(record.key)"
-            />
-          </a>
-          <a @click="deleteCustomer(record.id)">
-            <img src="@/assets/icons/ic_btn_delete.svg" class="action-icon"
-          /></a>
-        </template>
-        <template v-if="column.key === 'name'">
-          <a-tooltip
-            overlayClassName="tooltip-name-container"
-            placement="topLeft"
-          >
-            <template #title>
-              <span class="tooltip-name-style">
-                <span class="tooltip-name-title">External code: </span>
-                <span class="tooltip-name-description">{{
-                  record.externalCode
-                }}</span>
-              </span>
-            </template>
-            {{ record.name }}
-          </a-tooltip>
-        </template>
+      <template #action>
+        <a-button
+          class="btn-action color-btn-delete"
+          ghost
+          type="primary"
+          v-if="selectedKeys.length > 0"
+          @click="deleteCustomer(undefined)"
+        >
+          <template #icon>
+            <IcTrash class="btn-icon" :color="'#F54E4E'" />
+          </template>
+          {{ $t("delete_btn") }}
+        </a-button>
+        <a-button class="btn-action" type="primary">
+          <template #icon>
+            <img src="@/assets/icons/ic_import.svg" class="btn-icon" />
+          </template>
+          {{ $t("import_btn") }}
+        </a-button>
+        <a-button class="btn-action" type="primary">
+          <template #icon>
+            <img src="@/assets/icons/ic_export.svg" class="btn-icon" />
+          </template>
+          {{ $t("export_btn") }}
+        </a-button>
+        <a-button type="primary" class="btn-add-new" @click="handleClickAdd">
+          <template #icon>
+            <img src="@/assets/icons/ic_plus.svg" class="btn-icon" />
+          </template>
+          {{ $t("add_new_type_btn") }}
+        </a-button>
       </template>
-    </a-table>
-    <ThePagination
-      :isShowPagination="!isLoading && data && !!data.length"
-      :currentPage="pageOption.currentPage"
-      :pageSize="pageOption.pageSize"
-      :total="pageOption.total"
-      :isShowPrevBtn="isShowPrevBtn()"
-      :isShowNextBtn="isShowNextBtn()"
-      @onShowSizeChange="onShowSizeChange"
-      @onChange="onChange"
-    />
+    </ListSearchHeader>
+    <div class="customer-list__table-container mx-30">
+      <a-table
+        :row-selection="rowSelection"
+        :scroll="{ y: tableMaxHeight }"
+        :columns="columns"
+        :data-source="data"
+        :pagination="false"
+        v-if="!isLoading && data && data.length"
+      >
+        <template #headerCell="{ column }">
+          <template v-if="column.key === 'name'">
+            <div class="header-title" @click="changeSortName()">
+              <span>{{ $t(column.title) }}</span>
+              <SortView class="mx-12" :sort="sortName" />
+            </div>
+          </template>
+
+          <template v-if="column.key === 'postalCode'">
+            <div class="header-title" @click="changeSortPostalCode()">
+              <span>{{ $t(column.title) }}</span>
+              <SortView class="mx-12" :sort="sortPostalCode" />
+            </div>
+          </template>
+          <template v-if="column.key === 'address'">
+            <div class="header-title" @click="changeSortAddress()">
+              <span>{{ $t(column.title) }}</span>
+              <SortView class="mx-12" :sort="sortAddress" />
+            </div>
+          </template>
+
+          <template v-if="column.key === 'phoneNumber'">
+            <div class="header-title" @click="changeSortPhoneNumber()">
+              <span>{{ $t(column.title) }}</span>
+              <SortView class="mx-12" :sort="sortPhoneNumber" />
+            </div>
+          </template>
+
+          <template v-if="column.key === 'email'">
+            <div class="header-title" @click="changeSortEmail()">
+              <span>{{ $t(column.title) }}</span>
+              <SortView class="mx-12" :sort="sortEmail" />
+            </div>
+          </template>
+        </template>
+        <template #bodyCell="{ column, record }">
+          <template v-if="column.key === 'action'">
+            <a>
+              <img
+                src="@/assets/icons/ic_btn_edit.svg"
+                class="action-icon,'ml-0'"
+                @click="handleClickEdit(record.key)"
+              />
+            </a>
+            <a @click="deleteCustomer(record.id)">
+              <img src="@/assets/icons/ic_btn_delete.svg" class="action-icon"
+            /></a>
+          </template>
+          <template v-if="column.key === 'name'">
+            <a-tooltip
+              overlayClassName="tooltip-name-container"
+              placement="topLeft"
+            >
+              <template #title>
+                <span class="tooltip-name-style">
+                  <span class="tooltip-name-title">External code: </span>
+                  <span class="tooltip-name-description">{{
+                    record.externalCode
+                  }}</span>
+                </span>
+              </template>
+              {{ record.name }}
+            </a-tooltip>
+          </template>
+        </template>
+      </a-table>
+      <ThePagination
+        :isShowPagination="!isLoading && data && !!data.length"
+        :currentPage="pageOption.currentPage"
+        :pageSize="pageOption.pageSize"
+        :total="pageOption.total"
+        :isShowPrevBtn="isShowPrevBtn()"
+        :isShowNextBtn="isShowNextBtn()"
+        @onShowSizeChange="onShowSizeChange"
+        @onChange="onChange"
+      />
+      <NoData
+        :value="searchValue"
+        :is-loading="isLoading"
+        @onClick="handleBackToList"
+        v-if="isLoading || !data || !data.length"
+      />
+    </div>
   </div>
-  <NoData
-    :value="searchValue"
-    :is-loading="isLoading"
-    @onClick="handleBackToList"
-    v-if="isLoading || !data || !data.length"
-  />
 </template>
 
 <script setup lang="ts">
 //#region import
+import SortView from "@/modules/common/components/SortView.vue";
 import NoData from "@/modules/base/components/NoData.vue";
 import IcTrash from "@/assets/icons/IcTrash.vue";
 import ListSearchHeader from "@/modules/base/components/ListSearchHeader.vue";
 import { routeNames, router } from "@/routes";
-import { computed, onMounted, reactive, ref, inject } from "vue";
+import { computed, onMounted, reactive, ref, inject, watch } from "vue";
 import { columns } from "../models/CustomerListColumn";
-import { data } from "../models/CustomerListData";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import { service } from "@/services";
 import ThePagination from "@/modules/common/components/ThePagination.vue";
-
 import HeaderRef from "@/modules/base/models/search-header.model";
+import { Sort } from "@/modules/common/models/sort.enum";
+import { CustomerModel } from "../models/customer.model";
+import { Pagination } from "@/modules/common/models";
+import { debounce } from "lodash";
 //#endregion
 
 //#region props
 //#endregion
 
 //#region variables
+let sourceData: CustomerModel[] = [];
+const data = ref<CustomerModel[]>([]);
 const searchValue = ref<string>("");
 const isLoading = ref<boolean>(false);
 const messenger: (param: MessengerParamModel) => void =
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   inject("messenger")!;
 const selectedKeys = ref<number[]>([]);
-const selectedRowKeys = ref([]);
 const innerHeight = ref<number>(0);
-const pageOption = reactive({
+const pageOption = reactive<Pagination<CustomerModel>>({
   currentPage: 1,
   pageSize: 20,
   total: 1
 });
 const searchString = ref<string>("");
 const searchHeader = ref<HeaderRef | null>(null);
-
+const sortName = ref<Sort>(Sort.None);
+const sortEmail = ref<Sort>(Sort.None);
+const sortPhoneNumber = ref<Sort>(Sort.None);
+const sortAddress = ref<Sort>(Sort.None);
+const sortPostalCode = ref<Sort>(Sort.None);
 //#endregion
 
 //#region hooks
@@ -143,26 +185,27 @@ onMounted(() => {
   window.addEventListener("resize", () => {
     innerHeight.value = window.innerHeight;
   });
+  initialize();
 });
 //#endregion
 
 //#region function
+
 const handleBackToList = (): void => {
   if (searchHeader.value) {
     searchHeader.value.clearInput();
   }
 };
-const onSelectChange = (rowSelect: []): void => {
-  selectedRowKeys.value = rowSelect;
-};
 
 const onShowSizeChange = (current: number, pageSize: number): void => {
   pageOption.currentPage = current;
   pageOption.pageSize = pageSize;
+  initialize();
 };
 
 const onChange = (pageNumber: number): void => {
   pageOption.currentPage = pageNumber;
+  initialize();
 };
 
 const isShowPrevBtn = (): boolean => {
@@ -179,6 +222,78 @@ const isShowNextBtn = (): boolean => {
   return true;
 };
 
+const initialize = async (): Promise<void> => {
+  const sort = {
+    sortName: sortName.value,
+    sortAddress: sortAddress.value,
+    sortPostalCode: sortPostalCode.value,
+    sortPhoneNumber: sortPhoneNumber.value,
+    sortEmail: sortEmail.value
+  };
+  isLoading.value = true;
+  const res = await service.customer.fetchListCustomer(
+    pageOption?.currentPage || 1,
+    pageOption?.pageSize ? +pageOption?.pageSize : 20,
+    sort,
+    searchString.value
+  );
+  isLoading.value = false;
+  sourceData = (res?.results || []).map((item, index) => {
+    return { ...item, key: item.id || index + 1 };
+  });
+  data.value = [...sourceData];
+  pageOption.currentPage = res?.currentPage;
+  pageOption.pageSize = res?.pageSize || 20;
+  pageOption.total = res?.total;
+  pageOption.totalPage = res?.totalPage;
+};
+const calculateNextSortStatus = (currentSort: Sort): Sort => {
+  switch (currentSort) {
+    case Sort.Asc:
+      return Sort.Desc;
+    case Sort.Desc:
+      return Sort.None;
+    default:
+      return Sort.Asc;
+  }
+};
+const resetSort = (): void => {
+  sortName.value = Sort.None;
+  sortPostalCode.value = Sort.None;
+  sortAddress.value = Sort.None;
+  sortPhoneNumber.value = Sort.None;
+  sortEmail.value = Sort.None;
+};
+const changeSortName = (): void => {
+  const backupSortName = sortName.value;
+  resetSort();
+  sortName.value = calculateNextSortStatus(backupSortName);
+  initialize();
+};
+const changeSortPostalCode = (): void => {
+  const backupSortPostalCode = sortPostalCode.value;
+  resetSort();
+  sortPostalCode.value = calculateNextSortStatus(backupSortPostalCode);
+  initialize();
+};
+const changeSortAddress = (): void => {
+  const changeSortAddress = sortAddress.value;
+  resetSort();
+  sortAddress.value = calculateNextSortStatus(changeSortAddress);
+  initialize();
+};
+const changeSortPhoneNumber = (): void => {
+  const changeSortPhoneNumber = sortPhoneNumber.value;
+  resetSort();
+  sortPhoneNumber.value = calculateNextSortStatus(changeSortPhoneNumber);
+  initialize();
+};
+const changeSortEmail = (): void => {
+  const changeSortEmail = sortEmail.value;
+  resetSort();
+  sortEmail.value = calculateNextSortStatus(changeSortEmail);
+  initialize();
+};
 const totalPages = (): number => {
   return Math.ceil(Number(pageOption.total) / Number(pageOption.pageSize));
 };
@@ -203,7 +318,7 @@ const deleteCustomer = (id?: number): void => {
 };
 const onDeleteCustomer = async (deleteIds: number[]): Promise<void> => {
   isLoading.value = true;
-  const isSuccess = await service.container.deleteContainerTypeById(deleteIds);
+  const isSuccess = await service.customer.deleteCustomerById(deleteIds);
   isLoading.value = false;
   if (!isSuccess) {
     messenger({
@@ -219,14 +334,18 @@ const onDeleteCustomer = async (deleteIds: number[]): Promise<void> => {
     type: MessengerType.Success,
     callback: (isConfirm: boolean): void => {
       isConfirm;
-      // initialize();
+      initialize();
     }
   });
   pageOption.currentPage = 1;
   selectedKeys.value = [];
   searchString.value = "";
 };
-
+const onSearchChange = debounce((): void => {
+  pageOption.currentPage = 1;
+  selectedKeys.value = [];
+  initialize();
+}, 500);
 const handleClickEdit = (id: string): void => {
   router.push({ name: routeNames.editCustomer, params: { id } });
 };
@@ -237,6 +356,16 @@ const handleClickAdd = (): void => {
 //#endregion
 
 //#region computed
+const rowSelection = computed(() => {
+  return {
+    selectedRowKeys: selectedKeys.value,
+    onChange: (keys: number[]): void => {
+      selectedKeys.value = keys;
+    },
+    columnWidth: "50px"
+  };
+});
+
 const tableMaxHeight = computed(() => {
   const tableHeaderHeight = 58;
   const tableFooterHeight = 52;
@@ -254,6 +383,8 @@ const tableMaxHeight = computed(() => {
 //#endregion
 
 //#region reactive
+watch(searchValue, onSearchChange);
+
 //#endregion
 </script>
 
@@ -316,11 +447,15 @@ const tableMaxHeight = computed(() => {
       text-align: right;
     }
   }
+  .ant-table-tbody > tr.ant-table-row-selected:hover > td {
+    background: #f7f7f7;
+  }
 }
 </style>
 <style lang="scss">
 .customer-list {
   &__table-container {
+    height: 100%;
     .ant-checkbox-inner {
       &::after {
         top: 45%;

@@ -1,12 +1,98 @@
-import { transformRequest } from "./base.service";
 import {
   CustomerModel,
   Customer
 } from "@/modules/customer-management/models/customer.model";
-import { ServiceResponse } from "@/modules/common/models";
+import { Pagination, ServiceResponse } from "@/modules/common/models";
+import { Sort } from "@/modules/common/models/sort.enum";
+import { transformRequest } from "./base.service";
+import { PaginationDto } from "./dtos/common/pagination.dto";
+import { CustomerResponseDto } from "./dtos/customer-management/customer.dto";
+import { DEFAULT_SORT_ORDER } from "@/services/constants";
+import { calculateSortQuery } from "@/modules/common/helpers";
+
+// import { makeUniqueName } from "@/utils/string.helper";
+interface sortCustomerDto {
+  sortName: Sort;
+  sortAddress: Sort;
+  sortPostalCode: Sort;
+  sortPhoneNumber: Sort;
+  sortEmail: Sort;
+}
+// sortName: Sort; sortAddress: Sort; sortPostalCode: Sort; sortPhoneNumber: Sort; sortEmail: Sort;
+export async function fetchListCustomer(
+  page: number,
+  size: number | string,
+  sort: sortCustomerDto,
+  searchKeyword: string | null | undefined = ""
+): Promise<Pagination<CustomerModel> | undefined> {
+  const { sortName, sortAddress, sortPostalCode, sortPhoneNumber, sortEmail } =
+    sort;
+
+  const orderSortName = calculateSortQuery("name", sortName);
+  const orderSortAddress = calculateSortQuery("address", sortAddress);
+  const orderSortPostalCode = calculateSortQuery("postal_code", sortPostalCode);
+  const orderSortPhoneNumber = calculateSortQuery("telephone", sortPhoneNumber);
+  const orderSortEmail = calculateSortQuery("mail", sortEmail);
+
+  const order_by = [
+    orderSortName,
+    orderSortAddress,
+    orderSortPostalCode,
+    orderSortPhoneNumber,
+    orderSortEmail
+  ]
+    .filter((item) => !!item)
+    .toString();
+
+  const params = {
+    page,
+    page_size: size,
+    name__like: searchKeyword ? `%${searchKeyword}%` : undefined,
+    order_by: order_by?.length ? order_by : DEFAULT_SORT_ORDER
+  };
+
+  const [error, res] = await transformRequest<
+    PaginationDto<CustomerResponseDto>
+  >({
+    url: "/workplace/customer",
+    method: "get",
+    params
+  });
+  if (error || !res) return undefined;
+  if (!res) return Promise.resolve(undefined);
+  const {
+    current_page: currentPage = page,
+    page_size: pageSize = size,
+    count: total = 0,
+    total_page: totalPage = 1,
+    results
+  } = res;
+  return {
+    currentPage,
+    pageSize,
+    total,
+    totalPage,
+    results: results.map((customerDto, index) => {
+      const {
+        telephone: phoneNumber,
+        postal_code: postalCode,
+        mail: email,
+        ...rest
+      } = customerDto;
+      return {
+        ...rest,
+        key: index,
+        phoneNumber,
+        postalCode,
+        email
+      };
+    })
+  };
+}
+
 export async function deleteCustomerById(ids: number[]): Promise<boolean> {
   const [error] = await transformRequest<CustomerModel>({
-    url: `/customer`,
+    url: `/workplace/customer`,
     method: "delete",
     data: {
       ids

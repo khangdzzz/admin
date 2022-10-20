@@ -48,7 +48,7 @@
         :data-source="data"
         :pagination="false"
         v-if="!isLoading && data && data.length > 0"
-        :scroll="{ y: 700 }"
+        :scroll="{ y: tableMaxHeight }"
       >
         <template #headerCell="{ column }">
           <template v-if="column.key === 'name'">
@@ -216,10 +216,16 @@ const pageOption = reactive<Pagination<ResContainer>>({
   pageSize: 20,
   total: 0
 });
+const innerHeight = ref<number>(0);
+
 //#endregion===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎
 
 //#===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌Hooks
 onMounted(() => {
+  innerHeight.value = window.innerHeight;
+  window.addEventListener("resize", () => {
+    innerHeight.value = window.innerHeight;
+  });
   fetchContainerList();
 });
 //#endregion===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌
@@ -422,6 +428,20 @@ const fetchContainerDetail = async (id: string): Promise<void> => {
 //#endregion===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊
 
 //#===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏Computed
+const tableMaxHeight = computed(() => {
+  const tableHeaderHeight = 58;
+  const tableFooterHeight = 52;
+  const pageHeaderHeight = 120;
+  const marginBottom = 30;
+
+  return (
+    innerHeight.value -
+    tableHeaderHeight -
+    tableFooterHeight -
+    pageHeaderHeight -
+    marginBottom
+  );
+});
 //#endregion===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏
 
 //#===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍Emits
