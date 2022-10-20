@@ -28,7 +28,7 @@
         </template>
         {{ $t("export_btn") }}
       </a-button>
-      <a-button type="primary" class="btn btn-add-new">
+      <a-button type="primary" class="btn btn-add-new" @click="handleClickAdd">
         <template #icon>
           <img src="@/assets/icons/ic_plus.svg" class="btn-icon" />
         </template>
@@ -229,6 +229,10 @@ const onDeleteCustomer = async (deleteIds: number[]): Promise<void> => {
 
 const handleClickEdit = (id: string): void => {
   router.push({ name: routeNames.editCustomer, params: { id } });
+};
+
+const handleClickAdd = (): void => {
+  router.push({ name: routeNames.createNewCustomer });
 };
 //#endregion
 

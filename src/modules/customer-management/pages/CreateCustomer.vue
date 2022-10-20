@@ -7,7 +7,7 @@
         Add new Customer
       </div>
       <div>
-        <a-form :model="formData">
+        <a-form :model="formData" ref="createCustomerForm">
           <div>
             <CustomForm
               :form-data="formData.singleInput"
@@ -30,10 +30,17 @@
         <a-button
           type="secondary"
           class="create-customer__btn-style create-customer__cancel-btn"
-          >Cancel</a-button
+          :disabled="isSubmitting"
+          @click="handleClickCancel"
+          >{{ $t("btn_cancel") }}</a-button
         >
-        <a-button type="primary" class="create-customer__btn-style" disabled
-          >Submit</a-button
+        <a-button
+          type="primary"
+          class="create-customer__btn-style"
+          :loading="isSubmitting"
+          :disabled="isSubmitDisable"
+          @click="handleClickSubmit"
+          >{{ $t("btn_submit") }}</a-button
         >
       </div>
     </a-card>
@@ -43,19 +50,34 @@
 <script setup lang="ts">
 //#region import
 import CustomForm from "@/modules/base/components/CustomForm.vue";
-import { reactive } from "vue";
+import { computed, inject, onBeforeUnmount, reactive, ref } from "vue";
 import { formData as reactiveFormData } from "../models/create-customer-base-form";
 import { FormData } from "@/modules/staff-management/models/collection-base.model";
+import { routeNames, router } from "@/routes";
+import { service } from "@/services";
+import { makeUniqueName } from "@/utils/string.helper";
+import MessengerParamModel from "@/modules/base/models/messenger-param.model";
+import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 //#endregion
 
 //#region props
 //#endregion
 
 //#region variables
+const messenger: (
+  param: MessengerParamModel
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+) => void = inject("messenger")!;
 const formData = reactive<FormData>(reactiveFormData);
+const { singleInput, duoInputs } = formData;
+const isSubmitting = ref<boolean>(false);
+const createCustomerForm = ref();
 //#endregion
 
 //#region hooks
+onBeforeUnmount(() => {
+  clearInputs();
+});
 //#endregion
 
 //#region function
@@ -80,9 +102,99 @@ const handleOnDuoInputsBlur = (
 ): void => {
   formData.duoInputs[Number(index)].isFocus = false;
 };
+
+const handleClickCancel = (): void => {
+  router.push({ name: routeNames.customerList });
+};
+
+const clearInputs = (): void => {
+  singleInput[0].value = "";
+  singleInput[1].value = "";
+  singleInput[2].value = "";
+  singleInput[3].value = "";
+  singleInput[4].value = "";
+  singleInput[5].value = "";
+  singleInput[6].value = "";
+  duoInputs[0].value = "";
+  duoInputs[1].value = "";
+};
+
+const handleClickSubmit = async (): Promise<void> => {
+  const { singleInput, duoInputs } = formData;
+
+  const data = {
+    name: makeUniqueName(singleInput[0].value.toString()),
+    short_name: makeUniqueName(singleInput[1].value.toString()),
+    name_kana: makeUniqueName(singleInput[2].value.toString()),
+    postal_code: +singleInput[3].value,
+    address: makeUniqueName(singleInput[4].value.toString()),
+    telephone: makeUniqueName(singleInput[5].value.toString()),
+    mail: makeUniqueName(singleInput[6].value.toString()),
+    representative: makeUniqueName(duoInputs[0].value.toString()),
+    external_code: +duoInputs[1].value
+  };
+
+  isSubmitting.value = true;
+  const { error, res } = await service.customer.createCustomer(data);
+  if (!error && res) {
+    messenger({
+      title: "customer_created_successfully",
+      message: "",
+      type: MessengerType.Success,
+      callback: (isConfirm: boolean) => {
+        isConfirm;
+        router.push({
+          name: routeNames.customerList
+        });
+        clearInputs();
+      }
+    });
+  } else {
+    messenger({
+      title: "customer_create_failed",
+      message: "",
+      type: MessengerType.Error
+    });
+  }
+  isSubmitting.value = false;
+};
 //#endregion
 
 //#region computed
+const isNotValidToSubmit = computed(() => {
+  const isNotValidName = singleInput[0].value.toString().length > 50;
+  const isNotValidPostalCode =
+    singleInput[3].value.toString().length && isNaN(+singleInput[3].value);
+  const isNotValidPhoneNumber =
+    (singleInput[5].value.toString().length &&
+      !/\+[0-9]{6,12}/.test(singleInput[5].value.toString())) ||
+    singleInput[5].value.toString().length > 15;
+  const isNotValidEmail =
+    singleInput[6].value.toString().length &&
+    // eslint-disable-next-line no-control-regex, no-useless-escape
+    !/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@([a-z]{1})((?=.*[a-z|_])(?=.*[.])(?!.*\.\.)(?!.*\_\_)(?!.*\.\_)(?!.*\_\.)(?!.*\s).{1,61})([a-z]{1})$/.test(
+      singleInput[6].value.toString()
+    );
+  const isNotValidAddress = singleInput[4].value.toString().length > 255;
+  const isNotValidExternalCode = duoInputs[1].value.toString().length > 16;
+  const isNotValidRepresentative = duoInputs[0].value.toString().length > 50;
+
+  return (
+    isNotValidName ||
+    isNotValidPostalCode ||
+    isNotValidPhoneNumber ||
+    isNotValidEmail ||
+    isNotValidAddress ||
+    isNotValidExternalCode ||
+    isNotValidRepresentative
+  );
+});
+
+const isSubmitDisable = computed(() => {
+  return (
+    isNotValidToSubmit.value || !singleInput[0].value || !singleInput[1].value
+  );
+});
 //#endregion
 
 //#region reactive

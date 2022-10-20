@@ -164,7 +164,7 @@
   "back_to_list": "一覧表に戻る",
   "employee_code": "社員番号",
   "add_new_staff": "新規スタッフ追加",
-  "name_kana": "カタカナ",
+  "name_kana": "名称 (かな)",
   "telephone": "電話番号",
   "work_place": "所属",
   "type": "タイプ",
@@ -226,5 +226,8 @@
   "collection_base_lbl_type_1": "収集",
   "collection_base_lbl_type_2": "生産",
   "collection_base_lbl_type_3": "収集・生産",
-  "edit_collection_base": "回収拠点の編集"
+  "edit_collection_base": "回収拠点の編集",
+  "customer_created_successfully": "取引先が作成されました",
+  "customer_create_failed": "作成に失敗しました",
+  "external_code": "外部連携コード"
 }

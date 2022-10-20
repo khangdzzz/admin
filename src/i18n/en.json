@@ -234,5 +234,8 @@
   "collection_base_lbl_type_1": "Collection",
   "collection_base_lbl_type_2": "Manufacture",
   "collection_base_lbl_type_3": "Both",
-  "edit_collection_base": "Edit collection base"
+  "edit_collection_base": "Edit collection base",
+  "customer_created_successfully": "Customer is created successfully",
+  "customer_create_failed": "Create failed",
+  "external_code": "External code"
 }
