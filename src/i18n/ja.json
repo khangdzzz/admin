@@ -229,5 +229,6 @@
   "edit_collection_base": "回収拠点の編集",
   "customer_created_successfully": "取引先が作成されました",
   "customer_create_failed": "作成に失敗しました",
-  "external_code": "外部連携コード"
+  "external_code": "外部連携コード",
+  "customer_detail": "取引先詳細"
 }

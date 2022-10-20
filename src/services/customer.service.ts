@@ -36,3 +36,23 @@ export async function createCustomer(
     res
   };
 }
+
+export async function getCustomerDetail(
+  id: number
+): Promise<ServiceResponse<Customer>> {
+  const [err, res] = await transformRequest<Customer>({
+    url: `/workplace/customer/${id}`,
+    method: "get"
+  });
+
+  if (!res && err) {
+    return {
+      error: (err?.response?.data as { details: { msg: string }[] }).details[0]
+        .msg
+    };
+  }
+
+  return {
+    res
+  };
+}

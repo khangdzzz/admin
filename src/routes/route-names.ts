@@ -10,6 +10,7 @@ export const routeNames = {
   customerList: "CUSTOMER_LIST",
   createNewCustomer: "CREATE_NEW_CUSTOMER",
   editCustomer: "EDIT_CUSTOMER",
+  customerDetail: "CUSTOMER_DETAIL",
   vehicleManagement: "VEHICLE_MANAGEMENT",
   realTimeDynamics: "REAL_TIME_DYNAMICS",
   vehicle: "VEHICLE",
