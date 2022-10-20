@@ -156,19 +156,19 @@
 
 <script setup lang="ts">
 import locationIcon from "@/assets/icons/ic_collection_base.png";
+import { i18n } from "@/i18n";
 import CustomForm from "@/modules/base/components/CustomForm.vue";
+import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import { FormData } from "@/modules/staff-management/models/collection-base.model";
 import { formData as reactiveFormData } from "@/modules/staff-management/pages/create-collection-base-form";
-import { computed, reactive, ref, inject, onBeforeUnmount } from "vue";
-import MessengerParamModel from "@/modules/base/models/messenger-param.model";
+import { router } from "@/routes";
+import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
 import { commonStore } from "@/stores";
-import { routeNames } from "@/routes/route-names";
-import { router } from "@/routes";
 import { makeUniqueName } from "@/utils/string.helper";
 import { message } from "ant-design-vue";
-import { i18n } from "@/i18n";
+import { computed, inject, onBeforeUnmount, reactive, ref } from "vue";
 //#region import
 //#endregion
 
@@ -177,7 +177,7 @@ import { i18n } from "@/i18n";
 
 //#region variables
 const userStore = commonStore();
-const formData = reactive<FormData>(reactiveFormData);
+const formData = reactive<FormData>(reactiveFormData());
 const collectionBaseType = ref<number>(1);
 const center = ref<number[]>([40, 40]);
 const projection = ref<string>("EPSG:4326");
