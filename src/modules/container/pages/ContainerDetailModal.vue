@@ -146,7 +146,7 @@ onMounted(async () => {
 const downloadQR = async (): Promise<void> => {
   const anchor = document.createElement("a");
   anchor.href = urlQrCode.value;
-  anchor.download = `${detail.containerName} - ${detail.id}`;
+  anchor.download = `${detail.containerName}`;
   document.body.appendChild(anchor);
   anchor.click();
   document.body.removeChild(anchor);
