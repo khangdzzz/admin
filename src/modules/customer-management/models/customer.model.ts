@@ -1,12 +1,12 @@
 export interface CustomerModel {
-  tenantId: number;
+  tenantId?: number;
   name: string;
-  id: number;
-  key: number;
-  email: string;
-  phoneNumber: string;
-  address: string;
-  postalCode: string;
+  id?: number;
+  key?: number;
+  email: string | null;
+  phoneNumber: string | null;
+  address: string | null;
+  postalCode: string | null;
 }
 
 export interface Customer {

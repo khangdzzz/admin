@@ -14,7 +14,8 @@ export const columns = [
   {
     title: i18n.global.t("address"),
     dataIndex: "address",
-    key: "address"
+    key: "address",
+    width: "33%"
   },
   {
     title: i18n.global.t("phone_number"),
@@ -28,6 +29,7 @@ export const columns = [
   },
   {
     key: "action",
-    dataIndex: "action"
+    dataIndex: "action",
+    width: "120px"
   }
 ];
