@@ -79,7 +79,11 @@
         </template>
         <template #bodyCell="{ column, record }">
           <template v-if="column.key === 'action'">
-            <img src="@/assets/icons/ic_user.svg" class="action-icon" />
+            <img
+              src="@/assets/icons/ic_user.svg"
+              class="action-icon"
+              @click="($event) => handleClickUser($event)"
+            />
             <img
               src="@/assets/icons/ic_btn_edit.svg"
               class="action-icon"
@@ -405,6 +409,11 @@ const handleClickEdit = (e: MouseEvent, id: string): void => {
       id
     }
   });
+};
+
+const handleClickUser = (e: MouseEvent): void => {
+  if (e && e.stopPropagation) e.stopPropagation();
+  //
 };
 //#endregion
 
