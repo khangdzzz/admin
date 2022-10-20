@@ -40,13 +40,15 @@
           <template #icon>
             <img
               src="@/assets/icons/ic_download.svg"
-              :class="[ContainerDetailModal.btnIcon, 'my-8']"
+              :class="[ContainerDetailModal.btnIcon, 'mb-7']"
             />
           </template>
-          {{ $t("download_btn") }}
+          <span :class="ContainerDetailModal.btnText">{{
+            $t("download_btn")
+          }}</span>
         </a-button>
       </div>
-      <div :class="[ContainerDetailModal.infomaitionVehicle]">
+      <div :class="[ContainerDetailModal.infomaitionVehicle, 'mt-10']">
         <div
           v-for="item in information"
           :key="item.title"
@@ -56,7 +58,7 @@
             {{ item.title }}
           </div>
           <div :class="[ContainerDetailModal.value]">{{ item.value }}</div>
-          <a-divider style="border-color: #e8e8e8; margin: 10px 0" />
+          <a-divider style="border-color: #e8e8e8; margin: 10px 0 15px" />
         </div>
       </div>
     </div>
@@ -216,10 +218,17 @@ const downloadQR = async (): Promise<void> => {
       width: 140px;
       height: 32px;
       margin-bottom: 10px;
+      border: 1px solid #07a0b8;
+      border-radius: 6px;
+      padding: 7px;
       .btnIcon {
         width: 16px;
         height: 16px;
         margin-right: 10px;
+      }
+      .btnText {
+        position: relative;
+        top: -2px;
       }
       span {
         font-weight: 600;

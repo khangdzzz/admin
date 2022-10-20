@@ -54,6 +54,7 @@
   "import_btn": "Import",
   "export_btn": "Export",
   "add_new_type_btn": "Add",
+  "download_btn": "ダウンロード",
   "menu_lbl_hello": "こんにちは, {name}",
   "menu_lbl_dashboard": "ダッシュボード",
   "menu_lbl_dashboard_internal": "内部",
