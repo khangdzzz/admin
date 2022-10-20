@@ -28,7 +28,7 @@ export const formData = (): FormData => {
           },
           {
             max: 50,
-            message: i18n.global.t("max_length_input", currentLanguage, {
+            message: i18n.global.t("max_length_input_text", currentLanguage, {
               maxLength: 50
             }),
             trigger: "change"
@@ -56,7 +56,7 @@ export const formData = (): FormData => {
           },
           {
             max: 50,
-            message: i18n.global.t("max_length_input", currentLanguage, {
+            message: i18n.global.t("max_length_input_text", currentLanguage, {
               maxLength: 50
             }),
             trigger: "change"
@@ -123,7 +123,7 @@ export const formData = (): FormData => {
           },
           {
             max: 255,
-            message: i18n.global.t("max_length_input", currentLanguage, {
+            message: i18n.global.t("max_length_input_text", currentLanguage, {
               maxLength: 255
             }),
             trigger: "change"
@@ -145,7 +145,7 @@ export const formData = (): FormData => {
         rules: [
           {
             max: 15,
-            message: i18n.global.t("max_length_input", currentLanguage, {
+            message: i18n.global.t("max_length_input_text", currentLanguage, {
               maxLength: 15
             }),
             trigger: "change"
@@ -193,7 +193,7 @@ export const formData = (): FormData => {
         rules: [
           {
             max: 50,
-            message: i18n.global.t("max_length_input", currentLanguage, {
+            message: i18n.global.t("max_length_input_text", currentLanguage, {
               maxLength: 50
             }),
             trigger: "change"
