@@ -1,6 +1,7 @@
 <template>
   <div
-    class="create-container fill-height fill-width d-flex justify-center align-center">
+    class="create-container fill-height fill-width d-flex justify-center align-center"
+  >
     <a-card class="create-container__card px-20 py-30">
       <div class="create-container__title d-flex justify-center align-center">
         Add new container
@@ -26,18 +27,21 @@
         <CustomForm
           :form-data="formData"
           @on-focus="handleOnFocus"
-          @on-blur="handleOnBlur"></CustomForm>
+          @on-blur="handleOnBlur"
+        ></CustomForm>
       </a-form>
       <div class="d-flex justify-center align-center gap-20">
         <a-button
           class="create-container__btn-style create-container__cancel-btn"
           type="secondary"
-          @click="handleCancel">
+          @click="handleCancel"
+        >
           {{ $t("btn_cancel") }}
         </a-button>
         <a-button
           class="create-container__btn-style create-container__submit-btn"
-          type="primary">
+          type="primary"
+        >
           {{ $t("btn_submit") }}
         </a-button>
       </div>
@@ -107,16 +111,16 @@ const formData = ref([
     placeHolder: "container_weight",
     label: "container_weight",
     name: "weight",
-    inline:true,
+    inline: true,
     disabled: false,
-    spaceStyle:{
-      display:'inline-block',
-      width:'16px'
+    spaceStyle: {
+      display: "inline-block",
+      width: "16px"
     },
     rules: [
       {
         max: 10,
-        message: i18n.global.t("max_length_input", { maxLength: 10 })
+        message: i18n.global.t("max_length_input_number", { maxLength: 10 })
       },
       {
         pattern: /^\d*$/,
@@ -133,12 +137,12 @@ const formData = ref([
     placeHolder: "container_capacity",
     label: "container_capacity",
     name: "capacity",
-    inline:true,
+    inline: true,
     disabled: false,
     rules: [
       {
         max: 50,
-        message: i18n.global.t("max_length_input", { maxLength: 50 })
+        message: i18n.global.t("max_length_input_number", { maxLength: 50 })
       }
     ],
     required: false,
