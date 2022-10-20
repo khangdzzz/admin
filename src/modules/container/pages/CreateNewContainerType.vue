@@ -90,7 +90,7 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
         {
           max: 50,
           trigger: ["blur", "change"],
-          message: i18n.global.t("max_length_input", { maxLength: 50 })
+          message: i18n.global.t("max_length_input_text", { maxLength: 50 })
         }
       ]
     }
