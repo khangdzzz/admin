@@ -129,6 +129,12 @@ const routes: RouteRecordRaw[] = [
         name: routeNames.editCustomer,
         component: () =>
           import("@/modules/customer-management/pages/EditCustomer.vue")
+      },
+      {
+        path: "detail/:id",
+        name: routeNames.customerDetail,
+        component: () =>
+          import("@/modules/customer-management/pages/CustomerDetail.vue")
       }
     ]
   },

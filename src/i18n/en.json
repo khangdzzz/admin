@@ -237,5 +237,6 @@
   "edit_collection_base": "Edit collection base",
   "customer_created_successfully": "Customer is created successfully",
   "customer_create_failed": "Create failed",
-  "external_code": "External code"
+  "external_code": "External code",
+  "customer_detail": "Customer detail"
 }
