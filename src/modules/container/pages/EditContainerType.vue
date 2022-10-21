@@ -173,7 +173,7 @@ const handleSubmit = async (): Promise<void> => {
     }
     messenger({
       title: "edit_failed",
-      message: "create_vehicle_type_msg_create_fail_message",
+      message: "",
       type: MessengerType.Error
     });
   }

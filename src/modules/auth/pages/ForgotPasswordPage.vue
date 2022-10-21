@@ -53,14 +53,14 @@ const handlePopupErrorMsg = (errorName: string): void => {
     case "LimitExceededException":
       messenger({
         title: "forgot_password_attempt_limit_exceeded_title",
-        message: "forgot_password_attempt_limit_exceeded_msg",
+        message: "",
         type: MessengerType.Error
       });
       break;
     default:
       messenger({
         title: "forgot_password_error_popup_lbl_title",
-        message: "forgot_password_error_popup_lbl_message",
+        message: "",
         type: MessengerType.Error
       });
   }
@@ -102,7 +102,7 @@ const onSetNewPassword = (data: { code: string; password: string }): void => {
       isLoading.value = false;
       messenger({
         title: "forgot_password_reset_successfully_lbl_title",
-        message: "forgot_password_reset_successfully_lbl_message",
+        message: "",
         type: MessengerType.Success,
         callback: (isConfirm: boolean) => {
           isConfirm;

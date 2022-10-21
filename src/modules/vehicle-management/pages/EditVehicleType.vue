@@ -168,7 +168,7 @@ const handleFinish = async (): Promise<void> => {
     }
     messenger({
       title: "edit_vehicle_type_successfully",
-      message: "please_try_again",
+      message: "",
       type: MessengerType.Error,
       callback: (isConfirm: boolean) => {
         isConfirm;

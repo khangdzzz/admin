@@ -283,7 +283,7 @@ const handleSubmit = async (): Promise<void> => {
   } else {
     messenger({
       title: "popup_create_fail_title",
-      message: "popup_create_fail_message",
+      message: "",
       type: MessengerType.Error
     });
   }
