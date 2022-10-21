@@ -262,7 +262,7 @@ const onDeleteContainerType = async (deleteIds: number[]): Promise<void> => {
   if (!isSuccess) {
     messenger({
       title: "popup_delete_fail_lbl_title",
-      message: "popup_delete_fail_lbl_message",
+      message: "",
       type: MessengerType.Error
     });
     return;

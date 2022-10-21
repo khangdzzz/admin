@@ -333,7 +333,7 @@ const onCreate = async (): Promise<void> => {
   } else {
     messenger({
       title: "edit_failed",
-      message: "please_try_again",
+      message: "",
       type: MessengerType.Error
     });
   }

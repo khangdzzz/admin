@@ -147,7 +147,7 @@ const createVehicleType = async (): Promise<void> => {
     }
     messenger({
       title: "create_vehicle_type_msg_create_fail_title",
-      message: "create_vehicle_type_msg_create_fail_message",
+      message: "",
       type: MessengerType.Error
     });
   }

@@ -275,7 +275,7 @@ const onCreate = async (): Promise<void> => {
     }
     messenger({
       title: "create_failed",
-      message: "please_try_again",
+      message: "",
       type: MessengerType.Error
     });
   }
