@@ -230,10 +230,12 @@ const routes: RouteRecordRaw[] = [
           )
       },
       {
-        path: "create-new",
-        name: routeNames.createCollectionBase,
+        path: "list",
+        name: routeNames.collectionPointManagement,
         component: () =>
-          import("@/modules/staff-management/pages/CreateCollectionBase.vue")
+          import(
+            "@/modules/collection-point-management/pages/CollectionPointList.vue"
+          )
       },
     ]
   },

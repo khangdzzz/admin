@@ -9,7 +9,7 @@ import * as collectionBase from "./collection-base.service";
 import * as customer from "./customer.service";
 import * as constants from "./constants";
 import * as customerManagement from "./customer-management.service";
-import * as collectionPoint from "./collection-point.service"
+import * as collectionPoint from "./collection-point.service";
 export const service = {
   auth,
   localStorage,
