@@ -36,29 +36,29 @@
         :scroll="{ y: tableMaxHeight }" :customRow="customRow">
         <template #headerCell="{ column }">
           <template v-if="column.key === 'index'">
-            <span>{{ $t(column.title) }}</span>
+            <span class="header-title">{{ $t(column.title) }}</span>
           </template>
           <template v-if="column.key === 'name'">
             <div @click="changeSortName()">
-              <span>{{ $t(column.title) }}</span>
+              <span class="header-title">{{ $t(column.title) }}</span>
               <SortView class="mx-12" :sort="sortName" />
             </div>
           </template>
           <template v-if="column.key === 'postal_code'">
             <div @click="changeSortPostalCode()">
-              <span>{{ $t(column.title) }}</span>
+              <span class="header-title">{{ $t(column.title) }}</span>
               <SortView class="mx-12" :sort="sortPostalCode" />
             </div>
           </template>
           <template v-if="column.key === 'address'">
             <div @click="changeSortAdress()">
-              <span>{{ $t(column.title) }}</span>
+              <span class="header-title">{{ $t(column.title) }}</span>
               <SortView class="mx-12" :sort="sortAddress" />
             </div>
           </template>
           <template v-if="column.key === 'telephone'">
             <div @click="changeSortTelephone()">
-              <span>{{ $t(column.title) }}</span>
+              <span class="header-title">{{ $t(column.title) }}</span>
               <SortView class="mx-12" :sort="sortTelephone" />
             </div>
           </template>

@@ -1,9 +1,17 @@
 <template>
   <div class="fill-height d-flex flex-column">
-    <ListSearchHeader :title="$t('customer')" v-model:model-value.sync="searchString">
+    <ListSearchHeader
+      :title="$t('customer')"
+      v-model:model-value.sync="searchString"
+    >
       <template #action>
-        <a-button class="btn-action color-btn-delete" ghost type="primary" v-if="selectedKeys.length > 0"
-          @click="(event: MouseEvent)=> deleteCustomer(event, undefined)">
+        <a-button
+          class="btn-action color-btn-delete"
+          ghost
+          type="primary"
+          v-if="selectedKeys.length > 0"
+          @click="(event: MouseEvent)=> deleteCustomer(event, undefined)"
+        >
           <template #icon>
             <IcTrash class="btn-icon" :color="'#F54E4E'" />
           </template>
@@ -30,39 +38,46 @@
       </template>
     </ListSearchHeader>
     <div class="customer-list__table-container mx-30">
-      <a-table :row-selection="rowSelection" :scroll="{ y: tableMaxHeight }" :columns="columns" :data-source="data"
-        :pagination="false" v-if="!isLoading && data && data.length" :customRow="customRow">
+      <a-table
+        :row-selection="rowSelection"
+        :scroll="{ y: tableMaxHeight }"
+        :columns="columns"
+        :data-source="data"
+        :pagination="false"
+        v-if="!isLoading && data && data.length"
+        :customRow="customRow"
+      >
         <template #headerCell="{ column }">
           <template v-if="column.key === 'name'">
             <div class="header-title" @click="changeSortName()">
-              <span>{{ $t(column.title) }}</span>
+              <span class="header-title">{{ $t(column.title) }}</span>
               <SortView class="mx-12" :sort="sortName" />
             </div>
           </template>
 
           <template v-if="column.key === 'postalCode'">
             <div class="header-title" @click="changeSortPostalCode()">
-              <span>{{ $t(column.title) }}</span>
+              <span class="header-title">{{ $t(column.title) }}</span>
               <SortView class="mx-12" :sort="sortPostalCode" />
             </div>
           </template>
           <template v-if="column.key === 'address'">
             <div class="header-title" @click="changeSortAddress()">
-              <span>{{ $t(column.title) }}</span>
+              <span class="header-title">{{ $t(column.title) }}</span>
               <SortView class="mx-12" :sort="sortAddress" />
             </div>
           </template>
 
           <template v-if="column.key === 'phoneNumber'">
             <div class="header-title" @click="changeSortPhoneNumber()">
-              <span>{{ $t(column.title) }}</span>
+              <span class="header-title">{{ $t(column.title) }}</span>
               <SortView class="mx-12" :sort="sortPhoneNumber" />
             </div>
           </template>
 
           <template v-if="column.key === 'email'">
             <div class="header-title" @click="changeSortEmail()">
-              <span>{{ $t(column.title) }}</span>
+              <span class="header-title">{{ $t(column.title) }}</span>
               <SortView class="mx-12" :sort="sortEmail" />
             </div>
           </template>
@@ -70,19 +85,26 @@
         <template #bodyCell="{ column, record }">
           <template v-if="column.key === 'action'">
             <a>
-              <img src="@/assets/icons/ic_btn_edit.svg" class="action-icon,'ml-0'"
-                @click="(event: MouseEvent) => handleClickEdit(event, record.key)" />
+              <img
+                src="@/assets/icons/ic_btn_edit.svg"
+                class="action-icon,'ml-0'"
+                @click="(event: MouseEvent) => handleClickEdit(event, record.key)"
+              />
             </a>
             <a @click="(event) => deleteCustomer(event, record.id)">
-              <img src="@/assets/icons/ic_btn_delete.svg" class="action-icon" /></a>
+              <img src="@/assets/icons/ic_btn_delete.svg" class="action-icon"
+            /></a>
           </template>
           <template v-if="column.key === 'name'">
-            <a-tooltip overlayClassName="tooltip-name-container" placement="topLeft">
+            <a-tooltip
+              overlayClassName="tooltip-name-container"
+              placement="topLeft"
+            >
               <template #title>
                 <span class="tooltip-name-style">
                   <span class="tooltip-name-title">External code: </span>
                   <span class="tooltip-name-description">{{
-                  record.externalCode
+                    record.externalCode
                   }}</span>
                 </span>
               </template>
@@ -91,11 +113,22 @@
           </template>
         </template>
       </a-table>
-      <ThePagination :isShowPagination="!isLoading && data && !!data.length" :currentPage="pageOption.currentPage"
-        :pageSize="pageOption.pageSize" :total="pageOption.total" :isShowPrevBtn="isShowPrevBtn()"
-        :isShowNextBtn="isShowNextBtn()" @onShowSizeChange="onShowSizeChange" @onChange="onChange" />
-      <NoData :value="searchValue" :is-loading="isLoading" @onClick="handleBackToList"
-        v-if="isLoading || !data || !data.length" />
+      <ThePagination
+        :isShowPagination="!isLoading && data && !!data.length"
+        :currentPage="pageOption.currentPage"
+        :pageSize="pageOption.pageSize"
+        :total="pageOption.total"
+        :isShowPrevBtn="isShowPrevBtn()"
+        :isShowNextBtn="isShowNextBtn()"
+        @onShowSizeChange="onShowSizeChange"
+        @onChange="onChange"
+      />
+      <NoData
+        :value="searchValue"
+        :is-loading="isLoading"
+        @onClick="handleBackToList"
+        v-if="isLoading || !data || !data.length"
+      />
     </div>
   </div>
 </template>
@@ -435,7 +468,7 @@ watch(searchValue, onSearchChange);
     }
   }
 
-  .ant-table-tbody>tr.ant-table-row-selected:hover>td {
+  .ant-table-tbody > tr.ant-table-row-selected:hover > td {
     background: #f7f7f7;
   }
 
