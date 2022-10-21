@@ -1,17 +1,9 @@
 <template>
   <div class="d-flex flex-column">
-    <ListSearchHeader
-      :title="$t('staff_collection_base')"
-      v-model:model-value.sync="searchString"
-    >
+    <ListSearchHeader :title="$t('staff_collection_base')" v-model:model-value.sync="searchString">
       <template #action>
-        <a-button
-          class="btn-action color-btn-delete"
-          type="primary"
-          @click="($event: MouseEvent) => deleteCollectionBase($event, undefined)"
-          ghost
-          v-if="selectedKeys.length > 0"
-        >
+        <a-button class="btn-action color-btn-delete" type="primary"
+          @click="($event: MouseEvent) => deleteCollectionBase($event, undefined)" ghost v-if="selectedKeys.length > 0">
           <template #icon>
             <IcTrash class="btn-icon" :color="'#F54E4E'" />
           </template>
@@ -40,14 +32,8 @@
   </div>
   <div class="table-container mx-30 mb-30">
     <div v-if="!isLoading && data && data.length">
-      <a-table
-        :row-selection="rowSelection"
-        :columns="columns"
-        :data-source="data"
-        :pagination="false"
-        :scroll="{ y: tableMaxHeight }"
-        :customRow="customRow"
-      >
+      <a-table :row-selection="rowSelection" :columns="columns" :data-source="data" :pagination="false"
+        :scroll="{ y: tableMaxHeight }" :customRow="customRow">
         <template #headerCell="{ column }">
           <template v-if="column.key === 'index'">
             <span>{{ $t(column.title) }}</span>
@@ -79,41 +65,20 @@
         </template>
         <template #bodyCell="{ column, record }">
           <template v-if="column.key === 'action'">
-            <img
-              src="@/assets/icons/ic_user.svg"
-              class="action-icon"
-              @click="($event) => handleClickUser($event)"
-            />
-            <img
-              src="@/assets/icons/ic_btn_edit.svg"
-              class="action-icon"
-              @click="($event) => handleClickEdit($event, record.id)"
-            />
-            <img
-              src="@/assets/icons/ic_btn_delete.svg"
-              class="action-icon"
-              @click="($event) => deleteCollectionBase($event, record.id)"
-            />
+            <img src="@/assets/icons/ic_user.svg" class="action-icon" @click="($event) => handleClickUser($event)" />
+            <img src="@/assets/icons/ic_btn_edit.svg" class="action-icon"
+              @click="($event) => handleClickEdit($event, record.id)" />
+            <img src="@/assets/icons/ic_btn_delete.svg" class="action-icon"
+              @click="($event) => deleteCollectionBase($event, record.id)" />
           </template>
         </template>
       </a-table>
-      <ThePagination
-        :isShowPagination="!isLoading && data && !!data.length"
-        :currentPage="pageOption.currentPage"
-        :pageSize="pageOption.pageSize"
-        :total="pageOption.total"
-        :isShowPrevBtn="isShowPrevBtn()"
-        :isShowNextBtn="isShowNextBtn()"
-        @onShowSizeChange="onShowSizeChange"
-        @onChange="onChange"
-      />
+      <ThePagination :isShowPagination="!isLoading && data && !!data.length" :currentPage="pageOption.currentPage"
+        :pageSize="pageOption.pageSize" :total="pageOption.total" :isShowPrevBtn="isShowPrevBtn()"
+        :isShowNextBtn="isShowNextBtn()" @onShowSizeChange="onShowSizeChange" @onChange="onChange" />
     </div>
-    <NoData
-      :value="searchString"
-      :is-loading="isLoading"
-      @onClick="handleBackToList"
-      v-if="isLoading || !data || !data.length"
-    />
+    <NoData :value="searchString" :is-loading="isLoading" @onClick="handleBackToList"
+      v-if="isLoading || !data || !data.length" />
   </div>
 </template>
 
@@ -448,14 +413,20 @@ watch(searchString, onSearchChange);
   flex-grow: 1;
   height: 100%;
 }
+
 .action-icon {
   margin-left: 30px;
   cursor: pointer;
 }
+
 :deep() {
-  .ant-table-tbody > tr.ant-table-row-selected > td {
+  .ant-table-tbody>tr.ant-table-row-selected>td {
     background: $grey-2;
     border-color: rgba(0, 0, 0, 0.03);
+  }
+
+  .ant-table-row {
+    cursor: pointer;
   }
 }
 </style>
@@ -465,17 +436,20 @@ watch(searchString, onSearchChange);
   min-width: $width;
   height: $height;
 }
+
 @mixin text($fontWeight, $fontSize, $lineHeight) {
   font-weight: $fontWeight;
   font-size: $fontSize;
   line-height: $lineHeight;
 }
+
 .pagination {
   text-align: start;
   background-color: #fff;
   height: 60px;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
+
   .btnPagination {
     @include size-btn(82px, 40px);
     border-color: #eaeaea;
