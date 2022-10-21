@@ -1,17 +1,9 @@
 <template>
   <div class="fill-height d-flex flex-column">
-    <ListSearchHeader
-      :title="$t('customer')"
-      v-model:model-value.sync="searchString"
-    >
+    <ListSearchHeader :title="$t('customer')" v-model:model-value.sync="searchString">
       <template #action>
-        <a-button
-          class="btn-action color-btn-delete"
-          ghost
-          type="primary"
-          v-if="selectedKeys.length > 0"
-          @click="deleteCustomer(undefined)"
-        >
+        <a-button class="btn-action color-btn-delete" ghost type="primary" v-if="selectedKeys.length > 0"
+          @click="(event: MouseEvent)=> deleteCustomer(event, undefined)">
           <template #icon>
             <IcTrash class="btn-icon" :color="'#F54E4E'" />
           </template>
@@ -38,14 +30,8 @@
       </template>
     </ListSearchHeader>
     <div class="customer-list__table-container mx-30">
-      <a-table
-        :row-selection="rowSelection"
-        :scroll="{ y: tableMaxHeight }"
-        :columns="columns"
-        :data-source="data"
-        :pagination="false"
-        v-if="!isLoading && data && data.length"
-      >
+      <a-table :row-selection="rowSelection" :scroll="{ y: tableMaxHeight }" :columns="columns" :data-source="data"
+        :pagination="false" v-if="!isLoading && data && data.length" :customRow="customRow">
         <template #headerCell="{ column }">
           <template v-if="column.key === 'name'">
             <div class="header-title" @click="changeSortName()">
@@ -84,26 +70,19 @@
         <template #bodyCell="{ column, record }">
           <template v-if="column.key === 'action'">
             <a>
-              <img
-                src="@/assets/icons/ic_btn_edit.svg"
-                class="action-icon,'ml-0'"
-                @click="handleClickEdit(record.key)"
-              />
+              <img src="@/assets/icons/ic_btn_edit.svg" class="action-icon,'ml-0'"
+                @click="(event: MouseEvent) => handleClickEdit(event, record.key)" />
             </a>
-            <a @click="deleteCustomer(record.id)">
-              <img src="@/assets/icons/ic_btn_delete.svg" class="action-icon"
-            /></a>
+            <a @click="(event) => deleteCustomer(event, record.id)">
+              <img src="@/assets/icons/ic_btn_delete.svg" class="action-icon" /></a>
           </template>
           <template v-if="column.key === 'name'">
-            <a-tooltip
-              overlayClassName="tooltip-name-container"
-              placement="topLeft"
-            >
+            <a-tooltip overlayClassName="tooltip-name-container" placement="topLeft">
               <template #title>
                 <span class="tooltip-name-style">
                   <span class="tooltip-name-title">External code: </span>
                   <span class="tooltip-name-description">{{
-                    record.externalCode
+                  record.externalCode
                   }}</span>
                 </span>
               </template>
@@ -112,44 +91,33 @@
           </template>
         </template>
       </a-table>
-      <ThePagination
-        :isShowPagination="!isLoading && data && !!data.length"
-        :currentPage="pageOption.currentPage"
-        :pageSize="pageOption.pageSize"
-        :total="pageOption.total"
-        :isShowPrevBtn="isShowPrevBtn()"
-        :isShowNextBtn="isShowNextBtn()"
-        @onShowSizeChange="onShowSizeChange"
-        @onChange="onChange"
-      />
-      <NoData
-        :value="searchValue"
-        :is-loading="isLoading"
-        @onClick="handleBackToList"
-        v-if="isLoading || !data || !data.length"
-      />
+      <ThePagination :isShowPagination="!isLoading && data && !!data.length" :currentPage="pageOption.currentPage"
+        :pageSize="pageOption.pageSize" :total="pageOption.total" :isShowPrevBtn="isShowPrevBtn()"
+        :isShowNextBtn="isShowNextBtn()" @onShowSizeChange="onShowSizeChange" @onChange="onChange" />
+      <NoData :value="searchValue" :is-loading="isLoading" @onClick="handleBackToList"
+        v-if="isLoading || !data || !data.length" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 //#region import
-import SortView from "@/modules/common/components/SortView.vue";
-import NoData from "@/modules/base/components/NoData.vue";
 import IcTrash from "@/assets/icons/IcTrash.vue";
 import ListSearchHeader from "@/modules/base/components/ListSearchHeader.vue";
-import { routeNames, router } from "@/routes";
-import { computed, onMounted, reactive, ref, inject, watch } from "vue";
-import { columns } from "../models/CustomerListColumn";
+import NoData from "@/modules/base/components/NoData.vue";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
-import { service } from "@/services";
-import ThePagination from "@/modules/common/components/ThePagination.vue";
 import HeaderRef from "@/modules/base/models/search-header.model";
-import { Sort } from "@/modules/common/models/sort.enum";
-import { CustomerModel } from "../models/customer.model";
+import SortView from "@/modules/common/components/SortView.vue";
+import ThePagination from "@/modules/common/components/ThePagination.vue";
 import { Pagination } from "@/modules/common/models";
+import { Sort } from "@/modules/common/models/sort.enum";
+import { routeNames, router } from "@/routes";
+import { service } from "@/services";
 import { debounce } from "lodash";
+import { computed, inject, onMounted, reactive, ref, watch } from "vue";
+import { CustomerModel } from "../models/customer.model";
+import { columns } from "../models/CustomerListColumn";
 //#endregion
 
 //#region props
@@ -177,6 +145,22 @@ const sortEmail = ref<Sort>(Sort.None);
 const sortPhoneNumber = ref<Sort>(Sort.None);
 const sortAddress = ref<Sort>(Sort.None);
 const sortPostalCode = ref<Sort>(Sort.None);
+
+const customRow = (
+  record: CustomerModel
+): { onClick: (_event: PointerEvent) => void } => {
+  return {
+    onClick: (_event: PointerEvent): void => {
+      _event;
+      router.push({
+        name: routeNames.customerDetail,
+        params: {
+          id: record.id
+        }
+      });
+    }
+  };
+};
 //#endregion
 
 //#region hooks
@@ -297,7 +281,8 @@ const changeSortEmail = (): void => {
 const totalPages = (): number => {
   return Math.ceil(Number(pageOption.total) / Number(pageOption.pageSize));
 };
-const deleteCustomer = (id?: number): void => {
+const deleteCustomer = ($event: MouseEvent, id?: number): void => {
+  if ($event.stopPropagation) $event.stopPropagation();
   messenger({
     title: "popup_msg_confirm_delete",
     message: "",
@@ -346,7 +331,8 @@ const onSearchChange = debounce((): void => {
   selectedKeys.value = [];
   initialize();
 }, 500);
-const handleClickEdit = (id: string): void => {
+const handleClickEdit = ($event: MouseEvent, id: string): void => {
+  if ($event.stopPropagation) $event.stopPropagation();
   router.push({ name: routeNames.editCustomer, params: { id } });
 };
 
@@ -419,6 +405,7 @@ watch(searchValue, onSearchChange);
     height: 60px;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
+
     .btnPagination {
       @include size-btn(108px, 40px);
       padding: 0px 15px;
@@ -447,7 +434,8 @@ watch(searchValue, onSearchChange);
       text-align: right;
     }
   }
-  .ant-table-tbody > tr.ant-table-row-selected:hover > td {
+
+  .ant-table-tbody>tr.ant-table-row-selected:hover>td {
     background: #f7f7f7;
   }
 }
@@ -456,6 +444,7 @@ watch(searchValue, onSearchChange);
 .customer-list {
   &__table-container {
     height: 100%;
+
     .ant-checkbox-inner {
       &::after {
         top: 45%;
@@ -464,24 +453,29 @@ watch(searchValue, onSearchChange);
     }
   }
 }
+
 .tooltip-name-container .tooltip-name-style {
   color: $neutral-0;
 }
+
 .tooltip-name-container .ant-tooltip-inner {
   border-radius: 8px !important;
   background: rgba(0, 0, 0, 0.9);
   padding: 9px 8px;
 }
+
 .tooltip-name-container .tooltip-name-title {
   font-weight: 400;
   font-size: 14px;
   line-height: 18px;
 }
+
 .tooltip-name-container .tooltip-name-description {
   font-weight: 700;
   font-size: 16px;
   line-height: 20px;
 }
+
 .ant-tooltip-content {
   display: block !important;
 }
