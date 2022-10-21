@@ -41,7 +41,7 @@
             </template>
             <template v-if="column.key === 'name'">
               <div @click="changeSort(column.key)">
-                <span>{{ $t(column.title) }}</span>
+                <span class="header-title">{{ $t(column.title) }}</span>
                 <SortView
                   class="mx-12"
                   :sort="sort"

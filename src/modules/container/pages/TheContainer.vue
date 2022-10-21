@@ -53,26 +53,26 @@
         <template #headerCell="{ column }">
           <template v-if="column.key === 'name'">
             <div @click="changeSortName()">
-              <span>{{ $t(column.title) }}</span>
+              <span class="header-title">{{ $t(column.title) }}</span>
               <SortView class="mx-12" :sort="sortName" />
             </div>
           </template>
           <template v-if="column.key === 'type'">
             <div @click="changeSortType()">
-              <span>{{ $t(column.title) }}</span>
+              <span class="header-title">{{ $t(column.title) }}</span>
               <SortView class="mx-12" :sort="sortType" />
             </div>
           </template>
 
           <template v-if="column.key === 'capacity'">
             <div @click="changeSortCapacity()">
-              <span>{{ $t(column.title) }}</span>
+              <span class="header-title">{{ $t(column.title) }}</span>
               <SortView class="mx-12" :sort="sortCapacity" />
             </div>
           </template>
           <template v-if="column.key === 'weight'">
             <div @click="changeSortWeight()">
-              <span>{{ $t(column.title) }}</span>
+              <span class="header-title">{{ $t(column.title) }}</span>
               <SortView class="mx-12" :sort="sortWeight" />
             </div>
           </template>
