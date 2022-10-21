@@ -54,5 +54,8 @@ export const routeNames = {
   manufactureCategoryManagement: "MANUFACTURE_CATEGORY_MANAGEMENT",
   manufactureTaskManagement: "MANUFACTURE_TASK_MANAGEMENT",
   manufactureItemManagement: "MANUFACTURE_ITEM_MANAGEMENT",
-  roleManagement: "ROLE_MANAGEMENT"
+  roleManagement: "ROLE_MANAGEMENT",
+  collectionPointDetail: "COLLECTION_POINT_DETAIL",
+  listCollectionPoint: "LIST_COLLECTION_POINT",
+  editCollectionPoint: "CREATE_COLLECTION_POINT"
 };

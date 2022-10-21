@@ -216,12 +216,26 @@ const routes: RouteRecordRaw[] = [
   {
     path: "/collection-point-management",
     name: routeNames.collectionPointManagement,
-    component: () =>
-      import("@/modules/staff-management/pages/StaffManagement.vue"),
     beforeEnter: requireLoginGuard,
     meta: {
       layout: ScreenLayout.DEFAULT_LAYOUT
-    }
+    },
+    children: [
+      {
+        path: "detail/:id",
+        name: routeNames.collectionPointDetail,
+        component: () =>
+          import(
+            "@/modules/staff-management/pages/CollectionPointDetailPage.vue"
+          )
+      },
+      {
+        path: "create-new",
+        name: routeNames.createCollectionBase,
+        component: () =>
+          import("@/modules/staff-management/pages/CreateCollectionBase.vue")
+      },
+    ]
   },
   {
     path: "/container",

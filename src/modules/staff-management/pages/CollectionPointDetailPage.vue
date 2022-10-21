@@ -2,21 +2,21 @@
   <a-spin
     :spinning="isLoading"
     :tip="$t('common_loading')"
-    class="collection-base-detail__spin"
+    class="collection-point-detail__spin"
   >
-    <div class="d-flex flex-column collection-base-detail">
+    <div class="d-flex flex-column collection-point-detail">
       <ListSearchHeader
-        :title="$t('collection_base_detail')"
+        :title="$t('collection_point_detail')"
         :enable-search="false"
         :enable-back="true"
-        @goBack="goToCollectionBaseListPage"
+        @goBack="goToCollectionPointListPage"
       >
         <template #action>
           <a-button
             class="btn-action"
             ghost
             type="primary"
-            @click="editCollectionBase"
+            @click="editCollectionPoint"
           >
             <template #icon>
               <img src="@/assets/icons/ic_btn_edit.svg" class="btn-icon" />
@@ -27,7 +27,7 @@
             class="btn-action color-btn-delete"
             ghost
             type="primary"
-            @click="deleteCollectionBase"
+            @click="deleteCollectionPoint"
           >
             <template #icon>
               <IcTrash class="btn-icon" :color="'#F54E4E'" />
@@ -37,22 +37,22 @@
         </template>
       </ListSearchHeader>
       <div
-        class="collection-base-detail__content-wrapper d-flex justify-space-between gap-20 fill-height"
+        class="collection-point-detail__content-wrapper d-flex justify-space-between gap-20 fill-height"
       >
-        <div class="collection-base-detail__form-wrapper">
+        <div class="collection-point-detail__form-wrapper">
           <div
             v-for="(item, index) in informations"
             :key="index"
-            class="collection-base-detail__form-wrapper__row"
+            class="collection-point-detail__form-wrapper__row"
           >
-            <div class="collection-base-detail__form-wrapper__title">
+            <div class="collection-point-detail__form-wrapper__title">
               {{ $t(item.key) }}
             </div>
             <a-tooltip placement="top">
               <template #title>
                 <span>{{ item.value }}</span>
               </template>
-              <div class="collection-base-detail__form-wrapper__value">
+              <div class="collection-point-detail__form-wrapper__value">
                 {{ item.value }}
               </div>
             </a-tooltip>
@@ -60,13 +60,13 @@
             <a-divider style="border-color: #e8e8e8; margin: 10px 0" />
           </div>
         </div>
-        <div class="collection-base-detail__map-wrapper">
+        <div class="collection-point-detail__map-wrapper">
           <ol-map
             v-if="geoLocations.length"
             :loadTilesWhileAnimating="true"
             :loadTilesWhileInteracting="true"
             ref="map"
-            class="collection-base-detail__map-wrapper__map"
+            class="collection-point-detail__map-wrapper__map"
           >
             <ol-view
               ref="view"
@@ -109,16 +109,16 @@
             >
               <template v-slot="slotProps">
                 <div
-                  class="collection-base-detail__map-wrapper__overlay-content"
-                  v-if="slotProps && collectionBaseAddress"
+                  class="collection-point-detail__map-wrapper__overlay-content"
+                  v-if="slotProps && collectionPointAddress"
                 >
-                  {{ collectionBaseAddress }}
+                  {{ collectionPointAddress }}
                 </div>
               </template>
             </ol-overlay>
           </ol-map>
           <div
-            class="collection-base-detail__map-wrapper__position-detail"
+            class="collection-point-detail__map-wrapper__position-detail"
             v-if="geoLocations.length && !isLoading"
           >
             {{ geoLocations[0][0] }}, {{ geoLocations[0][1] }}
@@ -128,7 +128,7 @@
             />
           </div>
           <a-btn
-            class="collection-base-detail__map-wrapper__current-location-button"
+            class="collection-point-detail__map-wrapper__current-location-button"
             @click="focusCurrentLocation"
             v-if="!isLoading"
           >
@@ -143,16 +143,16 @@
 <script setup lang="ts">
 import locationIcon from "@/assets/icons/ic_collection_base.png";
 
-import ListSearchHeader from "@/modules/base/components/ListSearchHeader.vue";
-import { i18n } from "@/i18n";
-import { router } from "@/routes";
-import { routeNames } from "@/routes/route-names";
-import { message } from "ant-design-vue";
-import { inject, onMounted, ref } from "vue";
-import { service } from "@/services";
 import IcTrash from "@/assets/icons/IcTrash.vue";
+import { i18n } from "@/i18n";
+import ListSearchHeader from "@/modules/base/components/ListSearchHeader.vue";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
+import { service } from "@/services";
+import { message } from "ant-design-vue";
+import { inject, onMounted, ref } from "vue";
+import { useRoute } from "vue-router";
+import { router, routeNames } from "@/routes";
 //#region import
 //#endregion
 
@@ -169,68 +169,68 @@ const view = ref(null);
 const map = ref(null);
 const geoLocations = ref<number[][]>([]);
 const informations = ref<{ key: string; value: string }[]>([]);
-const collectionBaseAddress = ref<string>("");
+const collectionPointAddress = ref<string>("");
 const messenger: (param: MessengerParamModel) => void =
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   inject("messenger")!;
+
+const route = useRoute();
+const { id } = route.params;
 //#endregion
 
 //#region hooks
-onMounted(async (): Promise<void> => {
-  if (router.currentRoute.value.params?.id) {
-    isLoading.value = true;
-    const detail = await service.collectionBase.getCollectionBaseById(
-      +router.currentRoute.value.params?.id
-    );
-    if (detail) {
-      const {
-        name,
-        shortName,
-        kana,
-        longitude,
-        latitude,
-        collectionBaseType,
-        postalCode,
-        address,
-        telephone,
-        email: mail,
-        representative
-      } = detail;
-      const lat = latitude ? +latitude : 0;
-      const long = longitude ? +longitude : 0;
-      geoLocations.value.push([lat, long]);
-      setTimeout(() => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (view?.value as any)?.fit([lat, long, lat, long], {
-          maxZoom: 14
-        });
-      }, 300);
-      collectionBaseAddress.value = address || "";
-      informations.value = [
-        { key: "collection_base_lbl_name", value: name },
-        { key: "collection_base_lbl_short_name", value: shortName },
-        { key: "collection_base_lbl_name_kana", value: kana },
-        {
-          key: "collection_base_lbl_type",
-          value: i18n.global.t(
-            `collection_base_lbl_type_${collectionBaseType?.toString()}`
-          )
-        },
-        { key: "collection_base_lbl_postal_code", value: postalCode || "" },
-        { key: "collection_base_lbl_address", value: address || "" },
-        { key: "collection_base_lbl_phone_number", value: telephone || "" },
-        { key: "collection_base_lbl_email", value: mail || "" },
-        { key: "collection_base_lbl_representative", value: representative }
-      ];
-    }
-    isLoading.value = false;
-  }
+onMounted(() => {
+  init();
 });
 //#endregion
 
 //#region function
-const goToCollectionBaseListPage = (): void => {
-  router.push({ name: routeNames.listCollectionBase });
+const init = async (): Promise<void> => {
+  if (!id) return;
+
+  isLoading.value = true;
+  const res = await service.collectionPoint.getCollectionPointById(+id);
+  if (res) {
+    const {
+      customer___name,
+      name,
+      short_name,
+      name_kana,
+      postcode,
+      address,
+      telephone,
+      mail,
+      external_code,
+      latitude,
+      longitude
+    } = res;
+    const lat = latitude ? +latitude : 0;
+    const long = longitude ? +longitude : 0;
+    geoLocations.value.push([lat, long]);
+    setTimeout(() => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (view?.value as any)?.fit([lat, long, lat, long], {
+        maxZoom: 14
+      });
+    }, 300);
+    collectionPointAddress.value = address || "";
+    informations.value = [
+      { key: "customer", value: customer___name },
+      { key: "name", value: name },
+      { key: "short_name", value: short_name },
+      { key: "name_kana", value: name_kana },
+      { key: "postal_code", value: postcode || "" },
+      { key: "adress", value: address || "" },
+      { key: "phone_number", value: telephone || "" },
+      { key: "collection_base_lbl_email", value: mail || "" },
+      { key: "external_code", value: external_code }
+    ];
+  }
+  isLoading.value = false;
+};
+
+const goToCollectionPointListPage = (): void => {
+  router.push({ name: routeNames.listCollectionPoint });
 };
 
 const copyLocationToClipboard = (): void => {
@@ -242,18 +242,18 @@ const copyLocationToClipboard = (): void => {
   }
 };
 
-const editCollectionBase = (): void => {
-  if (!router.currentRoute.value.params?.id) return;
-  router.push({
-    name: routeNames.editCollectionBase,
-    params: {
-      id: router.currentRoute.value.params?.id
-    }
-  });
+const editCollectionPoint = (): void => {
+  if (!id) return;
+    router.push({
+      name: routeNames.editCollectionPoint,
+      params: {
+        id
+      }
+    });
 };
 
-const deleteCollectionBase = async (): Promise<void> => {
-  if (!router.currentRoute.value.params?.id) return;
+const deleteCollectionPoint = async (): Promise<void> => {
+  if (!id) return;
   messenger({
     title: "popup_msg_confirm_delete",
     message: "",
@@ -263,14 +263,14 @@ const deleteCollectionBase = async (): Promise<void> => {
       if (!isConfirm) {
         return;
       }
-      onDeleteCollectionBase(+router.currentRoute.value.params?.id);
+      onDeleteCollectionPoint(+id);
     }
   });
 };
 
-const onDeleteCollectionBase = async (deleteId: number): Promise<void> => {
+const onDeleteCollectionPoint = async (deleteId: number): Promise<void> => {
   isLoading.value = true;
-  const isSuccess = await service.collectionBase.deleteCollectionBaseById([
+  const isSuccess = await service.collectionPoint.deleteCollectionBaseById([
     deleteId
   ]);
   isLoading.value = false;
@@ -283,12 +283,12 @@ const onDeleteCollectionBase = async (deleteId: number): Promise<void> => {
     return;
   }
   messenger({
-    title: "collection_base_msg_delete_successfully",
+    title: "collection_point_msg_delete_successfully",
     message: "",
     type: MessengerType.Success,
     callback: (isConfirm: boolean): void => {
       isConfirm;
-      goToCollectionBaseListPage();
+      goToCollectionPointListPage();
     }
   });
 };
@@ -328,11 +328,11 @@ const focusCurrentLocation = (): void => {
 .ant-spin-nested-loading {
   height: 100%;
 }
-.collection-base-detail__spin {
+.collection-point-detail__spin {
   height: 100vh;
   width: 100%;
 }
-.collection-base-detail {
+.collection-point-detail {
   height: 100% !important;
   width: 100% !important;
   padding-bottom: 30px;
@@ -495,7 +495,7 @@ const focusCurrentLocation = (): void => {
 }
 
 :deep() {
-  .collection-base-detail {
+  .collection-point-detail {
     &__custom-input-wrapper {
       .ant-form-item {
         width: 100%;
