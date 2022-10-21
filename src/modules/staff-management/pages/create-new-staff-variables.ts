@@ -103,7 +103,7 @@ const radioOptions = {
       rules: [
         {
           max: 50,
-          message: i18n.global.t("max_length_input_text", { maxLength: 50 })
+          message: i18n.global.t("max_length_input", { maxLength: 50 })
         }
       ]
     },
@@ -128,7 +128,7 @@ const radioOptions = {
         },
         {
           max: 50,
-          message: i18n.global.t("max_length_input_text", { maxLength: 50 })
+          message: i18n.global.t("max_length_input", { maxLength: 50 })
         }
       ],
       required: true,
@@ -146,7 +146,7 @@ const radioOptions = {
       rules: [
         {
           max: 50,
-          message: i18n.global.t("max_length_input_text", { maxLength: 50 })
+          message: i18n.global.t("max_length_input", { maxLength: 50 })
         }
       ],
       required: false,
@@ -167,7 +167,7 @@ const radioOptions = {
         { required: true, message: "Please input your email!" },
         {
           max: 128,
-          message: i18n.global.t("max_length_input_text", { maxLength: 128 })
+          message: i18n.global.t("max_length_input", { maxLength: 128 })
         },
         { validator: validator.validateEmail, trigger: "change" }
       ]
@@ -183,7 +183,7 @@ const radioOptions = {
       rules: [
         {
           max: 15,
-          message: i18n.global.t("max_length_input_text", { maxLength: 15 })
+          message: i18n.global.t("max_length_input", { maxLength: 15 })
         },
         {
           pattern: /([0-9|\+]{1})([0-9])/g,

@@ -24,7 +24,7 @@ export const formData: FormData = {
         },
         {
           max: 50,
-          message: i18n.global.t("max_length_input_text", { maxLength: 50 }),
+          message: i18n.global.t("max_length_input", { maxLength: 50 }),
           trigger: "blur"
         }
       ],
@@ -50,7 +50,7 @@ export const formData: FormData = {
         },
         {
           max: 50,
-          message: i18n.global.t("max_length_input_text", { maxLength: 50 }),
+          message: i18n.global.t("max_length_input", { maxLength: 50 }),
           trigger: "blur"
         }
       ],
@@ -128,7 +128,7 @@ export const formData: FormData = {
         },
         {
           max: 50,
-          message: i18n.global.t("max_length_input_text", { maxLength: 50 }),
+          message: i18n.global.t("max_length_input", { maxLength: 50 }),
           trigger: "blur"
         }
       ],
@@ -220,7 +220,7 @@ export const formData: FormData = {
       rules: [
         {
           max: 11,
-          message: i18n.global.t("max_length_input_text", { maxLength: 11 }),
+          message: i18n.global.t("max_length_input", { maxLength: 11 }),
           trigger: "blur"
         }
       ]

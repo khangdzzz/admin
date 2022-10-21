@@ -171,7 +171,7 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
         },
         {
           max: 50,
-          message: i18n.global.t("max_length_input_text", { maxLength: 50 })
+          message: i18n.global.t("max_length_input", { maxLength: 50 })
         }
       ],
       required: true,
@@ -195,7 +195,7 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
         },
         {
           max: 50,
-          message: i18n.global.t("max_length_input_text", { maxLength: 50 })
+          message: i18n.global.t("max_length_input", { maxLength: 50 })
         }
       ],
       key: 2,
@@ -211,7 +211,7 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
       rules: [
         {
           max: 10,
-          message: i18n.global.t("max_length_input_text", { maxLength: 10 })
+          message: i18n.global.t("max_length_input", { maxLength: 10 })
         },
         {
           pattern: /^\d*$/,
@@ -232,7 +232,7 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
       rules: [
         {
           max: 50,
-          message: i18n.global.t("max_length_input_text", { maxLength: 50 })
+          message: i18n.global.t("max_length_input", { maxLength: 50 })
         }
       ],
       required: false,
