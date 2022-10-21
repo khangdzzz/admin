@@ -238,5 +238,7 @@
   "collection_point_msg_delete_successfully": "Collection base is deleted successfully",
   "collection_point": "Collection point",
   "delete_collection_point_successfully": "Collection point is deleted successfully",
-  "delete_collection_point_mutiple_successfully": "{length} Collection point is deleted successfully"
+  "delete_collection_point_mutiple_successfully": "{length} Collection point is deleted successfully",
+  "edit_customer_successfully":"Customer is edited successfully",
+  "edit_contaienr":" Edit customer"
 }

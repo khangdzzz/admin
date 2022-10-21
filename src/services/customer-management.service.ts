@@ -1,6 +1,5 @@
 import { Pagination, ServiceResponse } from "@/modules/common/models";
 import { Sort } from "@/modules/common/models/sort.enum";
-import { CustomerModel } from "@/modules/customer-management/models/customer.model";
 import { transformRequest } from "./base.service";
 import { PaginationDto } from "./dtos/common/pagination.dto";
 import {
@@ -8,6 +7,7 @@ import {
   CustomerResponseDto
 } from "./dtos/customer-management/customer.dto";
 import { DEFAULT_SORT_ORDER } from "@/services/constants";
+import CustomerModel, { CustomerDetail, EditCustomerDto } from "@/modules/customer-management/models/customer.model";
 // import { makeUniqueName } from "@/utils/string.helper";
 
 export async function fetchListCustomer(
@@ -24,8 +24,8 @@ export async function fetchListCustomer(
       sort === Sort.None
         ? DEFAULT_SORT_ORDER
         : sort === Sort.Asc
-        ? "name"
-        : "-name"
+          ? "name"
+          : "-name"
   };
 
   const [error, res] = await transformRequest<
@@ -65,4 +65,39 @@ export async function fetchListCustomer(
       };
     })
   };
+}
+
+
+export async function getCustomerById(
+  id: number
+): Promise<ServiceResponse<CustomerDetail>> {
+  const [error, res] = await transformRequest<CustomerDetail>({
+    url: `workplace/customer/${id}`,
+    method: "get"
+  });
+  if (error || !res) {
+    return {
+      error: (error?.response?.data as { details: { msg: string }[] })
+        .details[0].msg
+    };
+  }
+  return { res };
+}
+
+export async function editCustomerById(
+  id: number,
+  data: EditCustomerDto
+): Promise<ServiceResponse<EditCustomerDto>> {
+  const [error, res] = await transformRequest<EditCustomerDto>({
+    url: `workplace/customer/${id}`,
+    method: "put",
+    data
+  });
+  if (error || !res) {
+    return {
+      error: (error?.response?.data as { details: { msg: string }[] })
+        .details[0].msg
+    };
+  }
+  return { res };
 }

@@ -231,5 +231,7 @@
   "collection_point_msg_delete_successfully": "回収地点が削除されました",
   "collection_point": "回収地点 ",
   "delete_collection_point_successfully": "回収地点が削除されました",
-  "delete_collection_point_mutiple_successfully": "{length} 回収地点が削除されました"
+  "delete_collection_point_mutiple_successfully": "{length} 回収地点が削除されました",
+  "edit_customer_successfully":"取引先が編集されました",
+  "edit_contaienr":"取引先編集"
 }
