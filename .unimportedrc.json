@@ -11,6 +11,7 @@
     "src/modules/base/components/validator/validator.ts",
     "src/modules/common/helpers.ts",
     "src/modules/vehicle-management/pages/VehicleDetailModal.vue",
+    "src/services/dtos/container/container-detail-response.dto.ts",
     "src/stores/common.store.ts",
     "src/stores/index.ts",
     "src/stores/store-ids.ts"

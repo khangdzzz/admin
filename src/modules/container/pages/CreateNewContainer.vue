@@ -126,7 +126,7 @@ const formData = ref([
     rules: [
       {
         max: 10,
-        message: i18n.global.t("max_length_input_number", { maxLength: 10 }),
+        message: i18n.global.t("max_length_input", { maxLength: 10 }),
         trigger: "blur"
       },
 
@@ -160,7 +160,7 @@ const formData = ref([
     rules: [
       {
         max: 50,
-        message: i18n.global.t("max_length_input_number", { maxLength: 50 }),
+        message: i18n.global.t("max_length_input", { maxLength: 50 }),
         trigger: "blur"
       },
       {
