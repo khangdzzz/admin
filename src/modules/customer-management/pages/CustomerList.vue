@@ -438,6 +438,10 @@ watch(searchValue, onSearchChange);
   .ant-table-tbody>tr.ant-table-row-selected:hover>td {
     background: #f7f7f7;
   }
+
+  .ant-table-row {
+    cursor: pointer;
+  }
 }
 </style>
 <style lang="scss">
