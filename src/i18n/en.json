@@ -232,8 +232,11 @@
   "customer_create_failed": "Create failed",
   "external_code": "External code",
   "customer_detail": "Customer detail",
-  "edit_container_successfully":"Container is edited successfully",
-  "collection_point_detail":"Collection point detail",
-  "collection_base_detail":"Collection base detail",
-  "collection_point_msg_delete_successfully": "Collection base is deleted successfully"
+  "edit_container_successfully": "Container is edited successfully",
+  "collection_point_detail": "Collection point detail",
+  "collection_base_detail": "Collection base detail",
+  "collection_point_msg_delete_successfully": "Collection base is deleted successfully",
+  "collection_point": "Collection point",
+  "delete_collection_point_successfully": "Collection point is deleted successfully",
+  "delete_collection_point_mutiple_successfully": "{length} Collection point is deleted successfully"
 }
