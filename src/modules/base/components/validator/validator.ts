@@ -60,6 +60,22 @@ const validator = {
     }
 
     return Promise.resolve();
+  },
+
+  validateWeight: (_rule: Rule, value: number): Promise<void> => {
+    if (!value) {
+      return Promise.reject(
+        i18n.global.t("please_enter_input", {
+          fieldName: i18n.global.t("container_weight")
+        })
+      );
+    } else if (value && isNaN(value)) {
+      return Promise.reject(i18n.global.t("allow_input_number"));
+    } else if (value.toString().length > 10) {
+      return Promise.reject(i18n.global.t("max_length_input", { maxLength: 10 }));
+    }
+    return Promise.resolve();
   }
 };
+
 export default validator;

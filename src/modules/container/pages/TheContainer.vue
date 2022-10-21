@@ -157,7 +157,7 @@ import { service } from "@/services";
 import type { TableColumnType } from "ant-design-vue";
 import { debounce } from "lodash";
 import { computed, inject, onMounted, reactive, ref, watch } from "vue";
-import { Container, ResContainer } from "../models/container.model";
+import { ResContainer } from "../models/container.model";
 import ContainerDetailModal from "./ContainerDetailModal.vue";
 
 //#endregion===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆
@@ -176,7 +176,7 @@ const sortCapacity = ref<Sort>(Sort.None);
 
 const selectedKeys = ref<number[]>([]);
 
-const containerDetail = ref<Container | undefined>();
+const containerDetail = ref<ResContainer | undefined>();
 
 const columns: TableColumnType<ResContainer>[] = [
   {

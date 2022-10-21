@@ -1,52 +1,41 @@
 <template>
   <a-row type="flex" justify="center" align="middle" class="edit-container">
-    <div class="edit-container-content">
-      <h2 class="title">{{ $t("container_edit_container") }}</h2>
-      <div class="edit-form-container">
-        <a-form
-          :model="dynamicValidateForm"
-          name="editContainer"
-          autocomplete="off"
-        >
-          <a-form-item name="formDatavalue" :validateFirst="false">
-            <a-radio-group
-              disabled
-              v-model:value="ownerType"
-              class="radio-group"
-            >
-              <label class="label-radio disabled-color"
-                >{{ $t("container_owner_type") }}<span> *</span></label
-              >
-              <a-radio value="collectionBase">{{
-                $t("collection_base")
-              }}</a-radio>
-              <a-radio value="partner">{{ $t("partner") }}</a-radio>
-            </a-radio-group>
-          </a-form-item>
-          <CustomForm
-            :formData="dynamicValidateForm.formData"
-            @onBlur="handleOnBlur"
-            @onFocus="handleOnFocus"
-          ></CustomForm>
-        </a-form>
-      </div>
-      <a-row type="flex" justify="center" align="middle" gutter="20">
-        <a-col :span="12">
-          <a-button type="primary" @click="onCancel" ghost class="btn">{{
-            $t("btn_cancel")
-          }}</a-button>
-        </a-col>
-        <a-col :span="12">
-          <a-button
-            type="primary"
-            class="btn"
-            :disabled="!isValidated"
-            @click="onCreate"
-            >{{ $t("btn_submit") }}</a-button
+    <a-spin :tip="$t('common_loading')" :spinning="isLoadingInfo">
+      <div class="edit-container-content">
+        <h2 class="title">{{ $t("container_edit_container") }}</h2>
+        <div>
+          <a-form
+            ref="formRef"
+            :model="dynamicValidateForm"
+            name="editContainer"
+            layout="inline"
+            class="edit-form-container"
           >
-        </a-col>
-      </a-row>
-    </div>
+            <CustomForm
+              :formData="dynamicValidateForm.formData"
+              @onBlur="handleOnBlur"
+              @onFocus="handleOnFocus"
+            ></CustomForm>
+          </a-form>
+        </div>
+        <a-row type="flex" justify="center" align="middle" gutter="20">
+          <a-col :span="12">
+            <a-button type="primary" @click="onCancel" ghost class="btn">{{
+              $t("btn_cancel")
+            }}</a-button>
+          </a-col>
+          <a-col :span="12">
+            <a-button
+              type="primary"
+              class="btn"
+              :disabled="!isValidated"
+              @click="onCreate"
+              >{{ $t("btn_submit") }}</a-button
+            >
+          </a-col>
+        </a-row>
+      </div>
+    </a-spin>
   </a-row>
 </template>
 
@@ -54,13 +43,17 @@
 //#region import
 import { i18n } from "@/i18n";
 import CustomForm from "@/modules/base/components/CustomForm.vue";
+import validator from "@/modules/base/components/validator/validator";
+import MessengerParamModel from "@/modules/base/models/messenger-param.model";
+import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
-import { message } from "ant-design-vue";
-import { onMounted, reactive, ref, watch } from "vue";
+import { makeUniqueName } from "@/utils/string.helper";
+// import { Rule } from "ant-design-vue/lib/form";
+import { inject, onMounted, reactive, ref, watch } from "vue";
 import { useRoute } from "vue-router";
-import { ContainerSelection } from "../models/container.model";
+import { ContainerSelection, ResContainer } from "../models/container.model";
 
 const route = useRoute();
 
@@ -72,40 +65,21 @@ const route = useRoute();
 //#region variables
 const { id } = route.params;
 const containerTypes = ref<ContainerSelection[]>([]);
-const isValidated = ref<boolean>(false);
-const ownerType = ref<string>("collectionBase");
-const mockPartner = ref<ContainerSelection[]>([{ value: "", label: "" }]);
-const mockCollectionBase = ref<ContainerSelection[]>();
+const isValidated = ref<boolean>(true);
+const isExist = ref<boolean>(false);
+const isLoadingInfo = ref<boolean>(false);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
+let isExistName = async (): Promise<void> => {
+  if (isExist.value) {
+    return Promise.reject(i18n.global.t("error_unique_constraint"));
+  }
+  return Promise.resolve();
+};
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const dynamicValidateForm = reactive<{ formData: any[] }>({
   formData: [
-    {
-      inputType: "ASelect",
-      value: undefined,
-      placeHolder: "owner",
-      label: "owner",
-      name: "owner",
-      disabled: true,
-      required: true,
-      isFocus: false,
-      options: mockCollectionBase,
-      class: "disabled-color",
-      rules: [
-        {
-          required: true,
-          message: i18n.global.t("please_enter_input", {
-            fieldName: i18n.global.t("owner").toLowerCase()
-          })
-        }
-      ],
-      dropdownClassName: "form-option-content",
-      style: {
-        padding: "0px",
-        width: "620px",
-        border: "none"
-      },
-      key: 0
-    },
     {
       inputType: "AInput",
       value: "",
@@ -122,7 +96,11 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
         },
         {
           max: 50,
-          message: i18n.global.t("max_length_input_text", { maxLength: 50 })
+          message: i18n.global.t("max_length_input", { maxLength: 50 })
+        },
+        {
+          validator: isExistName,
+          trigger: ["change"]
         }
       ],
       required: true,
@@ -152,46 +130,98 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
         width: "620px",
         border: "none"
       },
-      key: 0
+      key: 2
+    },
+    {
+      inputType: "AInput",
+      value: "6666666",
+      placeHolder: "container_weight",
+      label: "container_weight",
+      name: "weight",
+      inline: true,
+      disabled: false,
+      spaceStyle: {
+        display: "inline-block",
+        width: "16px"
+      },
+      rules: [
+        {
+          validator: validator.validateWeight,
+          trigger: ["change", "blur"]
+        }
+      ],
+
+      required: true,
+      key: 3,
+      isFocus: false
+    },
+    {
+      inputType: "AInput",
+      value: "",
+      placeHolder: "container_capacity",
+      label: "container_capacity",
+      name: "capacity",
+      inline: true,
+      disabled: false,
+      required: false,
+      key: 4,
+      isFocus: false
     }
   ]
 });
+
+const fieldName: Record<string, number> = {
+  name: 0,
+  container_type_id: 1,
+  weight: 2,
+  capacity: 3
+};
+
+const formRef = ref();
+
+const messenger: (
+  param: MessengerParamModel
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+) => void = inject("messenger")!;
 //#endregion
 
 //#region hooks
 onMounted(() => {
-  Promise.all([fetchContainerType(), fetchMockData(), fetchContainerById()]);
+  Promise.all([fetchContainerType(), fetchContainerById()]);
 });
 //#endregion
 
 //#region function
-const fetchContainerType = (): void => {
-  const res = service.container.getContainerTypes();
-  containerTypes.value = res.map((item) => ({
-    value: item.id || "",
-    label: item.name
-  }));
-};
-
-const fetchMockData = (): void => {
-  mockCollectionBase.value = service.container.getMockCollectionBase();
-  mockPartner.value = service.vehicle.getMockPartner();
-};
-const fetchContainerById = (): void => {
-  const res = service.container.getContainerById(id.toString());
-  if (res) {
-    const toArrayRes = Object.values(res);
-    dynamicValidateForm.formData.forEach((item, index) => {
-      dynamicValidateForm.formData[index].value = toArrayRes[index];
-    });
+const fetchContainerType = async (): Promise<void> => {
+  const res = await service.container.getListContainerType(1, "full");
+  if (res && res.results) {
+    containerTypes.value = res?.results.map(
+      ({ id, name }: { id: number; name: string }) => ({
+        value: id || "",
+        label: name
+      })
+    );
   }
 };
+
+const fetchContainerById = async (): Promise<void> => {
+  isLoadingInfo.value = true;
+  const res = await service.container.getContainerById(id.toString());
+  if (res) {
+    for (const key of Object.keys(fieldName)) {
+      dynamicValidateForm.formData[fieldName[key]].value =
+        res[key as keyof ResContainer];
+    }
+  }
+  isLoadingInfo.value = false;
+};
+
 const handleValidateFields = (
   value: string,
   maxLength: number,
   isRequire: boolean
 ): boolean => {
-  const valueLength = value?.length || 0;
+  const valueLength = value.toString()?.length || 0;
   if (valueLength > maxLength) {
     return false;
   }
@@ -207,6 +237,7 @@ const handleOnBlur = (
 };
 
 const handleOnFocus = (index: number | boolean | Event): void => {
+  isExist.value = false;
   index = Number(index);
   dynamicValidateForm.formData[index].isFocus = true;
 };
@@ -214,19 +245,42 @@ const handleOnFocus = (index: number | boolean | Event): void => {
 const onCancel = (): void => {
   router.push({ name: routeNames.containerChild });
 };
+
 const onCreate = async (): Promise<void> => {
-  const containerInfo = {
-    id: id.toString(),
-    containerType: dynamicValidateForm.formData[0].value,
-    containerName: dynamicValidateForm.formData[1].value
-  };
-  const res = await service.container.updateContainer(containerInfo);
-  if (res) {
-    message.success("updated");
+  const [name, container_type___name, weight, capacity] =
+    dynamicValidateForm.formData;
+  isLoadingInfo.value = true;
+  const { error } = await service.container.editContainer({
+    id: Number(id),
+    name: makeUniqueName(name.value.toString()),
+    container_type_id: Number(container_type___name.value),
+    weight: Number(weight.value),
+    capacity: Number(capacity.value)
+  });
+  isLoadingInfo.value = false;
+  if (!error) {
+    messenger({
+      title: "edit_container_successfully",
+      message: "",
+      type: MessengerType.Success,
+      callback: (isConfirm: boolean) => {
+        isConfirm;
+        onCancel();
+      }
+    });
   } else {
-    message.error("error");
+    if (error === "error_unique_constraint") {
+      isExist.value = true;
+      return;
+    }
+    messenger({
+      title: "create_failed",
+      message: "please_try_again",
+      type: MessengerType.Error
+    });
   }
 };
+
 //#endregion
 
 //#region computed
@@ -245,17 +299,11 @@ watch(dynamicValidateForm, () => {
     isValidated.value = false;
   }
 });
-watch(
-  ownerType,
-  (oldVal) => {
-    if (oldVal === "partner") {
-      dynamicValidateForm.formData[0].options = mockPartner;
-    } else {
-      dynamicValidateForm.formData[0].options = mockCollectionBase;
-    }
-  },
-  { deep: true }
-);
+
+watch(isExist, () => {
+  formRef.value.validate();
+});
+
 //#endregion
 </script>
 
@@ -326,32 +374,22 @@ watch(
     color: $neutral-400 !important;
   }
   .edit-form-container {
-    .label-radio {
-      font-weight: 600 !important;
-      font-size: 16px;
-      line-height: 20px;
-      margin-right: 20px;
-      text-align: left;
-      padding-right: 10px;
-
-      span {
-        color: $red-1;
-        font-weight: 400;
-        font-size: 14px;
-        line-height: 100%;
+    .ant-form-item {
+      margin-right: 0px;
+      margin-bottom: 20px;
+      .ant-form-item-control {
+        .ant-form-item-control-input {
+          .ant-form-item-control-input-content {
+            .input-item {
+              padding: 0px;
+              width: 620px;
+            }
+            .inline {
+              width: 300px !important;
+            }
+          }
+        }
       }
-    }
-    .ant-radio-wrapper {
-      margin-right: 24px;
-      span {
-        font-weight: 400;
-        font-size: 18px;
-        line-height: 100%;
-      }
-    }
-    .ant-radio-inner {
-      width: 24px;
-      height: 24px;
     }
   }
 

@@ -19,9 +19,11 @@ exports[`Better Code Quality !`] = {
     ],
     "src/modules/staff-management/pages/CreateCollectionBase.vue:1896100077": [
       [279, 19, 47, "\'_event\' is defined but never used.", "3077278115"]
+    "src/modules/staff-management/pages/CollectionBase.vue:610036886": [
+      [178, 6, 6, "\'sortBy\' is assigned a value but never used.", "2170032388"]
     ],
-    "src/modules/staff-management/pages/CreateNewStaff.vue:2488377755": [
-      [124, 49, 3, "Unexpected any. Specify a different type.", "193409811"]
+    "src/modules/staff-management/pages/CreateNewStaff.vue:1932634962": [
+      [128, 49, 3, "Unexpected any. Specify a different type.", "193409811"]
     ],
     "src/services/collection-base.service.ts:155855216": [
     "src/services/collection-base.service.ts:1513036017": [
@@ -31,6 +33,14 @@ exports[`Better Code Quality !`] = {
     ],
     "src/services/container.service.ts:1105480702": [
       [125, 7, 1264, "Async function \'getListContainerType\' has too many lines (59). Maximum allowed is 50.", "1040648870"]
+    "src/services/container.service.ts:3992190803": [
+      [116, 7, 1264, "Async function \'getListContainerType\' has too many lines (59). Maximum allowed is 50.", "1040648870"],
+      [199, 76, 3, "Unexpected any. Specify a different type.", "193409811"],
+      [281, 70, 3, "Unexpected any. Specify a different type.", "193409811"]
+    "src/services/collection-base.service.ts:3764230987": [
+      [10, 7, 1375, "Async function \'getListCollectionBase\' has too many lines (59). Maximum allowed is 50.", "1287529989"],
+      [83, 66, 3, "Unexpected any. Specify a different type.", "193409811"],
+      [104, 77, 3, "Unexpected any. Specify a different type.", "193409811"]
     ],
     "src/services/vehicle.service.ts:3989307748": [
       [25, 7, 1607, "Async function \'getListVehicle\' has too many lines (64). Maximum allowed is 50.", "947189141"]

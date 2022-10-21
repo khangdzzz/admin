@@ -1,3 +1,6 @@
+import { Date } from "@/modules/common/models/date.model";
+
+
 export interface Container {
   id?: string;
   key?: number;
@@ -5,6 +8,14 @@ export interface Container {
   containerType: string;
   weight?: number;
   capacity?: string;
+}
+
+export interface EditContainerDto {
+  id: number
+  name: string,
+  container_type_id: number,
+  capacity: number | null,
+  weight: number
 }
 
 export interface ContainerSelection {
@@ -19,29 +30,14 @@ export interface ContainerType {
   capaity?: string;
   type?: string;
 }
-
-export interface ContainerDetail {
-  weight: number;
-  key?: number;
-  name: string;
+export interface ResContainer extends Date {
+  capacity: number | null;
   container_type___name: string;
-  capacity: number;
-}
-
-export interface ResContainer {
-  capacity: number;
-  container_type___name: string;
-  container_type_id: number;
-  created_at: Date;
-  created_by: number;
-  deleted_at: Date | null;
-  deleted_by: number | null;
+  container_type_id: number
   extension_code: string;
   id: number;
   name: string;
   tag_id: string | null;
   tenant_id: number;
-  updated_at: Date | null;
-  updated_by: number | null;
-  weight: number;
+  weight: number
 }
