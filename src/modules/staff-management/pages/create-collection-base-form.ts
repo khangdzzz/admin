@@ -22,7 +22,7 @@ export const formData = (): FormData => {
           {
             required: true,
             message: i18n.global.t("please_enter_input", currentLanguage, {
-              fieldName: i18n.global.t("name", currentLanguage)
+              fieldName: i18n.global.t("name", currentLanguage).toLowerCase()
             }),
             trigger: "blur"
           },
@@ -50,7 +50,9 @@ export const formData = (): FormData => {
           {
             required: true,
             message: i18n.global.t("please_enter_input", currentLanguage, {
-              fieldName: i18n.global.t("short_name", currentLanguage)
+              fieldName: i18n.global
+                .t("short_name", currentLanguage)
+                .toLowerCase()
             }),
             trigger: "blur"
           },
@@ -93,7 +95,9 @@ export const formData = (): FormData => {
           {
             required: true,
             message: i18n.global.t("please_enter_input", currentLanguage, {
-              fieldName: i18n.global.t("postal_code", currentLanguage)
+              fieldName: i18n.global
+                .t("postal_code", currentLanguage)
+                .toLowerCase()
             }),
             trigger: "blur"
           },
@@ -117,7 +121,7 @@ export const formData = (): FormData => {
           {
             required: true,
             message: i18n.global.t("please_enter_input", currentLanguage, {
-              fieldName: i18n.global.t("address", currentLanguage)
+              fieldName: i18n.global.t("address", currentLanguage).toLowerCase()
             }),
             trigger: "blur"
           },
@@ -153,10 +157,9 @@ export const formData = (): FormData => {
           {
             pattern: /\+[0-9]{6,12}/,
             message: i18n.global.t("invalid_field_name", currentLanguage, {
-              fieldName: i18n.global.t(
-                "collection_phone_number",
-                currentLanguage
-              )
+              fieldName: i18n.global
+                .t("collection_phone_number", currentLanguage)
+                .toLowerCase()
             }),
             trigger: "change"
           }
