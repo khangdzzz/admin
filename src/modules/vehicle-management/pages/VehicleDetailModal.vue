@@ -52,9 +52,9 @@
             {{ item.title }}
           </div>
           <div :class="[VehicleDetailModal.value]">{{ item.value }}</div>
-          <a-divider
+          <a-divider class="mt-10 mb-15"
             v-if="index < information.length - 1"
-            style="border-color: #e8e8e8; margin: 10px 0"
+            style="border-color: #e8e8e8"
           />
         </div>
       </div>
@@ -113,7 +113,7 @@ const form = reactive<{ information: Information[] }>({
       value: currentVehicle.vehicleName
     },
     {
-      title: i18n.global.t("vehicle_number_plate"),
+      title: i18n.global.t("number_plate"),
       value: currentVehicle.vehiclePlate
     },
     {
@@ -210,10 +210,11 @@ const downloadQR = async (): Promise<void> => {
     }
 
     .btn {
-      margin-top: 20px;
+      margin-top: 28px;
       padding: 0px 15px;
       width: 140px;
       height: 32px;
+      border-radius: 6px;
       .btnIcon {
         width: 16px;
         height: 16px;
