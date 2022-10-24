@@ -20,16 +20,22 @@
         </div>
         <a-row type="flex" justify="center" align="middle" gutter="20">
           <a-col :span="12">
-            <a-button type="primary" @click="onCancel" ghost class="btn">{{
-              $t("btn_cancel")
-            }}</a-button>
+            <a-button
+              type="primary"
+              @click="onCancel"
+              ghost
+              class="btn"
+              :disabled="isSubmitting"
+              >{{ $t("btn_cancel") }}</a-button
+            >
           </a-col>
           <a-col :span="12">
             <a-button
               type="primary"
               class="btn"
               :disabled="!isValidated"
-              @click="onCreate"
+              :loading="isSubmitting"
+              @click="updateContainer"
               >{{ $t("btn_submit") }}</a-button
             >
           </a-col>
@@ -53,7 +59,7 @@ import { makeUniqueName } from "@/utils/string.helper";
 // import { Rule } from "ant-design-vue/lib/form";
 import { inject, onMounted, reactive, ref, watch } from "vue";
 import { useRoute } from "vue-router";
-import { ContainerSelection, ResContainer } from "../models/container.model";
+import { Container, ContainerSelection } from "../models/container.model";
 
 const route = useRoute();
 
@@ -68,6 +74,7 @@ const containerTypes = ref<ContainerSelection[]>([]);
 const isValidated = ref<boolean>(true);
 const isExist = ref<boolean>(false);
 const isLoadingInfo = ref<boolean>(false);
+const isSubmitting = ref<boolean>(false);
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 
 let isExistName = async (): Promise<void> => {
@@ -171,8 +178,8 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
 });
 
 const fieldName: Record<string, number> = {
-  name: 0,
-  container_type_id: 1,
+  containerName: 0,
+  containerTypeId: 1,
   weight: 2,
   capacity: 3
 };
@@ -206,11 +213,12 @@ const fetchContainerType = async (): Promise<void> => {
 
 const fetchContainerById = async (): Promise<void> => {
   isLoadingInfo.value = true;
-  const res = await service.container.getContainerById(id.toString());
+  const res = await service.container.getContainerById(+id);
+  console.log(res);
   if (res) {
     for (const key of Object.keys(fieldName)) {
       dynamicValidateForm.formData[fieldName[key]].value =
-        res[key as keyof ResContainer];
+        res[key as keyof Container];
     }
   }
   isLoadingInfo.value = false;
@@ -243,13 +251,13 @@ const handleOnFocus = (index: number | boolean | Event): void => {
 };
 
 const onCancel = (): void => {
-  router.push({ name: routeNames.containerChild });
+  router.push({ name: routeNames.container });
 };
 
-const onCreate = async (): Promise<void> => {
+const updateContainer = async (): Promise<void> => {
   const [name, container_type___name, weight, capacity] =
     dynamicValidateForm.formData;
-  isLoadingInfo.value = true;
+  isSubmitting.value = true;
   const { error } = await service.container.editContainer({
     id: Number(id),
     name: makeUniqueName(name.value.toString()),
@@ -257,7 +265,7 @@ const onCreate = async (): Promise<void> => {
     weight: Number(weight.value),
     capacity: Number(capacity.value)
   });
-  isLoadingInfo.value = false;
+  isSubmitting.value = false;
   if (!error) {
     messenger({
       title: "edit_container_successfully",
@@ -274,7 +282,7 @@ const onCreate = async (): Promise<void> => {
       return;
     }
     messenger({
-      title: "create_failed",
+      title: "edit_failed",
       message: "",
       type: MessengerType.Error
     });

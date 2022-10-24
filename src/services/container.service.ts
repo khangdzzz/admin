@@ -5,8 +5,8 @@ import { Sort } from "@/modules/common/models/sort.enum";
 import { ContainerSelection, ContainerType } from "@/modules/container/models";
 import ContainerTypeModel from "@/modules/container/models/container-type.models";
 import {
-  EditContainerDto,
-  ResContainer
+  Container,
+  EditContainerDto
 } from "@/modules/container/models/container.model";
 import { DEFAULT_SORT_ORDER } from "@/services/constants";
 import { makeUniqueName } from "@/utils/string.helper";
@@ -17,7 +17,7 @@ import { PaginationDto } from "./dtos/common/pagination.dto";
 import { CreateContainerTypeInputDto } from "./dtos/container-management/create-container-type.dto";
 import { ContainerTypeResponseDto } from "./dtos/container/create-container-type.dto";
 
-import { Container as ContainerDTO } from "@/services/dtos/container/container.dto";
+import { ContainerResponseDTO } from "@/services/dtos/container/container.dto";
 
 interface sortContainerDto {
   sortType: Sort;
@@ -39,7 +39,7 @@ export async function getListContainer(
   size?: number,
   sort?: sortContainerDto,
   searchKeyword: string | null | undefined = ""
-): Promise<PaginationDto<ResContainer> | undefined> {
+): Promise<Pagination<Container> | undefined> {
   let params: {
     page: number | undefined;
     page_size: number | undefined;
@@ -70,16 +70,38 @@ export async function getListContainer(
     };
   }
 
-  const [err, res] = await transformRequest<PaginationDto<ResContainer>>({
+  const [err, res] = await transformRequest<
+    PaginationDto<ContainerResponseDTO>
+  >({
     url: "/container",
     method: "get",
     params
   });
 
   if (err) return undefined;
-  res.current_page = page || 1;
-  res.page_size = size || 20;
-  return res;
+  const { current_page = 1, page_size = 20 } = res;
+  return {
+    currentPage: current_page,
+    pageSize: page_size,
+    results: res.results.map((result) => {
+      const {
+        container_type___name: containerType,
+        capacity,
+        name: containerName,
+        id,
+        weight
+      } = result;
+      return {
+        containerName,
+        containerType,
+        capacity,
+        id,
+        key: id,
+        weight,
+        containerTypeId: 0
+      };
+    })
+  };
 }
 
 export function getContainerTypes(): ContainerType[] {
@@ -88,14 +110,29 @@ export function getContainerTypes(): ContainerType[] {
 }
 
 export async function getContainerById(
-  id: string
-): Promise<ResContainer | undefined> {
-  const [err, res] = await transformRequest<ResContainer>({
+  id: number
+): Promise<Container | undefined> {
+  const [err, res] = await transformRequest<ContainerResponseDTO>({
     url: `container/${id}`,
     method: "get"
   });
   if (err) return undefined;
-  return res;
+  const {
+    container_type___name: containerType,
+    container_type_id: containerTypeId,
+    capacity,
+    name: containerName,
+    weight
+  } = res;
+  return {
+    containerName,
+    containerType,
+    containerTypeId,
+    capacity,
+    id,
+    key: id,
+    weight
+  };
 }
 
 export async function editContainer(
@@ -104,7 +141,7 @@ export async function editContainer(
   [AxiosError<unknown, unknown>, null] | [null, ContainerTypeModel] | any
 > {
   const { id } = containerInfo;
-  const [error, res] = await transformRequest<ResContainer>({
+  const [error, res] = await transformRequest<ContainerResponseDTO>({
     url: `container/${id}`,
     method: "put",
     data: { ...containerInfo, id }
@@ -237,7 +274,7 @@ export async function createContainer(
   tag_id: string,
   weight: number,
   capacity: number | null
-): Promise<ServiceResponse<ContainerDTO>> {
+): Promise<ServiceResponse<ContainerResponseDTO>> {
   const data = {
     name,
     container_type_id,
@@ -247,7 +284,7 @@ export async function createContainer(
     capacity
   };
 
-  const [error, res] = await transformRequest<ContainerDTO>({
+  const [error, res] = await transformRequest<ContainerResponseDTO>({
     url: "container",
     method: "post",
     data
