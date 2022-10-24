@@ -457,9 +457,6 @@ watch(
               .ant-input-affix-wrapper {
                 padding-top: 20px;
               }
-              .not-has-icon {
-                padding-left: 0px;
-              }
               .ant-select-single {
                 .ant-select-selector {
                   .ant-select-selection-item {
