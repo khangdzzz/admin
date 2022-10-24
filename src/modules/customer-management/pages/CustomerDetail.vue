@@ -177,6 +177,7 @@ const deleteCustomer = async (id: number): Promise<void> => {
       isConfirm;
     }
   });
+  router.push({ name: routeNames.customerList });
 };
 //#endregion
 
