@@ -1,6 +1,5 @@
 
-export default interface CustomerModel {
-  tenantId: number;
+export interface CustomerModel {
   name: string;
   id?: number;
   key?: number;
@@ -37,7 +36,7 @@ export interface CustomerDetail {
   address: string,
   telephone: string,
   report_to: number,
-  external_code: number | null
+  external_code: number
 }
 
 export interface EditCustomerDto {
@@ -68,7 +67,7 @@ export interface CustomerDetail {
   address: string,
   telephone: string,
   report_to: number,
-  external_code: number | null
+  external_code: number
 }
 
 export interface EditCustomerDto {

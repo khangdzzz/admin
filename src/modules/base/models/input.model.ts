@@ -2,7 +2,7 @@ import { Rule } from "ant-design-vue/lib/form";
 
 export interface InputType {
   inputType: string;
-  value: string | number | boolean | null;
+  value: string | number | boolean;
   placeHolder: string;
   label: string;
   name: string;
