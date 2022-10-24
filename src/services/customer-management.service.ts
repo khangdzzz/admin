@@ -7,7 +7,7 @@ import {
   CustomerResponseDto
 } from "./dtos/customer-management/customer.dto";
 import { DEFAULT_SORT_ORDER } from "@/services/constants";
-import CustomerModel, { CustomerDetail, EditCustomerDto } from "@/modules/customer-management/models/customer.model";
+import { CustomerDetail, EditCustomerDto, CustomerModel } from "@/modules/customer-management/models/customer.model";
 // import { makeUniqueName } from "@/utils/string.helper";
 
 export async function fetchListCustomer(
