@@ -10,7 +10,11 @@
         <h2 class="title">{{ $t("vehicle_edit") }}</h2>
         <div class="create-form">
           <a-form :model="dynamicValidateForm" name="basic" autocomplete="off">
-            <a-form-item name="formDatavalue" :validateFirst="false">
+            <a-form-item
+              name="formDatavalue"
+              :validateFirst="false"
+              class="mb-20"
+            >
               <a-radio-group
                 v-model:value="ownerType"
                 class="radio-group"
@@ -44,23 +48,31 @@
           </a-col>
           <a-col :span="5" class="mr-2">
             <a-checkbox v-model:checked="checkPermission">
-              {{ $t("vehicle_permission") }}
+              <span class="check-permision__label">{{
+                $t("vehicle_permission")
+              }}</span>
             </a-checkbox>
           </a-col>
         </a-row>
         <a-row type="flex" justify="center" align="middle" gutter="20">
           <a-col :span="12">
-            <a-button type="primary" @click="onCancel" ghost class="btn">{{
-              $t("btn_cancel")
-            }}</a-button>
+            <a-button
+              type="primary"
+              @click="goToVehicleList"
+              ghost
+              class="btn"
+              :loading="isLoadingBtn"
+              >{{ $t("btn_cancel") }}</a-button
+            >
           </a-col>
           <a-col :span="12">
             <a-button
               type="primary"
               class="btn"
+              :loading="isLoadingBtn"
               :disabled="!isValidated"
-              @click="onCreate"
-              >{{ $t("btn_submit") }}</a-button
+              @click="updateVehicle"
+              >{{ $t("btn_save") }}</a-button
             >
           </a-col>
         </a-row>
@@ -101,6 +113,7 @@ const messenger: (param: MessengerParamModel) => void =
 const route = useRoute();
 const { id } = route.params;
 const isLoading = ref<boolean>(false);
+const isLoadingBtn = ref<boolean>(false);
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const dynamicValidateForm = reactive<{ formData: any[] }>({
   formData: [
@@ -224,6 +237,9 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
     }
   ]
 });
+
+const [owner, vehicleType, name, numberPlate, maxWeight] =
+  dynamicValidateForm.formData;
 //#endregion
 
 //#region hooks
@@ -243,17 +259,11 @@ onMounted(async () => {
 const fetchVehicleById = async (): Promise<void> => {
   const res = await service.vehicle.getVehicleDetail(id.toString());
   if (res) {
-    const toArrayRes = Object.values(res);
-    dynamicValidateForm.formData.forEach((item, index) => {
-      dynamicValidateForm.formData[index].value = toArrayRes[index];
-    });
-    const foundVehicleType = vehicleTypes.value?.find(
-      (vt) => vt.label === res.vehicleType
-    );
-
-    if (foundVehicleType) {
-      dynamicValidateForm.formData[1].value = foundVehicleType.value;
-    }
+    owner.value = res.ownerName;
+    vehicleType.value = res.vehicleType;
+    name.value = res.vehicleName;
+    numberPlate.value = res.vehiclePlate;
+    maxWeight.value = res.maxWeight;
 
     checkPermission.value = res.isHasPermission === 1 ? true : false;
   }
@@ -310,10 +320,10 @@ const handleOnFocus = (index: number | boolean | Event): void => {
   dynamicValidateForm.formData[index].isFocus = true;
 };
 
-const onCancel = (): void => {
+const goToVehicleList = (): void => {
   router.push({ name: routeNames.vehicle });
 };
-const onCreate = async (): Promise<void> => {
+const updateVehicle = async (): Promise<void> => {
   const vehicleInfo: Vehicle = {
     id: id.toString(),
     vehicleType: dynamicValidateForm.formData[1].value,
@@ -322,14 +332,16 @@ const onCreate = async (): Promise<void> => {
     maxWeight: dynamicValidateForm.formData[4].value,
     isHasPermission: checkPermission.value ? 1 : 0
   };
+  isLoadingBtn.value = true;
   const res = await service.vehicle.updateVehicle(vehicleInfo);
+  isLoadingBtn.value = false;
   if (res) {
     messenger({
       title: "vehicle_edit_successfully",
       message: "",
       type: MessengerType.Success
     });
-    router.push({ name: routeNames.vehicle });
+    goToVehicleList();
   } else {
     messenger({
       title: "edit_failed",
@@ -409,11 +421,15 @@ watch(
       font-size: 16px;
       line-height: 20px;
       margin: 0;
+      color: $neutral-600;
+    }
+    &__label {
+      color: $neutral-600;
     }
   }
   .btn {
     padding: 0px 15px;
-    margin-top: 30px;
+    margin-top: 31px;
     width: 180px;
     height: 48px;
     font-weight: 600;
@@ -427,6 +443,44 @@ watch(
 }
 :deep() {
   .create-form {
+    .ant-form {
+      .ant-form-item {
+        .ant-form-item-control {
+          .ant-form-item-explain {
+            .ant-form-item-explain-error {
+              margin-bottom: 25px;
+              line-height: 14.6px;
+            }
+          }
+          .ant-form-item-control-input {
+            .ant-form-item-control-input-content {
+              .ant-input-affix-wrapper {
+                padding-top: 20px;
+              }
+              .not-has-icon {
+                padding-left: 0px;
+              }
+              .ant-select-single {
+                .ant-select-selector {
+                  .ant-select-selection-item {
+                    color: $neutral-800;
+                    font-size: 16px;
+                  }
+                }
+              }
+              .ant-select-disabled {
+                .ant-select-selector {
+                  .ant-select-selection-item {
+                    color: $text-1 !important;
+                    font-size: 16px;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
     .label-radio {
       font-weight: 600 !important;
       font-size: 16px;
@@ -434,6 +488,7 @@ watch(
       margin-right: 20px;
       text-align: left;
       padding-right: 10px;
+      color: $text-1;
 
       span {
         color: $red-1;
@@ -448,11 +503,16 @@ watch(
         font-weight: 400;
         font-size: 18px;
         line-height: 100%;
+        color: $text-1;
       }
     }
     .ant-radio-inner {
       width: 24px;
       height: 24px;
+      background-color: #ffff;
+      &::after {
+        background-color: $text-1;
+      }
     }
   }
 
@@ -470,6 +530,7 @@ watch(
     .ant-checkbox-inner {
       width: 22px;
       height: 22px;
+      border-radius: 4px;
     }
   }
 }

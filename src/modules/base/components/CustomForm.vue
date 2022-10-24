@@ -276,6 +276,8 @@ const filterOption = (input: string, option: any): boolean => {
     .ant-input {
       background: transparent;
       border-radius: 10px;
+      font-size: 16px;
+      line-height: 16px;
     }
 
     .not-has-label {
