@@ -157,7 +157,7 @@ import { service } from "@/services";
 import type { TableColumnType } from "ant-design-vue";
 import { debounce } from "lodash";
 import { computed, inject, onMounted, reactive, ref, watch } from "vue";
-import { ResContainer } from "../models/container.model";
+import { Container } from "../models/container.model";
 import ContainerDetailModal from "./ContainerDetailModal.vue";
 
 //#endregion===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆
@@ -176,17 +176,17 @@ const sortCapacity = ref<Sort>(Sort.None);
 
 const selectedKeys = ref<number[]>([]);
 
-const containerDetail = ref<ResContainer | undefined>();
+const containerDetail = ref<Container | undefined>();
 
-const columns: TableColumnType<ResContainer>[] = [
+const columns: TableColumnType<Container>[] = [
   {
     title: i18n.global.t("container_container_name"),
-    dataIndex: "name",
+    dataIndex: "containerName",
     key: "name"
   },
   {
     title: i18n.global.t("container_container_type"),
-    dataIndex: "container_type___name",
+    dataIndex: "containerType",
     key: "type"
   },
   {
@@ -207,11 +207,11 @@ const columns: TableColumnType<ResContainer>[] = [
 const messenger: (param: MessengerParamModel) => void =
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   inject("messenger")!;
-const data = ref<ResContainer[]>([]);
+const data = ref<Container[]>([]);
 const searchValue = ref<string>("");
 const searchHeader = ref<HeaderRef | null>(null);
 const isLoading = ref<boolean>(false);
-const pageOption = reactive<Pagination<ResContainer>>({
+const pageOption = reactive<Pagination<Container>>({
   currentPage: 1,
   pageSize: 20,
   total: 0
@@ -336,15 +336,9 @@ const fetchContainerList = async (): Promise<void> => {
   isLoading.value = false;
 
   if (res) {
-    data.value = res.results.map((item) => {
-      return {
-        ...item,
-        key: item.id
-      };
-    });
-
-    pageOption.currentPage = res.current_page || 0;
-    pageOption.total = res.count;
+    data.value = res.results || [];
+    pageOption.currentPage = res.currentPage;
+    pageOption.total = res.total;
   }
 };
 
@@ -417,7 +411,7 @@ const handleBackToList = (): void => {
   }
 };
 
-const fetchContainerDetail = async (id: string): Promise<void> => {
+const fetchContainerDetail = async (id: number): Promise<void> => {
   isLoading.value = true;
   const res = await service.container.getContainerById(id);
   isLoading.value = false;

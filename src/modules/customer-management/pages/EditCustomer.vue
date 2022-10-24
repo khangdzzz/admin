@@ -63,18 +63,17 @@ const formData = reactive<FormData>(reactiveFormData);
 
 //#region hooks
 onMounted(async () => {
-  const res = service.customerManagement.getCustomerDetail();
-  const { singleInput, duoInputs } = formData;
-
-  singleInput[0].value = res.name;
-  singleInput[1].value = res.shortName;
-  singleInput[2].value = res.kana;
-  singleInput[3].value = res.postalCode;
-  singleInput[4].value = res.address;
-  singleInput[5].value = res.phoneNumber;
-  singleInput[6].value = res.email;
-  duoInputs[0].value = res.representative;
-  duoInputs[1].value = res.externalCode;
+  // const res = service.customerManagement.getCustomerDetail();
+  // const { singleInput, duoInputs } = formData;
+  // singleInput[0].value = res.name;
+  // singleInput[1].value = res.shortName;
+  // singleInput[2].value = res.kana;
+  // singleInput[3].value = res.postalCode;
+  // singleInput[4].value = res.address;
+  // singleInput[5].value = res.phoneNumber;
+  // singleInput[6].value = res.email;
+  // duoInputs[0].value = res.representative;
+  // duoInputs[1].value = res.externalCode;
 });
 //#endregion
 

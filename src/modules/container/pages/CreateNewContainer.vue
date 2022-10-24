@@ -2,41 +2,45 @@
   <div
     class="create-container fill-height fill-width d-flex justify-center align-center"
   >
-    <a-card class="create-container__card px-20 py-30">
-      <div
-        class="create-container__title d-flex justify-center align-center mb-30"
-      >
-        {{ $t("container_add_new_container") }}
-      </div>
-      <a-form
-        :model="{ formData }"
-        layout="inline"
-        class="form-create-container"
-      >
-        <CustomForm
-          :form-data="formData"
-          @on-focus="handleOnFocus"
-          @on-blur="handleOnBlur"
-        ></CustomForm>
-      </a-form>
-      <div class="d-flex justify-center align-center gap-20">
-        <a-button
-          class="create-container__btn-style create-container__cancel-btn"
-          type="secondary"
-          @click="handleCancel"
+    <a-spin :spinning="isFetchingMasterData" :tip="$t('common_loading')">
+      <a-card class="create-container__card px-20 py-30">
+        <div
+          class="create-container__title d-flex justify-center align-center mb-30"
         >
-          {{ $t("btn_cancel") }}
-        </a-button>
-        <a-button
-          class="create-container__btn-style create-container__submit-btn"
-          type="primary"
-          :disabled="!isAllowSubmit"
-          @click="handleSubmit"
+          {{ $t("container_add_new_container") }}
+        </div>
+        <a-form
+          :model="{ formData }"
+          layout="inline"
+          class="form-create-container"
         >
-          {{ $t("btn_submit") }}
-        </a-button>
-      </div>
-    </a-card>
+          <CustomForm
+            :form-data="formData"
+            @on-focus="handleOnFocus"
+            @on-blur="handleOnBlur"
+          ></CustomForm>
+        </a-form>
+        <div class="d-flex justify-center align-center gap-20">
+          <a-button
+            class="create-container__btn-style create-container__cancel-btn"
+            type="secondary"
+            @click="handleCancel"
+            :disabled="isLoading"
+          >
+            {{ $t("btn_cancel") }}
+          </a-button>
+          <a-button
+            class="create-container__btn-style create-container__submit-btn"
+            type="primary"
+            :disabled="!isAllowSubmit"
+            :loading="isLoading"
+            @click="handleSubmit"
+          >
+            {{ $t("btn_submit") }}
+          </a-button>
+        </div>
+      </a-card>
+    </a-spin>
   </div>
 </template>
 
@@ -61,6 +65,8 @@ const messenger: (
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 ) => void = inject("messenger")!;
 
+const isLoading = ref<boolean>(false);
+const isFetchingMasterData = ref<boolean>(false);
 const formData = ref([
   {
     inputType: "AInput",
@@ -187,12 +193,18 @@ onMounted(async () => {
 
 //#region function
 const initialize = async (): Promise<void> => {
+  isFetchingMasterData.value = true;
   const res = await service.container.getListContainerType(
     0,
     "full",
     undefined,
     ""
   );
+  isFetchingMasterData.value = false;
+  if (!res?.results?.length) {
+    router.push({ name: routeNames.container });
+    return;
+  }
   if (res && res.results) {
     const options = res.results.map((ct) => {
       return {
@@ -234,6 +246,7 @@ const handleSubmit = async (): Promise<void> => {
   if (formData.value[3].value !== "") {
     capacity = +formData.value[3].value;
   }
+  isLoading.value = true;
   const { error, res } = await service.container.createContainer(
     name,
     containerType,
@@ -242,6 +255,7 @@ const handleSubmit = async (): Promise<void> => {
     weight,
     capacity
   );
+  isLoading.value = false;
 
   if (res && !error) {
     messenger({
