@@ -2,6 +2,7 @@
   <div class="fill-height d-flex flex-column">
     <ListSearchHeader
       :title="$t('customer')"
+      ref="searchHeader"
       v-model:model-value.sync="searchString"
     >
       <template #action>
@@ -50,34 +51,34 @@
         <template #headerCell="{ column }">
           <template v-if="column.key === 'name'">
             <div class="header-title" @click="changeSortName()">
-              <span class="header-title">{{ $t(column.title) }}</span>
+              <span class="header-title">{{ $t("name") }}</span>
               <SortView class="mx-12" :sort="sortName" />
             </div>
           </template>
 
           <template v-if="column.key === 'postalCode'">
             <div class="header-title" @click="changeSortPostalCode()">
-              <span class="header-title">{{ $t(column.title) }}</span>
+              <span class="header-title">{{ $t("postal_code") }}</span>
               <SortView class="mx-12" :sort="sortPostalCode" />
             </div>
           </template>
           <template v-if="column.key === 'address'">
             <div class="header-title" @click="changeSortAddress()">
-              <span class="header-title">{{ $t(column.title) }}</span>
+              <span class="header-title">{{ $t("address") }}</span>
               <SortView class="mx-12" :sort="sortAddress" />
             </div>
           </template>
 
           <template v-if="column.key === 'phoneNumber'">
             <div class="header-title" @click="changeSortPhoneNumber()">
-              <span class="header-title">{{ $t(column.title) }}</span>
+              <span class="header-title">{{ $t("phone_number") }}</span>
               <SortView class="mx-12" :sort="sortPhoneNumber" />
             </div>
           </template>
 
           <template v-if="column.key === 'email'">
             <div class="header-title" @click="changeSortEmail()">
-              <span class="header-title">{{ $t(column.title) }}</span>
+              <span class="header-title">{{ $t("email") }}</span>
               <SortView class="mx-12" :sort="sortEmail" />
             </div>
           </template>
@@ -124,7 +125,7 @@
         @onChange="onChange"
       />
       <NoData
-        :value="searchValue"
+        :value="searchString"
         :is-loading="isLoading"
         @onClick="handleBackToList"
         v-if="isLoading || !data || !data.length"
@@ -402,7 +403,7 @@ const tableMaxHeight = computed(() => {
 //#endregion
 
 //#region reactive
-watch(searchValue, onSearchChange);
+watch(searchString, onSearchChange);
 
 //#endregion
 </script>
