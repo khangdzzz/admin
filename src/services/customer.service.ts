@@ -9,6 +9,7 @@ import { PaginationDto } from "./dtos/common/pagination.dto";
 import { CustomerResponseDto } from "./dtos/customer-management/customer.dto";
 import { DEFAULT_SORT_ORDER } from "@/services/constants";
 import { calculateSortQuery } from "@/modules/common/helpers";
+import { CreateCustomerDto } from "./dtos/customer-management/create-customer.dto";
 
 // import { makeUniqueName } from "@/utils/string.helper";
 interface sortCustomerDto {
@@ -103,7 +104,7 @@ export async function deleteCustomerById(ids: number[]): Promise<boolean> {
 }
 
 export async function createCustomer(
-  data: Customer
+  data: CreateCustomerDto
 ): Promise<ServiceResponse<Customer>> {
   const [err, res] = await transformRequest<Customer>({
     url: "/workplace/customer",

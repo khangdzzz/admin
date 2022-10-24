@@ -72,7 +72,27 @@ const validator = {
     } else if (value && isNaN(value)) {
       return Promise.reject(i18n.global.t("allow_input_number"));
     } else if (value.toString().length > 10) {
-      return Promise.reject(i18n.global.t("max_length_input", { maxLength: 10 }));
+      return Promise.reject(
+        i18n.global.t("max_length_input", { maxLength: 10 })
+      );
+    }
+    return Promise.resolve();
+  },
+  validatePhone: (_rule: Rule, value: string): Promise<void> => {
+    if (!value) {
+      return Promise.resolve();
+    }
+    if (value.length > 15) {
+      return Promise.reject(
+        i18n.global.t("max_length_input", { maxLength: 15 })
+      );
+    }
+    if (!/\+[0-9]{6,15}/.test(value)) {
+      return Promise.reject(
+        i18n.global.t("invalid_field_name", {
+          fieldName: i18n.global.t("collection_phone_number").toLowerCase()
+        })
+      );
     }
     return Promise.resolve();
   }

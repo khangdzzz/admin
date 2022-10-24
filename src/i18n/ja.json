@@ -247,5 +247,6 @@
   "collection_route_detail": "回収ルート詳細",
   "collection_route_detail_note": "摘要を入力",
   "list_of_collection_point": "回収地点一覧",
-  "total_collection_point": "総合"
+  "total_collection_point": "総合",
+  "customer_registration_lbl_page_title": "新規取引先追加"
 }
