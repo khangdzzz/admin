@@ -15,7 +15,8 @@
               :formData="dynamicValidateForm.formData"
               @onBlur="handleOnBlur"
               @onFocus="handleOnFocus"
-            ></CustomForm>
+            >
+            </CustomForm>
           </a-form>
         </div>
         <a-row type="flex" justify="center" align="middle" gutter="20">
@@ -319,6 +320,7 @@ watch(isExist, () => {
 .edit-container {
   height: 100%;
 }
+
 .edit-container-content {
   width: 660px;
   height: auto;
@@ -349,6 +351,7 @@ watch(isExist, () => {
       margin: 0;
     }
   }
+
   .btn {
     padding: 0px 15px;
     margin-top: 30px;
@@ -358,39 +361,50 @@ watch(isExist, () => {
     font-size: 18px;
     line-height: 100%;
   }
+
   .btn:disabled {
     background-color: $neutral-200;
     color: $white;
   }
+
   .disabled-color {
     color: $neutral-400;
   }
+
   .disabled-color span {
     color: $neutral-400 !important;
   }
 }
+
 :deep() {
   .ant-select {
     font-size: 16px;
     color: $neutral-800;
     font-weight: 400;
   }
+
   .disabled-color ~ label span {
     color: $neutral-400 !important;
   }
+
   .disabled-color .ant-select-selector {
     color: $neutral-400 !important;
   }
+
   .edit-form-container {
     .ant-form-item {
       margin-right: 0px;
       margin-bottom: 20px;
+
       .ant-form-item-control {
         .ant-form-item-control-input {
           .ant-form-item-control-input-content {
             .input-item {
               padding: 0px;
               width: 620px;
+            }
+            .not-has-icon {
+              padding-left: 12px;
             }
             .inline {
               width: 300px !important;
@@ -403,11 +417,13 @@ watch(isExist, () => {
 
   .ant-checkbox-wrapper {
     align-items: center;
+
     span {
       font-weight: 400;
       font-size: 16px;
       line-height: 20px;
     }
+
     .ant-checkbox {
       margin-bottom: 5px;
     }
