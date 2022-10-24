@@ -37,7 +37,7 @@
               :disabled="!isValidated"
               :loading="isSubmitting"
               @click="updateContainer"
-              >{{ $t("btn_submit") }}</a-button
+              >{{ $t("btn_save") }}</a-button
             >
           </a-col>
         </a-row>
@@ -50,7 +50,6 @@
 //#region import
 import { i18n } from "@/i18n";
 import CustomForm from "@/modules/base/components/CustomForm.vue";
-import validator from "@/modules/base/components/validator/validator";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import { router } from "@/routes";
@@ -154,11 +153,26 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
       },
       rules: [
         {
-          validator: validator.validateWeight,
-          trigger: ["change", "blur"]
+          max: 10,
+          message: i18n.global.t("max_length_input", { maxLength: 10 }),
+          trigger: "change"
+        },
+
+        {
+          pattern: /(?<=^| )\d+(\.\d+)?(?=$| )/g,
+          message: i18n.global.t("invalid_field_name", {
+            fieldName: i18n.global.t("container_weight").toLowerCase()
+          }),
+          trigger: "change"
+        },
+        {
+          required: true,
+          message: i18n.global.t("please_enter_input", {
+            fieldName: i18n.global.t("container_weight").toLowerCase()
+          }),
+          trigger: "change"
         }
       ],
-
       required: true,
       key: 3,
       isFocus: false
@@ -171,6 +185,20 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
       name: "capacity",
       inline: true,
       disabled: false,
+      rules: [
+        {
+          max: 50,
+          message: i18n.global.t("max_length_input", { maxLength: 50 }),
+          trigger: "change"
+        },
+        {
+          pattern: /(?<=^| )\d+(\.\d+)?(?=$| )/g,
+          message: i18n.global.t("invalid_field_name", {
+            fieldName: i18n.global.t("container_capacity").toLowerCase()
+          }),
+          trigger: "change"
+        }
+      ],
       required: false,
       key: 4,
       isFocus: false
@@ -399,9 +427,11 @@ watch(isExist, () => {
       .ant-form-item-control {
         .ant-form-item-control-input {
           .ant-form-item-control-input-content {
+         
             .input-item {
               padding: 0px;
               width: 620px;
+              padding-top: 20px;
             }
             .not-has-icon {
               padding-left: 12px;
