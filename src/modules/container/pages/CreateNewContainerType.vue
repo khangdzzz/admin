@@ -13,7 +13,7 @@
         >
         </CustomForm>
         <div class="create-new-container-type-form__error" v-if="isExist">
-          {{ $t("error_unique_constraint") }}
+          {{ $t("error_unique_constraint", { fieldName: $t("name") }) }}
         </div>
         <div class="create-new-container-type-form__action">
           <a-button

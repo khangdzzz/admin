@@ -197,7 +197,7 @@
   "vehicle_edit_successfully": "車両が編集されました",
   "popup_msg_confirm_delete": "削除しますか？",
   "popup_delete_fail_lbl_title": "削除に失敗しました",
-  "error_unique_constraint": "名称が存在しています",
+  "error_unique_constraint": "{fieldName}は既に存在しています。",
   "popup_create_fail_title": "作成に失敗しました",
   "popup_edit_fail_title": "編集に失敗しました",
   "permission": "廃棄物許可",

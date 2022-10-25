@@ -74,7 +74,11 @@ const route = useRoute();
 
 let isExistName = async (): Promise<void> => {
   if (isExist.value) {
-    return Promise.reject(i18n.global.t("error_unique_constraint"));
+    return Promise.reject(
+      i18n.global.t("error_unique_constraint", {
+        fieldName: i18n.global.t("name")
+      })
+    );
   }
   return Promise.resolve();
 };
