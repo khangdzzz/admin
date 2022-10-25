@@ -235,5 +235,7 @@
   "delete_collection_point_successfully": "回収地点が削除されました",
   "delete_collection_point_mutiple_successfully": "{length} 回収地点が削除されました",
   "edit_customer_successfully": "取引先が編集されました",
-  "edit_contaienr": "取引先編集"
+  "edit_contaienr": "取引先編集",
+  "create_vehicle_lbl_vehicle_name": "車両名称",
+  "create_vehicle_lbl_vehicle_number_plate": "ナンバープレートを"
 }
