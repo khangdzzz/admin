@@ -107,7 +107,7 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
         },
         {
           validator: isExistName,
-          trigger: ["change"]
+          trigger: ["blur", "change"]
         }
       ],
       required: true,
@@ -155,7 +155,7 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
         {
           max: 10,
           message: i18n.global.t("max_length_input", { maxLength: 10 }),
-          trigger: "change"
+          trigger: ["blur", "change"]
         },
 
         {
@@ -163,14 +163,14 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
           message: i18n.global.t("invalid_field_name", {
             fieldName: i18n.global.t("container_weight").toLowerCase()
           }),
-          trigger: "change"
+          trigger: ["blur", "change"]
         },
         {
           required: true,
           message: i18n.global.t("please_enter_input", {
             fieldName: i18n.global.t("container_weight").toLowerCase()
           }),
-          trigger: "change"
+          trigger: ["blur", "change"]
         }
       ],
       required: true,
@@ -189,14 +189,14 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
         {
           max: 50,
           message: i18n.global.t("max_length_input", { maxLength: 50 }),
-          trigger: "change"
+          trigger: ["blur", "change"]
         },
         {
           pattern: /(?<=^| )\d+(\.\d+)?(?=$| )/g,
           message: i18n.global.t("invalid_field_name", {
             fieldName: i18n.global.t("container_capacity").toLowerCase()
           }),
-          trigger: "change"
+          trigger: ["blur", "change"]
         }
       ],
       required: false,

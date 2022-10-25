@@ -55,7 +55,6 @@ export async function getListVehicle(
     sortPermission
   );
 
-
   const order_by = [
     orderSortType,
     orderSortName,
@@ -70,7 +69,7 @@ export async function getListVehicle(
   const params = {
     page,
     page_size: size,
-    name__like: searchKeyword ? `%${searchKeyword}%` : undefined,
+    __all__: searchKeyword ? `%${searchKeyword}%` : undefined,
     order_by: order_by?.length ? order_by : DEFAULT_SORT_ORDER
   };
   const [err, res] = await transformRequest<PaginationDto<ResVehicle>>({
@@ -191,7 +190,7 @@ export async function getVehicleDetail(
     maxWeight: max_capacity,
     isHasPermission: permission_flag,
     ownerType: workplace___workplace_type,
-    id,
+    id
   };
   return detail;
 }
