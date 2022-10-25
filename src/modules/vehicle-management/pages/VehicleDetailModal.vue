@@ -52,7 +52,8 @@
             {{ item.title }}
           </div>
           <div :class="[VehicleDetailModal.value]">{{ item.value }}</div>
-          <a-divider class="mt-10 mb-15"
+          <a-divider
+            class="mt-10 mb-15"
             v-if="index < information.length - 1"
             style="border-color: #e8e8e8"
           />
@@ -147,7 +148,7 @@ onMounted(async () => {
 const downloadQR = async (): Promise<void> => {
   const anchor = document.createElement("a");
   anchor.href = urlQrCode.value;
-  anchor.download = `${currentVehicle.vehicleName}${currentVehicle.vehiclePlate}`;
+  anchor.download = `${currentVehicle.vehicleName}_${currentVehicle.vehiclePlate}`;
   document.body.appendChild(anchor);
   anchor.click();
   document.body.removeChild(anchor);
@@ -211,20 +212,21 @@ const downloadQR = async (): Promise<void> => {
 
     .btn {
       margin-top: 28px;
-      padding: 0px 15px;
+      padding: 0px;
       width: 140px;
       height: 32px;
-      border-radius: 6px;
+       border-radius: 6px;
       .btnIcon {
         width: 16px;
         height: 16px;
-        margin-right: 10px;
+        margin-left: 9px;
       }
       span {
         font-weight: 600;
         font-size: 16px;
         line-height: 100%;
         color: $primary;
+        margin: 8px 10px 8px 9px;
       }
     }
   }
