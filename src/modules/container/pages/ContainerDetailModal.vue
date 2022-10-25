@@ -122,7 +122,7 @@ const form = reactive<{
     },
     {
       title: i18n.global.t("container_capacity"),
-      value: detail.capacity || null,
+      value: detail.capacity ?? '---',
       width: "190px",
       marginRight: "0"
     }
