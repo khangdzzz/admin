@@ -29,7 +29,7 @@
   background-color: $white;
 }
 
-.ant-table-thead>tr>th {
+.ant-table-thead > tr > th {
   font-weight: 700 !important;
   line-height: 18px;
   height: 58px !important;
@@ -53,10 +53,10 @@
   border-top-left-radius: 10px !important;
   border-top-right-radius: 10px !important;
   border-bottom-left-radius: 10px !important;
-  border-bottom-right-radius: 10px !important;
+  border-bottom-right-radius: 0px !important;
 }
 
-.ant-table-tbody>tr.ant-table-row-selected>td {
+.ant-table-tbody > tr.ant-table-row-selected > td {
   background: $grey-2;
   border-color: rgba(0, 0, 0, 0.03);
 }
@@ -72,7 +72,7 @@
   text-overflow: ellipsis;
 }
 
-.ant-table-thead>tr>th {
+.ant-table-thead > tr > th {
   font-weight: 700;
 }
 
@@ -88,27 +88,27 @@
   background-color: $neutral-50;
 }
 
-.ant-table-container table>thead>tr>th {
+.ant-table-container table > thead > tr > th {
   background-color: $white;
 }
 
-.ant-table-container table>thead>tr:first-child th {
+.ant-table-container table > thead > tr:first-child th {
   color: $text-1;
 }
 
-.ant-table-container table>thead>tr:first-child th:first-child {
+.ant-table-container table > thead > tr:first-child th:first-child {
   border-top-left-radius: 10px !important;
 }
 
-.ant-table-container table>thead>tr:first-child th:last-child {
+.ant-table-container table > thead > tr:first-child th:last-child {
   border-top-right-radius: 10px !important;
 }
 
-.ant-table-container table>tbody>tr:last-child td:first-child {
+.ant-table-container table > tbody > tr:last-child td:first-child {
   border-bottom-left-radius: 0px;
 }
 
-.ant-table-container table>tbody>tr:last-child td:last-child {
+.ant-table-container table > tbody > tr:last-child td:last-child {
   border-bottom-right-radius: 0px;
 }
 
@@ -116,7 +116,9 @@
   background: $white;
 }
 
-.ant-table-thead>tr>th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
+.ant-table-thead
+  > tr
+  > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
   height: 0 !important;
 }
 
@@ -129,11 +131,11 @@
   .ant-spin-nested-loading {
     .ant-spin-container {
       .ant-table {
-        .ant-table-container table>tbody>tr:last-child td:last-child {
+        .ant-table-container table > tbody > tr:last-child td:last-child {
           border-bottom-right-radius: 0px;
         }
 
-        .ant-table-container table>tbody>tr:last-child td:first-child {
+        .ant-table-container table > tbody > tr:last-child td:first-child {
           border-bottom-left-radius: 0px;
         }
       }
@@ -206,7 +208,7 @@
           span {
             font-size: 14px;
             font-weight: 700;
-            color: $neutral-600
+            color: $neutral-600;
           }
 
           img {
@@ -224,6 +226,14 @@
   }
 }
 
+.ant-select-selection-item {
+  margin-top: 6px !important;
+}
+
+.ant-select-selection-search-input {
+  margin-top: 6px !important;
+}
+
 .ant-select-dropdown {
   .ant-select-item-option-content {
     img {
@@ -236,7 +246,7 @@
   }
 }
 
-.ant-spin-nested-loading>div>.ant-spin {
+.ant-spin-nested-loading > div > .ant-spin {
   max-height: 100% !important;
 
   .ant-spin-dot {
@@ -299,7 +309,29 @@
 
 .has-label {
   .ant-input {
+    margin-top: 16px !important;
     padding-top: 8px !important;
     left: 0px;
   }
+}
+
+.ant-tooltip-arrow {
+  left: 20px !important;
+}
+
+.ant-tooltip-arrow-content {
+  width: 8.5px !important;
+  height: 8.5px !important;
+  background-color: rgba(0, 0, 0, 0.9);
+}
+
+.ant-btn-primary {
+  text-shadow: none !important;
+}
+
+.ant-tooltip-inner {
+  height: 36px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }

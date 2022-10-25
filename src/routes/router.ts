@@ -236,7 +236,7 @@ const routes: RouteRecordRaw[] = [
           import(
             "@/modules/collection-point-management/pages/CollectionPointList.vue"
           )
-      },
+      }
     ]
   },
   {
@@ -484,6 +484,13 @@ const routes: RouteRecordRaw[] = [
     meta: {
       layout: ScreenLayout.DEFAULT_LAYOUT
     },
+    redirect: {
+      name: routeNames.default
+    }
+  },
+  {
+    path: "/:pathMatch(.*)*",
+    name: "NOT_FOUND",
     redirect: {
       name: routeNames.default
     }

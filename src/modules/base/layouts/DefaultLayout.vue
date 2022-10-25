@@ -150,11 +150,14 @@ const goHome = (): void => {
                     <component
                       :is="subMenu.icon"
                       class="default-layout__icon"
-                     
                     ></component>
                   </template>
                   <template #title v-if="!collapsed">
-                    <span class="default-layout__menu-title" v-if="$t" :id="subMenu.qaAttr" >
+                    <span
+                      class="default-layout__menu-title"
+                      v-if="$t"
+                      :id="subMenu.qaAttr"
+                    >
                       {{ $t(subMenu.title) }}
                     </span>
                   </template>
@@ -416,7 +419,7 @@ $transition-time: 0.3s;
   }
 
   &__content-wrapper {
-    background-color: $neutral-50;
+    background-color: $primary-50;
     overflow: auto;
     flex-grow: 1;
   }

@@ -8,7 +8,8 @@
       :model="formState"
       :label-col="{ span: 8 }"
       :wrapper-col="{ span: 16 }"
-      autocomplete="off">
+      autocomplete="off"
+    >
       <a-form-item
         class="field-email"
         name="email"
@@ -22,12 +23,14 @@
             validator: validator.validateEmail,
             trigger: ['change', 'blur']
           }
-        ]">
+        ]"
+      >
         <a-input
           class="fgpw-form__input-email"
           v-model:value.trim="formState.email"
           @focus="onFocusInputEmail"
-          @blur="onBlurInputEmail">
+          @blur="onBlurInputEmail"
+        >
           <template #prefix>
             <IcUser class="mr-3 fgpw-icon-input" :color="getIconUserColor" />
           </template>
@@ -44,7 +47,8 @@
         <a-button
           class="fgpw-form__action-wrap--cancel"
           @click="redirectToLogin"
-          :disabled="isLoading">
+          :disabled="isLoading"
+        >
           {{ $t("forgot_password_btn_cancel") }}
         </a-button>
         <a-button
@@ -54,7 +58,8 @@
             emailIsValid ? 'active-btn' : ''
           ]"
           @click="$emit('handleConfirm', formState.email)"
-          :loading="isLoading">
+          :loading="isLoading"
+        >
           {{ $t("forgot_password_btn_confirm") }}
         </a-button>
       </div>
