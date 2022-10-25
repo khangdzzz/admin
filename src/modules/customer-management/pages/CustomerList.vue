@@ -78,7 +78,9 @@
 
           <template v-if="column.key === 'email'">
             <div class="header-title" @click="changeSortEmail()">
-              <span class="header-title">{{ $t("email") }}</span>
+              <span class="header-title">{{
+                $t("collection_base_lbl_email")
+              }}</span>
               <SortView class="mx-12" :sort="sortEmail" />
             </div>
           </template>
