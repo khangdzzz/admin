@@ -243,7 +243,6 @@ const fetchContainerType = async (): Promise<void> => {
 const fetchContainerById = async (): Promise<void> => {
   isLoadingInfo.value = true;
   const res = await service.container.getContainerById(+id);
-  console.log(res);
   if (res) {
     for (const key of Object.keys(fieldName)) {
       dynamicValidateForm.formData[fieldName[key]].value =
