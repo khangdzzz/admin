@@ -87,12 +87,12 @@ const formData = ref([
         message: i18n.global.t("please_enter_input", {
           fieldName: i18n.global.t("container_container_name").toLowerCase()
         }),
-        trigger: "blur"
+        trigger: ["blur", "change"]
       },
       {
         max: 50,
-        message: i18n.global.t("max_length_input_text", { maxLength: 50 }),
-        trigger: "blur"
+        message: i18n.global.t("max_length_input", { maxLength: 50 }),
+        trigger: ["blur", "change"]
       },
       {
         validator: async (): Promise<void> => {
@@ -101,7 +101,7 @@ const formData = ref([
           }
           return Promise.resolve();
         },
-        trigger: ["change"]
+        trigger: ["blur", "change"]
       }
     ]
   },
@@ -126,7 +126,7 @@ const formData = ref([
         message: i18n.global.t("please_enter_input", {
           fieldName: i18n.global.t("container_container_type").toLowerCase()
         }),
-        trigger: "blur"
+        trigger: ["blur", "change"]
       }
     ]
   },
@@ -146,7 +146,7 @@ const formData = ref([
       {
         max: 10,
         message: i18n.global.t("max_length_input", { maxLength: 10 }),
-        trigger: "blur"
+        trigger: ["blur", "change"]
       },
 
       {
@@ -154,14 +154,14 @@ const formData = ref([
         message: i18n.global.t("invalid_field_name", {
           fieldName: i18n.global.t("container_weight").toLowerCase()
         }),
-        trigger: "blur"
+        trigger: ["blur", "change"]
       },
       {
         required: true,
         message: i18n.global.t("please_enter_input", {
           fieldName: i18n.global.t("container_weight").toLowerCase()
         }),
-        trigger: "blur"
+        trigger: ["blur", "change"]
       }
     ],
     required: true,
@@ -180,14 +180,14 @@ const formData = ref([
       {
         max: 50,
         message: i18n.global.t("max_length_input", { maxLength: 50 }),
-        trigger: "blur"
+        trigger: ["blur", "change"]
       },
       {
         pattern: /(?<=^| )\d+(\.\d+)?(?=$| )/g,
         message: i18n.global.t("invalid_field_name", {
           fieldName: i18n.global.t("container_capacity").toLowerCase()
         }),
-        trigger: "blur"
+        trigger: ["blur", "change"]
       }
     ],
     required: false,
