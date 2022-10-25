@@ -10,6 +10,7 @@
           {{ $t("container_add_new_container") }}
         </div>
         <a-form
+          ref="formRef"
           :model="{ formData }"
           layout="inline"
           class="form-create-container"
@@ -46,7 +47,7 @@
 
 <script setup lang="ts">
 //#region import
-import { computed, inject, onMounted, ref } from "vue";
+import { computed, inject, onMounted, ref, watch } from "vue";
 
 import CustomForm from "@/modules/base/components/CustomForm.vue";
 import { routeNames, router } from "@/routes";
@@ -67,6 +68,9 @@ const messenger: (
 
 const isLoading = ref<boolean>(false);
 const isFetchingMasterData = ref<boolean>(false);
+const isExist = ref<boolean>(false);
+const formRef = ref();
+
 const formData = ref([
   {
     inputType: "AInput",
@@ -89,6 +93,15 @@ const formData = ref([
         max: 50,
         message: i18n.global.t("max_length_input_text", { maxLength: 50 }),
         trigger: "blur"
+      },
+      {
+        validator: async (): Promise<void> => {
+          if (isExist.value) {
+            return Promise.reject(i18n.global.t("error_unique_constraint"));
+          }
+          return Promise.resolve();
+        },
+        trigger: ["change"]
       }
     ]
   },
@@ -217,6 +230,7 @@ const initialize = async (): Promise<void> => {
 };
 
 const handleOnFocus = (index: number | boolean | Event): void => {
+  if (index === 0) isExist.value = false;
   formData.value[Number(index)].isFocus = true;
 };
 
@@ -267,8 +281,13 @@ const handleSubmit = async (): Promise<void> => {
       }
     });
   } else if (error) {
+    if (error === "error_unique_constraint") {
+      isExist.value = true;
+      return;
+    }
+
     messenger({
-      title: error,
+      title: "create_failed",
       message: "",
       type: MessengerType.Error,
       callback: () => {
@@ -290,6 +309,9 @@ const isAllowSubmit = computed(() => {
 //#endregion
 
 //#region reactive
+watch(isExist, () => {
+  formRef.value.validate();
+});
 //#endregion
 </script>
 
