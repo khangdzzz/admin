@@ -282,7 +282,10 @@ const onDeleteContainerType = async (deleteIds: number[]): Promise<void> => {
   searchString.value = "";
 };
 const handleBackToList = (): void => {
-  searchString.value = "";
+  if (searchString.value) {
+    isLoading.value = true;
+    searchString.value = "";
+  }
 };
 
 const onShowSizeChange = (current: number, pageSize: number): void => {
@@ -349,7 +352,6 @@ watch(searchString, onSearchChange);
   .ant-table-cell {
     text-align: center;
   }
-
 }
 </style>
 

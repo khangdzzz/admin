@@ -160,7 +160,6 @@ import { columns } from "../models/CustomerListColumn";
 //#region variables
 let sourceData: CustomerModel[] = [];
 const data = ref<CustomerModel[]>([]);
-const searchValue = ref<string>("");
 const isLoading = ref<boolean>(false);
 const messenger: (param: MessengerParamModel) => void =
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -211,6 +210,7 @@ onMounted(() => {
 
 const handleBackToList = (): void => {
   if (searchHeader.value) {
+    isLoading.value = true;
     searchHeader.value.clearInput();
   }
 };

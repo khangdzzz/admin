@@ -279,7 +279,10 @@ const onDeleteVehicleType = async (deleteIds: number[]): Promise<void> => {
 };
 
 const handleBackToList = (): void => {
-  searchString.value = "";
+  if (searchString.value) {
+    isLoading.value = true;
+    searchString.value = "";
+  }
 };
 
 const isShowPrevBtn = (): boolean => {
