@@ -239,6 +239,8 @@
   "collection_point": "Collection point",
   "delete_collection_point_successfully": "Collection point is deleted successfully",
   "delete_collection_point_mutiple_successfully": "{length} Collection point is deleted successfully",
-  "edit_customer_successfully":"Customer is edited successfully",
-  "edit_contaienr":" Edit customer"
+  "edit_customer_successfully": "Customer is edited successfully",
+  "edit_contaienr": " Edit customer",
+  "create_vehicle_lbl_vehicle_name": "vehicle name",
+  "create_vehicle_lbl_vehicle_number_plate": "number plate"
 }

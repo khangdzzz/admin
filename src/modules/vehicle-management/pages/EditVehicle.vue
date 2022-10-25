@@ -131,8 +131,9 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
         {
           required: true,
           message: i18n.global.t("please_enter_input", {
-            fieldName: i18n.global.t("owner")
-          })
+            fieldName: i18n.global.t("owner").toLowerCase()
+          }),
+          trigger: ["change", "blur"]
         }
       ],
       dropdownClassName: "form-option-content",
@@ -156,7 +157,8 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
         {
           required: true,
           message: i18n.global.t("please_enter_input", {
-            fieldName: i18n.global.t("vehicle_type")
+            fieldName: i18n.global.t("vehicle_type").toLowerCase(),
+            trigger: ["change", "blur"]
           })
         }
       ],
@@ -179,12 +181,16 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
         {
           required: true,
           message: i18n.global.t("please_enter_input", {
-            fieldName: i18n.global.t("vehicle_name")
-          })
+            fieldName: i18n.global
+              .t("create_vehicle_lbl_vehicle_name")
+              .toLowerCase()
+          }),
+          trigger: ["change", "blur"]
         },
         {
           max: 50,
-          message: i18n.global.t("max_length_input", { maxLength: 50 })
+          message: i18n.global.t("max_length_input", { maxLength: 50 }),
+          trigger: ["change", "blur"]
         }
       ],
       required: true,
@@ -203,12 +209,16 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
         {
           required: true,
           message: i18n.global.t("please_enter_input", {
-            fieldName: i18n.global.t("vehicle_number_plate")
-          })
+            fieldName: i18n.global
+              .t("create_vehicle_lbl_vehicle_number_plate")
+              .toLowerCase()
+          }),
+          trigger: ["change", "blur"]
         },
         {
           max: 50,
-          message: i18n.global.t("max_length_input", { maxLength: 50 })
+          message: i18n.global.t("max_length_input", { maxLength: 50 }),
+          trigger: ["change", "blur"]
         }
       ],
       key: 2,
@@ -224,11 +234,13 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
       rules: [
         {
           max: 10,
-          message: i18n.global.t("max_length_input", { maxLength: 10 })
+          message: i18n.global.t("max_length_input", { maxLength: 10 }),
+          trigger: ["change", "blur"]
         },
         {
           pattern: /^\d*$/,
-          message: i18n.global.t("allow_input_number")
+          message: i18n.global.t("allow_input_number"),
+          trigger: ["change", "blur"]
         }
       ],
       required: false,
