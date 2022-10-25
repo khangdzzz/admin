@@ -242,5 +242,11 @@
   "edit_customer_successfully": "Customer is edited successfully",
   "edit_contaienr": " Edit customer",
   "create_vehicle_lbl_vehicle_name": "vehicle name",
-  "create_vehicle_lbl_vehicle_number_plate": "number plate"
+  "create_vehicle_lbl_vehicle_number_plate": "number plate",
+  "collection_route": "Collection route",
+  "collection_route_name": "Route name",
+  "collection_route_workplace": "Workplace",
+  "collection_route_number_of_stores": "Number of stores",
+  "collection_route_last_update": "Last update",
+  "collection_route_navigation_id": "Navigation route ID"
 }

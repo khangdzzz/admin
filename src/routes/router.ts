@@ -425,8 +425,18 @@ const routes: RouteRecordRaw[] = [
       layout: ScreenLayout.DEFAULT_LAYOUT
     },
     redirect: {
-      name: routeNames.default
-    }
+      name: routeNames.listCollectionRoute
+    },
+    children: [
+      {
+        name: routeNames.listCollectionRoute,
+        path: "list",
+        component: () =>
+          import(
+            "@/modules/collection-route-order/pages/CollectionRouteList.vue"
+          )
+      }
+    ]
   },
   {
     path: "/delivery-management",
