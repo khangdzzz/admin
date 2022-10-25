@@ -426,11 +426,9 @@ watch(isExist, () => {
       .ant-form-item-control {
         .ant-form-item-control-input {
           .ant-form-item-control-input-content {
-         
             .input-item {
               padding: 0px;
               width: 620px;
-              padding-top: 20px;
             }
             .not-has-icon {
               padding-left: 12px;

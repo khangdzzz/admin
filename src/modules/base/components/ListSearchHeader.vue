@@ -123,3 +123,10 @@ defineExpose({ clearInput });
   margin: 0;
 }
 </style>
+<style lang="scss">
+.search-input {
+  .ant-input {
+    font-size: 18px !important;
+  }
+}
+</style>
