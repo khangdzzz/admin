@@ -466,9 +466,6 @@ watch(
           }
           .ant-form-item-control-input {
             .ant-form-item-control-input-content {
-              .ant-input-affix-wrapper {
-                padding-top: 20px;
-              }
               .ant-select-single {
                 .ant-select-selector {
                   .ant-select-selection-item {
