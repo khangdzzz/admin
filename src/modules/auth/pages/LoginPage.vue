@@ -183,15 +183,11 @@ const handleLogin = async (): Promise<void> => {
       );
       onLoginSuccessfully();
     },
-    onFailure: (err) => {
+    onFailure: (_err) => {
       isLoading.value = false;
-      const errMessage =
-        err.name === "NotAuthorizedException"
-          ? "login_confirm_account"
-          : "login_fail_to_login_try_again_message";
       messenger({
         title: "login_fail_to_login",
-        message: errMessage,
+        message: "",
         type: MessengerType.Error
       });
     }
