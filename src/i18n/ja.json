@@ -201,6 +201,8 @@
   "popup_create_fail_title": "作成に失敗しました",
   "popup_edit_fail_title": "編集に失敗しました",
   "permission": "廃棄物許可",
+  "delete_vehicle_successfully": "車両種別が削除されました",
+  "delete_vehicle_mutiple_successfully": "{length}台の車両が削除されました",
   "capacity": "最大積載量",
   "common_lbl_coming_soon": "近日公開",
   "container_successfully_created": "風袋が作成されました",
@@ -232,6 +234,6 @@
   "collection_point": "回収地点 ",
   "delete_collection_point_successfully": "回収地点が削除されました",
   "delete_collection_point_mutiple_successfully": "{length} 回収地点が削除されました",
-  "edit_customer_successfully":"取引先が編集されました",
-  "edit_contaienr":"取引先編集"
+  "edit_customer_successfully": "取引先が編集されました",
+  "edit_contaienr": "取引先編集"
 }
