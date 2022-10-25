@@ -10,6 +10,7 @@ import * as customer from "./customer.service";
 import * as constants from "./constants";
 import * as customerManagement from "./customer-management.service";
 import * as collectionPoint from "./collection-point.service";
+import * as collectionRoute from "./collection-route.service";
 export const service = {
   auth,
   localStorage,
@@ -22,5 +23,6 @@ export const service = {
   constants,
   customer,
   customerManagement,
-  collectionPoint
+  collectionPoint,
+  collectionRoute
 };
