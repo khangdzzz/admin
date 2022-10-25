@@ -219,6 +219,9 @@ const routes: RouteRecordRaw[] = [
     meta: {
       layout: ScreenLayout.DEFAULT_LAYOUT
     },
+    redirect: {
+      name: routeNames.collectionPointManagement
+    },
     children: [
       {
         path: "detail/:id",
@@ -234,6 +237,22 @@ const routes: RouteRecordRaw[] = [
         component: () =>
           import(
             "@/modules/collection-point-management/pages/CollectionPointList.vue"
+          )
+      },
+      {
+        path: "create",
+        name: routeNames.createCollectionPoint,
+        component: () =>
+          import(
+            "@/modules/collection-point-management/pages/CreateCollectionPoint.vue"
+          )
+      },
+      {
+        path: "edit/:id",
+        name: routeNames.editCollectionPoint,
+        component: () =>
+          import(
+            "@/modules/collection-point-management/pages/CreateCollectionPoint.vue"
           )
       }
     ]

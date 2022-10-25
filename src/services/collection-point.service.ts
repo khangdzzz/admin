@@ -1,6 +1,9 @@
 // import { CollectionBase } from "@/modules/staff-management/models/collection-base.model";
 import { transformRequest } from "./base.service";
-import { CollectionPoint } from "./dtos/collection-point/collection-point.dto";
+import {
+  CollectionPoint,
+  CollectionPointRequestDTO
+} from "./dtos/collection-point/collection-point.dto";
 import { Pagination } from "@/modules/common/models";
 import { Sort } from "@/modules/common/models/sort.enum";
 import { CollectionPointModel } from "@/modules/collection-point-management/models/collection-point.model";
@@ -8,6 +11,7 @@ import { CollectionPointResponseDto } from "./dtos/collection-point/collection-p
 import { PaginationDto } from "./dtos/common/pagination.dto";
 import { DEFAULT_SORT_ORDER } from "@/services/constants";
 import { calculateSortQuery } from "@/modules/common/helpers";
+import { ServiceResponse } from "@/modules/common/models";
 
 interface SortCollectionPointDto {
   sortName: Sort;
@@ -127,3 +131,24 @@ export const getCollectionPointById = async (
   if (error || !res) return undefined;
   return res;
 };
+
+export async function createCollectionPoint(
+  data: CollectionPointRequestDTO
+): Promise<ServiceResponse<CollectionPoint>> {
+  const [error, res] = await transformRequest<CollectionPoint>({
+    url: "/collect_point",
+    method: "post",
+    data
+  });
+
+  if (error || !res) {
+    return {
+      error: (error?.response?.data as { details: { msg: string }[] })
+        .details[0].msg
+    };
+  }
+
+  return {
+    res
+  };
+}

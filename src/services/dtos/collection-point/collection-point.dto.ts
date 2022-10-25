@@ -16,6 +16,7 @@ export interface CollectionPoint extends Date {
   id: number;
   customer___name: string;
 }
+
 export interface CollectionPointResponseDto {
   created_at?: Date;
   created_by?: number | string;
@@ -40,4 +41,18 @@ export interface CollectionPointResponseDto {
   longitude: number;
   workplace___name: string;
   customer?: string;
+}
+
+export interface CollectionPointRequestDTO {
+  customer_id: number;
+  name: string | null;
+  short_name: string;
+  name_kana: string;
+  postcode: string;
+  address: string;
+  telephone: string | null;
+  mail: string | null;
+  external_code: string;
+  latitude: number | null;
+  longitude: number | null;
 }

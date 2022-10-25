@@ -85,11 +85,26 @@
           </template>
         </template>
 
-        <template #bodyCell="{ column, record }">
+        <template #bodyCell="{ column, record, text }">
+          <template
+            v-if="columns.includes(column) && column.dataIndex !== 'action'"
+          >
+            <a-tooltip
+              v-if="text"
+              placement="topLeft"
+              :title="text"
+              arrow-point-at-center
+            >
+              <span class="has-value">{{ text }} </span>
+            </a-tooltip>
+            <span class="null-value" v-else>{{ NULL_VALUE_DISPLAY }}</span>
+          </template>
+
           <template v-if="column.dataIndex === 'action'">
             <img
               src="@/assets/icons/ic_btn_edit.svg"
               :class="[collectionPoint.actionIcon, 'ml-0']"
+              @click="(event) => handleClickEdit(event, record.id)"
             />
             <img
               src="@/assets/icons/ic_btn_delete.svg"
@@ -139,6 +154,7 @@ import type { TableColumnType } from "ant-design-vue";
 import { debounce } from "lodash";
 import { computed, inject, onMounted, reactive, ref, watch } from "vue";
 import { CollectionPointModel } from "../models/collection-point.model";
+import { NULL_VALUE_DISPLAY } from "@/utils/constants";
 
 //#endregion===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆
 
@@ -232,7 +248,7 @@ const customRow = (
     onClick: (_event: PointerEvent): void => {
       _event;
       router.push({
-        name: routeNames.customerDetail,
+        name: routeNames.collectionPointDetail,
         params: {
           id: record.id
         }
@@ -363,6 +379,18 @@ const onSearchChange = debounce((): void => {
   fetchCollectionPointList();
 }, 500);
 
+const handleClickEdit = ($event: MouseEvent, id: string): void => {
+  if ($event.stopPropagation) $event.stopPropagation();
+
+  if (!id) return;
+  router.push({
+    name: routeNames.editCollectionPoint,
+    params: {
+      id
+    }
+  });
+};
+
 const deleteCollectionPoint = ($event: MouseEvent, id?: number): void => {
   if ($event.stopPropagation) $event.stopPropagation();
   messenger({
@@ -421,7 +449,7 @@ const onDeleteCollectionPoint = async (deleteIds: number[]): Promise<void> => {
 };
 
 const onCreate = (): void => {
-  router.push({ name: routeNames.createNewContainer });
+  router.push({ name: routeNames.createCollectionPoint });
 };
 
 const handleSearchChange = (currentSearchValue: string): void => {
@@ -430,7 +458,7 @@ const handleSearchChange = (currentSearchValue: string): void => {
 
 const handleBackToList = (): void => {
   if (searchHeader.value) {
-    isLoading.value = true
+    isLoading.value = true;
     searchHeader.value.clearInput();
   }
 };

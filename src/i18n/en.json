@@ -254,5 +254,10 @@
   "list_of_collection_point": "List of collection point",
   "total_collection_point": "Total",
   "customer_registration_lbl_page_title": "Add new customer",
-  "delete_collection_route_successfully": "Collection route is deleted successfully"
+  "delete_collection_route_successfully": "Collection route is deleted successfully",
+  "add_new_collection_point": "Add new collection point",
+  "collection_point_created_successfully": "Collection point is created successfully",
+  "collection_point_create_failed": "Create failed",
+  "search_address": "Search address",
+  "cannot_find_address_from_field_name": "Cannot find an address from this {fieldName}"
 }

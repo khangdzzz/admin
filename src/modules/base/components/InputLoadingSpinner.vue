@@ -1,5 +1,5 @@
 <template>
-  <div class="loading-spinner">
+  <div class="input-loading-spinner">
     <div
       v-for="number in 8"
       :key="number"
@@ -18,14 +18,14 @@ defineProps({
 </script>
 
 <style lang="scss" scoped>
-.loading-spinner {
+.input-loading-spinner {
   display: inline-block;
   position: relative;
-  width: 80px;
-  height: 60px;
+  width: 60px;
+  height: 30px;
 
   div {
-    transform-origin: 38px 30px;
+    transform-origin: 38px 15px;
     animation: spinner 0.8s linear infinite;
 
     &::after {
@@ -34,8 +34,8 @@ defineProps({
       position: absolute;
       top: 3px;
       left: 37px;
-      width: 3px;
-      height: 14px;
+      width: 2px;
+      height: 6px;
       border-radius: 8px;
       background-color: inherit;
     }
