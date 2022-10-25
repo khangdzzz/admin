@@ -56,6 +56,7 @@ import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
 import { makeUniqueName } from "@/utils/string.helper";
+import { Rule } from "ant-design-vue/lib/form";
 // import { Rule } from "ant-design-vue/lib/form";
 import { inject, onMounted, reactive, ref, watch } from "vue";
 import { useRoute } from "vue-router";
@@ -153,24 +154,29 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
       },
       rules: [
         {
-          max: 10,
-          message: i18n.global.t("max_length_input", { maxLength: 10 }),
-          trigger: ["blur", "change"]
-        },
-
-        {
-          pattern: /(?<=^| )\d+(\.\d+)?(?=$| )/g,
-          message: i18n.global.t("invalid_field_name", {
-            fieldName: i18n.global.t("container_weight").toLowerCase()
-          }),
-          trigger: ["blur", "change"]
-        },
-        {
           required: true,
           message: i18n.global.t("please_enter_input", {
             fieldName: i18n.global.t("container_weight").toLowerCase()
           }),
           trigger: ["blur", "change"]
+        },
+        {
+          validator: async (_rule: Rule, value: string): Promise<void> => {
+            if (!value) return Promise.resolve();
+            if (value.length > 10) {
+              return Promise.reject(
+                i18n.global.t("max_length_input", { maxLength: 10 })
+              );
+            }
+            if (!/(?<=^| )\d+(\.\d+)?(?=$| )/g.test(value)) {
+              return Promise.reject(
+                i18n.global.t("invalid_field_name", {
+                  fieldName: i18n.global.t("container_weight").toLowerCase()
+                })
+              );
+            }
+          },
+          trigger: ["change", "blur"]
         }
       ],
       required: true,
@@ -187,16 +193,22 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
       disabled: false,
       rules: [
         {
-          max: 50,
-          message: i18n.global.t("max_length_input", { maxLength: 50 }),
-          trigger: ["blur", "change"]
-        },
-        {
-          pattern: /(?<=^| )\d+(\.\d+)?(?=$| )/g,
-          message: i18n.global.t("invalid_field_name", {
-            fieldName: i18n.global.t("container_capacity").toLowerCase()
-          }),
-          trigger: ["blur", "change"]
+          validator: async (_rule: Rule, value: string): Promise<void> => {
+            if (!value) return Promise.resolve();
+            if (value.length > 50) {
+              return Promise.reject(
+                i18n.global.t("max_length_input", { maxLength: 50 })
+              );
+            }
+            if (!/(?<=^| )\d+(\.\d+)?(?=$| )/g.test(value)) {
+              return Promise.reject(
+                i18n.global.t("invalid_field_name", {
+                  fieldName: i18n.global.t("container_capacity").toLowerCase()
+                })
+              );
+            }
+          },
+          trigger: ["change", "blur"]
         }
       ],
       required: false,
