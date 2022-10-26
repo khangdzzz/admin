@@ -4,7 +4,7 @@
       <div
         class="create-customer__title d-flex justify-center align-center mb-30"
       >
-        Add new Customer
+        {{ $t("customer_registration_lbl_page_title") }}
       </div>
       <div>
         <a-form :model="formData" ref="createCustomerForm">
@@ -131,11 +131,12 @@ const handleClickSubmit = async (): Promise<void> => {
     telephone: makeUniqueName(singleInput[5].value.toString()),
     mail: makeUniqueName(singleInput[6].value.toString()),
     representative: makeUniqueName(duoInputs[0].value.toString()),
-    external_code: +duoInputs[1].value
+    external_code: makeUniqueName(duoInputs[1].value.toString())
   };
 
   isSubmitting.value = true;
   const { error, res } = await service.customer.createCustomer(data);
+  isSubmitting.value = false;
   if (!error && res) {
     messenger({
       title: "customer_created_successfully",
@@ -156,7 +157,6 @@ const handleClickSubmit = async (): Promise<void> => {
       type: MessengerType.Error
     });
   }
-  isSubmitting.value = false;
 };
 //#endregion
 
@@ -244,6 +244,11 @@ const isSubmitDisable = computed(() => {
         width: 100%;
       }
     }
+  }
+
+  .ant-form-item-explain-error {
+    color: $red-500 !important;
+    margin-bottom: 20px;
   }
 }
 </style>
