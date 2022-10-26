@@ -168,6 +168,7 @@ import { service } from "@/services";
 import { commonStore } from "@/stores";
 import { makeUniqueName } from "@/utils/string.helper";
 import { message } from "ant-design-vue";
+import validator from "@/modules/base/components/validator/validator";
 import { computed, inject, onBeforeUnmount, reactive, ref } from "vue";
 //#region import
 //#endregion
@@ -221,13 +222,25 @@ const handleOnContactBlur = (
 ): void => {
   formData.contact[Number(index)].isFocus = false;
 };
-
+const handleValidateFields = (
+  value: string,
+  maxLength: number,
+  isRequire: boolean
+): boolean => {
+  const valueLength = value?.length || 0;
+  if (valueLength > maxLength) {
+    return false;
+  }
+  return isRequire ? valueLength > 0 : true;
+};
 const isButtonDisabled = computed((): boolean => {
   const { name, contact } = formData;
 
   return (
-    !name[0].value ||
-    !name[1].value ||
+    !handleValidateFields(name[0].value.toString(), 50, true) ||
+    !handleValidateFields(name[1].value.toString(), 50, true) ||
+    !validator.checkEmailFormat(contact[3].value.toString(), false) ||
+    !validator.checkPhoneFormat(contact[2].value.toString(), false) ||
     !collectionBaseType.value ||
     !contact[0].value ||
     !contact[1].value ||
