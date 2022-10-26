@@ -248,5 +248,9 @@
   "collection_route_workplace": "Workplace",
   "collection_route_number_of_stores": "Number of stores",
   "collection_route_last_update": "Last update",
-  "collection_route_navigation_id": "Navigation route ID"
+  "collection_route_navigation_id": "Navigation route ID",
+  "collection_route_detail": "Collection route detail",
+  "collection_route_detail_note": "Note",
+  "list_of_collection_point": "List of collection point",
+  "total_collection_point": "Total"
 }

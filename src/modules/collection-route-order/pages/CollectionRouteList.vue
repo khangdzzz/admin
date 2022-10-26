@@ -83,7 +83,17 @@
         </template>
         <template #bodyCell="{ column, record, text }">
           <template v-if="column.key === 'navigationId'">
-            <a class="navigation-link" v-if="text">{{ text }}</a>
+            <a class="navigation-link" v-if="text"
+              ><router-link
+                :to="{
+                  name: routeNames.collectionRouteDetail,
+                  params: {
+                    id: record.id
+                  }
+                }"
+                >{{ text }}</router-link
+              ></a
+            >
             <a-button
               type="primary"
               class="btn-create-navigation-link"
@@ -161,6 +171,7 @@ import { i18n } from "@/i18n";
 import { service } from "@/services";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
+import { routeNames } from "@/routes";
 //#endregion
 
 //#region props

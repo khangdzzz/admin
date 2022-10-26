@@ -50,6 +50,7 @@ export const routeNames = {
   collectionOrderManagement: "COLLECTION_ORDER_MANAGEMENT",
   collectionRouteManagement: "COLLECTION_ROUTE_MANAGEMENT",
   listCollectionRoute: "LIST_COLLECTION_ROUTE",
+  collectionRouteDetail: "DETAIL_COLLECTION_ROUTE",
   deliveryManagement: "DELIVERY_MANAGEMENT",
   storageManagement: "STORAGE_MANAGEMENT",
   manufactureCategoryManagement: "MANUFACTURE_CATEGORY_MANAGEMENT",

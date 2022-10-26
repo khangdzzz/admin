@@ -435,6 +435,14 @@ const routes: RouteRecordRaw[] = [
           import(
             "@/modules/collection-route-order/pages/CollectionRouteList.vue"
           )
+      },
+      {
+        name: routeNames.collectionRouteDetail,
+        path: "detail/:id",
+        component: () =>
+          import(
+            "@/modules/collection-route-order/pages/CollectionRouteDetail.vue"
+          )
       }
     ]
   },
