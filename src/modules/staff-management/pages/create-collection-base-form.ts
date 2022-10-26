@@ -3,7 +3,7 @@ import validator from "@/modules/base/components/validator/validator";
 import { FormData } from "@/modules/staff-management/models/collection-base.model";
 import { localStorageKeys } from "@/services/local-storage-keys";
 
-export const formData = (): FormData => {
+export const  formData = (): FormData => {
   const currentLanguage =
     localStorage.getItem(localStorageKeys.currentLanguage) || "en";
   return {

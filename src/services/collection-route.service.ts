@@ -1,5 +1,5 @@
-import { CollectionRoute } from "@/modules/collection-route-order/models/collection-route.model";
 import { calculateSortQuery } from "@/modules/common/helpers";
+import { CollectionRoute } from "@/modules/collection-route-management/models/collection-route.model";
 import { Pagination } from "@/modules/common/models";
 import { Sort } from "@/modules/common/models/sort.enum";
 import { transformRequest } from "./base.service";

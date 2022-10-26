@@ -29,7 +29,11 @@
           </template>
           {{ $t("export_btn") }}
         </a-button>
-        <a-button type="primary" class="btn btn-add-new">
+        <a-button
+          type="primary"
+          class="btn btn-add-new"
+          @click="handleClickAdd"
+        >
           <template #icon>
             <img src="@/assets/icons/ic_plus.svg" class="btn-icon" />
           </template>
@@ -225,6 +229,7 @@ const sortNavigationId = ref<Sort>(Sort.None);
 const searchString = ref<string>("");
 const isLoading = ref<boolean>(false);
 const innerHeight = ref<number>(0);
+
 //#endregion
 
 //#region hooks
@@ -382,7 +387,9 @@ const deleteCollectionRoute = ($event: MouseEvent, id?: number): void => {
     }
   });
 };
-
+const handleClickAdd = (): void => {
+  router.push({ name: routeNames.createCollectionRouteOrder });
+};
 const onDeleteCollectionRoute = async (deleteIds: number[]): Promise<void> => {
   if (!deleteIds.length) {
     return;
