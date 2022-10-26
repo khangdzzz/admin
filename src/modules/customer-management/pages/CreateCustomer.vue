@@ -205,6 +205,9 @@ const isSubmitDisable = computed(() => {
 .create-customer {
   &__card {
     width: 660px;
+    border-radius: 10px;
+    box-shadow: 4px 2px 8px rgba(0, 0, 0, 0.02);
+    background-color: $white;
   }
 
   &__title {
