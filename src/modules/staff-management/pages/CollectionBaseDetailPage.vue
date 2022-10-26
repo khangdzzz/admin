@@ -44,6 +44,7 @@
             v-for="(item, index) in informations"
             :key="index"
             class="collection-base-detail__form-wrapper__row"
+            :class="index !== 0 ? 'mt-15' : ''"
           >
             <div class="collection-base-detail__form-wrapper__title">
               {{ $t(item.key) }}
@@ -361,7 +362,6 @@ const focusCurrentLocation = (): void => {
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
-      margin-top: 15px;
     }
     &__title {
       width: 100%;
@@ -378,6 +378,7 @@ const focusCurrentLocation = (): void => {
       font-weight: 600;
       font-size: 18px;
       line-height: 22px;
+      color: $neutral-600;
       max-width: 100%;
       min-height: 22px;
       white-space: nowrap;

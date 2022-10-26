@@ -32,6 +32,22 @@ const validator = {
       }
     }
   },
+  checkEmailFormat: (email: string, isRequire: boolean): boolean => {
+    const regExpEmail =
+      // eslint-disable-next-line no-control-regex, no-useless-escape
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@([a-z]{1})((?=.*[a-z|_])(?=.*[.])(?!.*\.\.)(?!.*\_\_)(?!.*\.\_)(?!.*\_\.)(?!.*\s).{1,61})([a-z]{1})$/;
+    return isRequire
+      ? regExpEmail.test(email)
+      : regExpEmail.test(email) || email.length === 0;
+  },
+  checkPhoneFormat: (phone: string, isRequire: boolean): boolean => {
+    const regExpPhone =
+      // eslint-disable-next-line no-control-regex, no-useless-escape
+      /\+[0-9]{6,12}/;
+    return isRequire
+      ? regExpPhone.test(phone)
+      : regExpPhone.test(phone) || phone.length === 0;
+  },
   validatePassword: (rule: Rule, value: string): Promise<void> => {
     const passwordRegex = /^[\S]{6,32}$/i;
 
@@ -61,23 +77,6 @@ const validator = {
 
     return Promise.resolve();
   },
-
-  validateWeight: (_rule: Rule, value: number): Promise<void> => {
-    if (!value) {
-      return Promise.reject(
-        i18n.global.t("please_enter_input", {
-          fieldName: i18n.global.t("container_weight")
-        })
-      );
-    } else if (value && isNaN(value)) {
-      return Promise.reject(i18n.global.t("allow_input_number"));
-    } else if (value.toString().length > 10) {
-      return Promise.reject(
-        i18n.global.t("max_length_input", { maxLength: 10 })
-      );
-    }
-    return Promise.resolve();
-  },
   validatePhone: (_rule: Rule, value: string): Promise<void> => {
     if (!value) {
       return Promise.resolve();
@@ -92,6 +91,23 @@ const validator = {
         i18n.global.t("invalid_field_name", {
           fieldName: i18n.global.t("collection_phone_number").toLowerCase()
         })
+      );
+    }
+    return Promise.resolve();
+  },
+
+  validateWeight: (_rule: Rule, value: number): Promise<void> => {
+    if (!value) {
+      return Promise.reject(
+        i18n.global.t("please_enter_input", {
+          fieldName: i18n.global.t("container_weight")
+        })
+      );
+    } else if (value && isNaN(value)) {
+      return Promise.reject(i18n.global.t("allow_input_number"));
+    } else if (value.toString().length > 10) {
+      return Promise.reject(
+        i18n.global.t("max_length_input", { maxLength: 10 })
       );
     }
     return Promise.resolve();
