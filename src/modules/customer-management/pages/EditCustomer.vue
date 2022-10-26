@@ -87,7 +87,7 @@ const formData = reactive<FormData>({
   singleInput: [
     {
       inputType: "AInput",
-      value: "sadasdasasd",
+      value: "",
       placeHolder: "name",
       label: "name",
       name: "name",

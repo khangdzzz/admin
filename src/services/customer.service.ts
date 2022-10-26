@@ -10,6 +10,7 @@ import { CustomerResponseDto } from "./dtos/customer-management/customer.dto";
 import { DEFAULT_SORT_ORDER } from "@/services/constants";
 import { calculateSortQuery } from "@/modules/common/helpers";
 import { CreateCustomerDto } from "./dtos/customer-management/create-customer.dto";
+import { NULL_VALUE_DISPLAY } from "@/utils/constants";
 
 // import { makeUniqueName } from "@/utils/string.helper";
 interface sortCustomerDto {
@@ -75,17 +76,19 @@ export async function fetchListCustomer(
     totalPage,
     results: results.map((customerDto, index) => {
       const {
-        telephone: phoneNumber,
-        postal_code: postalCode,
+        telephone,
+        postal_code,
         mail: email,
+        address,
         ...rest
       } = customerDto;
       return {
         ...rest,
         key: index,
-        phoneNumber,
-        postalCode,
-        email
+        phoneNumber: telephone || NULL_VALUE_DISPLAY,
+        postalCode: postal_code || NULL_VALUE_DISPLAY,
+        email: email || NULL_VALUE_DISPLAY,
+        address: address || NULL_VALUE_DISPLAY
       };
     })
   };

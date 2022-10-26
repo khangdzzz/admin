@@ -79,10 +79,10 @@ export async function getListContainer(
   });
 
   if (err) return undefined;
-  const { current_page = 1, page_size = 20, count } = res;
+  const { page_size = 20, count } = res;
   return {
     total: count,
-    currentPage: current_page,
+    currentPage: page,
     pageSize: page_size,
     results: res.results.map((result) => {
       const {
@@ -170,8 +170,8 @@ export async function getListContainerType(
       sort === Sort.None
         ? DEFAULT_SORT_ORDER
         : sort === Sort.Asc
-          ? "name"
-          : "-name"
+        ? "name"
+        : "-name"
   };
   const [error, res] = await transformRequest<
     PaginationDto<ContainerTypeResponseDto>

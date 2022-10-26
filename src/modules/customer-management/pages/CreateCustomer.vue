@@ -126,7 +126,7 @@ const handleClickSubmit = async (): Promise<void> => {
     name: makeUniqueName(singleInput[0].value.toString()),
     short_name: makeUniqueName(singleInput[1].value.toString()),
     name_kana: makeUniqueName(singleInput[2].value.toString()),
-    postal_code: +singleInput[3].value,
+    postal_code: singleInput[3].value ? +singleInput[3].value : null,
     address: makeUniqueName(singleInput[4].value.toString()),
     telephone: makeUniqueName(singleInput[5].value.toString()),
     mail: makeUniqueName(singleInput[6].value.toString()),
