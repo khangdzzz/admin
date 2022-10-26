@@ -72,6 +72,7 @@ import { service } from "@/services";
 import IcTrash from "@/assets/icons/IcTrash.vue";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
+import { NULL_VALUE_DISPLAY } from "@/utils/constants";
 //#endregion
 
 //#region props
@@ -112,23 +113,23 @@ const initialize = async (): Promise<void> => {
     } = res;
 
     customerDetails.value = [
-      { key: "name", value: name },
-      { key: "short_name", value: short_name },
-      { key: "name_kana", value: name_kana },
-      { key: "postal_code", value: postal_code || "" },
-      { key: "address", value: address || "" },
-      { key: "phone_number", value: telephone || "" },
-      { key: "collection_email", value: mail || "" },
+      { key: "name", value: name || NULL_VALUE_DISPLAY },
+      { key: "short_name", value: short_name || NULL_VALUE_DISPLAY },
+      { key: "name_kana", value: name_kana || NULL_VALUE_DISPLAY },
+      { key: "postal_code", value: postal_code || NULL_VALUE_DISPLAY },
+      { key: "address", value: address || NULL_VALUE_DISPLAY },
+      { key: "phone_number", value: telephone || NULL_VALUE_DISPLAY },
+      { key: "collection_email", value: mail || NULL_VALUE_DISPLAY },
       {
         key: "pair",
         value: [
           {
             key: "representative",
-            value: representative
+            value: representative || NULL_VALUE_DISPLAY
           },
           {
             key: "external_code",
-            value: external_code
+            value: external_code || NULL_VALUE_DISPLAY
           }
         ]
       }
