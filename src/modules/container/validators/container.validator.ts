@@ -29,7 +29,7 @@ export const validateContainerWeight = (value: string): string => {
   if (value.length > 8) {
     return i18n.global.t("max_length_input", { maxLength: 8 });
   }
-  if (!/^[1-9][0-9]*[.]?[0-9]{1,2}$/.test(value)) {
+  if (!/(^0|^[1-9][0-9]{1,5})\.([0-9]{1,2}$)|(^[1-9][0-9]{0,7}$)/.test(value)) {
     return i18n.global.t("invalid_field_name", {
       fieldName: i18n.global.t("container_weight").toLowerCase()
     });
@@ -42,7 +42,7 @@ export const validateContainerCapacity = (value: string): string => {
   if (value.length > 8) {
     return i18n.global.t("max_length_input", { maxLength: 8 });
   }
-  if (!/^[1-9][0-9]*[.]?[0-9]{1,2}$/.test(value)) {
+  if (!/(^0|^[1-9][0-9]{1,5})\.([0-9]{1,2}$)|(^[1-9][0-9]{0,7}$)/.test(value)) {
     return i18n.global.t("invalid_field_name", {
       fieldName: i18n.global.t("container_capacity").toLowerCase()
     });
