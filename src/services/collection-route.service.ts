@@ -55,3 +55,29 @@ export async function deleteCollectionRoute(ids: number[]): Promise<boolean> {
   if (error) return false;
   return true;
 }
+
+export function getCollectionRouteById(collectionId: number): CollectionRoute {
+  const res = getListCollectionRoute?.results.filter((item) => {
+    return item.id === collectionId;
+  });
+  const {
+    id,
+    updated_at,
+    workplace,
+    name,
+    number_of_stores,
+    navigation_id,
+    list_collection_point
+  } = res[0];
+
+  return {
+    key: id,
+    id,
+    lastUpdate: updated_at,
+    workPlace: workplace,
+    name,
+    numberOfStore: number_of_stores,
+    navigationId: navigation_id,
+    listCollectionPoint: list_collection_point
+  };
+}
