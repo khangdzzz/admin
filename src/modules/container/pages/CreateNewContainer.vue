@@ -49,12 +49,18 @@
 //#region import
 import { computed, inject, onMounted, ref, watch } from "vue";
 
-import CustomForm from "@/modules/base/components/CustomForm.vue";
-import { routeNames, router } from "@/routes";
 import { i18n } from "@/i18n";
-import { service } from "@/services";
+import CustomForm from "@/modules/base/components/CustomForm.vue";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
+import { routeNames, router } from "@/routes";
+import { service } from "@/services";
+import { Rule } from "ant-design-vue/lib/form";
+import {
+  validateContainerCapacity,
+  validateContainerName,
+  validateContainerWeight
+} from "../validators/container.validator";
 //#endregion
 
 //#region props
@@ -83,26 +89,9 @@ const formData = ref([
     isFocus: false,
     rules: [
       {
-        required: true,
-        message: i18n.global.t("please_enter_input", {
-          fieldName: i18n.global.t("container_container_name").toLowerCase()
-        }),
-        trigger: ["blur", "change"]
-      },
-      {
-        max: 50,
-        message: i18n.global.t("max_length_input", { maxLength: 50 }),
-        trigger: ["blur", "change"]
-      },
-      {
-        validator: async (): Promise<void> => {
-          if (isExist.value) {
-            return Promise.reject(
-              i18n.global.t("error_unique_constraint", {
-                fieldName: i18n.global.t("container_container_name")
-              })
-            );
-          }
+        validator: (_rule: Rule, value: string): Promise<void> => {
+          const error = validateContainerName(value, isExist.value);
+          if (error) return Promise.reject(error);
           return Promise.resolve();
         },
         trigger: ["blur", "change"]
@@ -148,23 +137,11 @@ const formData = ref([
     },
     rules: [
       {
-        max: 10,
-        message: i18n.global.t("max_length_input", { maxLength: 10 }),
-        trigger: ["blur", "change"]
-      },
-
-      {
-        pattern: /(?<=^| )\d+(\.\d+)?(?=$| )/g,
-        message: i18n.global.t("invalid_field_name", {
-          fieldName: i18n.global.t("container_weight").toLowerCase()
-        }),
-        trigger: ["blur", "change"]
-      },
-      {
-        required: true,
-        message: i18n.global.t("please_enter_input", {
-          fieldName: i18n.global.t("container_weight").toLowerCase()
-        }),
+        validator: (_rule: Rule, value: string): Promise<void> => {
+          const error = validateContainerWeight(value);
+          if (error) return Promise.reject(error);
+          return Promise.resolve();
+        },
         trigger: ["blur", "change"]
       }
     ],
@@ -182,15 +159,11 @@ const formData = ref([
     disabled: false,
     rules: [
       {
-        max: 50,
-        message: i18n.global.t("max_length_input", { maxLength: 50 }),
-        trigger: ["blur", "change"]
-      },
-      {
-        pattern: /(?<=^| )\d+(\.\d+)?(?=$| )/g,
-        message: i18n.global.t("invalid_field_name", {
-          fieldName: i18n.global.t("container_capacity").toLowerCase()
-        }),
+        validator: (_rule: Rule, value: string): Promise<void> => {
+          const error = validateContainerCapacity(value);
+          if (error) return Promise.reject(error);
+          return Promise.resolve();
+        },
         trigger: ["blur", "change"]
       }
     ],
@@ -281,6 +254,7 @@ const handleSubmit = async (): Promise<void> => {
       message: "",
       type: MessengerType.Success,
       callback: () => {
+        clearInputs();
         router.push({ name: routeNames.containerChild });
       }
     });
@@ -295,20 +269,26 @@ const handleSubmit = async (): Promise<void> => {
       message: "",
       type: MessengerType.Error,
       callback: () => {
-        clearInputs();
+        // clearInputs();
       }
     });
   }
 };
+
 //#endregion
 
 //#region computed
 const isAllowSubmit = computed(() => {
-  return (
-    formData.value[0].value &&
-    formData.value[1].value &&
-    formData.value[2].value
-  );
+  if (validateContainerName(formData.value[0].value, false)) {
+    return false;
+  }
+  if (validateContainerWeight(formData.value[2].value)) {
+    return false;
+  }
+  if (validateContainerCapacity(formData.value[3].value)) {
+    return false;
+  }
+  return formData.value[1].value;
 });
 //#endregion
 

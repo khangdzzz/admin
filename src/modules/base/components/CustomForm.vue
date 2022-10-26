@@ -77,6 +77,7 @@
       @pressEnter="onPressEnter"
       @focus="onFocus(index)"
       @blur="onBlur(item.value, index)"
+      @keydown="item.inputBehaviour"
       class="input-item float-label"
       :class="[
         item.class,

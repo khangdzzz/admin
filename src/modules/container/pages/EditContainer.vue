@@ -34,7 +34,7 @@
             <a-button
               type="primary"
               class="btn"
-              :disabled="!isValidated"
+              :disabled="!isAllowSubmit"
               :loading="isSubmitting"
               @click="updateContainer"
               >{{ $t("btn_save") }}</a-button
@@ -57,10 +57,14 @@ import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
 import { makeUniqueName } from "@/utils/string.helper";
 import { Rule } from "ant-design-vue/lib/form";
-// import { Rule } from "ant-design-vue/lib/form";
-import { inject, onMounted, reactive, ref, watch } from "vue";
+import { computed, inject, onMounted, reactive, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { Container, ContainerSelection } from "../models/container.model";
+import {
+  validateContainerName,
+  validateContainerWeight,
+  validateContainerCapacity
+} from "../validators/container.validator";
 
 const route = useRoute();
 
@@ -76,18 +80,6 @@ const isValidated = ref<boolean>(true);
 const isExist = ref<boolean>(false);
 const isLoadingInfo = ref<boolean>(false);
 const isSubmitting = ref<boolean>(false);
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-
-let isExistName = async (): Promise<void> => {
-  if (isExist.value) {
-    return Promise.reject(
-      i18n.global.t("error_unique_constraint", {
-        fieldName: i18n.global.t("container_container_name")
-      })
-    );
-  }
-  return Promise.resolve();
-};
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const dynamicValidateForm = reactive<{ formData: any[] }>({
@@ -101,17 +93,11 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
       disabled: false,
       rules: [
         {
-          required: true,
-          message: i18n.global.t("please_enter_input", {
-            fieldName: i18n.global.t("container_container_name").toLowerCase()
-          })
-        },
-        {
-          max: 50,
-          message: i18n.global.t("max_length_input", { maxLength: 50 })
-        },
-        {
-          validator: isExistName,
+          validator: (_rule: Rule, value: string): Promise<void> => {
+            const error = validateContainerName(value, isExist.value);
+            if (error) return Promise.reject(error);
+            return Promise.resolve();
+          },
           trigger: ["blur", "change"]
         }
       ],
@@ -146,7 +132,7 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
     },
     {
       inputType: "AInput",
-      value: "6666666",
+      value: "",
       placeHolder: "container_weight",
       label: "container_weight",
       name: "weight",
@@ -158,27 +144,10 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
       },
       rules: [
         {
-          required: true,
-          message: i18n.global.t("please_enter_input", {
-            fieldName: i18n.global.t("container_weight").toLowerCase()
-          }),
-          trigger: ["blur", "change"]
-        },
-        {
-          validator: async (_rule: Rule, value: string): Promise<void> => {
-            if (!value) return Promise.resolve();
-            if (value.length > 10) {
-              return Promise.reject(
-                i18n.global.t("max_length_input", { maxLength: 10 })
-              );
-            }
-            if (!/(?<=^| )\d+(\.\d+)?(?=$| )/g.test(value)) {
-              return Promise.reject(
-                i18n.global.t("invalid_field_name", {
-                  fieldName: i18n.global.t("container_weight").toLowerCase()
-                })
-              );
-            }
+          validator: (_rule: Rule, value: string): Promise<void> => {
+            const error = validateContainerWeight(value);
+            if (error) return Promise.reject(error);
+            return Promise.resolve();
           },
           trigger: ["change", "blur"]
         }
@@ -197,20 +166,10 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
       disabled: false,
       rules: [
         {
-          validator: async (_rule: Rule, value: string): Promise<void> => {
-            if (!value) return Promise.resolve();
-            if (value.length > 50) {
-              return Promise.reject(
-                i18n.global.t("max_length_input", { maxLength: 50 })
-              );
-            }
-            if (!/(?<=^| )\d+(\.\d+)?(?=$| )/g.test(value)) {
-              return Promise.reject(
-                i18n.global.t("invalid_field_name", {
-                  fieldName: i18n.global.t("container_capacity").toLowerCase()
-                })
-              );
-            }
+          validator: (_rule: Rule, value: string): Promise<void> => {
+            const error = validateContainerCapacity(value);
+            if (error) return Promise.reject(error);
+            return Promise.resolve();
           },
           trigger: ["change", "blur"]
         }
@@ -304,7 +263,7 @@ const updateContainer = async (): Promise<void> => {
   isSubmitting.value = true;
   const { error } = await service.container.editContainer({
     id: Number(id),
-    name: makeUniqueName(name.value.toString()),
+    name: makeUniqueName(name.value.toString()) || "",
     container_type_id: Number(container_type___name.value),
     weight: Number(weight.value),
     capacity: Number(capacity.value)
@@ -339,6 +298,18 @@ const updateContainer = async (): Promise<void> => {
 //#endregion
 
 //#region reactive
+const isAllowSubmit = computed(() => {
+  if (validateContainerName(dynamicValidateForm.formData[0].value, false)) {
+    return false;
+  }
+  if (validateContainerWeight(dynamicValidateForm.formData[2].value)) {
+    return false;
+  }
+  if (validateContainerCapacity(dynamicValidateForm.formData[3].value)) {
+    return false;
+  }
+  return dynamicValidateForm.formData[1].value;
+});
 
 watch(dynamicValidateForm, () => {
   if (
