@@ -253,5 +253,6 @@
   "collection_route_detail_note": "Note",
   "list_of_collection_point": "List of collection point",
   "total_collection_point": "Total",
-  "customer_registration_lbl_page_title": "Add new customer"
+  "customer_registration_lbl_page_title": "Add new customer",
+  "delete_collection_route_successfully": "Collection route is deleted successfully"
 }

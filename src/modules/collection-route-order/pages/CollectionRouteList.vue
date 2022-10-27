@@ -44,12 +44,14 @@
         :data-source="data"
         :pagination="false"
         :scroll="{ y: tableMaxHeight }"
+        :customRow="customRow"
         v-if="!isLoading && data && data.length"
       >
         <template #headerCell="{ column }">
           <template v-if="column.key === 'index'">
             <span>{{ $t(column.title) }}</span>
           </template>
+
           <template v-if="column.key === 'name'">
             <div @click="changeSortName()">
               <span class="header-title">{{ $t(column.title) }}</span>
@@ -83,17 +85,7 @@
         </template>
         <template #bodyCell="{ column, record, text }">
           <template v-if="column.key === 'navigationId'">
-            <a class="navigation-link" v-if="text"
-              ><router-link
-                :to="{
-                  name: routeNames.collectionRouteDetail,
-                  params: {
-                    id: record.id
-                  }
-                }"
-                >{{ text }}</router-link
-              ></a
-            >
+            <a class="navigation-link" v-if="text">{{ text }}</a>
             <a-button
               type="primary"
               class="btn-create-navigation-link"
@@ -108,6 +100,9 @@
               </template>
               Create
             </a-button>
+          </template>
+          <template v-if="column.key === 'lastUpdate'">
+            {{ formatDateTime(text, "yyyy/MM/dd hh:mm:ss") }}
           </template>
           <template v-if="column.dataIndex === 'action'">
             <center>
@@ -169,9 +164,10 @@ import { CollectionRoute } from "../models/collection-route.model";
 import NoData from "@/modules/base/components/NoData.vue";
 import { i18n } from "@/i18n";
 import { service } from "@/services";
+import { formatDateTime } from "@/modules/base/components/validator/dateFormat";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
-import { routeNames } from "@/routes";
+import { routeNames, router } from "@/routes";
 //#endregion
 
 //#region props
@@ -218,6 +214,7 @@ const columns: TableColumnType<CollectionRoute>[] = [
 const messenger: (param: MessengerParamModel) => void =
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   inject("messenger")!;
+let sourceData: CollectionRoute[] = [];
 const selectedKeys = ref<number[]>([]);
 const data = ref<CollectionRoute[]>();
 const sortName = ref<Sort>(Sort.None);
@@ -287,6 +284,45 @@ const changeSortNavigationId = (): void => {
   sortNavigationId.value = calculateNextSortStatus(backupSortNavigationId);
   initialize();
 };
+
+const onSearchChange = debounce((): void => {
+  pageOption.currentPage = 1;
+  selectedKeys.value = [];
+  initialize();
+}, 500);
+//#endregion
+
+//#region function
+const initialize = async (): Promise<void> => {
+  const sort = {
+    sortName: sortName.value,
+    sortWorkPlace: sortWorkPlace.value,
+    sortNumberStore: sortNumberOfStores.value,
+    sortLastUpdate: sortLastUpdate.value,
+    sortNavigationRouteId: sortNavigationId.value
+  };
+  isLoading.value = true;
+  const res = await service.collectionRoute.getListCollectionRoutes(
+    pageOption?.currentPage || 1,
+    pageOption?.pageSize ? pageOption?.pageSize : 20,
+    sort,
+    searchString.value
+  );
+
+  sourceData = (res?.results || []).map((item, index) => {
+    return { ...item, key: item.id || index + 1 };
+  });
+  data.value = [...sourceData];
+  isLoading.value = false;
+  pageOption.currentPage = res?.currentPage;
+  pageOption.total = res?.total;
+  pageOption.totalPage = res?.totalPage;
+};
+const onShowSizeChange = (current: number, pageSize: number): void => {
+  pageOption.currentPage = current;
+  pageOption.pageSize = pageSize;
+  initialize();
+};
 const isShowPrevBtn = (): boolean => {
   const isFirtPage = pageOption.currentPage === 1;
   if (totalPages() === 1 || isFirtPage) return false;
@@ -304,24 +340,6 @@ const isShowNextBtn = (): boolean => {
 const totalPages = (): number => {
   return Math.ceil(Number(pageOption.total) / Number(pageOption.pageSize));
 };
-const onSearchChange = debounce((): void => {
-  pageOption.currentPage = 1;
-  selectedKeys.value = [];
-  initialize();
-}, 500);
-//#endregion
-
-//#region function
-const initialize = async (): Promise<void> => {
-  const res = await service.collectionRoute.getListCollectionRoutes();
-  data.value = res?.results;
-};
-const onShowSizeChange = (current: number, pageSize: number): void => {
-  pageOption.currentPage = current;
-  pageOption.pageSize = pageSize;
-  initialize();
-};
-
 const onChange = (pageNumber: number): void => {
   pageOption.currentPage = pageNumber;
   initialize();
@@ -329,7 +347,21 @@ const onChange = (pageNumber: number): void => {
 const handleBackToList = (): void => {
   searchString.value = "";
 };
-
+const customRow = (
+  record: CollectionRoute
+): { onClick: (_event: PointerEvent) => void } => {
+  return {
+    onClick: (_event: PointerEvent): void => {
+      _event;
+      router.push({
+        name: routeNames.collectionRouteDetail,
+        params: {
+          id: record.id
+        }
+      });
+    }
+  };
+};
 const deleteCollectionRoute = (id?: number): void => {
   messenger({
     title: "popup_msg_confirm_delete",
@@ -368,7 +400,7 @@ const onDeleteCollectionRoute = async (deleteIds: number[]): Promise<void> => {
     return;
   }
   messenger({
-    title: "delete_container_msg_delete_successfully",
+    title: "delete_collection_route_successfully",
     message: "",
     type: MessengerType.Success,
     callback: (isConfirm: boolean): void => {
