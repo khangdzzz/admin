@@ -4,7 +4,8 @@ import {
   Vehicle,
   VehicleSelection,
   VehicleDetail,
-  ResVehicle
+  ResVehicle,
+  EditVehicleDto
 } from "@/modules/vehicle-management/models/vehicle.model";
 import { transformRequest } from "./base.service";
 import { PaginationDto } from "./dtos/common/pagination.dto";
@@ -12,6 +13,7 @@ import { DEFAULT_SORT_ORDER } from "@/services/constants";
 import { VehicleResponseDto } from "./dtos/vehicle-management/vehicle-type.dto";
 import { CollectionBaseResponseDto } from "./dtos/collection-base/collection-base.dto";
 import { calculateSortQuery } from "@/modules/common/helpers";
+import { makeUniqueName } from "@/utils/string.helper";
 
 interface sortVehicleDto {
   sortType: Sort;
@@ -196,7 +198,7 @@ export async function getVehicleDetail(
 }
 
 export async function updateVehicle(
-  vehicleInfo: Vehicle
+  vehicleInfo: EditVehicleDto
 ): Promise<Vehicle | unknown> {
   const {
     vehicleType,
@@ -212,7 +214,7 @@ export async function updateVehicle(
     params: {},
     data: {
       vehicle_type_id: vehicleType,
-      name: vehicleName,
+      name: makeUniqueName(vehicleName),
       plate_number: vehiclePlate,
       max_capacity: maxWeight,
       permission_flag: isHasPermission

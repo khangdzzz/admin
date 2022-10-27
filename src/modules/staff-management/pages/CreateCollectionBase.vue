@@ -261,14 +261,14 @@ const handleCancel = (): void => {
 const handleSubmit = async (): Promise<void> => {
   const { name, contact } = formData;
   const data = {
-    name: makeUniqueName(name[0].value.toString()),
-    shortName: makeUniqueName(name[1].value.toString()),
-    kana: makeUniqueName(name[2].value.toString()),
-    postalCode: makeUniqueName(contact[0].value.toString()),
-    address: makeUniqueName(contact[1].value.toString()),
-    telephone: makeUniqueName(contact[2].value.toString()),
-    email: makeUniqueName(contact[3].value.toString()),
-    representative: makeUniqueName(contact[4].value.toString()),
+    name: name[0].value.toString(),
+    shortName: name[1].value.toString(),
+    kana: name[2].value.toString(),
+    postalCode: contact[0].value.toString(),
+    address: contact[1].value.toString(),
+    telephone: contact[2].value.toString(),
+    email: contact[3].value.toString(),
+    representative: contact[4].value.toString(),
     latitude: geoLocations.value[0][0],
     longitude: geoLocations.value[0][1],
     collectionBaseType: collectionBaseType.value || 1

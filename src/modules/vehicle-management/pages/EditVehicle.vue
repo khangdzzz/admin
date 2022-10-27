@@ -91,10 +91,9 @@ import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
-import { makeUniqueName } from "@/utils/string.helper";
 import { inject, onMounted, reactive, ref, watch } from "vue";
 import { useRoute } from "vue-router";
-import { Vehicle, VehicleSelection } from "../models/vehicle.model";
+import { VehicleSelection } from "../models/vehicle.model";
 
 //#endregion
 
@@ -337,10 +336,10 @@ const goToVehicleList = (): void => {
   router.push({ name: routeNames.vehicle });
 };
 const updateVehicle = async (): Promise<void> => {
-  const vehicleInfo: Vehicle = {
-    id: id.toString(),
-    vehicleType: dynamicValidateForm.formData[1].value,
-    vehicleName: makeUniqueName(dynamicValidateForm.formData[2].value),
+  const vehicleInfo = {
+    id: +id,
+    vehicleType: +dynamicValidateForm.formData[1].value,
+    vehicleName: dynamicValidateForm.formData[2].value,
     vehiclePlate: dynamicValidateForm.formData[3].value,
     maxWeight: dynamicValidateForm.formData[4].value,
     isHasPermission: checkPermission.value ? 1 : 0

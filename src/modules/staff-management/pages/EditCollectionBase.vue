@@ -154,23 +154,22 @@
 
 <script setup lang="ts">
 import locationIcon from "@/assets/icons/ic_collection_base.png";
+import { i18n } from "@/i18n";
 import CustomForm from "@/modules/base/components/CustomForm.vue";
+import validator from "@/modules/base/components/validator/validator";
+import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import {
-  CollectionBase,
-  FormData
+CollectionBase,
+FormData
 } from "@/modules/staff-management/models/collection-base.model";
 import { formData as reactiveFormData } from "@/modules/staff-management/pages/create-collection-base-form";
-import { computed, reactive, ref, inject, onMounted } from "vue";
-import MessengerParamModel from "@/modules/base/models/messenger-param.model";
+import { router } from "@/routes";
+import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
 import { commonStore } from "@/stores";
-import { routeNames } from "@/routes/route-names";
-import { router } from "@/routes";
-import { makeUniqueName } from "@/utils/string.helper";
 import { message } from "ant-design-vue";
-import { i18n } from "@/i18n";
-import validator from "@/modules/base/components/validator/validator";
+import { computed, inject, onMounted, reactive, ref } from "vue";
 //#region import
 //#endregion
 
@@ -330,14 +329,14 @@ const handleSubmit = async (): Promise<void> => {
 
   const data = {
     id: +collectionBaseId,
-    name: makeUniqueName(name[0].value.toString()),
-    shortName: makeUniqueName(name[1].value.toString()),
-    kana: makeUniqueName(name[2].value.toString()),
-    postalCode: makeUniqueName(contact[0].value.toString()),
-    address: makeUniqueName(contact[1].value.toString()),
-    telephone: makeUniqueName(contact[2].value.toString()),
-    email: makeUniqueName(contact[3].value.toString()),
-    representative: makeUniqueName(contact[4].value.toString()),
+    name: name[0].value.toString(),
+    shortName: name[1].value.toString(),
+    kana: name[2].value.toString(),
+    postalCode: contact[0].value.toString(),
+    address: contact[1].value.toString(),
+    telephone: contact[2].value.toString(),
+    email: contact[3].value.toString(),
+    representative: contact[4].value.toString(),
     latitude: geoLocations.value[0][0],
     longitude: geoLocations.value[0][1],
     collectionBaseType: collectionBaseType.value || 1

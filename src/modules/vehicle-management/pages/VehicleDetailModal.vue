@@ -95,11 +95,16 @@ const visible = ref<boolean>(true);
 
 const urlQrCode = ref<string>("");
 
+const WorkPlaceTypeEnum = ref<string[]>([
+  i18n.global.t("collection_base"),
+  i18n.global.t("partner")
+]);
+
 const form = reactive<{ information: Information[] }>({
   information: [
     {
       title: i18n.global.t("owner_type"),
-      value: currentVehicle.ownerType || null
+      value: WorkPlaceTypeEnum.value[currentVehicle.ownerType - 1]
     },
     {
       title: i18n.global.t("owner"),
@@ -215,7 +220,7 @@ const downloadQR = async (): Promise<void> => {
       padding: 0px;
       width: 140px;
       height: 32px;
-       border-radius: 6px;
+      border-radius: 6px;
       .btnIcon {
         width: 16px;
         height: 16px;

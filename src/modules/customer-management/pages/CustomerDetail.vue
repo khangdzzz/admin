@@ -220,7 +220,7 @@ const editCustomer = async (): Promise<void> => {
   }
 
   &__item-wrapper {
-    border-bottom: 1px solid $neutral-200;
+    border-bottom: 1px solid $grey-3;
   }
 
   &__label {
