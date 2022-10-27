@@ -99,14 +99,14 @@ const formData = reactive<FormData>({
         {
           required: true,
           message: i18n.global.t("please_enter_input", {
-            fieldName: i18n.global.t("name")
+            fieldName: i18n.global.t("name").toLowerCase()
           }),
           trigger: ["blur", "change"]
         },
         {
           max: 50,
           message: i18n.global.t("max_length_input", { maxLength: 50 }),
-          trigger: "change"
+          trigger: ["blur", "change"]
         },
         {
           validator: isExistName,
@@ -129,18 +129,18 @@ const formData = reactive<FormData>({
         {
           required: true,
           message: i18n.global.t("please_enter_input", {
-            fieldName: i18n.global.t("short_name")
+            fieldName: i18n.global.t("short_name").toLowerCase()
           }),
           trigger: ["blur", "change"]
         },
         {
           max: 50,
           message: i18n.global.t("max_length_input", { maxLength: 50 }),
-          trigger: "blur"
+          trigger: ["blur", "change"]
         },
         {
           validator: isExistName,
-          trigger: ["change"]
+          trigger: ["blur", "change"]
         }
       ],
       parent: "singleInput"
