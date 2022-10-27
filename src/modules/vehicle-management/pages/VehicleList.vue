@@ -499,7 +499,7 @@ const handleSearchChange = (currentSearchValue: string): void => {
 
 const handleBackToList = (): void => {
   if (searchHeader.value) {
-    isLoading.value = true
+    isLoading.value = true;
     searchHeader.value.clearInput();
   }
 };
