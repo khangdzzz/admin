@@ -208,6 +208,7 @@ const isSubmitDisable = computed(() => {
     border-radius: 10px;
     box-shadow: 4px 2px 8px rgba(0, 0, 0, 0.02);
     background-color: $white;
+    border: none;
   }
 
   &__title {
@@ -235,13 +236,12 @@ const isSubmitDisable = computed(() => {
 }
 
 :deep() {
-  .create-customer {
-    .ant-card {
-      &-body {
-        padding: 30px 20px;
-      }
+  .ant-card {
+    .ant-card-body {
+      padding: 30px 20px !important;
     }
-
+  }
+  .create-customer {
     &__duo-inputs-wrapper {
       .ant-form-item {
         width: 100%;
