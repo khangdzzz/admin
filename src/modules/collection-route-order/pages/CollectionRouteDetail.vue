@@ -1,90 +1,101 @@
 <template>
-  <div class="collection-detail-container">
-    <div class="collection-detail-header">
-      <ListSearchHeader
-        :enable-search="false"
-        :enable-back="true"
-        :title="$t('collection_route_detail')"
-        @goBack="handleGoBack"
-      >
-        <template #action>
-          <a-button class="btn-action" ghost type="primary">
-            <template #icon>
-              <img src="@/assets/icons/ic_btn_edit.svg" class="btn-icon" />
-            </template>
-            Re-create
-          </a-button>
-          <a-button class="btn-action color-btn-delete" ghost type="primary">
-            <template #icon>
-              <IcTrash class="btn-icon" :color="'#F54E4E'" />
-            </template>
-            {{ $t("delete_btn") }}
-          </a-button>
-        </template>
-      </ListSearchHeader>
-    </div>
-    <div :class="[CollectionRouteDetail.detailContent, 'mx-30 px-20 py-20']">
-      <div :class="[CollectionRouteDetail.title, 'mb-8']">
-        {{ $t("collection_route_name") }}
-      </div>
-      <div :class="[CollectionRouteDetail.value]">
-        {{ collectionRouteDetail?.name }}
-      </div>
-      <a-divider class="mt-10 mb-15" style="border-color: #e8e8e8" />
-      <div :class="[CollectionRouteDetail.title, 'mb-8']">
-        {{ $t("collection_route_workplace") }}
-      </div>
-      <div :class="[CollectionRouteDetail.value]">
-        {{ collectionRouteDetail?.workPlace }}
-      </div>
-      <a-divider class="mt-10 mb-15" style="border-color: #e8e8e8" />
-      <div :class="[CollectionRouteDetail.title, 'mb-8']">
-        {{ $t("collection_route_detail_note") }}
-      </div>
-      <div :class="[CollectionRouteDetail.value]">
-        <span v-if="collectionRouteDetail?.note">{{
-          collectionRouteDetail?.note
-        }}</span>
-        <span v-else>---</span>
-      </div>
-      <a-divider class="mt-10 mb-15" style="border-color: #e8e8e8" />
-      <div :class="[CollectionRouteDetail.title, 'mb-8']">
-        {{ $t("collection_route_navigation_id") }}
-      </div>
-      <div :class="[CollectionRouteDetail.value]">
-        <span :class="[CollectionRouteDetail.link]">{{
-          collectionRouteDetail?.navigationId
-        }}</span>
-      </div>
-      <a-divider class="mt-10 mb-15" style="border-color: #e8e8e8" />
-      <div class="list-collection-point">
-        <div class="d-flex justify-space-between collection-point-header">
-          <span>{{ $t("list_of_collection_point") }}</span>
-          <span
-            ><span class="total-item">{{ $t("total_collection_point") }}:</span>
-            {{ collectionRouteDetail?.listCollectionPoint?.length }}
-          </span>
-        </div>
-
-        <div
-          class="d-flex justify-space-between collection-point-item"
-          v-for="(item, index) in collectionRouteDetail?.listCollectionPoint"
-          :class="
-            index + 1 === collectionRouteDetail?.listCollectionPoint?.length
-              ? 'border-item'
-              : ''
-          "
-          :key="item.id"
+  <a-spin
+    :spinning="isLoading"
+    :tip="$t('common_loading')"
+    class="collection-route-detail__spin"
+  >
+    <div class="collection-detail-container">
+      <div class="collection-detail-header">
+        <ListSearchHeader
+          :enable-search="false"
+          :enable-back="true"
+          :title="$t('collection_route_detail')"
+          @goBack="handleGoBack"
         >
-          <div class="d-flex gap-10">
-            <span class="item-index">{{ index + 1 }}</span>
-            <span class="item-text">{{ item.collection_point }}</span>
+          <template #action>
+            <a-button class="btn-action" ghost type="primary">
+              <template #icon>
+                <img src="@/assets/icons/ic_btn_edit.svg" class="btn-icon" />
+              </template>
+              Re-create
+            </a-button>
+            <a-button class="btn-action color-btn-delete" ghost type="primary">
+              <template #icon>
+                <IcTrash class="btn-icon" :color="'#F54E4E'" />
+              </template>
+              {{ $t("delete_btn") }}
+            </a-button>
+          </template>
+        </ListSearchHeader>
+      </div>
+      <div :class="[CollectionRouteDetail.detailContent, 'mx-30 px-20 py-20']">
+        <div :class="[CollectionRouteDetail.title, 'mb-8']">
+          {{ $t("collection_route_name") }}
+        </div>
+        <div :class="[CollectionRouteDetail.value]">
+          {{ collectionRouteDetail?.name }}
+        </div>
+        <a-divider class="mt-10 mb-15" style="border-color: #e8e8e8" />
+        <div :class="[CollectionRouteDetail.title, 'mb-8']">
+          {{ $t("collection_route_workplace") }}
+        </div>
+        <div :class="[CollectionRouteDetail.value]">
+          {{ collectionRouteDetail?.workPlace }}
+        </div>
+        <a-divider class="mt-10 mb-15" style="border-color: #e8e8e8" />
+        <div :class="[CollectionRouteDetail.title, 'mb-8']">
+          {{ $t("collection_route_detail_note") }}
+        </div>
+        <div :class="[CollectionRouteDetail.value]">
+          <span v-if="collectionRouteDetail?.note">{{
+            collectionRouteDetail?.note
+          }}</span>
+          <span v-else>- - -</span>
+        </div>
+        <a-divider class="mt-10 mb-15" style="border-color: #e8e8e8" />
+        <div :class="[CollectionRouteDetail.title, 'mb-8']">
+          {{ $t("collection_route_navigation_id") }}
+        </div>
+        <div :class="[CollectionRouteDetail.value]">
+          <span
+            :class="[CollectionRouteDetail.link]"
+            v-if="collectionRouteDetail?.navigationId"
+            >{{ collectionRouteDetail?.navigationId }}</span
+          >
+          <span v-else>- - -</span>
+        </div>
+        <a-divider class="mt-10 mb-15" style="border-color: #e8e8e8" />
+        <div class="list-collection-point">
+          <div class="d-flex justify-space-between collection-point-header">
+            <span>{{ $t("list_of_collection_point") }}</span>
+            <span
+              ><span class="total-item"
+                >{{ $t("total_collection_point") }}:</span
+              >
+              {{ collectionRouteDetail?.listCollectionPoint?.length }}
+            </span>
           </div>
-          <div class="item-subtext">{{ item.customer_name }}</div>
+
+          <div
+            class="d-flex justify-space-between collection-point-item"
+            v-for="(item, index) in collectionRouteDetail?.listCollectionPoint"
+            :class="
+              index + 1 === collectionRouteDetail?.listCollectionPoint?.length
+                ? 'border-item'
+                : ''
+            "
+            :key="item.id"
+          >
+            <div class="d-flex gap-10">
+              <span class="item-index">{{ index + 1 }}</span>
+              <span class="item-text">{{ item.collection_point }}</span>
+            </div>
+            <div class="item-subtext">{{ item.customer_name }}</div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </a-spin>
 </template>
 
 <script setup lang="ts">
@@ -106,7 +117,7 @@ import { service } from "@/services";
 const route = useRoute();
 const { id } = route.params;
 const collectionRouteDetail = ref<CollectionRoute>();
-
+const isLoading = ref<boolean>(false);
 //#endregion
 
 //#region hooks
@@ -119,10 +130,11 @@ onMounted(() => {
 const handleGoBack = (): void => {
   router.push({ name: routeNames.collectionRouteManagement });
 };
-const getCollectionRouteDetail = (): void => {
-  collectionRouteDetail.value = service.collectionRoute.getCollectionRouteById(
-    Number(id)
-  );
+const getCollectionRouteDetail = async (): Promise<void> => {
+  isLoading.value = true;
+  const res = await service.collectionRoute.getCollectionRouteById(Number(id));
+  isLoading.value = false;
+  collectionRouteDetail.value = res;
 };
 //#endregion
 
@@ -161,6 +173,10 @@ const getCollectionRouteDetail = (): void => {
   font-size: $fs;
   line-height: $lh;
   color: $color;
+}
+.collection-route-detail__spin {
+  height: 100vh;
+  width: 100%;
 }
 .list-collection-point {
   .collection-point-header {
