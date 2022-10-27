@@ -99,7 +99,7 @@ const formData = reactive<FormData>({
         {
           required: true,
           message: i18n.global.t("please_enter_input", {
-            fieldName: i18n.global.t("name")
+            fieldName: i18n.global.t("name").toLowerCase()
           }),
           trigger: ["blur", "change"]
         },
@@ -129,7 +129,7 @@ const formData = reactive<FormData>({
         {
           required: true,
           message: i18n.global.t("please_enter_input", {
-            fieldName: i18n.global.t("short_name")
+            fieldName: i18n.global.t("short_name").toLowerCase()
           }),
           trigger: ["blur", "change"]
         },

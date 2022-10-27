@@ -460,7 +460,6 @@ watch(
         .ant-form-item-control {
           .ant-form-item-explain {
             .ant-form-item-explain-error {
-              margin-bottom: 25px;
               line-height: 14.6px;
             }
           }
