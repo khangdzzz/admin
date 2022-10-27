@@ -283,6 +283,8 @@
   font-size: 18px;
   line-height: 100%;
   color: $neutral-600;
+  display: inline-flex;
+  align-items: center;
 
   .ant-radio {
     font-size: 0px;
