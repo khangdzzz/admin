@@ -8,12 +8,13 @@
           {{ $t("edit_contaienr") }}
         </div>
         <div>
-          <a-form :model="formData">
+          <a-form :model="formData" ref="formRef">
             <div>
               <CustomForm
                 :form-data="formData.singleInput"
                 @on-focus="handleOnSingleInputFocus"
                 @on-blur="handleOnSingleInputBlur"
+                @change="handleOnChange"
               />
             </div>
             <div
@@ -23,6 +24,7 @@
                 :form-data="formData.duoInputs"
                 @on-focus="handleOnDuoInputsFocus"
                 @on-blur="handleOnDuoInputsBlur"
+                @change="handleOnChange"
               />
             </div>
           </a-form>
@@ -36,7 +38,7 @@
             >{{ $t("btn_cancel") }}</a-button
           >
           <a-button
-            :disabled="isDisabledAction"
+            :disabled="isSubmitDisable"
             type="primary"
             class="edit-customer__btn-style"
             @click="handleClickSave"
@@ -63,7 +65,6 @@ import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import { i18n } from "@/i18n";
 import validator from "@/modules/base/components/validator/validator";
 import { makeUniqueName } from "@/utils/string.helper";
-
 //#endregion
 
 //#region props
@@ -213,7 +214,7 @@ const formData = reactive<FormData>({
         {
           pattern: /\+[0-9]{6,12}/,
           message: i18n.global.t("invalid_field_name", {
-            fieldName: i18n.global.t("collection_phone_number")
+            fieldName: i18n.global.t("collection_phone_number").toLowerCase()
           }),
           trigger: "change"
         }
@@ -287,6 +288,10 @@ const isLoading = ref<boolean>(false);
 
 const isExist = ref<boolean>(false);
 
+const isValid = ref<boolean>(false);
+
+const formRef = ref();
+
 const messenger: (
   param: MessengerParamModel
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -300,7 +305,8 @@ const [representative, externalCode] = duoInputs;
 
 //#region hooks
 onMounted(async () => {
-  init();
+  await init();
+  onCheckValidFields();
 });
 //#endregion
 
@@ -357,6 +363,10 @@ const handleOnDuoInputsBlur = (
   formData.duoInputs[Number(index)].isFocus = false;
 };
 
+const handleOnChange = (): void => {
+  onCheckValidFields();
+};
+
 const handleClickCancel = (): void => {
   router.push({ name: routeNames.customerList });
 };
@@ -376,10 +386,13 @@ const handleClickSave = async (): Promise<void> => {
     ...(externalCode.value && { external_code: externalCode.value as number })
   };
   isLoading.value = true;
-  const error = await service.customerManagement.editCustomerById(+id, payload);
+  const { error } = await service.customerManagement.editCustomerById(
+    +id,
+    payload
+  );
   isLoading.value = false;
 
-  if (error) {
+  if (!error) {
     messenger({
       title: "edit_customer_successfully",
       message: "",
@@ -404,12 +417,22 @@ const handleClickSave = async (): Promise<void> => {
 //#endregion
 
 //#region computed
-const isDisabledAction = computed(
-  () => isLoading.value || !name.value || !shortName.value
-);
+const onCheckValidFields = async (): Promise<void> => {
+  try {
+    await formRef.value.validateFields();
+    isValid.value = true;
+  } catch {
+    isValid.value = false;
+  }
+};
+
+const isSubmitDisable = computed(() => {
+  return !isValid.value || !name.value || !shortName.value;
+});
 //#endregion
 
 //#region reactive
+
 //#endregion
 </script>
 
