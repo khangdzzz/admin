@@ -215,7 +215,6 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: "/collection-point-management",
-    name: routeNames.collectionPointManagement,
     beforeEnter: requireLoginGuard,
     meta: {
       layout: ScreenLayout.DEFAULT_LAYOUT
