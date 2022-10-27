@@ -337,10 +337,15 @@
 }
 
 .ant-tooltip-inner {
-  height: 36px !important;
-  display: flex !important;
   align-items: center !important;
   justify-content: center !important;
+  border-radius: 8px !important;
+  background: rgba(0, 0, 0, 0.9);
+  padding: 9px 8px;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
 }
 
 .ant-empty-img-simple {
