@@ -205,8 +205,8 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
     {
       inputType: "AInput",
       value: "",
-      placeHolder: "vehicle_number_plate",
-      label: "vehicle_number_plate",
+      placeHolder: "number_plate",
+      label: "number_plate",
       name: "vehiclePlate",
       disabled: isLoading,
       required: true,

@@ -15,14 +15,15 @@
               :validateFirst="false"
               class="mb-20"
             >
+              <label class="label-radio"
+                >{{ $t("vehicle_owner_type") }}<span> *</span></label
+              >
+
               <a-radio-group
-                v-model:value="ownerType"
                 class="radio-group"
+                v-model:value="ownerType"
                 :disabled="true"
               >
-                <label class="label-radio"
-                  >{{ $t("vehicle_owner_type") }}<span> *</span></label
-                >
                 <a-radio value="collectionBase">{{
                   $t("collection_base")
                 }}</a-radio>
@@ -200,8 +201,8 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
     {
       inputType: "AInput",
       value: "",
-      placeHolder: "vehicle_number_plate",
-      label: "vehicle_number_plate",
+      placeHolder: "number_plate",
+      label: "number_plate",
       name: "vehiclePlate",
       disabled: false,
       required: true,
@@ -427,6 +428,7 @@ watch(
 
   .check-permision {
     width: 100%;
+    margin-top: 11px;
 
     h3 {
       font-weight: 600;
@@ -457,6 +459,7 @@ watch(
   .create-form {
     .ant-form {
       .ant-form-item {
+        margin-bottom: 20px;
         .ant-form-item-control {
           .ant-form-item-explain {
             .ant-form-item-explain-error {
@@ -466,6 +469,8 @@ watch(
           }
           .ant-form-item-control-input {
             .ant-form-item-control-input-content {
+              display: flex;
+              align-items: center;
               .ant-select-single {
                 .ant-select-selector {
                   .ant-select-selection-item {
@@ -476,6 +481,7 @@ watch(
               }
               .ant-select-disabled {
                 .ant-select-selector {
+                  background-color: $grey-2;
                   .ant-select-selection-item {
                     color: $text-1 !important;
                     font-size: 16px;
@@ -497,27 +503,9 @@ watch(
       color: $text-1;
 
       span {
-        color: $red-1;
         font-weight: 400;
         font-size: 14px;
         line-height: 100%;
-      }
-    }
-    .ant-radio-wrapper {
-      margin-right: 24px;
-      span {
-        font-weight: 400;
-        font-size: 18px;
-        line-height: 100%;
-        color: $text-1;
-      }
-    }
-    .ant-radio-inner {
-      width: 24px;
-      height: 24px;
-      background-color: #ffff;
-      &::after {
-        background-color: $text-1;
       }
     }
   }
