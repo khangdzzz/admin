@@ -133,12 +133,7 @@
 
       <!-- //region slot select  -->
       <template #suffixIcon>
-        <img
-          src="@/assets/icons/ic_dropdown.svg"
-          width="20"
-          height="20"
-          style="padding: 4px"
-        />
+        <IcDropDown :color="item.disabled ? '#999999' : '#3C3C3C'" />
       </template>
       <!-- endregion -->
     </component>
@@ -168,6 +163,7 @@
 
 <script setup lang="ts">
 //#region import
+import IcDropDown from "@/assets/icons/IcDropDown.vue";
 //#endregion
 
 //*===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍Emits
