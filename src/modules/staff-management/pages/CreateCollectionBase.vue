@@ -243,6 +243,7 @@ const isButtonDisabled = computed((): boolean => {
     !validator.checkPhoneFormat(contact[2].value.toString(), false) ||
     !collectionBaseType.value ||
     !contact[0].value ||
+    isNaN(Number(contact[0].value)) ||
     !contact[1].value ||
     !geoLocations.value.length
   );
