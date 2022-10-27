@@ -8,7 +8,7 @@
         <a-button
           class="btn-action btn color-btn-delete"
           type="primary"
-          @click="deleteCollectionRoute(undefined)"
+          @click="(event: MouseEvent) => deleteCollectionRoute(event, undefined)"
           ghost
           v-if="selectedKeys.length > 0"
         >
@@ -121,7 +121,7 @@
               <img
                 src="@/assets/icons/ic_btn_delete.svg"
                 :class="[collectionRouteList.actionIcon]"
-                @click="deleteCollectionRoute(record.id)"
+                @click="(event: MouseEvent) => deleteCollectionRoute(event, record.id)"
               />
             </center>
           </template>
@@ -362,7 +362,8 @@ const customRow = (
     }
   };
 };
-const deleteCollectionRoute = (id?: number): void => {
+const deleteCollectionRoute = ($event: MouseEvent, id?: number): void => {
+  if ($event.stopPropagation) $event.stopPropagation();
   messenger({
     title: "popup_msg_confirm_delete",
     message: "",
