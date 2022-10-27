@@ -12,7 +12,7 @@
         @goBack="handleClickGoBack"
       >
         <template #action>
-          <a-button class="btn-action" ghost type="primary">
+          <a-button class="btn-action" type="primary" @click="editCustomer">
             <template #icon>
               <img src="@/assets/icons/ic_btn_edit.svg" class="btn-icon" />
             </template>
@@ -179,6 +179,14 @@ const deleteCustomer = async (id: number): Promise<void> => {
     }
   });
   router.push({ name: routeNames.customerList });
+};
+
+const editCustomer = async (): Promise<void> => {
+  const customerId = router.currentRoute.value.params.id;
+  await router.push({
+    name: routeNames.editCustomer,
+    params: { id: customerId }
+  });
 };
 //#endregion
 

@@ -448,13 +448,12 @@ const isDisabledAction = computed(
 }
 
 :deep() {
-  .edit-customer {
-    .ant-card {
-      .ant-card-body {
-        padding: 30px 20px !important;
-      }
+  .ant-card {
+    .ant-card-body {
+      padding: 30px 20px !important;
     }
-
+  }
+  .edit-customer {
     &__duo-inputs-wrapper {
       .ant-form-item {
         width: 100%;
