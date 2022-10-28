@@ -260,7 +260,7 @@ const editCollectionPoint = (): void => {
 const deleteCollectionPoint = async (): Promise<void> => {
   if (!id) return;
   messenger({
-    title: "popup_msg_confirm_delete",
+    title: "common_confirm",
     message: "",
     type: MessengerType.Confirm,
     buttonOkTitle: "btn_delete",

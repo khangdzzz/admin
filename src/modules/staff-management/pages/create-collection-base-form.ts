@@ -92,21 +92,12 @@ export const formData = (): FormData => {
         key: 4,
         isFocus: false,
         parent: "contact",
-        rules: [
-          {
-            required: true,
-            message: i18n.global.t("please_enter_input", currentLanguage, {
-              fieldName: i18n.global
-                .t("postal_code", currentLanguage)
-                .toLowerCase()
-            }),
-            trigger: ["blur", "change"]
-          },
-          {
-            validator: validator.validateNumber,
-            trigger: ["blur", "change"]
-          }
-        ]
+        actionBtn: {
+          name: "",
+          click: undefined
+        },
+        class: "",
+        rules: []
       },
       {
         inputType: "AInput",
