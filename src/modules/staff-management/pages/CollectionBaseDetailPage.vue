@@ -197,16 +197,23 @@ onMounted(async (): Promise<void> => {
         email: mail,
         representative
       } = detail;
-      const lat = latitude ? +latitude : 0;
-      const long = longitude ? +longitude : 0;
-      geoLocations.value.push([lat, long]);
-      setTimeout(() => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (view?.value as any)?.fit([lat, long, lat, long], {
-          maxZoom: 14
-        });
-      }, 300);
-      collectionBaseAddress.value = address || "";
+      if (longitude && latitude) {
+        const lat = +latitude;
+        const long = +longitude;
+        geoLocations.value.push([lat, long]);
+        setTimeout(() => {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (view?.value as any)?.fit([lat, long, lat, long], {
+            maxZoom: 14
+          });
+        }, 300);
+        collectionBaseAddress.value = address || "";
+      } else {
+        setTimeout(() => {
+          focusCurrentLocation();
+        }, 300);
+      }
+
       informations.value = [
         { key: "collection_base_lbl_name", value: name },
         { key: "collection_base_lbl_short_name", value: shortName },

@@ -43,7 +43,7 @@ const validator = {
   checkPhoneFormat: (phone: string, isRequire: boolean): boolean => {
     const regExpPhone =
       // eslint-disable-next-line no-control-regex, no-useless-escape
-      /\+[0-9]{6,12}/;
+      /^[+][0-9]{6,15}$/;
     return isRequire
       ? regExpPhone.test(phone)
       : regExpPhone.test(phone) || phone.length === 0;

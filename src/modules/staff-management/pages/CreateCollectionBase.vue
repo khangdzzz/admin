@@ -41,6 +41,7 @@
             :form-data="formData.contact"
             @on-focus="handleOnContactFocus"
             @on-blur="handleOnContactBlur"
+            @on-key-press="handleOnKeyPress"
           />
         </div>
       </a-form>
@@ -122,6 +123,14 @@
             </ol-style>
           </ol-vector-layer>
         </ol-map>
+
+        <a-btn
+          class="create-collection-base__map-wrapper__current-location-button"
+          @click="focusCurrentLocation"
+        >
+          <img src="@/assets/icons/ic_btn_current_location.svg" />
+        </a-btn>
+
         <div
           class="create-collection-base__map-wrapper__position-detail"
           v-if="geoLocations.length"
@@ -158,6 +167,7 @@
 import locationIcon from "@/assets/icons/ic_collection_base.png";
 import { i18n } from "@/i18n";
 import CustomForm from "@/modules/base/components/CustomForm.vue";
+import validator from "@/modules/base/components/validator/validator";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import { FormData } from "@/modules/staff-management/models/collection-base.model";
@@ -166,9 +176,7 @@ import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
 import { commonStore } from "@/stores";
-import { makeUniqueName } from "@/utils/string.helper";
 import { message } from "ant-design-vue";
-import validator from "@/modules/base/components/validator/validator";
 import { computed, inject, onBeforeUnmount, reactive, ref } from "vue";
 //#region import
 //#endregion
@@ -327,6 +335,38 @@ const copyLocationToClipboard = (): void => {
     message.success(i18n.global.t("common_msg_copied_to_clipboard"));
   }
 };
+
+const focusCurrentLocation = (): void => {
+  navigator.geolocation.getCurrentPosition(
+    (position: { coords: { longitude: number; latitude: number } }): void => {
+      geoLocChange([position.coords.longitude, position.coords.latitude]);
+    },
+    (error: { message: string }): void => {
+      error.message;
+    },
+    {
+      enableHighAccuracy: false,
+      timeout: 5000,
+      maximumAge: Infinity
+    }
+  );
+};
+
+const handleOnKeyPress = (
+  value: string | number,
+  index: number
+): void | boolean => {
+  if (index === 0) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const e: any = window.event;
+    let charCode = e.which ? e.which : e.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode !== 46) {
+      e.preventDefault();
+    } else {
+      return true;
+    }
+  }
+};
 //#endregion
 
 //#region computed
@@ -339,6 +379,9 @@ const copyLocationToClipboard = (): void => {
 <style lang="scss" scoped>
 .create-collection-base {
   &__content-wrapper {
+    background-color: $white;
+    border-radius: 10px;
+    box-shadow: 4px 2px 8px rgba(0, 0, 0, 0.02);
     background-color: $white;
   }
 
@@ -384,6 +427,21 @@ const copyLocationToClipboard = (): void => {
         margin-left: 16px;
         cursor: pointer;
       }
+    }
+
+    &__current-location-button {
+      display: flex;
+      justify-content: space-around;
+      width: 48px;
+      height: 48px;
+      border-radius: 24px;
+      background-color: white;
+      align-content: center;
+      align-items: center;
+      position: absolute;
+      bottom: 34px;
+      right: 10px;
+      cursor: pointer;
     }
   }
 
@@ -452,6 +510,11 @@ const copyLocationToClipboard = (): void => {
         gap: 10px;
       }
     }
+  }
+
+  .ant-form-item-explain-error {
+    color: $red-500 !important;
+    margin-bottom: 20px;
   }
 }
 </style>
