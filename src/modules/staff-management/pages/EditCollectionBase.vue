@@ -44,6 +44,7 @@
               :form-data="formData.contact"
               @on-focus="handleOnContactFocus"
               @on-blur="handleOnContactBlur"
+              @on-key-press="handleOnKeyPress"
             />
           </div>
         </a-form>
@@ -131,6 +132,12 @@
               @click="copyLocationToClipboard"
             />
           </div>
+          <a-btn
+            class="create-collection-base__map-wrapper__current-location-button"
+            @click="focusCurrentLocation"
+          >
+            <img src="@/assets/icons/ic_btn_current_location.svg" />
+          </a-btn>
         </div>
       </div>
       <div class="d-flex justify-center gap-20 mt-20 pb-20">
@@ -160,8 +167,8 @@ import validator from "@/modules/base/components/validator/validator";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import {
-CollectionBase,
-FormData
+  CollectionBase,
+  FormData
 } from "@/modules/staff-management/models/collection-base.model";
 import { formData as reactiveFormData } from "@/modules/staff-management/pages/create-collection-base-form";
 import { router } from "@/routes";
@@ -234,16 +241,22 @@ const initialize = async (): Promise<void> => {
     contact[3].value = email || "";
     contact[4].value = representative;
     collectionBaseType.value = cbType;
-
-    geoLocations.value.push([longitude, latitude]);
-    collectionBaseAddress.value = address || "";
-
-    setTimeout(() => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (view?.value as any)?.fit([latitude, longitude, latitude, longitude], {
-        maxZoom: 14
-      });
-    }, 300);
+    if (longitude && latitude) {
+      const lat = +latitude;
+      const long = +longitude;
+      geoLocations.value.push([lat, long]);
+      setTimeout(() => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (view?.value as any)?.fit([lat, long, lat, long], {
+          maxZoom: 14
+        });
+      }, 300);
+      collectionBaseAddress.value = address || "";
+    } else {
+      setTimeout(() => {
+        focusCurrentLocation();
+      }, 300);
+    }
   }
 };
 
@@ -395,6 +408,45 @@ const copyLocationToClipboard = (): void => {
     message.success(i18n.global.t("common_msg_copied_to_clipboard"));
   }
 };
+
+const focusCurrentLocation = (): void => {
+  navigator.geolocation.getCurrentPosition(
+    (position: { coords: { longitude: number; latitude: number } }): void => {
+      geoLocChange([position.coords.longitude, position.coords.latitude]);
+    },
+    (error: { message: string }): void => {
+      error.message;
+    },
+    {
+      enableHighAccuracy: false,
+      timeout: 5000,
+      maximumAge: Infinity
+    }
+  );
+};
+
+const geoLocChange = (loc: number[]): void => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (view?.value as any)?.fit([loc[0], loc[1], loc[0], loc[1]], {
+    maxZoom: 14
+  });
+};
+
+const handleOnKeyPress = (
+  value: string | number,
+  index: number
+): void | boolean => {
+  if (index === 0) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const e: any = window.event;
+    let charCode = e.which ? e.which : e.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode !== 46) {
+      e.preventDefault();
+    } else {
+      return true;
+    }
+  }
+};
 //#endregion
 
 //#region computed
@@ -407,6 +459,9 @@ const copyLocationToClipboard = (): void => {
 <style lang="scss" scoped>
 .create-collection-base {
   &__content-wrapper {
+    background-color: $white;
+    border-radius: 10px;
+    box-shadow: 4px 2px 8px rgba(0, 0, 0, 0.02);
     background-color: $white;
   }
 
@@ -476,6 +531,21 @@ const copyLocationToClipboard = (): void => {
       text-overflow: ellipsis;
       min-height: 38px;
       word-wrap: break-word;
+    }
+
+    &__current-location-button {
+      display: flex;
+      justify-content: space-around;
+      width: 48px;
+      height: 48px;
+      border-radius: 24px;
+      background-color: white;
+      align-content: center;
+      align-items: center;
+      position: absolute;
+      bottom: 34px;
+      right: 10px;
+      cursor: pointer;
     }
   }
 

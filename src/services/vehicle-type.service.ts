@@ -13,7 +13,7 @@ export async function createVehicleType(
 ): Promise<ServiceResponse<VehicleTypeModel>> {
   const data = {
     tenant_id: tenantId,
-    name: makeUniqueName(name)
+    name: makeUniqueName(name) || ""
   };
   const [error, res] = await transformRequest<VehicleTypeResponseDto>({
     url: "/vehicle_type",

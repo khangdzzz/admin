@@ -242,7 +242,7 @@ export async function createContainerType(
 > {
   const data = {
     tenant_id: tenantId,
-    name: makeUniqueName(name)
+    name: makeUniqueName(name) || ""
   };
   const [error, res] = await transformRequest<ContainerTypeResponseDto>({
     url: "/container_type",
