@@ -6,11 +6,13 @@ import * as container from "./container.service";
 import * as vehicleType from "./vehicle-type.service";
 import * as staff from "./staff.service";
 import * as collectionBase from "./collection-base.service";
+import * as collectionPoint from "./collection-point.service";
 import * as customer from "./customer.service";
 import * as constants from "./constants";
 import * as customerManagement from "./customer-management.service";
-import * as collectionPoint from "./collection-point.service";
 import * as collectionRoute from "./collection-route.service";
+import * as location from "./location.service";
+
 export const service = {
   auth,
   localStorage,
@@ -20,9 +22,10 @@ export const service = {
   vehicleType,
   staff,
   collectionBase,
+  collectionPoint,
   constants,
   customer,
   customerManagement,
-  collectionPoint,
-  collectionRoute
+  collectionRoute,
+  location
 };

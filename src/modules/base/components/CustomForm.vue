@@ -10,7 +10,7 @@
       v-if="item.name === 'email'"
       :is="item.inputType"
       v-model:value.trim="item.value"
-      :disabled="item.disabled"
+      :disabled="item.disabled || item.loading"
       :options="item.options"
       :style="item.style"
       :dropdownClassName="item.dropdownClassName"
@@ -57,13 +57,14 @@
           style="padding: 4px"
         />
       </template>
+
       <!-- endregion -->
     </component>
     <component
       v-else-if="item.name !== 'radio'"
       :is="item.inputType"
       v-model:value="item.value"
-      :disabled="item.disabled"
+      :disabled="item.disabled || item.loading"
       :options="item.options"
       :style="item.style"
       :dropdownClassName="item.dropdownClassName"
@@ -78,6 +79,7 @@
       @focus="onFocus(index)"
       @blur="onBlur(item.value, index)"
       @keydown="item.inputBehaviour"
+      @keypress="onKeyPress(item.value, index)"
       class="input-item float-label"
       :class="[
         item.class,
@@ -94,6 +96,7 @@
       </template>
       <template #suffix>
         <component :is="item.suffixIcon" :color="item.iconColor" />
+        <LoadingSpinner v-if="item.loading" />
       </template>
       <!-- endregion -->
 
@@ -133,10 +136,26 @@
 
       <!-- //region slot select  -->
       <template #suffixIcon>
+        <div v-if="item.loading">
+          <LoadingSpinner />
+        </div>
         <IcDropDown :color="item.disabled ? '#999999' : '#3C3C3C'" />
       </template>
       <!-- endregion -->
     </component>
+
+    <div
+      class="d-flex align-center"
+      v-if="item.actionBtn && item.actionBtn.name"
+    >
+      <a-button
+        class="custom-form__action-btn"
+        :disabled="item.actionBtn.disabled || false"
+        :loading="item.actionBtn.loading || false"
+        @click="item.actionBtn.click"
+        >{{ $t(item.actionBtn.name) }}</a-button
+      >
+    </div>
 
     <label
       v-if="item.label"
@@ -164,6 +183,7 @@
 <script setup lang="ts">
 //#region import
 import IcDropDown from "@/assets/icons/IcDropDown.vue";
+import LoadingSpinner from "@/modules/base/components/InputLoadingSpinner.vue";
 //#endregion
 
 //*===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍Emits
@@ -178,6 +198,7 @@ const emit = defineEmits<{
     index: number | string | Event
   ): void;
   (e: "onFocus", index: number | boolean | Event): void;
+  (e: "onKeyPress", value: string | number, index: number): void;
 }>();
 //#endregion
 
@@ -221,6 +242,10 @@ const onFocus = (index: number): void => {
   emit("onFocus", index);
 };
 
+const onKeyPress = (value: string | number, index: number): void => {
+  emit("onKeyPress", value, index);
+};
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const isActivePasswordIcon = (item: any): boolean => {
   return item.name === "password" && item?.value?.length;
@@ -250,6 +275,18 @@ const filterOption = (input: string, option: any): boolean => {
   @include text(400, 12px, 100%);
 }
 
+.custom-form {
+  &__action-btn {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 100%;
+    color: $primary-400;
+    border: 1px solid $primary-400;
+    border-radius: 6px;
+  }
+}
+
 :deep() {
   .multiple {
     position: relative;
@@ -268,7 +305,11 @@ const filterOption = (input: string, option: any): boolean => {
     border: 1px solid $grey-1;
     outline: none;
     border-radius: 10px;
-    background: #f7f7f7;
+    background: $neutral-50;
+
+    &:has(.ant-select-selector) {
+      border: none !important;
+    }
 
     .ant-input {
       background: transparent;
@@ -296,7 +337,7 @@ const filterOption = (input: string, option: any): boolean => {
       height: 100%;
       background-color: transparent;
       border-radius: 10px !important;
-      border: 1px solid $grey-1;
+      border: 1px solid $neutral-100;
       .ant-select-selection-overflow {
         .ant-select-selection-overflow-item {
           span {
@@ -348,6 +389,12 @@ const filterOption = (input: string, option: any): boolean => {
 
     .anticon-eye {
       color: $primary !important;
+    }
+  }
+
+  .ant-select-arrow {
+    &:has(div > div.input-loading-spinner) {
+      right: 68px;
     }
   }
 }

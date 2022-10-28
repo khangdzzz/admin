@@ -123,7 +123,8 @@
 }
 
 .ant-select-dropdown {
-  border-radius: 6px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
   padding: 0;
 }
 
@@ -228,11 +229,13 @@
 }
 
 .ant-select-selection-item {
-  margin-top: 6px !important;
+  margin-top: 4px !important;
+  font-size: 16px !important;
 }
 
 .ant-select-selection-search-input {
-  margin-top: 6px !important;
+  font-size: 16px;
+  margin-top: 2px !important;
 }
 
 .ant-select-dropdown {
@@ -244,6 +247,19 @@
 
   .ant-select-item-option-selected {
     background-color: $neutral-50;
+    font-style: normal;
+    font-weight: 700 !important;
+    font-size: 16px;
+    line-height: 100%;
+    color: $neutral-600;
+  }
+
+  .ant-select-item-option {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 100%;
+    color: $neutral-600;
   }
 }
 
@@ -312,6 +328,7 @@
   display: flex;
   align-items: center;
   margin-right: 13px;
+  right: 8px;
 }
 
 .has-label {
@@ -354,4 +371,39 @@
 
 .ant-empty-description {
   display: none !important;
+}
+
+.ant-empty-img-simple {
+  display: none !important;
+}
+
+.ant-empty-description {
+  display: none !important;
+}
+
+.ant-form-item-control-input-content {
+  &:has(.input-with-action-btn) {
+    display: flex;
+    gap: 20px;
+  }
+}
+
+.ant-form-item-has-error {
+  .ant-form-item-control {
+    .ant-form-item-control-input {
+      .ant-form-item-control-input-content {
+        .input-item {
+          background-color: $neutral-50 !important;
+
+          .ant-select-selector {
+            background-color: $neutral-50 !important;
+          }
+
+          .ant-input {
+            background-color: $neutral-50 !important;
+          }
+        }
+      }
+    }
+  }
 }

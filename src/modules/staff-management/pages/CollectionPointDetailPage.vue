@@ -62,11 +62,11 @@
         </div>
         <div class="collection-point-detail__map-wrapper">
           <ol-map
-            v-if="geoLocations.length"
             :loadTilesWhileAnimating="true"
             :loadTilesWhileInteracting="true"
             ref="map"
             class="collection-point-detail__map-wrapper__map"
+            v-if="!isLoading"
           >
             <ol-view
               ref="view"
@@ -121,7 +121,8 @@
             class="collection-point-detail__map-wrapper__position-detail"
             v-if="geoLocations.length && !isLoading"
           >
-            {{ geoLocations[0][0] }}, {{ geoLocations[0][1] }}
+            {{ geoLocations.length ? geoLocations[0][0] : NULL_VALUE_DISPLAY }},
+            {{ geoLocations.length ? geoLocations[0][1] : NULL_VALUE_DISPLAY }}
             <img
               src="@/assets/icons/ic_btn_copy.svg"
               @click="copyLocationToClipboard"
@@ -153,6 +154,7 @@ import { message } from "ant-design-vue";
 import { inject, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import { router, routeNames } from "@/routes";
+import { NULL_VALUE_DISPLAY } from "@/utils/constants";
 //#region import
 //#endregion
 
@@ -204,15 +206,21 @@ const init = async (): Promise<void> => {
       latitude,
       longitude
     } = res;
-    const lat = latitude ? +latitude : 0;
-    const long = longitude ? +longitude : 0;
-    geoLocations.value.push([lat, long]);
-    setTimeout(() => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (view?.value as any)?.fit([lat, long, lat, long], {
-        maxZoom: 14
-      });
-    }, 300);
+    if (latitude && longitude) {
+      geoLocations.value.push([longitude, latitude]);
+
+      setTimeout(() => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (view?.value as any)?.fit([latitude, longitude, latitude, longitude], {
+          maxZoom: 14
+        });
+      }, 300);
+    } else {
+      setTimeout(() => {
+        focusCurrentLocation();
+      }, 300);
+    }
+
     collectionPointAddress.value = address || "";
     informations.value = [
       { key: "customer", value: customer___name },
@@ -225,12 +233,14 @@ const init = async (): Promise<void> => {
       { key: "collection_base_lbl_email", value: mail || "" },
       { key: "external_code", value: external_code }
     ];
+  } else {
+    router.push({ name: routeNames.collectionPointManagement });
   }
   isLoading.value = false;
 };
 
 const goToCollectionPointListPage = (): void => {
-  router.push({ name: routeNames.listCollectionPoint });
+  router.push({ name: routeNames.collectionPointManagement });
 };
 
 const copyLocationToClipboard = (): void => {
@@ -244,12 +254,12 @@ const copyLocationToClipboard = (): void => {
 
 const editCollectionPoint = (): void => {
   if (!id) return;
-    router.push({
-      name: routeNames.editCollectionPoint,
-      params: {
-        id
-      }
-    });
+  router.push({
+    name: routeNames.editCollectionPoint,
+    params: {
+      id
+    }
+  });
 };
 
 const deleteCollectionPoint = async (): Promise<void> => {

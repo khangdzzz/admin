@@ -7,7 +7,11 @@ import {
   CustomerResponseDto
 } from "./dtos/customer-management/customer.dto";
 import { DEFAULT_SORT_ORDER } from "@/services/constants";
-import { CustomerDetail, EditCustomerDto, CustomerModel } from "@/modules/customer-management/models/customer.model";
+import {
+  CustomerDetail,
+  EditCustomerDto,
+  CustomerModel
+} from "@/modules/customer-management/models/customer.model";
 // import { makeUniqueName } from "@/utils/string.helper";
 
 export async function fetchListCustomer(
@@ -24,8 +28,8 @@ export async function fetchListCustomer(
       sort === Sort.None
         ? DEFAULT_SORT_ORDER
         : sort === Sort.Asc
-          ? "name"
-          : "-name"
+        ? "name"
+        : "-name"
   };
 
   const [error, res] = await transformRequest<
@@ -36,7 +40,17 @@ export async function fetchListCustomer(
     params
   });
   if (error || !res) return undefined;
-  if (!res) return Promise.resolve(undefined);
+
+  if (size === "full" && Array.isArray(res)) {
+    return {
+      currentPage: 1,
+      pageSize: "full",
+      total: 1,
+      totalPage: 1,
+      results: res
+    };
+  }
+
   const {
     current_page: currentPage = page,
     page_size: pageSize = size,
@@ -66,7 +80,6 @@ export async function fetchListCustomer(
     })
   };
 }
-
 
 export async function getCustomerById(
   id: number

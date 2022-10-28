@@ -249,5 +249,10 @@
   "list_of_collection_point": "回収地点一覧",
   "total_collection_point": "総合",
   "customer_registration_lbl_page_title": "新規取引先追加",
-  "delete_collection_route_successfully": "回収ルートが削除されました"
+  "delete_collection_route_successfully": "回収ルートが削除されました",
+  "add_new_collection_point": "新規回収地点の追加",
+  "collection_point_created_successfully": "回収地点が作成されました",
+  "collection_point_create_failed": "作成に失敗しました",
+  "search_address": "住所検索",
+  "cannot_find_address_from_field_name": "入力した{fieldName} はシステムに見つかりませんでした。"
 }
