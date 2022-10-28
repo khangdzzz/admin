@@ -6,5 +6,13 @@ export interface CollectionRouteResponseDTO {
   workplace___name: string;
   number_collect_points: number;
   navigation_id: string;
-  collect_point_ids: any[];
+  collect_point_ids: number[];
+  collect_points: CollectionPointResponseDTO[];
+  notice: string;
+}
+
+export interface CollectionPointResponseDTO {
+  id: number;
+  name: string;
+  customer___name: string;
 }

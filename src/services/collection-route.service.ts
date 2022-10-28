@@ -6,7 +6,6 @@ import { transformRequest } from "./base.service";
 import { DEFAULT_SORT_ORDER } from "./constants";
 import { CollectionRouteResponseDTO } from "./dtos/collection-route/collection-route.dto";
 import { PaginationDto } from "./dtos/common/pagination.dto";
-import getListCollectionRoute from "./mocks/collection-route/get-list-collection-route.response.json";
 
 interface SortCollectionRouteDto {
   sortName: Sort;
@@ -85,7 +84,8 @@ export async function getListCollectionRoutes(
         workplace___name,
         name,
         number_collect_points,
-        navigation_id
+        navigation_id,
+        notice
       } = item;
       return {
         key: id,
@@ -94,7 +94,8 @@ export async function getListCollectionRoutes(
         workPlace: workplace___name,
         name,
         numberOfStore: number_collect_points,
-        navigationId: navigation_id
+        navigationId: navigation_id,
+        notice
       };
     })
   };
@@ -128,7 +129,8 @@ export async function getCollectionRouteById(
     name,
     number_collect_points,
     navigation_id,
-    collect_point_ids
+    notice,
+    collect_points
   } = res;
 
   return {
@@ -139,6 +141,7 @@ export async function getCollectionRouteById(
     name,
     numberOfStore: number_collect_points,
     navigationId: navigation_id,
-    listCollectionPoint: collect_point_ids
+    notice,
+    listCollectionPoint: collect_points
   };
 }

@@ -6,6 +6,6 @@ export interface CollectionRoute {
   numberOfStore?: number;
   lastUpdate?: string;
   navigationId?: string;
-  note?: string;
+  notice?: string;
   listCollectionPoint?: any[];
 }
