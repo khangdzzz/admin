@@ -144,12 +144,14 @@
         <a-button
           type="secondary"
           class="create-collection-base__btn-style create-collection-base__cancel-btn"
+          :disabled="isSubmitting"
           @click="handleCancel"
           >{{ $t("btn_cancel") }}</a-button
         >
         <a-button
           type="primary"
           class="create-collection-base__btn-style"
+          :loading="isSubmitting"
           :disabled="isButtonDisabled"
           @click="handleSubmit"
           >{{ $t("btn_submit") }}</a-button
@@ -359,7 +361,7 @@ const handleSubmit = async (): Promise<void> => {
 
   isSubmitting.value = true;
   const { error, res } = await service.collectionBase.editCollectionBase(data);
-
+  isSubmitting.value = false;
   if (res && !error) {
     messenger({
       title: "collection_base_msg_edited_successfully",
@@ -368,12 +370,7 @@ const handleSubmit = async (): Promise<void> => {
       callback: (isConfirm: boolean) => {
         isConfirm;
         goToCollectionBaseListPage();
-        router.push({
-          name: routeNames.collectionBaseDetail,
-          params: {
-            id: res.id
-          }
-        });
+        router.go(-1);
         clearInputs();
       }
     });
@@ -384,7 +381,6 @@ const handleSubmit = async (): Promise<void> => {
       type: MessengerType.Error
     });
   }
-  isSubmitting.value = false;
 };
 
 const goToCollectionBaseListPage = (): void => {
