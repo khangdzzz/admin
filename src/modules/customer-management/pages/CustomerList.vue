@@ -94,9 +94,12 @@
                 @click="(event: MouseEvent) => handleClickEdit(event, record.key)"
               />
             </a>
-            <a @click="(event) => deleteCustomer(event, record.id)">
-              <img src="@/assets/icons/ic_btn_delete.svg" class="action-icon"
-            /></a>
+
+            <img
+              @click="(event) => deleteCustomer(event, record.id)"
+              src="@/assets/icons/ic_btn_delete.svg"
+              class="action-icon"
+            />
           </template>
           <template v-if="column.key === 'name'">
             <a-tooltip
