@@ -44,6 +44,7 @@ export interface CollectionPointResponseDto {
 }
 
 export interface CollectionPointRequestDTO {
+  id?: number;
   customer_id: number;
   name: string | null;
   short_name: string;

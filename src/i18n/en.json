@@ -259,5 +259,7 @@
   "collection_point_created_successfully": "Collection point is created successfully",
   "collection_point_create_failed": "Create failed",
   "search_address": "Search address",
-  "cannot_find_address_from_field_name": "Cannot find an address from this {fieldName}"
+  "cannot_find_address_from_field_name": "Cannot find an address from this {fieldName}",
+  "edit_collection_point": "Edit collection point",
+  "collection_point_edited_successfully": "Collection point is edited successfully"
 }

@@ -152,3 +152,26 @@ export async function createCollectionPoint(
     res
   };
 }
+
+export async function editCollectionPoint(
+  data: CollectionPointRequestDTO
+): Promise<ServiceResponse<CollectionPoint>> {
+  const { id } = data;
+
+  const [error, res] = await transformRequest<CollectionPoint>({
+    url: `collect_point/${id}`,
+    method: "put",
+    data
+  });
+
+  if (error || !res) {
+    return {
+      error: (error?.response?.data as { details: { msg: string }[] })
+        .details[0].msg
+    };
+  }
+
+  return {
+    res
+  };
+}

@@ -228,7 +228,7 @@ const routes: RouteRecordRaw[] = [
         name: routeNames.collectionPointDetail,
         component: () =>
           import(
-            "@/modules/staff-management/pages/CollectionPointDetailPage.vue"
+            "@/modules/collection-point-management/pages/CollectionPointDetailPage.vue"
           )
       },
       {
@@ -252,7 +252,7 @@ const routes: RouteRecordRaw[] = [
         name: routeNames.editCollectionPoint,
         component: () =>
           import(
-            "@/modules/collection-point-management/pages/CreateCollectionPoint.vue"
+            "@/modules/collection-point-management/pages/EditCollectionPoint.vue"
           )
       }
     ]
