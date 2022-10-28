@@ -54,32 +54,32 @@
         <template #headerCell="{ column }">
           <template v-if="column.key === 'name'">
             <div @click="changeSortName()">
-              <span>{{ $t(column.title) }}</span>
+              <span>{{ column.title }}</span>
               <SortView class="mx-12" :sort="sortName" />
             </div>
           </template>
           <template v-if="column.key === 'customer'">
             <div @click="changeSortCustomer()">
-              <span>{{ $t(column.title) }}</span>
+              <span>{{ column.title }}</span>
               <SortView class="mx-12" :sort="sortCustomer" />
             </div>
           </template>
 
           <template v-if="column.key === 'postalCode'">
             <div @click="changeSortPostalCode()">
-              <span>{{ $t(column.title) }}</span>
+              <span>{{ column.title }}</span>
               <SortView class="mx-12" :sort="sortPostalCode" />
             </div>
           </template>
           <template v-if="column.key === 'address'">
             <div @click="changeSortAddress()">
-              <span>{{ $t(column.title) }}</span>
+              <span>{{ column.title }}</span>
               <SortView class="mx-12" :sort="sortAddress" />
             </div>
           </template>
           <template v-if="column.key === 'phoneNumber'">
             <div @click="changeSortPhoneNumber()">
-              <span>{{ $t(column.title) }}</span>
+              <span>{{ column.title }}</span>
               <SortView class="mx-12" :sort="sortPhoneNumber" />
             </div>
           </template>
@@ -177,7 +177,7 @@ const selectedKeys = ref<number[]>([]);
 const columns: TableColumnType<CollectionPointModel>[] = [
   {
     title: i18n.global.t("customer"),
-    dataIndex: "customer",
+    dataIndex: "customer___name",
     key: "customer"
   },
   {

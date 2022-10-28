@@ -102,20 +102,20 @@
 
       <!-- //region slot select and autocomplete  -->
       <template #option="{ label, value, content }">
-        <div :style="styleContent" class="d-flex justify-start align-center">
+        <div
+          class="custom-form__option-wrapper px-10 d-flex justify-start align-center"
+        >
           <div class="checkbox mr-10">
             <a-checkbox
               :checked="checked(item.value, value)"
               v-if="item.mode"
             />
           </div>
-          <div class="content d-flex flex-column">
-            <span class="text-label">
-              {{ label }}
-            </span>
-            <span class="text-content">
-              {{ content }}
-            </span>
+          <div
+            class="content fill-height d-flex flex-column justify-center gap-6"
+          >
+            <div class="text-content">{{ content }}</div>
+            <div class="text-label">{{ label }}</div>
           </div>
         </div>
       </template>
@@ -285,6 +285,10 @@ const filterOption = (input: string, option: any): boolean => {
     border: 1px solid $primary-400;
     border-radius: 6px;
   }
+
+  &__option-wrapper {
+    height: 64px !important;
+  }
 }
 
 :deep() {
@@ -404,6 +408,24 @@ const filterOption = (input: string, option: any): boolean => {
 .ant-select-dropdown {
   padding: 0;
 }
+
+.text-label {
+  color: $neutral-600;
+  @include text(400, 16px, 20px);
+}
+
+.text-content {
+  color: $neutral-400;
+  @include text(400, 14px, 18px);
+}
+
+.ant-select-item-option-selected {
+  .text-label {
+    color: $neutral-600;
+    font-weight: 600 !important;
+  }
+}
+
 .form-option-content {
   .ant-select-item-option-active,
   .ant-select-item-option-selected {
@@ -427,15 +449,6 @@ const filterOption = (input: string, option: any): boolean => {
           }
         }
       }
-      .text-content {
-        font-size: 16px;
-        line-height: 100%;
-      }
-    }
-    .text-label {
-      color: $neutral-600;
-      margin-bottom: 6px;
-      @include text(400, 14px, 100%);
     }
   }
 }

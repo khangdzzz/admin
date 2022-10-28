@@ -1,14 +1,14 @@
 <template>
   <a-spin :tip="$t('common_loading')" :spinning="isLoading">
-    <div class="create-collection-point p-30 fill-height">
-      <div class="create-collection-point__title mb-20">
-        {{ $t("add_new_collection_point") }}
+    <div class="edit-collection-point p-30 fill-height">
+      <div class="edit-collection-point__title mb-20">
+        {{ $t("edit_collection_point") }}
       </div>
       <div
-        class="create-collection-point__content-wrapper d-flex justify-space-between gap-20 px-20 pt-20"
+        class="edit-collection-point__content-wrapper d-flex justify-space-between gap-20 px-20 pt-20"
       >
         <a-form
-          class="create-collection-point__form-wrapper"
+          class="edit-collection-point__form-wrapper"
           :model="formData"
           help="test"
           ref="createCollectionPointRef"
@@ -22,7 +22,7 @@
             />
           </div>
         </a-form>
-        <div class="create-collection-point__map-wrapper">
+        <div class="edit-collection-point__map-wrapper">
           <ol-map
             :loadTilesWhileAnimating="true"
             :loadTilesWhileInteracting="true"
@@ -100,7 +100,7 @@
               </ol-style>
             </ol-vector-layer>
           </ol-map>
-          <div class="create-collection-point__map-wrapper__position-detail">
+          <div class="edit-collection-point__map-wrapper__position-detail">
             {{ geoLocations.length ? geoLocations[0][0] : NULL_VALUE_DISPLAY }},
             {{ geoLocations.length ? geoLocations[0][1] : NULL_VALUE_DISPLAY }}
             <img
@@ -109,7 +109,7 @@
             />
           </div>
           <a-btn
-            class="create-collection-point__map-wrapper__current-location-button"
+            class="edit-collection-point__map-wrapper__current-location-button"
             @click="focusCurrentLocation"
             v-if="!isLoading"
           >
@@ -120,18 +120,18 @@
       <div class="d-flex justify-center gap-20 mt-20 pb-20">
         <a-button
           type="secondary"
-          class="create-collection-point__btn-style create-collection-point__cancel-btn"
+          class="edit-collection-point__btn-style edit-collection-point__cancel-btn"
           :disabled="isSubmitting"
           @click="handleCancel"
           >{{ $t("btn_cancel") }}</a-button
         >
         <a-button
           type="primary"
-          class="create-collection-point__btn-style"
+          class="edit-collection-point__btn-style"
           :loading="isSubmitting"
           :disabled="!isAllowSubmit"
           @click="handleSubmit"
-          >{{ $t("btn_submit") }}</a-button
+          >{{ $t("btn_save") }}</a-button
         >
       </div>
     </div>
@@ -165,6 +165,7 @@ import {
   ref,
   watch
 } from "vue";
+import { useRoute } from "vue-router";
 //#endregion
 
 //#region props
@@ -192,6 +193,8 @@ const { data } = formData;
 const isPostalCodeHasError = ref<boolean>(false);
 const customerOptions = ref<{ value: number; label: string }[]>();
 const isLoading = ref<boolean>(false);
+const route = useRoute();
+const { id } = route.params;
 //#endregion
 
 //#region hooks
@@ -280,6 +283,7 @@ const handleOnKeyPress = (
 
 const handleSubmit = async (): Promise<void> => {
   const collectionPoint = {
+    id: +id,
     customer_id: +data[0].value,
     name: makeUniqueName(data[1].value.toString()) || null,
     short_name: makeUniqueName(data[2].value.toString()) || "",
@@ -297,7 +301,7 @@ const handleSubmit = async (): Promise<void> => {
 
   isSubmitting.value = true;
   setBtnActionDisableState(true);
-  const { error, res } = await service.collectionPoint.createCollectionPoint(
+  const { error, res } = await service.collectionPoint.editCollectionPoint(
     collectionPoint
   );
   isSubmitting.value = false;
@@ -305,23 +309,18 @@ const handleSubmit = async (): Promise<void> => {
 
   if (res && !error) {
     messenger({
-      title: "collection_point_created_successfully",
+      title: "collection_point_edited_successfully",
       message: "",
       type: MessengerType.Success,
       callback: (isConfirm: boolean) => {
         isConfirm;
-        router.push({
-          name: routeNames.collectionPointDetail,
-          params: {
-            id: res.id
-          }
-        });
+        router.go(-1);
         clearInputs();
       }
     });
   } else {
     messenger({
-      title: "popup_create_fail_title",
+      title: "popup_edit_fail_title",
       message: "",
       type: MessengerType.Error
     });
@@ -408,6 +407,35 @@ const fetchListCustomer = async (): Promise<void> => {
   }
 };
 
+const fetchCollectionPointDetail = async (): Promise<void> => {
+  const res = await service.collectionPoint.getCollectionPointById(+id);
+
+  if (!res) {
+    router.push({
+      name: routeNames.collectionPointManagement
+    });
+    return;
+  }
+
+  data[0].value = res.customer_id || "";
+  data[1].value = res.name || "";
+  data[2].value = res.short_name || "";
+  data[3].value = res.name_kana || "";
+  data[4].value = res.postcode || "";
+  data[5].value = res.address || "";
+  data[6].value = res.telephone || "";
+  data[7].value = res.mail || "";
+  data[8].value = res.external_code || "";
+
+  if (res.longitude && res.latitude) {
+    geoLocations.value.push([res.longitude, res.latitude]);
+  } else {
+    setTimeout(() => {
+      focusCurrentLocation(), 300;
+    });
+  }
+};
+
 const checkMaxLength = (data: string, maxLength: number): boolean => {
   return data.length <= maxLength;
 };
@@ -430,6 +458,7 @@ const focusCurrentLocation = (): void => {
 
 const initialize = async (): Promise<void> => {
   await fetchListCustomer();
+  await fetchCollectionPointDetail();
 };
 //#endregion
 
@@ -450,7 +479,7 @@ const isAllowSubmit = computed(() => {
     !data[6].value ||
     (data[6].value &&
       checkMaxLength(data[6].value.toString(), 15) &&
-      /^[+][0-9]{6,15}$/.test(data[6].value.toString()));
+      /\+[0-9]{6,12}/.test(data[6].value.toString()));
   const isValidName =
     checkMaxLength(data[1].value.toString(), 50) && data[1].value;
   const isValidShortName =
@@ -495,7 +524,7 @@ watch(
 </script>
 
 <style lang="scss" scoped>
-.create-collection-point {
+.edit-collection-point {
   &__content-wrapper {
     background-color: $white;
     box-shadow: 4px 2px 8px rgba(0, 0, 0, 0.02);
@@ -586,7 +615,7 @@ watch(
     }
   }
 
-  .create-collection-point {
+  .edit-collection-point {
     &__custom-input-wrapper {
       .ant-form-item {
         width: 100%;

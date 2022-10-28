@@ -48,8 +48,8 @@
             <div class="collection-point-detail__form-wrapper__title">
               {{ $t(item.key) }}
             </div>
-            <a-tooltip placement="top">
-              <template #title>
+            <a-tooltip placement="topLeft">
+              <template #title v-if="item.value">
                 <span>{{ item.value }}</span>
               </template>
               <div class="collection-point-detail__form-wrapper__value">
@@ -211,7 +211,7 @@ const init = async (): Promise<void> => {
 
       setTimeout(() => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (view?.value as any)?.fit([latitude, longitude, latitude, longitude], {
+        (view?.value as any)?.fit([longitude, latitude, longitude, latitude], {
           maxZoom: 14
         });
       }, 300);
@@ -228,7 +228,7 @@ const init = async (): Promise<void> => {
       { key: "short_name", value: short_name },
       { key: "name_kana", value: name_kana },
       { key: "postal_code", value: postcode || "" },
-      { key: "adress", value: address || "" },
+      { key: "address", value: address || "" },
       { key: "phone_number", value: telephone || "" },
       { key: "collection_base_lbl_email", value: mail || "" },
       { key: "external_code", value: external_code }
