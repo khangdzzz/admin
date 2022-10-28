@@ -1,9 +1,16 @@
 <template>
   <div
-    class="create-collection-route-order px-30 py-20 fill-height d-flex flex-column"
+    class="create-collection-route-order p-30 fill-height d-flex flex-column"
   >
+    <div class="create-collection-route-order-title">
+      {{ $t("collection_route_order") }}
+    </div>
     <a-card class="create-collection-route-order__card">
-      <a-form :model="formData" ref="createCustomerForm">
+      <a-form
+        :model="formData"
+        ref="createCollectionRouteOrder"
+        name="createCollectionRouteOrder"
+      >
         <div
           class="create-collection-route-order__duo-inputs-wrapper d-flex justify-space-between gap-20"
         >
@@ -12,26 +19,35 @@
             @on-focus="handleOnDuoInputsFocus"
             @on-blur="handleOnDuoInputsBlur"
           />
+          <CustomForm
+            :form-data="formData.duoInputs2"
+            @on-focus="handleOnDuoInputs2Focus"
+            @on-blur="handleOnDuoInputs2Blur"
+          />
         </div>
         <a-form-item name="note" label="">
-          <label class="label-note">Note</label>
+          <label class="label-note">{{
+            $t("collection_route_detail_note")
+          }}</label>
           <div class="create-collection-route-order__note">
-            <a-textarea :maxlength="100" v-model:value="formNote.note" />
+            <a-textarea :maxlength="255" v-model:value="formNote.note" />
           </div>
         </a-form-item>
         <div class="">
-          <p class="collection-point-title">Collection point selection</p>
+          <p class="collection-point-title">
+            {{ $t("collection_route_point_selection") }}
+          </p>
           <div class="collection-point-content d-flex">
             <div class="collection-point__data-left">
               <div class="collection-point__head">
                 <div class="collection-point__head--title">
-                  All collection points
+                  {{ $t("collection_route_all_collection_points") }}
                 </div>
                 <div class="collection-point__head--total">
-                  <span>Total: </span>
+                  <span>{{ $t("collection_route_total") }}: </span>
                   <span class="number-total">
-                    {{ numberOfCollectionPoint }}</span
-                  >
+                    {{ numberOfCollectionPoint }}
+                  </span>
                 </div>
               </div>
               <div class="collection-point__search p-9">
@@ -71,13 +87,13 @@
             <div class="collection-point__data-right">
               <div class="collection-point__head">
                 <div class="collection-point__head--title">
-                  Selected collection point
+                  {{ $t("collection_route_selected_collection_point") }}
                 </div>
                 <div class="collection-point__head--total">
-                  <span>Total: </span>
+                  <span>{{ $t("collection_route_total") }}: </span>
                   <span class="number-total">
-                    {{ numberOfSelectedCollectionPoint }}</span
-                  >
+                    {{ numberOfSelectedCollectionPoint }}
+                  </span>
                 </div>
               </div>
               <draggable
@@ -105,9 +121,11 @@
               <div class="collection-point__data mh-300"></div>
               <ul class="helper">
                 <li class="helper-item">
-                  Double click to select store to route
+                  {{ $t("collection_route_select_store") }}
                 </li>
-                <li class="helper-item">Drag and drop to rearrange order</li>
+                <li class="helper-item">
+                  {{ $t("collection_route_rearrange_order") }}
+                </li>
               </ul>
             </div>
           </div>
@@ -126,8 +144,9 @@
       <a-button
         type="primary"
         class="create-collection-base__btn-style"
-        :disabled="true"
+        :disabled="isDisableSubmit"
         :loading="false"
+        @click="handleClickSubmit"
         >{{ $t("btn_submit") }}</a-button
       >
     </div>
@@ -138,58 +157,93 @@
 //#region import
 import IcSwap from "@/assets/icons/IcSwap.vue";
 import CustomForm from "@/modules/base/components/CustomForm.vue";
-import { computed, reactive, ref } from "vue";
+import {
+  computed,
+  reactive,
+  ref,
+  inject,
+  onBeforeUnmount,
+  onMounted,
+  watch
+} from "vue";
+import { FormDataCreateCollectionRoute } from "@/modules/collection-route-management/models/collection-route.model";
 import { formData as reactiveFormData } from "@/modules/collection-route-management/models/create-collection-route-order-base-form";
-import { FormData } from "@/modules/staff-management/models/collection-base.model";
 import { routeNames, router } from "@/routes";
 import draggable from "vuedraggable";
-
-export interface form {
+import { service } from "@/services";
+import { makeUniqueName } from "@/utils/string.helper";
+import MessengerParamModel from "@/modules/base/models/messenger-param.model";
+import { MessengerType } from "@/modules/base/models/messenger-type.enum";
+import {
+  CollectionPoint,
+  CollectionBase
+} from "@/modules/collection-route-management/models/collection-route.model";
+export interface Form {
   note: string;
 }
-
 //#endregion
 
 //#region props
 //#endregion
 
 //#region variables
-
+const messenger: (
+  param: MessengerParamModel
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+) => void = inject("messenger")!;
 const searchCollectionPoint = ref<string>("");
 const drag = ref<boolean>(false);
-const formData = reactive<FormData>(reactiveFormData);
+const formData = reactive<FormDataCreateCollectionRoute>(reactiveFormData);
 const isSubmitting = ref<boolean>(false);
-const createCustomerForm = ref();
-const formNote = reactive<form>({ note: "" });
-const listCollectionPoint = ref<any>([
-  { id: "0", name: "John Brown 1", customerName: "New York" },
-  { id: "1", name: "John Brown 2", customerName: "New York" },
-  { id: "2", name: "John Brown 3", customerName: "New York" },
-  { id: "3", name: "John Brown 4", customerName: "New York" },
-  { id: "4", name: "John Brown 5", customerName: "New York" },
-  { id: "5", name: "John Brown 6", customerName: "New York" },
-  { id: "6", name: "John Brown 7", customerName: "New York" },
-  { id: "7", name: "John Brown 8", customerName: "New York" },
-  { id: "8", name: "John Brown 9", customerName: "New York" },
-  { id: "9", name: "John Brown 10", customerName: "New York" },
-  { id: "10", name: "John Brown 11", customerName: "New York" },
-  { id: "11", name: "John Brown 12", customerName: "New York" },
-  { id: "12", name: "John Brown 13", customerName: "New York" },
-  { id: "13", name: "John Brown 14", customerName: "New York" },
-  { id: "14", name: "John Brown 15", customerName: "New York" },
-  { id: "15", name: "John Brown 16", customerName: "New York" },
-  { id: "16", name: "John Brown 17", customerName: "New York" },
-  { id: "17", name: "John Brown 18", customerName: "New York" }
-]);
-const listSelectedCollectionPoint = ref<any[]>([]);
+const isDisableSubmit = ref<boolean>(true);
+const formNote = reactive<Form>({ note: "" });
+const listCollectionPoint = ref<CollectionPoint[]>([]);
+const listSelectedCollectionPoint = ref<CollectionPoint[]>([]);
+const listCollectionBase = ref<CollectionBase[]>();
+const handleSubmitBtn = reactive<any>({
+  formData: formData,
+  listSelectedCollectionPoint: listSelectedCollectionPoint
+});
 //#endregion
 
 //#region hooks
+onMounted(async () => {
+  await Promise.all([fetchCollectionBase(), fetchListCollectionPoint()]);
+});
+onBeforeUnmount(() => {
+  clearInputs();
+});
 // //#endregion
 
 // //#region function
+
+const fetchListCollectionPoint = async (): Promise<void> => {
+  const res = await service.collectionRoute.getCollectionPoint();
+  if (res) {
+    listCollectionPoint.value = res?.map((item) => ({
+      id: item.id,
+      name: item.name,
+      customerName: item.customer___name
+    }));
+  }
+};
+const fetchCollectionBase = async (): Promise<void> => {
+  const res = await service.vehicle.getCollectionBase();
+  if (res) {
+    listCollectionBase.value = res?.map((item) => ({
+      value: item.id || 0,
+      label: item.name
+    }));
+    formData.duoInputs2[0].options = listCollectionBase.value;
+  }
+};
+
+const clearInputs = (): void => {
+  formData.duoInputs[0].value = "";
+  formData.duoInputs2[0].value = "";
+};
 const filteredCollectionPointList = computed(function () {
-  return listCollectionPoint.value.filter((data) =>
+  return listCollectionPoint.value.filter((data: CollectionPoint) =>
     data.name.toLowerCase().includes(searchCollectionPoint.value.toLowerCase())
   );
 });
@@ -200,16 +254,15 @@ const numberOfSelectedCollectionPoint = computed(() => {
   return listSelectedCollectionPoint.value.length;
 });
 const getListIdSelectedCP = computed(() => {
-  let data = [];
+  let data: number[] = [];
   listSelectedCollectionPoint.value.forEach((element) => data.push(element.id));
   return data;
 });
 
-const onHandleAddCollectionPointByIdById = (id: string | number): void => {
-  const data = listCollectionPoint.value.find((data) => data.id == id);
-  listSelectedCollectionPoint.value.push(data);
+const onHandleAddCollectionPointByIdById = (id: number): void => {
+  listSelectedCollectionPoint.value.push(listCollectionPoint.value[id]);
 };
-const onHandleRemoveCollectionPointById = (id: string | number): void => {
+const onHandleRemoveCollectionPointById = (id: number): void => {
   listSelectedCollectionPoint.value.splice(
     listSelectedCollectionPoint.value.findIndex((item) => item.id == id),
     1
@@ -225,19 +278,88 @@ const handleOnDuoInputsBlur = (
 ): void => {
   formData.duoInputs[Number(index)].isFocus = false;
 };
-
-const handleClickCancel = (): void => {
-  router.push({ name: routeNames.customerList });
+const handleOnDuoInputs2Focus = (index: number | boolean | Event): void => {
+  formData.duoInputs2[Number(index)].isFocus = true;
 };
 
+const handleOnDuoInputs2Blur = (
+  value: number | boolean | Event,
+  index: string | number | Event
+): void => {
+  formData.duoInputs2[Number(index)].isFocus = false;
+};
+
+const handleClickCancel = (): void => {
+  router.push({ name: routeNames.listCollectionRoute });
+};
+const converListIdToString = (listId: number[]): string => {
+  let str1 = listId.toString().replace(/,/g, ", ");
+  let str2 = str1.slice(0, -1) + "]";
+  let str3 = "[" + str2.slice();
+  return str3;
+};
+const handleClickSubmit = async (): Promise<void> => {
+  const listStringId = converListIdToString(getListIdSelectedCP.value);
+  const data = {
+    name: makeUniqueName(formData.duoInputs[0].value.toString()),
+    workplace_id: formData.duoInputs2[0].value,
+    collect_point_ids: listStringId,
+    notice: makeUniqueName(formNote.note.toString())
+  };
+
+  const { error, res } = await service.collectionRoute.createCollectionRoute(
+    data
+  );
+  if (!error && res) {
+    messenger({
+      title: "collection_route_created_successfully",
+      message: "",
+      type: MessengerType.Success,
+      callback: (isConfirm: boolean) => {
+        isConfirm;
+        router.push({
+          name: routeNames.listCollectionRoute
+        });
+        clearInputs();
+      }
+    });
+  } else {
+    messenger({
+      title: "create_failed",
+      message: "",
+      type: MessengerType.Error
+    });
+  }
+};
+const activeSubmitButton = (): void => {
+  if (
+    handleSubmitBtn.formData.duoInputs[0].value &&
+    handleSubmitBtn.formData.duoInputs2[0].value &&
+    handleSubmitBtn.listSelectedCollectionPoint.length > 0
+  ) {
+    isDisableSubmit.value = false;
+  } else {
+    isDisableSubmit.value = true;
+  }
+};
 //#endregion
 
 //#region reactive
+watch(handleSubmitBtn, () => {
+  activeSubmitButton();
+});
 //#endregion
 </script>
 
 <style lang="scss" scoped>
 .create-collection-route-order {
+  .create-collection-route-order-title {
+    font-weight: 700;
+    font-size: 28px;
+    line-height: 36px;
+    margin-bottom: 20px;
+    color: $neutral-600;
+  }
   &__card {
     width: auto;
     background: $neutral-0;
