@@ -460,7 +460,7 @@ watch(
   .create-form {
     .ant-form {
       .ant-form-item {
-        margin-bottom: 25px;
+        margin-bottom: 20px;
         .ant-form-item-control {
           .ant-form-item-explain {
             .ant-form-item-explain-error {
@@ -471,6 +471,11 @@ watch(
             .ant-form-item-control-input-content {
               display: flex;
               align-items: center;
+              .input-item {
+                .ant-input {
+                  color: $neutral-800;
+                }
+              }
               .ant-select-single {
                 .ant-select-selector {
                   .ant-select-selection-item {

@@ -11,7 +11,7 @@
         <div class="create-form">
           <a-form :model="dynamicValidateForm" name="basic" autocomplete="off">
             <a-form-item
-            class="mb-20"
+              class="mb-20"
               name="formData0value"
               :validateFirst="false"
               v-if="isTenantAdmin()"
@@ -434,7 +434,7 @@ watch(
   }
   .btn {
     padding: 0px 15px;
-    margin-top: 30px;
+    margin-top: 31px;
     width: 180px;
     height: 48px;
     font-weight: 600;
@@ -450,7 +450,7 @@ watch(
   .create-form {
     .ant-form {
       .ant-form-item {
-        margin-bottom: 25px;
+        margin-bottom: 20px;
         .ant-form-item-control {
           .ant-form-item-explain {
             .ant-form-item-explain-error {
@@ -461,6 +461,11 @@ watch(
             .ant-form-item-control-input-content {
               display: flex;
               align-items: center;
+              .input-item {
+                .ant-input {
+                  color: $neutral-800;
+                }
+              }
               .ant-select-single {
                 .ant-select-selector {
                   .ant-select-selection-item {
