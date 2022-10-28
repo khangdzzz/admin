@@ -24,10 +24,12 @@
                 v-model:value="ownerType"
                 :disabled="true"
               >
-                <a-radio value="collectionBase">{{
+                <a-radio class="radio-group__content" value="collectionBase">{{
                   $t("collection_base")
                 }}</a-radio>
-                <a-radio value="partner">{{ $t("partner") }}</a-radio>
+                <a-radio class="radio-group__content" value="partner">{{
+                  $t("partner")
+                }}</a-radio>
               </a-radio-group>
             </a-form-item>
             <CustomForm
@@ -427,7 +429,7 @@ watch(
 
   .check-permision {
     width: 100%;
-    margin-top: 11px;
+    margin-top: 6px;
 
     h3 {
       font-weight: 600;
@@ -458,11 +460,11 @@ watch(
   .create-form {
     .ant-form {
       .ant-form-item {
-        margin-bottom: 20px;
+        margin-bottom: 25px;
         .ant-form-item-control {
           .ant-form-item-explain {
             .ant-form-item-explain-error {
-              line-height: 14.6px;
+              line-height: 14.06px;
             }
           }
           .ant-form-item-control-input {

@@ -305,6 +305,10 @@
   align-items: center;
   .ant-radio-disabled .ant-radio-inner {
     border-color: $text-1 !important;
+    background-color: #ffffff;
+  }
+  .ant-radio-disabled + span {
+    color: $text-1;
   }
 
   .ant-radio {
