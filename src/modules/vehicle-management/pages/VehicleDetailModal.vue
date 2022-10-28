@@ -97,7 +97,10 @@ const urlQrCode = ref<string>("");
 
 const WorkPlaceTypeEnum = ref<string[]>([
   i18n.global.t("collection_base"),
-  i18n.global.t("partner")
+  i18n.global.t("partner"),
+  i18n.global.t("customer"),
+  i18n.global.t("destination"),
+  i18n.global.t("disposal")
 ]);
 
 const form = reactive<{ information: Information[] }>({
@@ -108,23 +111,23 @@ const form = reactive<{ information: Information[] }>({
     },
     {
       title: i18n.global.t("owner"),
-      value: currentVehicle.ownerName || null
+      value: currentVehicle.ownerName ?? '---'
     },
     {
       title: i18n.global.t("vehicle_type"),
-      value: currentVehicle.vehicleType
+      value: currentVehicle.vehicleType ?? '---'
     },
     {
       title: i18n.global.t("vehicle_name"),
-      value: currentVehicle.vehicleName
+      value: currentVehicle.vehicleName ?? '---'
     },
     {
       title: i18n.global.t("number_plate"),
-      value: currentVehicle.vehiclePlate
+      value: currentVehicle.vehiclePlate ?? '---'
     },
     {
       title: i18n.global.t("vehicle_max_loading_weight"),
-      value: currentVehicle.maxWeight || null
+      value: currentVehicle.maxWeight ?? '---'
     },
 
     {

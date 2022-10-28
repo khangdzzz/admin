@@ -104,19 +104,19 @@ const form = reactive<{
   information: [
     {
       title: i18n.global.t("container_container_name"),
-      value: detail.containerName || null,
+      value: detail.containerName ?? '---',
       width: "100%",
       marginRight: "0"
     },
     {
       title: i18n.global.t("container_container_type"),
-      value: detail.containerType || null,
+      value: detail.containerType ?? '---',
       width: "100%",
       marginRight: "0"
     },
     {
       title: i18n.global.t("container_weight"),
-      value: detail.weight || null,
+      value: detail.weight ?? '---',
       width: "190px",
       marginRight: "20px"
     },

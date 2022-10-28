@@ -256,5 +256,6 @@
   "search_address": "住所検索",
   "cannot_find_address_from_field_name": "入力した{fieldName} はシステムに見つかりませんでした。",
   "edit_collection_point": "回収地点の編集",
-  "collection_point_edited_successfully": "回収地点が編集されました"
+  "collection_point_edited_successfully": "回収地点が編集されました",
+  "disposal":"処分場"
 }
