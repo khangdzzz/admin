@@ -368,7 +368,7 @@ const handleOnChange = (): void => {
 };
 
 const handleClickCancel = (): void => {
-  router.push({ name: routeNames.customerList });
+  router.go(-1);
 };
 
 const handleClickSave = async (): Promise<void> => {
@@ -399,7 +399,7 @@ const handleClickSave = async (): Promise<void> => {
       type: MessengerType.Success,
       callback: (isConfirm: boolean) => {
         isConfirm;
-        handleClickCancel();
+        router.push({ name: routeNames.customerList });
       }
     });
   } else {

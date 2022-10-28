@@ -10,7 +10,7 @@ export interface VehicleSelection {
 }
 export interface Vehicle {
   id: number | undefined | string;
-  ownerType?: string | undefined;
+  ownerType: number ;
   ownerId?: number;
   ownerName?: string;
   vehicleType: number | string;
@@ -52,4 +52,15 @@ export interface ResVehicle {
   permission_flag: number;
   workplace__name: string;
   vehicle_type___name: string;
+}
+
+export interface EditVehicleDto {
+  id: number;
+  ownerName?: string;
+  vehicleType: number;
+  vehicleName: string;
+  vehiclePlate: string;
+  maxWeight?: number;
+  code?: string;
+  isHasPermission?: number;
 }

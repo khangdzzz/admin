@@ -14,7 +14,6 @@ import { makeUniqueName } from "@/utils/string.helper";
 import { AxiosError } from "axios";
 import { transformRequest } from "./base.service";
 import { PaginationDto } from "./dtos/common/pagination.dto";
-import { CreateContainerTypeInputDto } from "./dtos/container-management/create-container-type.dto";
 import { ContainerTypeResponseDto } from "./dtos/container/create-container-type.dto";
 
 import { ContainerResponseDTO } from "@/services/dtos/container/container.dto";
@@ -170,8 +169,8 @@ export async function getListContainerType(
       sort === Sort.None
         ? DEFAULT_SORT_ORDER
         : sort === Sort.Asc
-        ? "name"
-        : "-name"
+          ? "name"
+          : "-name"
   };
   const [error, res] = await transformRequest<
     PaginationDto<ContainerTypeResponseDto>
@@ -241,7 +240,7 @@ export async function createContainerType(
 ): Promise<
   [AxiosError<unknown, unknown>, null] | [null, ContainerTypeResponseDto] | any
 > {
-  const data: CreateContainerTypeInputDto = {
+  const data = {
     tenant_id: tenantId,
     name: makeUniqueName(name)
   };

@@ -1,12 +1,13 @@
 import { Pagination } from "@/modules/common/models";
 import { Sort } from "@/modules/common/models/sort.enum";
-import { CollectionBase } from "@/modules/staff-management/models/collection-base.model";
+import { CollectionBase, CreateCollectionBaseDto, EditCollectionBaseDto } from "@/modules/staff-management/models/collection-base.model";
 import { transformRequest } from "./base.service";
 import { CollectionBaseResponseDto } from "./dtos/collection-base/collection-base.dto";
 import { PaginationDto } from "./dtos/common/pagination.dto";
 import { DEFAULT_SORT_ORDER } from "@/services/constants";
 import { AxiosError } from "axios";
 import { calculateSortQuery } from "@/modules/common/helpers";
+import { makeUniqueName } from "@/utils/string.helper";
 
 interface SortCollectionBaseDto {
   sortName: Sort;
@@ -152,7 +153,7 @@ export const getCollectionBaseById = async (
 };
 
 export async function createCollectionBase(
-  collectionBase: CollectionBase
+  collectionBase: CreateCollectionBaseDto
 ): Promise<
   [AxiosError<unknown, unknown>, null] | [null, CollectionBaseResponseDto] | any
 > {
@@ -170,18 +171,18 @@ export async function createCollectionBase(
     telephone
   } = collectionBase;
 
-  const data: CollectionBaseResponseDto = {
-    name,
-    address,
+  const data = {
+    name: makeUniqueName(name),
+    address: makeUniqueName(address),
     latitude,
     longitude,
-    short_name: shortName,
-    name_kana: kana,
+    short_name: makeUniqueName(shortName),
+    name_kana: makeUniqueName(kana),
     base_type: collectionBaseType,
-    postal_code: postalCode,
-    mail: email || null,
-    representative,
-    telephone: telephone || null
+    postal_code: makeUniqueName(postalCode),
+    mail: makeUniqueName(email),
+    representative: makeUniqueName(representative),
+    telephone: makeUniqueName(telephone)
   };
 
   const [error, res] = await transformRequest<CollectionBaseResponseDto>({
@@ -201,7 +202,7 @@ export async function createCollectionBase(
 }
 
 export async function editCollectionBase(
-  collectionBase: CollectionBase
+  collectionBase: EditCollectionBaseDto
 ): Promise<
   [AxiosError<unknown, unknown>, null] | [null, CollectionBaseResponseDto] | any
 > {
@@ -220,19 +221,18 @@ export async function editCollectionBase(
     telephone
   } = collectionBase;
 
-  const data: CollectionBaseResponseDto = {
-    id,
-    name,
-    address,
+  const data = {
+    name: makeUniqueName(name),
+    address: makeUniqueName(address),
     latitude,
     longitude,
-    short_name: shortName,
-    name_kana: kana,
+    short_name: makeUniqueName(shortName),
+    name_kana: makeUniqueName(kana),
     base_type: collectionBaseType,
-    postal_code: postalCode,
-    mail: email || null,
-    representative,
-    telephone: telephone || null
+    postal_code: makeUniqueName(postalCode),
+    mail: makeUniqueName(email),
+    representative: makeUniqueName(representative),
+    telephone: makeUniqueName(telephone)
   };
 
   const [error, res] = await transformRequest<CollectionBaseResponseDto>({

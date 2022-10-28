@@ -3,10 +3,7 @@ import { Sort } from "@/modules/common/models/sort.enum";
 import { VehicleTypeModel } from "@/modules/vehicle-management/models";
 import { transformRequest } from "./base.service";
 import { PaginationDto } from "./dtos/common/pagination.dto";
-import {
-  CreateVehicleTypeInputDto,
-  VehicleTypeResponseDto
-} from "./dtos/vehicle-management/create-vehicle-type.dto";
+import { VehicleTypeResponseDto } from "./dtos/vehicle-management/create-vehicle-type.dto";
 import { DEFAULT_SORT_ORDER } from "@/services/constants";
 import { makeUniqueName } from "@/utils/string.helper";
 
@@ -14,7 +11,7 @@ export async function createVehicleType(
   tenantId: number,
   name: string
 ): Promise<ServiceResponse<VehicleTypeModel>> {
-  const data: CreateVehicleTypeInputDto = {
+  const data = {
     tenant_id: tenantId,
     name: makeUniqueName(name)
   };

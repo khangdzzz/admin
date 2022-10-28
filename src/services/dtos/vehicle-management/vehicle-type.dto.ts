@@ -11,5 +11,5 @@ export interface VehicleResponseDto {
   permission_flag: number;
   workplace___name: string;
   vehicle_type___name: string;
-  workplace___workplace_type: string;
+  workplace___workplace_type: number;
 }

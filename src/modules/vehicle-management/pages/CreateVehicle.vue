@@ -335,7 +335,7 @@ const onCreate = async (): Promise<void> => {
   isLoading.value = true;
   const vehicleInfo = {
     id: undefined,
-    ownerType: ownerType.value || undefined,
+    ownerType: +ownerType.value,
     ownerId: dynamicValidateForm.formData[0].value,
     vehicleType: dynamicValidateForm.formData[1].value,
     vehicleName: dynamicValidateForm.formData[2].value,
