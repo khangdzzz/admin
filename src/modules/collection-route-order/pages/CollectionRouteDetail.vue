@@ -17,7 +17,7 @@
               <template #icon>
                 <img src="@/assets/icons/ic_btn_edit.svg" class="btn-icon" />
               </template>
-              Re-create
+              Edit
             </a-button>
             <a-button class="btn-action color-btn-delete" ghost type="primary">
               <template #icon>
@@ -47,8 +47,8 @@
           {{ $t("collection_route_detail_note") }}
         </div>
         <div :class="[CollectionRouteDetail.value]">
-          <span v-if="collectionRouteDetail?.note">{{
-            collectionRouteDetail?.note
+          <span v-if="collectionRouteDetail?.notice">{{
+            collectionRouteDetail?.notice
           }}</span>
           <span v-else>- - -</span>
         </div>
@@ -88,9 +88,9 @@
           >
             <div class="d-flex gap-10">
               <span class="item-index">{{ index + 1 }}</span>
-              <span class="item-text">{{ item.collection_point }}</span>
+              <span class="item-text">{{ item.name }}</span>
             </div>
-            <div class="item-subtext">{{ item.customer_name }}</div>
+            <div class="item-subtext">{{ item.customer___name }}</div>
           </div>
         </div>
       </div>
@@ -195,9 +195,9 @@ const getCollectionRouteDetail = async (): Promise<void> => {
     background-color: $primary-100;
 
     .item-index {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
+      display: block;
+      min-height: 20px;
+      min-width: 20px;
       background: $primary-400;
       border-radius: 24px;
       @include text(700, 14px, 14px, $white);
