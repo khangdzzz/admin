@@ -313,10 +313,10 @@ const isButtonDisabled = computed((): boolean => {
   const { name, contact } = formData;
 
   return (
-    !handleValidateFields(name[0].value.toString(), 50, true) ||
-    !handleValidateFields(name[1].value.toString(), 50, true) ||
-    !validator.checkEmailFormat(contact[3].value.toString(), false) ||
-    !validator.checkPhoneFormat(contact[2].value.toString(), false) ||
+    !handleValidateFields(name[0].value?.toString(), 50, true) ||
+    !handleValidateFields(name[1].value?.toString(), 50, true) ||
+    !validator.checkEmailFormat(contact[3].value?.toString(), false) ||
+    !validator.checkPhoneFormat(contact[2].value?.toString(), false) ||
     !collectionBaseType.value ||
     !contact[0].value ||
     isNaN(Number(contact[0].value)) ||
@@ -344,14 +344,14 @@ const handleSubmit = async (): Promise<void> => {
 
   const data = {
     id: +collectionBaseId,
-    name: name[0].value.toString(),
-    shortName: name[1].value.toString(),
-    kana: name[2].value.toString(),
-    postalCode: contact[0].value.toString(),
-    address: contact[1].value.toString(),
-    telephone: contact[2].value.toString(),
-    email: contact[3].value.toString(),
-    representative: contact[4].value.toString(),
+    name: name[0].value?.toString(),
+    shortName: name[1].value?.toString(),
+    kana: name[2].value?.toString(),
+    postalCode: contact[0].value?.toString(),
+    address: contact[1].value?.toString(),
+    telephone: contact[2].value?.toString(),
+    email: contact[3].value?.toString(),
+    representative: contact[4].value?.toString(),
     latitude: geoLocations.value[0][0],
     longitude: geoLocations.value[0][1],
     collectionBaseType: collectionBaseType.value || 1

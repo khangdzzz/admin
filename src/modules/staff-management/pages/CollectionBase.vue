@@ -77,7 +77,7 @@
             </div>
           </template>
         </template>
-        <template #bodyCell="{ column, record }">
+        <template #bodyCell="{ column, record, text }">
           <template v-if="column.key === 'action'">
             <img
               src="@/assets/icons/ic_user.svg"
@@ -94,6 +94,9 @@
               class="action-icon"
               @click="($event) => deleteCollectionBase($event, record.id)"
             />
+          </template>
+          <template v-else>
+            <span>{{ text || NULL_VALUE_DISPLAY }}</span>
           </template>
         </template>
       </a-table>
@@ -134,6 +137,7 @@ import IcTrash from "@/assets/icons/IcTrash.vue";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import { debounce } from "lodash";
+import { NULL_VALUE_DISPLAY } from "@/utils/constants";
 //#endregion
 
 //#region props

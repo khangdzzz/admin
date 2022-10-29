@@ -50,7 +50,7 @@
               {{ $t(item.key) }}
             </div>
             <div class="collection-base-detail__form-wrapper__value">
-              {{ item.value }}
+              {{ item.value || NULL_VALUE_DISPLAY }}
             </div>
 
             <a-divider style="border-color: #e8e8e8; margin: 10px 0" />
@@ -149,6 +149,7 @@ import { service } from "@/services";
 import IcTrash from "@/assets/icons/IcTrash.vue";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
+import { NULL_VALUE_DISPLAY } from "@/utils/constants";
 //#region import
 //#endregion
 

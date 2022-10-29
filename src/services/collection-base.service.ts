@@ -1,6 +1,10 @@
 import { Pagination } from "@/modules/common/models";
 import { Sort } from "@/modules/common/models/sort.enum";
-import { CollectionBase, CreateCollectionBaseDto, EditCollectionBaseDto } from "@/modules/staff-management/models/collection-base.model";
+import {
+  CollectionBase,
+  CreateCollectionBaseDto,
+  EditCollectionBaseDto
+} from "@/modules/staff-management/models/collection-base.model";
 import { transformRequest } from "./base.service";
 import { CollectionBaseResponseDto } from "./dtos/collection-base/collection-base.dto";
 import { PaginationDto } from "./dtos/common/pagination.dto";
@@ -22,18 +26,10 @@ export async function getListCollectionBase(
   sort: SortCollectionBaseDto,
   searchKeyword: string | null | undefined = ""
 ): Promise<Pagination<CollectionBase> | undefined> {
-  const {
-    sortName,
-    sortPostalCode,
-    sortAddress,
-    sortTelephone,
-  } = sort;
+  const { sortName, sortPostalCode, sortAddress, sortTelephone } = sort;
 
   const orderSortName = calculateSortQuery("name", sortName);
-  const orderSortAddress = calculateSortQuery(
-    "address",
-    sortAddress
-  );
+  const orderSortAddress = calculateSortQuery("address", sortAddress);
   const orderSortWPostalCode = calculateSortQuery(
     "postal_code",
     sortPostalCode
@@ -44,7 +40,7 @@ export async function getListCollectionBase(
     orderSortName,
     orderSortAddress,
     orderSortWPostalCode,
-    orderSortPhone,
+    orderSortPhone
   ]
     .filter((item) => !!item)
     .toString();
