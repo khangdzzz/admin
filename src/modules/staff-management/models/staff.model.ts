@@ -7,4 +7,7 @@ export interface Staff {
   userRole: string;
   tenant: string;
   collectionBase: string;
+  workplace?: string;
+  lastLoggedIn?: string;
+  isDisabled: boolean;
 }

@@ -5,7 +5,10 @@ export interface StaffTypeResponseDto {
   employee_code: string;
   email: string;
   name: string;
-  user_role: string;
+  user_role: number;
   tenant: string;
   collection_base: string;
+  belongs: number;
+  last_logged_in?: string;
+  is_disable: boolean;
 }
