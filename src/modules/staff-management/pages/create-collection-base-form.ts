@@ -2,6 +2,7 @@ import { i18n } from "@/i18n";
 import validator from "@/modules/base/components/validator/validator";
 import { FormData } from "@/modules/staff-management/models/collection-base.model";
 import { localStorageKeys } from "@/services/local-storage-keys";
+import { Rule } from "ant-design-vue/lib/form";
 
 export const formData = (): FormData => {
   const currentLanguage =
@@ -31,7 +32,7 @@ export const formData = (): FormData => {
             message: i18n.global.t("max_length_input", currentLanguage, {
               maxLength: 50
             }),
-            trigger: "change"
+            trigger: ["blur", "change"]
           }
         ],
         parent: "name"
@@ -54,14 +55,14 @@ export const formData = (): FormData => {
                 .t("short_name", currentLanguage)
                 .toLowerCase()
             }),
-            trigger: "blur"
+            trigger: ["blur", "change"]
           },
           {
             max: 50,
             message: i18n.global.t("max_length_input", currentLanguage, {
               maxLength: 50
             }),
-            trigger: "change"
+            trigger: ["blur", "change"]
           }
         ],
         parent: "name"
@@ -99,11 +100,11 @@ export const formData = (): FormData => {
                 .t("postal_code", currentLanguage)
                 .toLowerCase()
             }),
-            trigger: "blur"
+            trigger: ["blur", "change"]
           },
           {
             validator: validator.validateNumber,
-            trigger: "change"
+            trigger: ["blur", "change"]
           }
         ]
       },
@@ -130,7 +131,7 @@ export const formData = (): FormData => {
             message: i18n.global.t("max_length_input", currentLanguage, {
               maxLength: 255
             }),
-            trigger: "change"
+            trigger: ["blur", "change"]
           }
         ],
         parent: "contact"
@@ -148,20 +149,27 @@ export const formData = (): FormData => {
         parent: "contact",
         rules: [
           {
-            max: 15,
-            message: i18n.global.t("max_length_input", currentLanguage, {
-              maxLength: 15
-            }),
-            trigger: "change"
-          },
-          {
-            pattern: /^[+][0-9]{6,15}$/,
-            message: i18n.global.t("invalid_field_name", currentLanguage, {
-              fieldName: i18n.global
-                .t("collection_phone_number", currentLanguage)
-                .toLowerCase()
-            }),
-            trigger: "change"
+            validator: (_rule: Rule, value: string): Promise<void> => {
+              if (!value) return Promise.resolve();
+              if (value.length > 15) {
+                return Promise.reject(
+                  i18n.global.t("max_length_input", currentLanguage, {
+                    maxLength: 15
+                  })
+                );
+              }
+              if (!/^[+][0-9]{5,14}$/.test(value)) {
+                return Promise.reject(
+                  i18n.global.t("invalid_field_name", currentLanguage, {
+                    fieldName: i18n.global
+                      .t("collection_phone_number", currentLanguage)
+                      .toLowerCase()
+                  })
+                );
+              }
+              return Promise.resolve();
+            },
+            trigger: ["blur", "change"]
           }
         ]
       },
@@ -178,7 +186,7 @@ export const formData = (): FormData => {
         rules: [
           {
             validator: validator.validateEmail,
-            trigger: "change"
+            trigger: ["blur", "change"]
           }
         ],
         parent: "contact"
@@ -199,7 +207,7 @@ export const formData = (): FormData => {
             message: i18n.global.t("max_length_input", currentLanguage, {
               maxLength: 50
             }),
-            trigger: "change"
+            trigger: ["blur", "change"]
           }
         ],
         parent: "contact"

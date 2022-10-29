@@ -49,14 +49,9 @@
             <div class="collection-base-detail__form-wrapper__title">
               {{ $t(item.key) }}
             </div>
-            <a-tooltip placement="top">
-              <template #title>
-                <span>{{ item.value }}</span>
-              </template>
-              <div class="collection-base-detail__form-wrapper__value">
-                {{ item.value }}
-              </div>
-            </a-tooltip>
+            <div class="collection-base-detail__form-wrapper__value">
+              {{ item.value }}
+            </div>
 
             <a-divider style="border-color: #e8e8e8; margin: 10px 0" />
           </div>

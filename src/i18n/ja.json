@@ -230,7 +230,6 @@
   "edit_container_successfully": "風袋が編集されました",
   "collection_point_detail": "回収地点の編集",
   "collection_base_detail": "回収拠点詳細",
-  "collection_point_msg_delete_successfully": "回収地点が削除されました",
   "collection_point": "回収地点 ",
   "delete_collection_point_successfully": "回収地点が削除されました",
   "delete_collection_point_mutiple_successfully": "{length} 回収地点が削除されました",
@@ -257,5 +256,5 @@
   "cannot_find_address_from_field_name": "入力した{fieldName} はシステムに見つかりませんでした。",
   "edit_collection_point": "回収地点の編集",
   "collection_point_edited_successfully": "回収地点が編集されました",
-  "disposal":"処分場"
+  "disposal": "処分場"
 }

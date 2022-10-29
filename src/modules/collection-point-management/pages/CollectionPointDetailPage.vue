@@ -48,14 +48,9 @@
             <div class="collection-point-detail__form-wrapper__title">
               {{ $t(item.key) }}
             </div>
-            <a-tooltip placement="topLeft">
-              <template #title v-if="item.value">
-                <span>{{ item.value }}</span>
-              </template>
-              <div class="collection-point-detail__form-wrapper__value">
-                {{ item.value }}
-              </div>
-            </a-tooltip>
+            <div class="collection-point-detail__form-wrapper__value">
+              {{ item.value || NULL_VALUE_DISPLAY }}
+            </div>
 
             <a-divider style="border-color: #e8e8e8; margin: 10px 0" />
           </div>
@@ -293,7 +288,7 @@ const onDeleteCollectionPoint = async (deleteId: number): Promise<void> => {
     return;
   }
   messenger({
-    title: "collection_point_msg_delete_successfully",
+    title: "delete_collection_point_successfully",
     message: "",
     type: MessengerType.Success,
     callback: (isConfirm: boolean): void => {

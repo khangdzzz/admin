@@ -235,7 +235,6 @@
   "edit_container_successfully": "Container is edited successfully",
   "collection_point_detail": "Collection point detail",
   "collection_base_detail": "Collection base detail",
-  "collection_point_msg_delete_successfully": "Collection base is deleted successfully",
   "collection_point": "Collection point",
   "delete_collection_point_successfully": "Collection point is deleted successfully",
   "delete_collection_point_mutiple_successfully": "{length} Collection point is deleted successfully",
@@ -262,5 +261,5 @@
   "cannot_find_address_from_field_name": "Cannot find an address from this {fieldName}",
   "edit_collection_point": "Edit collection point",
   "collection_point_edited_successfully": "Collection point is edited successfully",
-  "disposal":"Disposal"
+  "disposal": "Disposal"
 }
