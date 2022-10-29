@@ -167,7 +167,7 @@ const isNotValidToSubmit = computed(() => {
     singleInput[3].value.toString().length && isNaN(+singleInput[3].value);
   const isNotValidPhoneNumber =
     (singleInput[5].value.toString().length &&
-      !/^[+][0-9]{6,15}$/.test(singleInput[5].value.toString())) ||
+      !/^[+][0-9]{5,14}$/.test(singleInput[5].value.toString())) ||
     singleInput[5].value.toString().length > 15;
   const isNotValidEmail =
     singleInput[6].value.toString().length &&

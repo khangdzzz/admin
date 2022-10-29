@@ -450,7 +450,7 @@ const isAllowSubmit = computed(() => {
     !data[6].value ||
     (data[6].value &&
       checkMaxLength(data[6].value.toString(), 15) &&
-      /^[+][0-9]{6,15}$/.test(data[6].value.toString()));
+      /^[+][0-9]{5,14}$/.test(data[6].value.toString()));
   const isValidName =
     checkMaxLength(data[1].value.toString(), 50) && data[1].value;
   const isValidShortName =

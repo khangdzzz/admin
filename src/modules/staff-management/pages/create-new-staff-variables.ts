@@ -186,7 +186,7 @@ const radioOptions = {
           message: i18n.global.t("max_length_input", { maxLength: 15 })
         },
         {
-          pattern: /^[+][0-9]{6,15}$/,
+          pattern: /^[+][0-9]{5,14}$/,
           message: i18n.global.t("allow_input_number")
         }
       ]

@@ -89,14 +89,7 @@
           <template
             v-if="columns.includes(column) && column.dataIndex !== 'action'"
           >
-            <a-tooltip
-              v-if="text"
-              placement="topLeft"
-              :title="text"
-              arrow-point-at-center
-            >
-              <span class="has-value">{{ text }} </span>
-            </a-tooltip>
+            <span v-if="text" class="has-value">{{ text }} </span>
             <span class="null-value" v-else>{{ NULL_VALUE_DISPLAY }}</span>
           </template>
 

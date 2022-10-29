@@ -332,7 +332,7 @@ const clearInputs = (): void => {
 };
 
 const handleCancel = (): void => {
-  router.push({ name: routeNames.listCollectionBase });
+  router.go(-1);
   clearInputs();
 };
 
@@ -610,6 +610,11 @@ const handleOnKeyPress = (
         gap: 10px;
       }
     }
+  }
+
+  .ant-form-item-explain-error {
+    color: $red-500 !important;
+    margin-bottom: 20px;
   }
 }
 </style>

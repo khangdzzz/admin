@@ -261,7 +261,7 @@ const clearInputs = (): void => {
 };
 
 const handleCancel = (): void => {
-  router.push({ name: routeNames.collectionPointManagement });
+  router.go(-1);
   clearInputs();
 };
 
