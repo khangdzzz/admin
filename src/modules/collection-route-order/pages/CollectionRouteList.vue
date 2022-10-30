@@ -401,7 +401,7 @@ const onDeleteCollectionRoute = async (deleteIds: number[]): Promise<void> => {
     return;
   }
   messenger({
-    title: "delete_collection_route_successfully",
+    title: "common_msg_delete_successfully",
     message: "",
     type: MessengerType.Success,
     callback: (isConfirm: boolean): void => {

@@ -288,7 +288,7 @@ const handleSubmit = async (): Promise<void> => {
   );
   if (res && !error) {
     messenger({
-      title: "create_collection_base_msg_create_successfully",
+      title: "common_msg_create_successfully",
       message: "",
       type: MessengerType.Success,
       callback: (isConfirm: boolean) => {

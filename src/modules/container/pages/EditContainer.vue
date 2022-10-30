@@ -271,7 +271,7 @@ const updateContainer = async (): Promise<void> => {
   isSubmitting.value = false;
   if (!error) {
     messenger({
-      title: "edit_container_successfully",
+      title: "common_msg_edit_successfully",
       message: "",
       type: MessengerType.Success,
       callback: (isConfirm: boolean) => {

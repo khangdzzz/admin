@@ -348,7 +348,7 @@ const onCreate = async (): Promise<void> => {
 
   if (res) {
     messenger({
-      title: "vehicle_create_success",
+      title: "common_msg_create_successfully",
       message: "",
       type: MessengerType.Success
     });

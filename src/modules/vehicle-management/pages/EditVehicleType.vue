@@ -154,7 +154,7 @@ const handleFinish = async (): Promise<void> => {
   isLoading.value = false;
   if (!error) {
     messenger({
-      title: "edit_vehicle_type_successfully",
+      title: "common_msg_edit_successfully",
       message: "",
       type: MessengerType.Success,
       callback: (isConfirm: boolean) => {
@@ -168,7 +168,7 @@ const handleFinish = async (): Promise<void> => {
       return;
     }
     messenger({
-      title: "edit_vehicle_type_successfully",
+      title: "edit_failed",
       message: "",
       type: MessengerType.Error,
       callback: (isConfirm: boolean) => {

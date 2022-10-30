@@ -171,7 +171,7 @@ const deleteCustomer = async (id: number): Promise<void> => {
     return;
   }
   messenger({
-    title: "customer_delete_successfully",
+    title: "common_msg_delete_successfully",
     message: "",
     type: MessengerType.Success,
     callback: (isConfirm: boolean): void => {

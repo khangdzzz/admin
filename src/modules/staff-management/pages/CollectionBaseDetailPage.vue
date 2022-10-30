@@ -287,7 +287,7 @@ const onDeleteCollectionBase = async (deleteId: number): Promise<void> => {
     return;
   }
   messenger({
-    title: "collection_base_msg_delete_successfully",
+    title: "common_msg_delete_successfully",
     message: "",
     type: MessengerType.Success,
     callback: (isConfirm: boolean): void => {

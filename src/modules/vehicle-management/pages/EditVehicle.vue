@@ -351,7 +351,7 @@ const updateVehicle = async (): Promise<void> => {
   isLoadingBtn.value = false;
   if (res) {
     messenger({
-      title: "vehicle_edit_successfully",
+      title: "common_msg_edit_successfully",
       message: "",
       type: MessengerType.Success
     });

@@ -106,6 +106,7 @@ import { debounce } from "lodash";
 import { computed, inject, onMounted, reactive, ref, watch } from "vue";
 import { VehicleTypeModel } from "../models";
 import IcTrash from "@/assets/icons/IcTrash.vue";
+import { i18n } from "@/i18n";
 
 //#endregion
 
@@ -265,7 +266,12 @@ const onDeleteVehicleType = async (deleteIds: number[]): Promise<void> => {
     return;
   }
   messenger({
-    title: "vehicle_type_msg_delete_successfully",
+    title:
+      deleteIds.length > 1
+        ? i18n.global.t("common_msg_delete_multiple_successfully", {
+            number: deleteIds.length
+          })
+        : "common_msg_delete_successfully",
     message: "",
     type: MessengerType.Success,
     callback: (isConfirm: boolean): void => {

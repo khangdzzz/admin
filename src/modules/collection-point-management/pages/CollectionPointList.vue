@@ -425,10 +425,10 @@ const onDeleteCollectionPoint = async (deleteIds: number[]): Promise<void> => {
   messenger({
     title:
       deleteIds.length > 1
-        ? i18n.global.t("delete_collection_point_mutiple_successfully", {
-            length: deleteIds.length
+        ? i18n.global.t("common_msg_delete_multiple_successfully", {
+            number: deleteIds.length
           })
-        : "delete_collection_point_successfully",
+        : "common_msg_delete_successfully",
     message: "",
     type: MessengerType.Success,
     callback: (isConfirm: boolean): void => {

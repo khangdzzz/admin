@@ -158,7 +158,7 @@ const handleSubmit = async (): Promise<void> => {
   isLoading.value = false;
   if (!error) {
     messenger({
-      title: "container_type_eidt_successfully",
+      title: "common_msg_edit_successfully",
       message: "",
       type: MessengerType.Success,
       callback: (isConfirm: boolean) => {
