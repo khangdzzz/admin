@@ -428,10 +428,10 @@ const onDeleteStaff = async (deleteIds: number[]): Promise<void> => {
   messenger({
     title:
       deleteIds.length > 1
-        ? i18n.global.t("staff_delete_multiple_successfully", {
-            count: deleteIds.length
+        ? i18n.global.t("common_msg_delete_multiple_successfully", {
+            number: deleteIds.length
           })
-        : "staff_delete_successfully",
+        : "common_msg_delete_successfully",
     message: "",
     type: MessengerType.Success,
     callback: (isConfirm: boolean): void => {

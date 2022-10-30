@@ -139,7 +139,7 @@ const handleClickSubmit = async (): Promise<void> => {
   isSubmitting.value = false;
   if (!error && res) {
     messenger({
-      title: "customer_created_successfully",
+      title: "common_msg_create_successfully",
       message: "",
       type: MessengerType.Success,
       callback: (isConfirm: boolean) => {

@@ -394,7 +394,7 @@ const handleClickSave = async (): Promise<void> => {
 
   if (!error) {
     messenger({
-      title: "edit_customer_successfully",
+      title: "common_msg_edit_successfully",
       message: "",
       type: MessengerType.Success,
       callback: (isConfirm: boolean) => {

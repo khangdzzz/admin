@@ -250,7 +250,7 @@ const handleSubmit = async (): Promise<void> => {
 
   if (res && !error) {
     messenger({
-      title: "container_successfully_created",
+      title: "common_msg_create_successfully",
       message: "",
       type: MessengerType.Success,
       callback: () => {

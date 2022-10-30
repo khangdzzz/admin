@@ -132,7 +132,7 @@ const createVehicleType = async (): Promise<void> => {
   isLoading.value = false;
   if (!error) {
     messenger({
-      title: "create_vehicle_type_msg_create_successfully",
+      title: "common_msg_create_successfully",
       message: "",
       type: MessengerType.Success,
       callback: (isConfirm: boolean) => {
