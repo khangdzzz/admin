@@ -10,6 +10,7 @@
         :model="dynamicValidateForm"
         layout="inline"
         class="form-create-staff"
+        ref="createCollectionOrderRef"
       >
         <CustomForm
           :form-data="getFormData"
@@ -21,6 +22,7 @@
           <template #radio>
             <div
               class="d-flex align-center gap-24 pt-10 align-flex-start radio"
+              v-if="userStore.user?.userType !== UserType.SystemAdmin"
             >
               <div class="create-staff__type-selector-title">
                 {{ $t("type") }}
@@ -70,23 +72,55 @@
           class="create-staff__btn-style create-staff__cancel-btn"
           type="secondary"
           @click="handleCancel"
+          :disabled="isLoading"
         >
           {{ $t("btn_cancel") }}
         </a-button>
         <a-button
           class="create-staff__btn-style create-staff__submit-btn"
           type="primary"
+          @click="handleSubmit"
+          :loading="isLoading"
+          :disabled="!isValidated"
         >
           {{ $t("btn_submit") }}
         </a-button>
       </div>
     </a-card>
+    <a-modal
+      v-model:visible="visibleModalSuccess"
+      width="420px"
+      :closable="false"
+      class="custom-modal"
+      centered
+      :footer="null"
+      :maskClosable="false"
+    >
+      <div class="modal-content">
+        <img src="@/assets/icons/ic_success.png" class="modal-icon" />
+        <h3 class="modal-title mb-10">{{ $t("create_staff_successfully") }}</h3>
+        <p class="modal-message mb-10 mt-0">
+          {{ $t("email") }}: {{ staffEmail }}
+        </p>
+        <p class="modal-message mb-10 mt-0">
+          {{ $t("login_password") }}: {{ staffPassword }}
+          <img
+            class="ic-clipboard"
+            src="@/assets/icons/ic_clipboard.png"
+            @click="handleCopy"
+          />
+        </p>
+        <a-button type="primary" class="btn-ok mt-10" @click="handleCloseModal">
+          OK
+        </a-button>
+      </div>
+    </a-modal>
   </div>
 </template>
 
 <script setup lang="ts">
 //#region import
-import { onMounted, reactive, watch, computed } from "vue";
+import { onMounted, reactive, watch, computed, ref, inject } from "vue";
 
 import CustomForm from "@/modules/base/components/CustomForm.vue";
 import { UserType } from "@/modules/base/models/user-type.enum";
@@ -97,6 +131,11 @@ import {
 import { routeNames, router } from "@/routes";
 import { commonStore } from "@/stores";
 import radioOptions from "./create-new-staff-variables";
+import validator from "@/modules/base/components/validator/validator";
+import { service } from "@/services";
+import MessengerParamModel from "@/modules/base/models/messenger-param.model";
+import { MessengerType } from "@/modules/base/models/messenger-type.enum";
+
 //#endregion
 
 //#region props
@@ -104,21 +143,38 @@ import radioOptions from "./create-new-staff-variables";
 
 interface options {
   text: string;
+  value: string | number;
+}
+
+interface selects {
+  label: string;
   value: string;
+  content: string;
+  type: number;
 }
 
 //#region variables
 const userStore = commonStore();
-
+const messenger: (
+  param: MessengerParamModel
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+) => void = inject("messenger")!;
+const isValidated = ref<boolean>(false);
+const staffPassword = ref<string>("abc12345A");
+const staffEmail = ref<string>("");
+const visibleModalSuccess = ref<boolean>(false);
+const createCollectionOrderRef = ref();
+const listWorkPlace = ref();
+const isLoading = ref<boolean>(false);
 const formState = reactive<{
-  type: string;
+  type: number;
   userRole: UserRoleOptions | undefined;
   workPlace: string;
   typeOptions: options[];
   userRoleOptions: options[];
   userType: string | undefined;
 }>({
-  type: "",
+  type: 0,
   userRole: undefined,
   workPlace: "",
   typeOptions: radioOptions.typeOptions,
@@ -138,6 +194,7 @@ onMounted(() => {
       (item) => item.value === TypeOptions.TENANT
     );
   }
+  getListWorkPlace();
 });
 
 //#endregion
@@ -150,7 +207,7 @@ const handleOnFocus = (index: number | boolean | Event): void => {
 const handleOnClose = (index: number, value: string): void => {
   dynamicValidateForm.formData[index].value = dynamicValidateForm.formData[
     index
-  ].value.filter((item: string) => item !== value);
+  ].value?.filter((item: string) => item !== value);
 };
 
 const handleOnChange = (value: string, index: number): void => {
@@ -164,10 +221,85 @@ const handleOnBlur = (
   dynamicValidateForm.formData[Number(index)].isFocus = false;
 };
 
-const handleCancel = (): void => {
-  router.push({ name: routeNames.containerChild });
+const handleCloseModal = (): void => {
+  visibleModalSuccess.value = false;
+  handleClearInput();
+  router.push({ name: routeNames.staffManagement });
 };
 
+const handleClearInput = (): void => {
+  createCollectionOrderRef.value.resetFields();
+};
+const getListWorkPlace = async (): Promise<void> => {
+  const res = await service.staff.getListWorkPlace();
+  if (res) {
+    listWorkPlace.value = res.results?.map((item) => {
+      return {
+        value: item.id,
+        content: item.name,
+        label: item.name,
+        type: item.workPlaceType
+      };
+    });
+  }
+};
+const filterWorkPlaceByType = async (type: number): Promise<void> => {
+  console.log(listWorkPlace.value);
+
+  const filter = await listWorkPlace.value?.filter(
+    (item: selects) => item.type === type
+  );
+
+  dynamicValidateForm.formData[6].options = filter;
+  dynamicValidateForm.formData[7].options = filter;
+};
+
+const handleCancel = (): void => {
+  handleClearInput();
+  router.push({ name: routeNames.staffManagement });
+};
+const handleSubmit = async (): Promise<void> => {
+  let workPlaceValue = undefined;
+  const workPlaceForm = dynamicValidateForm.formData[6].value;
+  if (workPlaceForm) {
+    if (Array.isArray(workPlaceForm)) {
+      workPlaceValue = workPlaceForm;
+    } else {
+      workPlaceValue = [workPlaceForm];
+    }
+  } else {
+    workPlaceValue = undefined;
+  }
+
+  const data = {
+    employee_code: dynamicValidateForm.formData[0].value,
+    name: dynamicValidateForm.formData[1].value,
+    name_kana: dynamicValidateForm.formData[2].value,
+    email: dynamicValidateForm.formData[3].value,
+    telephone: dynamicValidateForm.formData[4].value || null,
+    belongs: formState.type,
+    user_role: formState.userRole,
+    workplace_ids: workPlaceValue,
+    password: staffPassword.value
+  };
+  isLoading.value = true;
+  const res = await service.staff.createStaff(data);
+  isLoading.value = false;
+  if (res.res) {
+    visibleModalSuccess.value = true;
+    staffEmail.value = res.res.email;
+  } else {
+    messenger({
+      title: "popup_create_fail_title",
+      message: "",
+      type: MessengerType.Error
+    });
+  }
+};
+
+const handleCopy = (): void => {
+  navigator.clipboard.writeText(staffPassword.value);
+};
 const setUserRoleOptions = (): void => {
   if (userStore.user?.userType === UserType.TenantAdmin) {
     switch (formState.type) {
@@ -210,22 +342,22 @@ const getFormData = computed(() => {
     formState.type === TypeOptions.TENANT &&
     formState.userRole &&
     [
-      UserRoleOptions.COLLECTIONS_BASE_ADMIN,
-      UserRoleOptions.COLLECTIONS_BASE_DRIVE,
-      UserRoleOptions.DRIVE_MANUFACTURE_STAFF,
-      UserRoleOptions.MANUFACTURE_STAFF
+      UserRoleOptions.COLLECTION_BASE_ADMIN,
+      UserRoleOptions.DRIVER,
+      UserRoleOptions.DRIVER_MANUFACTURING_STAFF,
+      UserRoleOptions.MANUFACTURING_STAFF
     ].includes(formState.userRole);
 
   if (hideWorkPlaceField) {
-    return dynamicValidateForm.formData.filter(
+    return dynamicValidateForm.formData?.filter(
       ({ inputType }: { inputType: string }) => inputType !== "ASelect"
     );
   } else if (showSelectMultiple) {
-    return dynamicValidateForm.formData.filter(
+    return dynamicValidateForm.formData?.filter(
       ({ key }: { key: number }) => key !== 8
     );
   } else {
-    return dynamicValidateForm.formData.filter(
+    return dynamicValidateForm.formData?.filter(
       ({ key }: { key: number }) => key !== 7
     );
   }
@@ -237,15 +369,53 @@ const getFormData = computed(() => {
 watch(
   () => formState.type,
   () => {
+    formState.userRole = undefined;
     if (formState.type === TypeOptions.DESTINATION) {
       formState.userRole = UserRoleOptions.CONSIGNEE;
     }
-
     setUserRoleOptions();
+
+    dynamicValidateForm.formData[6].value = undefined;
   },
   { deep: true, immediate: true }
 );
+watch(
+  () => formState.userRole,
+  () => {
+    if (formState.userRole) {
+      filterWorkPlaceByType(formState.userRole);
+    }
 
+    dynamicValidateForm.formData[6].value = undefined;
+  },
+  { deep: true, immediate: true }
+);
+watch([dynamicValidateForm, formState], () => {
+  if (userStore.user?.userType === UserType.SystemAdmin) {
+    formState.type = 0;
+    formState.userRole = 1;
+    if (
+      dynamicValidateForm.formData[1].value &&
+      validator.checkEmailFormat(dynamicValidateForm.formData[3].value, true)
+    ) {
+      isValidated.value = true;
+    }
+  } else {
+    if (
+      dynamicValidateForm.formData[1].value &&
+      validator.checkEmailFormat(dynamicValidateForm.formData[3].value, true) &&
+      formState.userRole &&
+      (dynamicValidateForm.formData[6].value?.length ||
+        Number.isInteger(dynamicValidateForm.formData[6].value) ||
+        formState.userRole === UserRoleOptions.TENANT_ADMIN) &&
+      formState.type
+    ) {
+      isValidated.value = true;
+    } else {
+      isValidated.value = false;
+    }
+  }
+});
 //
 //#endregion
 </script>
@@ -253,6 +423,10 @@ watch(
 <style lang="scss" scoped>
 .radio {
   width: 660px;
+}
+.ic-clipboard {
+  margin-left: 17px;
+  cursor: pointer;
 }
 .create-staff {
   &__card {
@@ -310,6 +484,9 @@ watch(
       }
     }
   }
+  .create-staff__radio-title {
+    align-items: center;
+  }
   .form-create-staff {
     .ant-form-item {
       margin-right: 0px;
@@ -321,7 +498,7 @@ watch(
               height: 80px !important;
             }
             .input-item {
-              padding: 0px;
+              padding: 0px 12px;
               width: 620px;
             }
             .ant-select-multiple {

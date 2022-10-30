@@ -1,19 +1,19 @@
 export enum TypeOptions {
-    TENANT = "tenant",
-    PARTNER = "partner",
-    CUSTOMER = "customer",
-    DESTINATION = "destination"
+  TENANT = 1,
+  PARTNER = 2,
+  CUSTOMER = 3,
+  DESTINATION = 4
 }
 
 export enum UserRoleOptions {
-    TENANT_ADMIN = "tenant_admin",
-    COLLECTIONS_BASE_ADMIN = "collection_base_admin",
-    COLLECTIONS_BASE_DRIVE = "collection_base_drive",
-    MANUFACTURE_STAFF = "manufacture_staff",
-    DRIVE_MANUFACTURE_STAFF = "drive_manufacture_staff",
-    PARTNER_DRIVER="partner_driver",
-    PARTNER_ADMIN="partner_admin",
-    DISCHARGER="discharger",
-    DASHBOARD_VIEWER="dashboard_viewer",
-    CONSIGNEE ="consignee",
+  SYSTEM_ADMIN = 1,
+  TENANT_ADMIN = 2,
+  PARTNER_ADMIN = 2,
+  COLLECTION_BASE_ADMIN = 3,
+  DISCHARGER = 4,
+  DASHBOARD_USER = 5,
+  CONSIGNEE = 6,
+  DRIVER = 7,
+  MANUFACTURING_STAFF = 8,
+  DRIVER_MANUFACTURING_STAFF = 9
 }

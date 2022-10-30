@@ -1,7 +1,12 @@
 import { calculateSortQuery } from "@/modules/common/helpers";
-import { Pagination } from "@/modules/common/models";
+import { Pagination, ServiceResponse } from "@/modules/common/models";
 import { Sort } from "@/modules/common/models/sort.enum";
 import { Staff } from "@/modules/staff-management/models";
+import {
+  StaffDto,
+  workPlace,
+  workPlaceDTO
+} from "@/modules/staff-management/models/staff.model";
 import { transformRequest } from "./base.service";
 import { DEFAULT_SORT_ORDER } from "./constants";
 import { PaginationDto } from "./dtos/common/pagination.dto";
@@ -143,4 +148,61 @@ export async function changeUserActiveStatus(
   });
   if (error) return false;
   return true;
+}
+
+export async function createStaff(
+  data: StaffDto
+): Promise<ServiceResponse<StaffDto>> {
+  const [err, res] = await transformRequest<StaffDto>({
+    url: "staff_management",
+    method: "post",
+    data
+  });
+
+  if (!res && err) {
+    return {
+      error: JSON.stringify(err)
+    };
+  }
+
+  return {
+    res
+  };
+}
+
+const data = {
+  results: [
+    {
+      id: 238,
+      name: "Collection base 1",
+      workplace_type: 1
+    },
+    {
+      id: 237,
+      name: "Collection base 2",
+      workplace_type: 1
+    }
+  ]
+};
+
+export async function getListWorkPlace(): Promise<
+  Pagination<workPlace> | undefined
+> {
+  const [err, res] = await transformRequest<workPlaceDTO[]>({
+    url: `workplace/options?page_size=full`,
+    method: "get"
+  });
+  if (err) return undefined;
+
+  //const results = data.results;
+  return {
+    results: res.map((item) => {
+      const { id, name, workplace_type } = item;
+      return {
+        id,
+        name,
+        workPlaceType: workplace_type
+      };
+    })
+  };
 }
