@@ -12,6 +12,10 @@ import { DEFAULT_SORT_ORDER } from "./constants";
 import { PaginationDto } from "./dtos/common/pagination.dto";
 import { StaffTypeResponseDto } from "./dtos/staff-management/create-staff-type.dto";
 import { format } from "date-fns";
+import {
+  StaffDetailsResponse,
+  StaffDetailsResponseDTO
+} from "./dtos/staff-management/staff-details.dto";
 
 const UserRoleLabel = [
   "user_role_lbl_system_admin",
@@ -206,5 +210,33 @@ export async function getListWorkPlace(): Promise<
         workPlaceType: workplace_type
       };
     })
+  };
+}
+
+export async function getStaffDetail(
+  id: number
+): Promise<ServiceResponse<StaffDetailsResponseDTO>> {
+  const [error, res] = await transformRequest<StaffDetailsResponse>({
+    url: `/staff_management/${id}`,
+    method: "get"
+  });
+
+  if (error || !res) {
+    return {
+      error: (error?.response?.data as { details: { msg: string }[] })
+        .details[0].msg
+    };
+  }
+
+  return {
+    res: {
+      ...res,
+      user_role: UserRoleLabel[res.user_role - 1],
+      belongs: WorkplaceLabel[res.belongs],
+      is_disable: !res.is_disable,
+      last_logged_in: res.last_logged_in
+        ? format(new Date(res.last_logged_in), "yyyy/MM/dd")
+        : ""
+    }
   };
 }

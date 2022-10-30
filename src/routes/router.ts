@@ -218,6 +218,12 @@ const routes: RouteRecordRaw[] = [
         name: routeNames.createNewStaff,
         component: () =>
           import("@/modules/staff-management/pages/CreateNewStaff.vue")
+      },
+      {
+        path: "detail/:id",
+        name: routeNames.staffDetail,
+        component: () =>
+          import("@/modules/staff-management/pages/StaffDetailPage.vue")
       }
     ]
   },
