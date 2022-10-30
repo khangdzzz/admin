@@ -26,7 +26,7 @@
 <script setup lang="ts">
 //#region import
 import FloatingLabel from "@/modules/base/components/FloatingLabel.vue";
-import { PropType, ref, Slot } from "vue";
+import { PropType, ref } from "vue";
 //#endregion
 
 //#region props

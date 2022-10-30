@@ -2,7 +2,7 @@
   <a-form-item :name="controlName" :rules="rules">
     <FloatingLabel
       class="floating-label-select"
-      :is-focused="!!value"
+      :is-focused="isFocused || !!value"
       :label="$t(isFocused || !!value ? label : placeHolder)"
       :control-name="controlName"
       :required="required"
@@ -20,6 +20,14 @@
       >
         <template #suffixIcon>
           <div></div>
+        </template>
+        <template #option="{ value, label }">
+          <div class="d-flex flex-column justify-center gap-6">
+            <div v-if="label" class="floating-label-select__input-label">
+              {{ label }}
+            </div>
+            <div class="floating-label-select__input-value">{{ value }}</div>
+          </div>
         </template>
       </a-select>
       <img
@@ -88,8 +96,8 @@ const emit = defineEmits<{
 const focus = (id: string): void => {
   document.getElementById(id)?.focus();
 };
-const dataChange = (e: { target: { value: string | undefined } }): void => {
-  emit("update:value", e?.target?.value || "");
+const dataChange = (value: string): void => {
+  emit("update:value", value || "");
 };
 //#endregion
 
@@ -118,8 +126,8 @@ const dataChange = (e: { target: { value: string | undefined } }): void => {
     top: 20px;
     height: 40px;
     bottom: 0;
-    width: calc(100% - 24px);
-    left: 12px;
+    width: 100%;
+    left: 0px;
     right: 12px;
     background-color: transparent !important;
     padding-left: 0;
@@ -141,13 +149,71 @@ const dataChange = (e: { target: { value: string | undefined } }): void => {
     padding-right: 0;
     background-color: transparent !important;
   }
+
+  &__input-label {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 18px;
+    color: $neutral-400;
+  }
+
+  &__input-value {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 20px;
+    color: $neutral-600;
+  }
 }
 
-:deep {
+.ant-select-item-option-selected {
+  .ant-select-item-option-content {
+    .floating-label-select__input-value {
+      font-style: normal;
+      font-weight: 600;
+      font-size: 16px;
+      line-height: 20px;
+      color: $neutral-600;
+    }
+  }
+}
+
+:deep() {
   .ant-form-item-explain-error {
     color: $red-500 !important;
     margin-bottom: 20px;
     margin-top: 8px;
+  }
+}
+</style>
+<style lang="scss">
+.ant-select-dropdown {
+  &:has(div
+      > .rc-virtual-list-holder
+      > div
+      > .rc-virtual-list-holder-inner
+      > .ant-select-item-option
+      > .ant-select-item-option-content
+      > div
+      > .floating-label-select__input-value) {
+    padding: 0px !important;
+  }
+}
+
+.ant-select-item-option {
+  &:has(.ant-select-item-option-content
+      > div
+      > .floating-label-select__input-value) {
+    height: 64px !important;
+  }
+}
+
+.ant-select-item-option-active {
+  &:has(.ant-select-item-option-content
+      > div
+      > .floating-label-select__input-value) {
+    height: 64px !important;
   }
 }
 </style>
