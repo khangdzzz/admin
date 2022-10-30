@@ -1,5 +1,5 @@
 <template>
-  <a-form-item :name="controlName" :rules="rules">
+  <a-form-item :name="controlName" :rules="rules" :class="className">
     <FloatingLabel
       class="floating-label-input"
       :is-focused="isFocused || !!value"
@@ -59,6 +59,9 @@ defineProps({
   prefix: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     type: Object as PropType<{ icon: any; action: any }> | undefined
+  },
+  className: {
+    type: String
   }
 });
 //#endregion
@@ -126,7 +129,7 @@ const dataChange = (e: { target: { value: string | undefined } }): void => {
   }
 }
 
-:deep {
+:deep() {
   .ant-form-item-explain-error {
     color: $red-500 !important;
     margin-bottom: 20px;
