@@ -11,7 +11,7 @@
           class="edit-collection-point__form-wrapper"
           :model="formData"
           help="test"
-          ref="createCollectionPointRef"
+          ref="editCollectionPointRef"
         >
           <div>
             <CustomForm
@@ -187,7 +187,7 @@ const messenger: (
   param: MessengerParamModel
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 ) => void = inject("messenger")!;
-const createCollectionPointRef = ref();
+const editCollectionPointRef = ref();
 const isSubmitting = ref<boolean>(false);
 const { data } = formData;
 const isPostalCodeHasError = ref<boolean>(false);
@@ -257,7 +257,7 @@ const handleOnDataBlur = (
 };
 
 const clearInputs = (): void => {
-  createCollectionPointRef.value.resetFields();
+  editCollectionPointRef.value.resetFields();
 };
 
 const handleCancel = (): void => {
@@ -349,7 +349,7 @@ const getLatLongFromAddress = async (address: string): Promise<void> => {
   const { error, res } = await service.location.getLatLongFromAddress(address);
 
   if (!error && res && res.length > 0) {
-    geoLocations.value.push([+res[0].lon, +res[0].lat]);
+    geoLocations.value = [[+res[0].lon, +res[0].lat]];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (view?.value as any)?.fit(
       [+res[0].lon, +res[0].lat, +res[0].lon, +res[0].lat],
@@ -508,8 +508,7 @@ const isAllowSubmit = computed(() => {
 watch(
   [isPostalCodeHasError, (): string | number | boolean => data[5].value],
   () => {
-    console.log("data", data[5].value);
-    createCollectionPointRef.value.validate();
+    editCollectionPointRef.value.validate();
   }
 );
 

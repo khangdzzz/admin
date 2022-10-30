@@ -58,7 +58,7 @@
         </div>
         <div class="collection-base-detail__map-wrapper">
           <ol-map
-            v-if="geoLocations.length"
+            v-if="!isLoading"
             :loadTilesWhileAnimating="true"
             :loadTilesWhileInteracting="true"
             ref="map"
@@ -117,7 +117,8 @@
             class="collection-base-detail__map-wrapper__position-detail"
             v-if="geoLocations.length && !isLoading"
           >
-            {{ geoLocations[0][0] }}, {{ geoLocations[0][1] }}
+            {{ geoLocations.length ? geoLocations[0][0] : NULL_VALUE_DISPLAY }},
+            {{ geoLocations.length ? geoLocations[0][1] : NULL_VALUE_DISPLAY }}
             <img
               src="@/assets/icons/ic_btn_copy.svg"
               @click="copyLocationToClipboard"
@@ -259,7 +260,7 @@ const editCollectionBase = (): void => {
 const deleteCollectionBase = async (): Promise<void> => {
   if (!router.currentRoute.value.params?.id) return;
   messenger({
-    title: "popup_msg_confirm_delete",
+    title: "common_confirm",
     message: "",
     type: MessengerType.Confirm,
     buttonOkTitle: "btn_delete",

@@ -54,32 +54,32 @@
         <template #headerCell="{ column }">
           <template v-if="column.key === 'name'">
             <div @click="changeSortName()">
-              <span>{{ column.title }}</span>
+              <span class="header-title">{{ column.title }}</span>
               <SortView class="mx-12" :sort="sortName" />
             </div>
           </template>
           <template v-if="column.key === 'customer'">
             <div @click="changeSortCustomer()">
-              <span>{{ column.title }}</span>
+              <span class="header-title">{{ column.title }}</span>
               <SortView class="mx-12" :sort="sortCustomer" />
             </div>
           </template>
 
           <template v-if="column.key === 'postalCode'">
             <div @click="changeSortPostalCode()">
-              <span>{{ column.title }}</span>
+              <span class="header-title">{{ column.title }}</span>
               <SortView class="mx-12" :sort="sortPostalCode" />
             </div>
           </template>
           <template v-if="column.key === 'address'">
             <div @click="changeSortAddress()">
-              <span>{{ column.title }}</span>
+              <span class="header-title">{{ column.title }}</span>
               <SortView class="mx-12" :sort="sortAddress" />
             </div>
           </template>
           <template v-if="column.key === 'phoneNumber'">
             <div @click="changeSortPhoneNumber()">
-              <span>{{ column.title }}</span>
+              <span class="header-title">{{ column.title }}</span>
               <SortView class="mx-12" :sort="sortPhoneNumber" />
             </div>
           </template>
@@ -387,7 +387,7 @@ const handleClickEdit = ($event: MouseEvent, id: string): void => {
 const deleteCollectionPoint = ($event: MouseEvent, id?: number): void => {
   if ($event.stopPropagation) $event.stopPropagation();
   messenger({
-    title: "popup_msg_confirm_delete",
+    title: "common_confirm",
     message: "",
     type: MessengerType.Confirm,
     buttonOkTitle: "btn_delete",

@@ -131,11 +131,9 @@
           <img src="@/assets/icons/ic_btn_current_location.svg" />
         </a-btn>
 
-        <div
-          class="create-collection-base__map-wrapper__position-detail"
-          v-if="geoLocations.length"
-        >
-          {{ geoLocations[0][0] }}, {{ geoLocations[0][1] }}
+        <div class="create-collection-base__map-wrapper__position-detail">
+          {{ geoLocations.length ? geoLocations[0][0] : NULL_VALUE_DISPLAY }},
+          {{ geoLocations.length ? geoLocations[0][1] : NULL_VALUE_DISPLAY }}
           <img
             src="@/assets/icons/ic_btn_copy.svg"
             @click="copyLocationToClipboard"
@@ -177,7 +175,19 @@ import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
 import { commonStore } from "@/stores";
 import { message } from "ant-design-vue";
-import { computed, inject, onBeforeUnmount, reactive, ref } from "vue";
+import {
+  computed,
+  inject,
+  onBeforeUnmount,
+  onMounted,
+  reactive,
+  ref,
+  watch
+} from "vue";
+import { Rule } from "ant-design-vue/lib/form";
+import { localStorageKeys } from "@/services/local-storage-keys";
+import { makeUniqueName } from "@/utils/string.helper";
+import { NULL_VALUE_DISPLAY } from "@/utils/constants";
 //#region import
 //#endregion
 
@@ -186,6 +196,8 @@ import { computed, inject, onBeforeUnmount, reactive, ref } from "vue";
 
 //#region variables
 const userStore = commonStore();
+const currentLanguage =
+  localStorage.getItem(localStorageKeys.currentLanguage) || "en";
 const formData = reactive<FormData>(reactiveFormData());
 const collectionBaseType = ref<number>(1);
 const center = ref<number[]>([40, 40]);
@@ -201,34 +213,73 @@ const messenger: (
 ) => void = inject("messenger")!;
 const createCollectionBaseRef = ref();
 const isSubmitting = ref<boolean>(false);
+const { name, contact } = formData;
+const isPostalCodeHasError = ref<boolean>(false);
 //#endregion
 
 //#region hooks
 onBeforeUnmount(() => {
   clearInputs();
 });
+
+onMounted(() => {
+  if (contact[0].actionBtn) {
+    contact[0].actionBtn.name = "search_address";
+    contact[0].actionBtn.click = handleSearchAddress;
+    contact[0].actionBtn.disabled = isEnableSearchAddress.value;
+    contact[0].class = "input-with-action-btn";
+  }
+
+  contact[0].rules?.push({
+    validator: (rule: Rule, value: number): Promise<void> => {
+      if (!value) {
+        return Promise.reject(
+          i18n.global.t("please_enter_input", currentLanguage, {
+            fieldName: i18n.global
+              .t("postal_code", currentLanguage)
+              .toLowerCase()
+          })
+        );
+      }
+
+      if (value && isNaN(value)) {
+        return Promise.reject(i18n.global.t("allow_input_number"));
+      }
+
+      if (isPostalCodeHasError.value)
+        return Promise.reject(
+          i18n.global.t("cannot_find_address_from_field_name", {
+            fieldName: i18n.global.t("postal_code").toLowerCase()
+          })
+        );
+
+      return Promise.resolve();
+    },
+    trigger: ["blur", "change"]
+  });
+});
 //#endregion
 
 //#region function
 const handleOnNameFocus = (index: number | boolean | Event): void => {
-  formData.name[Number(index)].isFocus = true;
+  name[Number(index)].isFocus = true;
 };
 const handleOnContactFocus = (index: number | boolean | Event): void => {
-  formData.contact[Number(index)].isFocus = true;
+  contact[Number(index)].isFocus = true;
 };
 
 const handleOnNameBlur = (
   value: number | boolean | Event,
   index: string | number | Event
 ): void => {
-  formData.name[Number(index)].isFocus = false;
+  name[Number(index)].isFocus = false;
 };
 
 const handleOnContactBlur = (
   value: number | boolean | Event,
   index: string | number | Event
 ): void => {
-  formData.contact[Number(index)].isFocus = false;
+  contact[Number(index)].isFocus = false;
 };
 const handleValidateFields = (
   value: string,
@@ -241,21 +292,6 @@ const handleValidateFields = (
   }
   return isRequire ? valueLength > 0 : true;
 };
-const isButtonDisabled = computed((): boolean => {
-  const { name, contact } = formData;
-
-  return (
-    !handleValidateFields(name[0].value?.toString(), 50, true) ||
-    !handleValidateFields(name[1].value?.toString(), 50, true) ||
-    !validator.checkEmailFormat(contact[3].value?.toString(), false) ||
-    !validator.checkPhoneFormat(contact[2].value?.toString(), false) ||
-    !collectionBaseType.value ||
-    !contact[0].value ||
-    isNaN(Number(contact[0].value)) ||
-    !contact[1].value ||
-    !geoLocations.value.length
-  );
-});
 
 const clearInputs = (): void => {
   createCollectionBaseRef.value.resetFields();
@@ -267,7 +303,6 @@ const handleCancel = (): void => {
 };
 
 const handleSubmit = async (): Promise<void> => {
-  const { name, contact } = formData;
   const data = {
     name: name[0].value?.toString(),
     shortName: name[1].value?.toString(),
@@ -277,11 +312,12 @@ const handleSubmit = async (): Promise<void> => {
     telephone: contact[2].value?.toString(),
     email: contact[3].value?.toString(),
     representative: contact[4].value?.toString(),
-    latitude: geoLocations.value[0][0],
-    longitude: geoLocations.value[0][1],
+    latitude: geoLocations.value.length ? geoLocations.value[0][0] : null,
+    longitude: geoLocations.value.length ? geoLocations.value[0][1] : null,
     collectionBaseType: collectionBaseType.value || 1
   };
   if (!userStore.user) return;
+  setBtnActionDisableState(true);
   isSubmitting.value = true;
   const { error, res } = await service.collectionBase.createCollectionBase(
     data
@@ -309,7 +345,48 @@ const handleSubmit = async (): Promise<void> => {
       type: MessengerType.Error
     });
   }
+  setBtnActionDisableState(false);
   isSubmitting.value = false;
+};
+
+const setBtnActionDisableState = (state: boolean): void => {
+  if (contact[0].actionBtn) {
+    contact[0].actionBtn.disabled = state;
+  }
+};
+
+const handleSearchAddress = async (): Promise<void> => {
+  setBtnActionDisableState(true);
+  contact[1].loading = true;
+  const { res } = await service.location.isPostalAddressExists(
+    makeUniqueName(contact[0].value.toString()) || ""
+  );
+  setBtnActionDisableState(false);
+
+  if (!res) {
+    isPostalCodeHasError.value = true;
+    contact[0].class = "input-with-action-btn postal-code__uniq-warning";
+  } else {
+    contact[1].value = res?.full_address || "";
+    await getLatLongFromAddress(res.full_address);
+  }
+  contact[1].loading = false;
+};
+
+const getLatLongFromAddress = async (address: string): Promise<void> => {
+  const { error, res } = await service.location.getLatLongFromAddress(address);
+
+  if (!error && res && res.length > 0) {
+    geoLocations.value = [[+res[0].lon, +res[0].lat]];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (view?.value as any)?.fit(
+      [+res[0].lon, +res[0].lat, +res[0].lon, +res[0].lat],
+      {
+        maxZoom: 14
+      }
+    );
+    contact[1].value = res[0].display_name;
+  }
 };
 
 const geoLocChange = (loc: number[]): void => {
@@ -370,9 +447,39 @@ const handleOnKeyPress = (
 //#endregion
 
 //#region computed
+const isEnableSearchAddress = computed(() => {
+  return !!contact[0].value && isNaN(+contact[0].value);
+});
+
+const isButtonDisabled = computed((): boolean => {
+  return (
+    !handleValidateFields(name[0].value.toString(), 50, true) ||
+    !handleValidateFields(name[1].value.toString(), 50, true) ||
+    !validator.checkEmailFormat(contact[3].value.toString(), false) ||
+    !validator.checkPhoneFormat(contact[2].value.toString(), false) ||
+    !collectionBaseType.value ||
+    !contact[0].value ||
+    isNaN(Number(contact[0].value)) ||
+    !contact[1].value
+  );
+});
 //#endregion
 
 //#region reactive
+watch(
+  [isPostalCodeHasError, (): string | number | boolean => contact[1].value],
+  () => {
+    createCollectionBaseRef.value.validate();
+  }
+);
+
+watch(
+  () => contact[0].value,
+  () => {
+    isPostalCodeHasError.value = false;
+    contact[0].class = "input-with-action-btn";
+  }
+);
 //#endregion
 </script>
 

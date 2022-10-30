@@ -28,11 +28,11 @@ export interface CreateCollectionBaseDto {
   postalCode: string;
   email?: string;
   representative: string;
-  latitude: number;
-  longitude: number;
+  latitude: number | null;
+  longitude: number | null;
   address?: string;
   telephone?: string;
   collectionBaseType: number;
 }
 
-export type EditCollectionBaseDto = CreateCollectionBaseDto
+export type EditCollectionBaseDto = CreateCollectionBaseDto;
