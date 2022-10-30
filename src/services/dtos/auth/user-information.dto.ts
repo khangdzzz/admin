@@ -1,7 +1,12 @@
 export default interface UserInfomationDto {
   id: number;
-  tenant_id: number;
   email: string;
-  full_name: string;
-  user_type: string;
+  tenant_id: number;
+  employee_code: string;
+  name: string;
+  name_kana: string;
+  is_disable: number;
+  telephone: string;
+  belongs: number;
+  user_role: number;
 }

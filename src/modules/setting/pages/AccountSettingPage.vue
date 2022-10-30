@@ -1,27 +1,6 @@
 <template>
   <div class="account-setting-page">
     <h1>Account Setting Screen</h1>
-    <a-select
-      class="account-setting__select-role"
-      @change="onSelect"
-      v-model:value="currentRole"
-    >
-      <a-select-option :value="UserType.TenantAdmin"
-        >Tenant Admin</a-select-option
-      >
-      <a-select-option :value="UserType.CollectionBaseAdmin"
-        >Collection Base Admin</a-select-option
-      >
-      <a-select-option :value="UserType.PartnerAdmin"
-        >Partner Admin</a-select-option
-      >
-      <a-select-option :value="UserType.SystemAdmin"
-        >System Admin</a-select-option
-      >
-      <a-select-option :value="UserType.DischargerCustomer"
-        >Discharger Customer</a-select-option
-      >
-    </a-select>
     <ChangeLanguage></ChangeLanguage>
   </div>
 </template>
