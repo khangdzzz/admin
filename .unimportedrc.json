@@ -11,6 +11,7 @@
     "src/modules/base/components/validator/validator.ts",
     "src/modules/common/helpers.ts",
     "src/modules/common/models/date.model.ts",
+    "src/modules/staff-management/pages/StaffRegistration.vue",
     "src/modules/vehicle-management/pages/VehicleDetailModal.vue",
     "src/services/dtos/container-management/create-container-type.dto.ts",
     "src/services/dtos/container/container-detail-response.dto.ts",

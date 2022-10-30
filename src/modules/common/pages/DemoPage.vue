@@ -1,16 +1,29 @@
 <template>
-    <div class="demo-page">
-        <a-form :model="formState">
-            <FloatingLabelInput class="demo-page__floating-label-input" place-holder="Nghia Place Holder"
-                label="Nghia Label" control-name="username" v-model:value="formState.username"></FloatingLabelInput>
-        </a-form>
-    </div>
+  <div class="demo-page">
+    <a-form :model="formState">
+      <FloatingLabelInput
+        class="demo-page__floating-label-input"
+        place-holder="staff_employee_code"
+        label="staff_employee_code"
+        control-name="username"
+        v-model:value="formState.username"
+        :required="true"
+        :rules="[
+          {
+            required: true,
+            message: $t('forgot_password_msg_err_code_required'),
+            trigger: ['change', 'blur']
+          }
+        ]"
+      ></FloatingLabelInput>
+    </a-form>
+  </div>
 </template>
 
 <script setup lang="ts">
 //#region import
-import FloatingLabelInput from '@/modules/base/components/FloatingLabelInput.vue'
-import { reactive } from 'vue';
+import FloatingLabelInput from "@/modules/base/components/FloatingLabelInput.vue";
+import { reactive } from "vue";
 //#endregion
 
 //#region props
@@ -30,21 +43,22 @@ import { reactive } from 'vue';
 
 //#region reactive
 interface FormState {
-    username: string;
+  username: string;
 }
 
 const formState = reactive<FormState>({
-    username: 'Nghia',
+  username: "Nghia"
 });
 //#endregion
 </script>
 
 <style lang="scss" scoped>
 .demo-page {
-    padding: 20px;
+  background-color: white;
+  padding: 20px;
 
-    &__floating-label-input {
-        width: 500px;
-    }
+  &__floating-label-input {
+    width: 500px;
+  }
 }
 </style>
