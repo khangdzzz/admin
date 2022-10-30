@@ -2,6 +2,7 @@ export const routeNames = {
   default: "DEFAULT",
   notFound: "PAGE_NOT_FOUND",
   login: "AUTH_LOGIN",
+  demo: "DEMO_SCREEN",
   forgotPassword: "FORGOT_PASSWORD",
   collectionBusiness: "COLLECTION_BUSINESS",
   productManufacture: "PRODUCT_MANUFACTURE",
