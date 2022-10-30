@@ -46,6 +46,7 @@ export async function getCurrentUserInformation(): Promise<
 
   const userStore = commonStore();
   userStore.user = userInfo;
+  localStorage.setItem(localStorageKeys.userName, email);
   return userInfo;
 }
 
@@ -64,8 +65,7 @@ export function refreshToken(): void {
   const refreshToken = service.localStorage.getItem(
     localStorageKeys.refreshToken
   ) as string;
-  const userStore = commonStore();
-  const userEmail = userStore.user?.email as string;
+  const userEmail = localStorage.getItem(localStorageKeys.userName);
   const poolData = {
     UserPoolId: import.meta.env.VITE_COGNITO_USER_POOL_ID,
     ClientId: import.meta.env.VITE_COGNITO_CLIENT_ID
@@ -73,7 +73,7 @@ export function refreshToken(): void {
   const userPool = new CognitoUserPool(poolData);
 
   const cognitoUser = new CognitoUser({
-    Username: userEmail,
+    Username: userEmail || "",
     Pool: userPool
   });
 
