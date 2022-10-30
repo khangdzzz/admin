@@ -21,6 +21,7 @@ export const routeNames = {
   createVehicleType: "CREATE_VEHICLE_TYPE",
   editVehicleType: "EDIT_VEHICLE_TYPE",
   staffManagement: "STAFF_MANAGEMENT",
+  staffDetail: "STAFF_DETAIL",
   createCollectionBase: "CREATE_COLLECTION_BASE",
   listCollectionBase: "LIST_COLLECTION_BASE",
   createNewStaff: "CREATE_NEW_STAFF",

@@ -257,5 +257,9 @@
   "common_msg_delete_multiple_successfully": "{number}件を削除しました。",
   "common_msg_create_successfully": "作成に成功しました。",
   "common_msg_edit_successfully": "編集に成功しました。",
-  "common_msg_delete_successfully": "削除に成功しました。"
+  "common_msg_delete_successfully": "削除に成功しました。",
+  "staff_workplace": "参照先",
+  "last_login_time": "最終ログイン日時",
+  "staff_detail": "ユーザー詳細",
+  "enable_account": "Enable Account"
 }

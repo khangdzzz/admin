@@ -261,5 +261,9 @@
   "common_msg_delete_multiple_successfully": "Deleted {number} records",
   "common_msg_create_successfully": "Created successfully",
   "common_msg_edit_successfully": "Edited successfully",
-  "common_msg_delete_successfully": "Deleted successfully"
+  "common_msg_delete_successfully": "Deleted successfully",
+  "staff_workplace": "Workplace",
+  "last_login_time": "Last login time",
+  "staff_detail": "Staff Detail",
+  "enable_account": "Enable Account"
 }
