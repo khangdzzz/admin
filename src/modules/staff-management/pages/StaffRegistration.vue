@@ -6,12 +6,18 @@
       <div class="create-staff__title d-flex mb-30 justify-center align-center">
         {{ $t("add_new_staff") }}
       </div>
-      <a-form>
+      <a-form :model="formState">
         <FloatingLabelInput
           place-holder="staff_employee_code"
           label="staff_employee_code"
-          control-name="username"
-          v-model:value="formState.username"
+          control-name="employeeCode"
+          v-model:value="formState.employeeCode"
+        ></FloatingLabelInput>
+        <FloatingLabelInput
+          place-holder="name"
+          label="name"
+          control-name="name"
+          v-model:value="formState.name"
           :required="true"
           :rules="[
             {
@@ -21,6 +27,38 @@
             }
           ]"
         ></FloatingLabelInput>
+        <FloatingLabelInput
+          place-holder="name_kana"
+          label="name_kana"
+          control-name="nameKana"
+          v-model:value="formState.nameKana"
+        ></FloatingLabelInput>
+        <FloatingLabelInput
+          place-holder="email"
+          label="email"
+          control-name="email"
+          v-model:value="formState.email"
+          :required="true"
+          :rules="[
+            {
+              required: true,
+              message: $t('forgot_password_msg_err_code_required'),
+              trigger: ['change', 'blur']
+            }
+          ]"
+        ></FloatingLabelInput>
+        <FloatingLabelInput
+          place-holder="telephone"
+          label="telephone"
+          control-name="telephone"
+          v-model:value="formState.telephone"
+        ></FloatingLabelInput>
+        <FloatingLabelSelect
+          place-holder="Select"
+          label="Select"
+          control-name="telephone"
+          v-model:value="formState.telephone"
+        ></FloatingLabelSelect>
       </a-form>
       <div class="d-flex justify-center align-center gap-20 mt-10 mb-30">
         <a-button
@@ -46,10 +84,15 @@
 <script setup lang="ts">
 //#region import
 import FloatingLabelInput from "@/modules/base/components/FloatingLabelInput.vue";
+import FloatingLabelSelect from "@/modules/base/components/FloatingLabelSelect.vue";
 import { reactive, ref } from "vue";
 
 interface FormState {
-  username: string;
+  employeeCode: string;
+  name: string;
+  nameKana: string;
+  email: string;
+  telephone: string;
 }
 //#endregion
 
@@ -60,7 +103,11 @@ interface FormState {
 const isValidated = ref<boolean>(false);
 const isLoading = ref<boolean>(false);
 const formState = reactive<FormState>({
-  username: "Nghia"
+  employeeCode: "",
+  name: "",
+  nameKana: "",
+  email: "",
+  telephone: ""
 });
 //#endregion
 
