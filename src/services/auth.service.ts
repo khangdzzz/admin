@@ -9,31 +9,39 @@ import {
   CognitoRefreshToken
 } from "amazon-cognito-identity-js";
 import { service } from ".";
+import { transformRequest } from "./base.service";
 import UserInfomationDto from "./dtos/auth/user-information.dto";
 import { localStorageKeys } from "./local-storage-keys";
-import * as mockGetMe from "./mocks/auth/get-me.response.json";
+const userRoles = [
+  UserType.SystemAdmin,
+  UserType.TenantAdmin,
+  UserType.CollectionBaseAdmin,
+  UserType.Dischanger,
+  UserType.DashboardUser,
+  UserType.Consignee,
+  UserType.Driver,
+  UserType.ManufacturingStaff,
+  UserType.DriverManufacturingStaff
+];
 
 export async function getCurrentUserInformation(): Promise<
   UserInfo | undefined
 > {
-  // const [error, res] = await transformRequest<UserInfomationDto>({
-  //   url: "auth/me",
-  //   method: "post"
-  // });
-  // if (error || !res) {
-  //   return undefined;
-  // }
-  const res: UserInfomationDto = mockGetMe;
-  const mockRole: UserType = (localStorage.getItem(localStorageKeys.userType) ||
-    UserType.TenantAdmin) as UserType;
-  const { id, email, full_name: fullName, tenant_id: tenantId } = res;
+  const [error, res] = await transformRequest<UserInfomationDto>({
+    url: "user/me",
+    method: "get"
+  });
+  if (error || !res) {
+    return undefined;
+  }
+  const { id, email, name: fullName, tenant_id: tenantId, user_role } = res;
 
   const userInfo = {
     id,
     email,
     fullName,
     tenantId,
-    userType: mockRole
+    userType: userRoles[user_role - 1]
   };
 
   const userStore = commonStore();
