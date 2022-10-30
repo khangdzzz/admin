@@ -195,7 +195,7 @@ const columns = [
     title: "staff_employee_code",
     dataIndex: "employeeCode",
     key: "employeeCode",
-    width: "160px"
+    width: "10%"
   },
   {
     title: "staff_name",
@@ -210,8 +210,7 @@ const columns = [
   {
     title: "staff_user_role",
     dataIndex: "userRole",
-    key: "userRole",
-    width: "160px"
+    key: "userRole"
   },
   {
     title: "staff_workplace_type",
@@ -223,7 +222,7 @@ const columns = [
     title: "staff_last_login_time",
     dataIndex: "lastLoggedIn",
     key: "lastLoggedIn",
-    width: "160px"
+    maxWidth: 160
   },
   {
     title: "",

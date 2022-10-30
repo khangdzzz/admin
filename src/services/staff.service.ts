@@ -11,6 +11,8 @@ import { transformRequest } from "./base.service";
 import { DEFAULT_SORT_ORDER } from "./constants";
 import { PaginationDto } from "./dtos/common/pagination.dto";
 import { StaffTypeResponseDto } from "./dtos/staff-management/create-staff-type.dto";
+import { format } from "date-fns";
+
 const UserRoleLabel = [
   "user_role_lbl_system_admin",
   "user_role_lbl_tenant_admin",
@@ -115,7 +117,7 @@ export async function getlistStaff(
         collectionBase: collection_base,
         workplace: WorkplaceLabel[belongs],
         lastLoggedIn: last_logged_in
-          ? new Date(last_logged_in).toLocaleDateString()
+          ? format(new Date(last_logged_in), "yyyy/MM/dd")
           : undefined,
         isDisabled: is_disable
       };
