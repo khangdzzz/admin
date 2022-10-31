@@ -213,7 +213,7 @@
   "customer_create_failed": "作成に失敗しました",
   "external_code": "外部連携コード",
   "customer_detail": "取引先詳細",
-  "collection_point_detail": "回収地点の編集",
+  "collection_point_detail": "回収地点詳細",
   "collection_base_detail": "回収拠点詳細",
   "collection_point": "回収地点 ",
   "delete_collection_point_mutiple_successfully": "{length}回収地点が削除されました",

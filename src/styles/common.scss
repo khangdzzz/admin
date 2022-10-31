@@ -46,6 +46,9 @@
   .btn-icon {
     margin-right: 10px;
   }
+  &:hover{
+    background-color: $white;
+  }
 }
 .btn-add-new {
   @include flex-center();
