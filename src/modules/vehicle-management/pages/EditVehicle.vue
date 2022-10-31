@@ -381,7 +381,9 @@ watch(
       dynamicValidateForm.formData[1].value &&
       handleValidateFields(dynamicValidateForm.formData[2].value, 50, true) &&
       handleValidateFields(dynamicValidateForm.formData[3].value, 50, true) &&
-      handleValidateFields(dynamicValidateForm.formData[4].value, 10, false)
+      (dynamicValidateForm.formData[4].value
+        ? regex.test(dynamicValidateForm.formData[4].value)
+        : true)
     ) {
       isValidated.value = true;
     } else {
