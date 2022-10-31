@@ -621,7 +621,6 @@ watch(
 
   .ant-form-item-explain-error {
     color: $red-500 !important;
-    margin-bottom: 20px;
   }
 }
 </style>

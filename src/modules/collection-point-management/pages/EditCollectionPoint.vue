@@ -634,9 +634,5 @@ watch(
       }
     }
   }
-
-  .ant-form-item-explain-error {
-    margin-bottom: 20px !important;
-  }
 }
 </style>

@@ -2,6 +2,7 @@ import { i18n } from "@/i18n";
 import validator from "@/modules/base/components/validator/validator";
 import { FormData } from "@/modules/collection-point-management/models/collection-point.model";
 import { localStorageKeys } from "@/services/local-storage-keys";
+import { Rule } from "ant-design-vue/lib/form";
 
 export const formData = (): FormData => {
   const currentLanguage =
@@ -161,19 +162,28 @@ export const formData = (): FormData => {
         isFocus: false,
         rules: [
           {
-            max: 15,
-            message: i18n.global.t("max_length_input", currentLanguage, {
-              maxLength: 15
-            }),
-            trigger: ["blur", "change"]
-          },
-          {
-            pattern: /^[+][0-9]{5,14}$/,
-            message: i18n.global.t("invalid_field_name", currentLanguage, {
-              fieldName: i18n.global
-                .t("collection_phone_number", currentLanguage)
-                .toLowerCase()
-            }),
+            validator: (rule: Rule, value: string): Promise<void> => {
+              const regex = /^[+][0-9]{5,14}$/;
+              if (value && value.length > 15) {
+                return Promise.reject(
+                  i18n.global.t("max_length_input", currentLanguage, {
+                    maxLength: 15
+                  })
+                );
+              }
+
+              if (value && value.length > 0 && !regex.test(value)) {
+                return Promise.reject(
+                  i18n.global.t("invalid_field_name", currentLanguage, {
+                    fieldName: i18n.global
+                      .t("collection_phone_number", currentLanguage)
+                      .toLowerCase()
+                  })
+                );
+              }
+
+              return Promise.resolve();
+            },
             trigger: ["blur", "change"]
           }
         ],
