@@ -496,13 +496,18 @@ watch(
       text-align: left;
       padding-right: 10px;
       color: $neutral-600;
-
       span {
         font-weight: 400;
         font-size: 14px;
         line-height: 100%;
         color: $red-1;
       }
+    }
+  }
+
+  .ant-radio-checked {
+    .ant-radio-inner {
+      border-color: $primary !important;
     }
   }
 
