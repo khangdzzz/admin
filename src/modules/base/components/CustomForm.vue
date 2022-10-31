@@ -171,7 +171,11 @@
           ? $t(item.placeHolder)
           : $t(item.label)
       }}
-      <span class="require" v-if="item.required">*</span>
+      <span
+        :class="[item.disabled ? 'disabled-require' : 'require']"
+        v-if="item.required"
+        >*</span
+      >
     </label>
 
     <div v-if="item.inline && item.spaceStyle" :style="item.spaceStyle"></div>
@@ -272,6 +276,10 @@ const filterOption = (input: string, option: any): boolean => {
 
 .require {
   color: $red-1;
+  @include text(400, 12px, 100%);
+}
+.disabled-require {
+  color: $text-1;
   @include text(400, 12px, 100%);
 }
 

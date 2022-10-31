@@ -367,6 +367,9 @@ const focusCurrentLocation = (): void => {
       flex-wrap: wrap;
       justify-content: space-between;
       margin-top: 15px;
+      &:first-child {
+        margin-top: 0px !important;
+      }
     }
     &__title {
       width: 100%;
