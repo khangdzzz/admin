@@ -113,6 +113,11 @@
           </div>
           <div
             class="content fill-height d-flex flex-column justify-center gap-6z custom-form__custom-option-padding"
+            :class="
+              item.mode === 'multiple'
+                ? 'custom-form__custom-multiple-option-padding'
+                : ''
+            "
           >
             <div class="text-content">{{ content }}</div>
             <div class="text-label">{{ label }}</div>
@@ -300,6 +305,9 @@ const filterOption = (input: string, option: any): boolean => {
 
   &__custom-option-padding {
     margin-left: -10px;
+  }
+  &__custom-multiple-option-padding {
+    margin-left: 10px;
   }
 }
 
