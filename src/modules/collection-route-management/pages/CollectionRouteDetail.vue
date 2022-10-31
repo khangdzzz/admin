@@ -13,11 +13,16 @@
           @goBack="handleGoBack"
         >
           <template #action>
-            <a-button class="btn-action" ghost type="primary">
+            <a-button
+              class="btn-action"
+              ghost
+              type="primary"
+              @click="editCollectionRoute(id)"
+            >
               <template #icon>
                 <img src="@/assets/icons/ic_btn_edit.svg" class="btn-icon" />
               </template>
-              Edit
+              {{ $t("edit_btn") }}
             </a-button>
             <a-button class="btn-action color-btn-delete" ghost type="primary">
               <template #icon>
@@ -135,6 +140,12 @@ const getCollectionRouteDetail = async (): Promise<void> => {
   const res = await service.collectionRoute.getCollectionRouteById(Number(id));
   isLoading.value = false;
   collectionRouteDetail.value = res;
+};
+const editCollectionRoute = (id: string): void => {
+  router.push({
+    params: { id },
+    name: routeNames.editCollectionRouteOrder
+  });
 };
 //#endregion
 

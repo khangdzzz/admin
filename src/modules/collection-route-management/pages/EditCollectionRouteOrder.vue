@@ -1,24 +1,23 @@
 <template>
-  <a-spin :tip="$t('common_loading')" :spinning="isLoading">
-    <div
-      class="create-collection-route-order p-30 fill-height d-flex flex-column"
-    >
-      <div class="create-collection-route-order-title">
-        {{ $t("collection_route_order") }}
+  <div class="edit-collection-route-order p-30 fill-height d-flex flex-column">
+    <a-spin :tip="$t('common_loading')" :spinning="isLoading">
+      <div class="edit-collection-route-order-title">
+        {{ $t("collection_route_order_edit_title") }}
       </div>
-      <a-card class="create-collection-route-order__card">
+      <a-card class="edit-collection-route-order__card">
         <a-form
           :model="formData"
-          ref="createCollectionRouteOrder"
-          name="createCollectionRouteOrder"
+          ref="editCollectionRouteOrder"
+          name="editCollectionRouteOrder"
         >
           <div
-            class="create-collection-route-order__duo-inputs-wrapper d-flex justify-space-between gap-20"
+            class="edit-collection-route-order__duo-inputs-wrapper d-flex justify-space-between gap-20"
           >
             <CustomForm
               :form-data="formData.duoInputs"
               @on-focus="handleOnDuoInputsFocus"
               @on-blur="handleOnDuoInputsBlur"
+              :class="'test'"
             />
             <CustomForm
               :form-data="formData.duoInputs2"
@@ -30,7 +29,7 @@
             <label class="label-note">{{
               $t("collection_route_detail_note")
             }}</label>
-            <div class="create-collection-route-order__note">
+            <div class="edit-collection-route-order__note">
               <a-textarea :maxlength="255" v-model:value="formNote.note" />
             </div>
           </a-form-item>
@@ -139,22 +138,22 @@
       <div class="d-flex justify-center gap-20 mt-20 pb-20">
         <a-button
           type="secondary"
-          class="create-collection-base__btn-style create-collection-base__cancel-btn"
-          :disabled="isSubmitting"
+          class="edit-collection-point__btn-style edit-collection-point__cancel-btn"
           @click="handleClickCancel"
+          :disabled="isLoading"
           >{{ $t("btn_cancel") }}</a-button
         >
         <a-button
           type="primary"
-          class="create-collection-base__btn-style"
+          class="edit-collection-point__btn-style"
           :disabled="isDisableSubmit"
           :loading="false"
           @click="handleClickSubmit"
-          >{{ $t("btn_submit") }}</a-button
+          >{{ $t("btn_save") }}</a-button
         >
       </div>
-    </div>
-  </a-spin>
+    </a-spin>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -170,14 +169,15 @@ import {
   onMounted,
   watch
 } from "vue";
+import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import { FormDataCreateCollectionRoute } from "@/modules/collection-route-management/models/collection-route.model";
 import { formData as reactiveFormData } from "@/modules/collection-route-management/models/create-collection-route-order-base-form";
 import { routeNames, router } from "@/routes";
 import draggable from "vuedraggable";
 import { service } from "@/services";
+import { useRoute } from "vue-router";
 import { makeUniqueName } from "@/utils/string.helper";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
-import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import {
   CollectionPoint,
   CollectionBase
@@ -191,7 +191,6 @@ export interface Form {
 //#endregion
 
 //#region variables
-const isLoading = ref<boolean>(false);
 const messenger: (
   param: MessengerParamModel
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -199,7 +198,6 @@ const messenger: (
 const searchCollectionPoint = ref<string>("");
 const drag = ref<boolean>(false);
 const formData = reactive<FormDataCreateCollectionRoute>(reactiveFormData);
-const isSubmitting = ref<boolean>(false);
 const isDisableSubmit = ref<boolean>(true);
 const formNote = reactive<Form>({ note: "" });
 const listCollectionPoint = ref<CollectionPoint[]>([]);
@@ -209,12 +207,22 @@ const handleSubmitBtn = reactive<any>({
   formData: formData,
   listSelectedCollectionPoint: listSelectedCollectionPoint
 });
+const isLoading = ref<boolean>(false);
+
+const route = useRoute();
+
 //#endregion
 
 //#region hooks
+
 onMounted(async () => {
   isLoading.value = true;
-  await Promise.all([fetchCollectionBase(), fetchListCollectionPoint()]);
+  await Promise.all([
+    fetchCollectionBase(),
+    fetchListCollectionPoint(),
+    fetchData()
+  ]);
+  isDisableSubmit.value = true;
   isLoading.value = false;
 });
 onBeforeUnmount(() => {
@@ -223,6 +231,7 @@ onBeforeUnmount(() => {
 // //#endregion
 
 // //#region function
+const { id } = route.params;
 
 const fetchListCollectionPoint = async (): Promise<void> => {
   const res = await service.collectionRoute.getCollectionPoint();
@@ -234,8 +243,24 @@ const fetchListCollectionPoint = async (): Promise<void> => {
     }));
   }
 };
+const fetchData = async (): Promise<void> => {
+  isLoading.value = true;
+
+  if (!id) {
+    router.push({ name: routeNames.listCollectionRoute });
+    return;
+  }
+  const res = await service.collectionRoute.getCollectionRouteById(Number(id));
+  if (res) {
+    formData.duoInputs[0].value = res.name;
+    formNote.note = res.notice;
+    formData.duoInputs2[0].value = res.workplaceId;
+    listSelectedCollectionPoint.value = res.listCollectionPoint;
+  }
+  isLoading.value = false;
+};
 const fetchCollectionBase = async (): Promise<void> => {
-  const res = await service.collectionRoute.getWorkplace();
+  const res = await service.vehicle.getCollectionBase();
   if (res) {
     listCollectionBase.value = res?.map((item) => ({
       value: item.id || 0,
@@ -314,12 +339,13 @@ const handleClickSubmit = async (): Promise<void> => {
     notice: makeUniqueName(formNote.note.toString())
   };
 
-  const { error, res } = await service.collectionRoute.createCollectionRoute(
+  const { error, res } = await service.collectionRoute.editCollectionRoute(
+    +id,
     data
   );
   if (!error && res) {
     messenger({
-      title: "created_successfully",
+      title: "edited_successfully",
       message: "",
       type: MessengerType.Success,
       callback: (isConfirm: boolean) => {
@@ -332,12 +358,13 @@ const handleClickSubmit = async (): Promise<void> => {
     });
   } else {
     messenger({
-      title: "create_failed",
+      title: "edit_failed",
       message: "",
       type: MessengerType.Error
     });
   }
 };
+
 const activeSubmitButton = (): void => {
   if (
     handleSubmitBtn.formData.duoInputs[0].value &&
@@ -349,6 +376,7 @@ const activeSubmitButton = (): void => {
     isDisableSubmit.value = true;
   }
 };
+
 //#endregion
 
 //#region reactive
@@ -359,8 +387,8 @@ watch(handleSubmitBtn, () => {
 </script>
 
 <style lang="scss" scoped>
-.create-collection-route-order {
-  .create-collection-route-order-title {
+.edit-collection-route-order {
+  .edit-collection-route-order-title {
     font-weight: 700;
     font-size: 28px;
     line-height: 36px;
@@ -416,6 +444,8 @@ watch(handleSubmitBtn, () => {
     background: $white;
     border: 1px solid $primary;
     color: $primary;
+  }
+  .edit-collection-route-order__duo-inputs-wrapper {
   }
   .collection-point {
     &__head {
@@ -563,7 +593,7 @@ watch(handleSubmitBtn, () => {
       // line-height: 100%;
     }
   }
-  .create-collection-base__btn-style {
+  .edit-collection-point__btn-style {
     height: 48px;
     width: 180px;
     font-style: normal;
@@ -571,7 +601,7 @@ watch(handleSubmitBtn, () => {
     font-size: 18px;
     line-height: 100%;
   }
-  .create-collection-base__cancel-btn {
+  .edit-collection-point__cancel-btn {
     border: 1px solid $primary;
     background-color: $white;
     color: $primary;
@@ -598,7 +628,7 @@ watch(handleSubmitBtn, () => {
 }
 
 :deep() {
-  .create-collection-route-order {
+  .edit-collection-route-order {
     &__duo-inputs-wrapper {
       .ant-form-item {
         width: 100%;
@@ -611,7 +641,10 @@ watch(handleSubmitBtn, () => {
   .ant-card-body {
     padding: 20px 20px 80px 20px !important;
   }
-  .create-collection-route-order__duo-inputs-wrapper .ant-row .ant-form-item {
+  .edit-collection-route-order__duo-inputs-wrapper .ant-row .ant-form-item {
+    margin-bottom: 0px !important;
+  }
+  .ant-row .ant-form-item {
     margin-bottom: 0px !important;
   }
 }

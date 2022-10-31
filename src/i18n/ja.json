@@ -239,6 +239,7 @@
   "create_vehicle_lbl_vehicle_name": "車両名称",
   "create_vehicle_lbl_vehicle_number_plate": "ナンバープレート",
   "collection_route": "回収ルート管理",
+  "collection_route_order_edit_title": "回収順の編集",
   "collection_route_name": "ルート名称",
   "collection_route_workplace": "職場",
   "collection_route_number_of_stores": "回収地点数",
@@ -265,5 +266,6 @@
   "cannot_find_address_from_field_name": "入力した{fieldName} はシステムに見つかりませんでした。",
   "edit_collection_point": "回収地点の編集",
   "collection_point_edited_successfully": "回収地点が編集されました",
-  "disposal": "処分場"
+  "disposal": "処分場",
+  "created_successfully":"作成に成功しました。"
 }

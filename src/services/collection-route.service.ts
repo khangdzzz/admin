@@ -10,7 +10,6 @@ import { transformRequest } from "./base.service";
 import { DEFAULT_SORT_ORDER } from "./constants";
 import { CollectionRouteResponseDTO } from "./dtos/collection-route/collection-route.dto";
 import { PaginationDto } from "./dtos/common/pagination.dto";
-import getListCollectionRoute from "./mocks/collection-route/get-list-collection-route.response.json";
 import { CollectionBaseResponseDto } from "./dtos/collection-base/collection-base.dto";
 import { CollectionPointResponseDto } from "./dtos/collection-point/collection-point.dto";
 import { AxiosError } from "axios";
@@ -138,7 +137,8 @@ export async function getCollectionRouteById(
     number_collect_points,
     navigation_id,
     notice,
-    collect_points
+    collect_points,
+    workplace_id
   } = res;
 
   return {
@@ -150,16 +150,17 @@ export async function getCollectionRouteById(
     numberOfStore: number_collect_points,
     navigationId: navigation_id,
     notice,
-    listCollectionPoint: collect_points
+    listCollectionPoint: collect_points,
+    workplaceId: workplace_id
   };
 }
-export async function getCollectionBase(): Promise<
+export async function getWorkplace(): Promise<
   CollectionBaseResponseDto[] | undefined
 > {
   const [err, res] = await transformRequest<
     PaginationDto<CollectionBaseResponseDto>
   >({
-    url: `/workplace/collection_base`,
+    url: `/workplace/options?workplace_type_in=3,2`,
     method: "get"
   });
   if (err) return undefined;
@@ -172,7 +173,7 @@ export async function getCollectionPoint(): Promise<
   const [err, res] = await transformRequest<
     PaginationDto<CollectionPointResponseDto>
   >({
-    url: `collect_point`,
+    url: `/collect_point`,
     method: "get"
   });
   if (err) return undefined;
@@ -194,6 +195,32 @@ export async function createCollectionRoute(
   );
   if (error || !res) {
     false;
+  }
+  return {
+    res
+  };
+}
+
+export async function editCollectionRoute(
+  id: number,
+  data: CreateCollectionRouteModel
+): Promise<
+  | [AxiosError<unknown, unknown>, null]
+  | [null, CreateCollectionRouteResponseDto]
+  | any
+> {
+  const [error, res] = await transformRequest<CreateCollectionRouteResponseDto>(
+    {
+      url: `/collect_order/${id}`,
+      method: "PUT",
+      data
+    }
+  );
+  if (error || !res) {
+    return {
+      error: (error?.response?.data as { details: { msg: string }[] })
+        .details[0].msg
+    };
   }
   return {
     res

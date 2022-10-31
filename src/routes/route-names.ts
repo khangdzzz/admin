@@ -52,6 +52,7 @@ export const routeNames = {
   listCollectionRoute: "LIST_COLLECTION_ROUTE",
   collectionRouteDetail: "DETAIL_COLLECTION_ROUTE",
   createCollectionRouteOrder: "CREATE_COLLECTION_ROUTE",
+  editCollectionRouteOrder: "EDIT_COLLECTION_ROUTE",
   deliveryManagement: "DELIVERY_MANAGEMENT",
   storageManagement: "STORAGE_MANAGEMENT",
   manufactureCategoryManagement: "MANUFACTURE_CATEGORY_MANAGEMENT",

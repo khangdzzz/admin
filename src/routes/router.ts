@@ -492,7 +492,7 @@ const routes: RouteRecordRaw[] = [
             "@/modules/collection-route-management/pages/CollectionRouteList.vue"
           )
       },
-    {
+      {
         name: routeNames.collectionRouteDetail,
         path: "detail/:id",
         component: () =>
@@ -506,6 +506,14 @@ const routes: RouteRecordRaw[] = [
         component: () =>
           import(
             "@/modules/collection-route-management/pages/CreateCollectionRouteOrder.vue"
+          )
+      },
+      {
+        path: "edit/:id",
+        name: routeNames.editCollectionRouteOrder,
+        component: () =>
+          import(
+            "@/modules/collection-route-management/pages/EditCollectionRouteOrder.vue"
           )
       }
     ]
