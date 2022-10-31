@@ -27,27 +27,40 @@ const userRoles = [
 export async function getCurrentUserInformation(): Promise<
   UserInfo | undefined
 > {
-  const [error, res] = await transformRequest<UserInfomationDto>({
-    url: "user/me",
-    method: "get"
-  });
-  if (error || !res) {
+  try {
+    const [error, res] = await transformRequest<UserInfomationDto>({
+      url: "user/me",
+      method: "get"
+    });
+    if (error || !res) {
+      const userInfoString = localStorage.getItem(localStorageKeys.userInfo);
+      if (userInfoString) {
+        return JSON.parse(userInfoString) as UserInfo;
+      }
+      return undefined;
+    }
+    const { id, email, name: fullName, tenant_id: tenantId, user_role } = res;
+
+    const userInfo = {
+      id,
+      email,
+      fullName,
+      tenantId,
+      userType: userRoles[user_role - 1]
+    };
+
+    const userStore = commonStore();
+    userStore.user = userInfo;
+    localStorage.setItem(localStorageKeys.userName, email);
+    localStorage.setItem(localStorageKeys.userInfo, JSON.stringify(userInfo));
+    return userInfo;
+  } catch (error) {
+    const userInfoString = localStorage.getItem(localStorageKeys.userInfo);
+    if (userInfoString) {
+      return JSON.parse(userInfoString) as UserInfo;
+    }
     return undefined;
   }
-  const { id, email, name: fullName, tenant_id: tenantId, user_role } = res;
-
-  const userInfo = {
-    id,
-    email,
-    fullName,
-    tenantId,
-    userType: userRoles[user_role - 1]
-  };
-
-  const userStore = commonStore();
-  userStore.user = userInfo;
-  localStorage.setItem(localStorageKeys.userName, email);
-  return userInfo;
 }
 
 export function logout(): void {
