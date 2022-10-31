@@ -6,8 +6,10 @@
     "vue"
   ],
   "ignoreUnimported": [
+    "src/assets/icons/IcCloseIcon.vue",
     "src/modules/auth/models/auth.model.ts",
     "src/modules/auth/models/index.ts",
+    "src/modules/base/components/FloatingLabelMultipleSelect.vue",
     "src/modules/base/components/FloatingLabelSelect.vue",
     "src/modules/base/components/validator/validator.ts",
     "src/modules/common/helpers.ts",
