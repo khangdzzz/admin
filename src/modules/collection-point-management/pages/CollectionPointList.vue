@@ -387,7 +387,7 @@ const handleClickEdit = ($event: MouseEvent, id: string): void => {
 const deleteCollectionPoint = ($event: MouseEvent, id?: number): void => {
   if ($event.stopPropagation) $event.stopPropagation();
   messenger({
-    title: "common_confirm",
+    title: "popup_msg_confirm_delete",
     message: "",
     type: MessengerType.Confirm,
     buttonOkTitle: "btn_delete",
