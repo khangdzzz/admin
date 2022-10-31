@@ -1,7 +1,7 @@
 <template>
   <a-form-item :name="controlName" :rules="rules" :class="className">
     <FloatingLabel
-      class="floating-label-input"
+      class="floating-label-select"
       :is-focused="isFocused || !!value"
       :label="$t(isFocused || !!value ? label : placeHolder)"
       :control-name="controlName"
@@ -9,16 +9,36 @@
       @click="focus(`${label}-input`)"
       :prefix="prefix"
     >
-      <a-input
+      <a-select
         :id="`${label}-input`"
-        class="floating-label-input__input"
+        class="floating-label-select__input"
         @focusin="isFocused = true"
         @focusout="isFocused = false"
         :bordered="false"
         :value="value"
+        :options="options"
+        :open="isFocused"
         @change="dataChange"
       >
-      </a-input>
+        <template #suffixIcon>
+          <div></div>
+        </template>
+        <template #option="{ value, label }">
+          <div class="d-flex flex-column justify-center gap-6">
+            <div v-if="label" class="floating-label-select__input-label">
+              {{ label }}
+            </div>
+            <div class="floating-label-select__input-value">{{ value }}</div>
+          </div>
+        </template>
+      </a-select>
+      <img
+        class="floating-label-select__dropdown"
+        src="@/assets/icons/ic_dropdown.svg"
+        width="20"
+        height="20"
+        style="padding: 4px"
+      />
     </FloatingLabel>
   </a-form-item>
 </template>
@@ -60,6 +80,10 @@ defineProps({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     type: Object as PropType<{ icon: any; action: any }> | undefined
   },
+  options: {
+    type: Array,
+    default: () => []
+  },
   className: {
     type: String
   }
@@ -81,8 +105,8 @@ const emit = defineEmits<{
 const focus = (id: string): void => {
   document.getElementById(id)?.focus();
 };
-const dataChange = (e: { target: { value: string | undefined } }): void => {
-  emit("update:value", e?.target?.value || "");
+const dataChange = (value: string): void => {
+  emit("update:value", value || "");
 };
 //#endregion
 
@@ -94,18 +118,25 @@ const dataChange = (e: { target: { value: string | undefined } }): void => {
 </script>
 
 <style lang="scss" scoped>
-.floating-label-input {
+.floating-label-select {
   height: 60px;
   position: relative;
   cursor: text;
+
+  &__dropdown {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translate(0, -50%);
+  }
 
   &__input {
     position: absolute;
     top: 20px;
     height: 40px;
     bottom: 0;
-    width: calc(100% - 24px);
-    left: 12px;
+    width: 100%;
+    left: 0px;
     right: 12px;
     background-color: transparent !important;
     padding-left: 0;
@@ -127,6 +158,34 @@ const dataChange = (e: { target: { value: string | undefined } }): void => {
     padding-right: 0;
     background-color: transparent !important;
   }
+
+  &__input-label {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 18px;
+    color: $neutral-400;
+  }
+
+  &__input-value {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 20px;
+    color: $neutral-600;
+  }
+}
+
+.ant-select-item-option-selected {
+  .ant-select-item-option-content {
+    .floating-label-select__input-value {
+      font-style: normal;
+      font-weight: 600;
+      font-size: 16px;
+      line-height: 20px;
+      color: $neutral-600;
+    }
+  }
 }
 
 :deep() {
@@ -134,6 +193,36 @@ const dataChange = (e: { target: { value: string | undefined } }): void => {
     color: $red-500 !important;
     margin-bottom: 20px;
     margin-top: 8px;
+  }
+}
+</style>
+<style lang="scss">
+.ant-select-dropdown {
+  &:has(div
+      > .rc-virtual-list-holder
+      > div
+      > .rc-virtual-list-holder-inner
+      > .ant-select-item-option
+      > .ant-select-item-option-content
+      > div
+      > .floating-label-select__input-value) {
+    padding: 0px !important;
+  }
+}
+
+.ant-select-item-option {
+  &:has(.ant-select-item-option-content
+      > div
+      > .floating-label-select__input-value) {
+    height: 64px !important;
+  }
+}
+
+.ant-select-item-option-active {
+  &:has(.ant-select-item-option-content
+      > div
+      > .floating-label-select__input-value) {
+    height: 64px !important;
   }
 }
 </style>

@@ -6,12 +6,42 @@
       <div class="create-staff__title d-flex mb-30 justify-center align-center">
         {{ $t("add_new_staff") }}
       </div>
-      <a-form>
+      <a-form :model="formState">
         <FloatingLabelInput
           place-holder="staff_employee_code"
           label="staff_employee_code"
-          control-name="username"
-          v-model:value="formState.username"
+          control-name="employeeCode"
+          v-model:value="formState.employeeCode"
+        ></FloatingLabelInput>
+        <div class="d-flex gap-20">
+          <FloatingLabelInput
+            place-holder="name"
+            label="name"
+            control-name="name"
+            v-model:value="formState.name"
+            :required="true"
+            :rules="[
+              {
+                required: true,
+                message: $t('forgot_password_msg_err_code_required'),
+                trigger: ['change', 'blur']
+              }
+            ]"
+            class="fill-width"
+          ></FloatingLabelInput>
+          <FloatingLabelInput
+            place-holder="name_kana"
+            label="name_kana"
+            control-name="nameKana"
+            v-model:value="formState.nameKana"
+            class="fill-width"
+          ></FloatingLabelInput>
+        </div>
+        <FloatingLabelInput
+          place-holder="email"
+          label="email"
+          control-name="email"
+          v-model:value="formState.email"
           :required="true"
           :rules="[
             {
@@ -21,8 +51,83 @@
             }
           ]"
         ></FloatingLabelInput>
+        <FloatingLabelInput
+          place-holder="telephone"
+          label="telephone"
+          control-name="telephone"
+          v-model:value="formState.telephone"
+        ></FloatingLabelInput>
+
+        <div class="d-flex">
+          <div class="create-staff__staff-type__radio-title">
+            Type <span>*</span>
+          </div>
+          <div>
+            <a-radio-group v-model:value="staffType">
+              <div class="create-staff__staff-type__container gap-24">
+                <div class="create-staff__staff-type__left-side">
+                  <div class="mb-20">
+                    <a-radio value="tenant">Tenant/ Collection base</a-radio>
+                  </div>
+                  <div>
+                    <a-radio value="customer">Customer</a-radio>
+                  </div>
+                </div>
+                <div class="create-staff__staff-type__right-side">
+                  <div class="mb-20">
+                    <a-radio value="partner">Partner</a-radio>
+                  </div>
+                  <div>
+                    <a-radio value="destination">Destination</a-radio>
+                  </div>
+                </div>
+              </div>
+            </a-radio-group>
+          </div>
+        </div>
+        <div class="d-flex my-30">
+          <div class="create-staff__staff-type__radio-title">
+            User role <span>*</span>
+          </div>
+          <div>
+            <a-radio-group v-model:value="userRole">
+              <div class="create-staff__staff-type__container gap-12">
+                <div class="create-staff__staff-type__left-side">
+                  <div>
+                    <a-radio value="tenant admin">Tenant Admin</a-radio>
+                  </div>
+                  <div class="my-20">
+                    <a-radio value="driver">Driver</a-radio>
+                  </div>
+                  <div>
+                    <a-radio value="driver/ manufacture staff"
+                      >Driver/ Manufacture staff</a-radio
+                    >
+                  </div>
+                </div>
+                <div class="create-staff__staff-type__right-side">
+                  <div class="mb-20">
+                    <a-radio value="admin">Admin</a-radio>
+                  </div>
+                  <div>
+                    <a-radio value="manufacture staff"
+                      >Manufacture staff</a-radio
+                    >
+                  </div>
+                </div>
+              </div>
+            </a-radio-group>
+          </div>
+        </div>
+        <FloatingLabelSelect
+          place-holder="Workplace"
+          label="Workplace"
+          control-name="telephone"
+          :options="options"
+          v-model:value="formState.workplaces"
+        ></FloatingLabelSelect>
       </a-form>
-      <div class="d-flex justify-center align-center gap-20 mt-10 mb-30">
+      <div class="d-flex justify-center align-center gap-20 mt-10">
         <a-button
           class="create-staff__btn-style create-staff__cancel-btn"
           type="secondary"
@@ -46,11 +151,18 @@
 <script setup lang="ts">
 //#region import
 import FloatingLabelInput from "@/modules/base/components/FloatingLabelInput.vue";
+import FloatingLabelSelect from "@/modules/base/components/FloatingLabelMultipleSelect.vue";
 import { reactive, ref } from "vue";
 
 interface FormState {
-  username: string;
+  employeeCode: string;
+  name: string;
+  nameKana: string;
+  email: string;
+  telephone: string;
+  workplaces: string[];
 }
+
 //#endregion
 
 //#region props
@@ -60,8 +172,37 @@ interface FormState {
 const isValidated = ref<boolean>(false);
 const isLoading = ref<boolean>(false);
 const formState = reactive<FormState>({
-  username: "Nghia"
+  employeeCode: "",
+  name: "",
+  nameKana: "",
+  email: "",
+  telephone: "",
+  workplaces: []
 });
+const staffType = ref<string>("tenant");
+const userRole = ref<string>("tenant admin");
+const options = ref([
+  {
+    value: "collectionBase value",
+    label: "Collection Base label",
+    content: "Collection Base content"
+  },
+  {
+    value: "collectionBase1",
+    label: "Collection Base 1",
+    content: "Collection Base 1"
+  },
+  {
+    value: "collectionBase2",
+    label: "Collection Base 2",
+    content: "Collection Base 2"
+  },
+  {
+    value: "collectionBase3",
+    label: "Collection Base 3",
+    content: "Collection Base 3"
+  }
+]);
 //#endregion
 
 //#region hooks
@@ -92,6 +233,7 @@ const formState = reactive<FormState>({
     border-radius: 10px;
     box-shadow: 4px 2px 8px rgba(0, 0, 0, 0.02);
     background-color: $white;
+    overflow-x: hidden;
   }
 
   &__title {
@@ -130,6 +272,33 @@ const formState = reactive<FormState>({
     background-color: $white;
     color: $primary;
     border: 1px solid $primary;
+  }
+
+  &__staff-type {
+    &__container {
+      display: grid;
+      grid-template-areas: "leftSide leftSide leftSide rightSide rightSide rightSide";
+    }
+
+    &__right-side {
+      grid-area: rightSide;
+    }
+
+    &__left-side {
+      grid-area: leftSide;
+    }
+
+    &__radio-title {
+      width: 110px;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 16px;
+      line-height: 20px;
+      color: $neutral-600;
+      span {
+        color: $red-500;
+      }
+    }
   }
 }
 

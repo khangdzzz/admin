@@ -3,7 +3,10 @@
     <component :is="prefix.icon" v-if="prefix"></component>
     <slot></slot>
     <label
-      :class="`floating-label__place-holder${!isFocused ? '' : '__focused'}`"
+      :class="[
+        'floating-label__label-state',
+        `floating-label__place-holder${!isFocused ? '' : '__focused'}`
+      ]"
       >{{ label }} <span class="required" v-if="required">*</span></label
     >
   </div>
@@ -61,12 +64,16 @@ defineProps({
 .floating-label {
   position: relative;
   height: 60px;
-  background-color: #f7f7f7;
-  border: 1px solid #eaeaea;
+  background-color: $neutral-50;
+  border: 1px solid $neutral-100;
   border-radius: 10px;
   padding-left: 12px;
   padding-right: 12px;
   cursor: text;
+
+  &__label-state {
+    transition: all ease 150ms;
+  }
 
   &__place-holder {
     margin: 0;
@@ -78,22 +85,18 @@ defineProps({
     font-weight: 400;
     font-size: 16px;
     line-height: 100%;
-    color: #999999;
+    color: $neutral-400;
     cursor: text;
   }
 
   &__place-holder__focused {
     @extend .floating-label__place-holder;
-    color: #999999;
+    color: $neutral-400;
     font-size: 14px;
     top: 11px;
     height: auto;
     text-align: center;
     transform: translate(0, 0);
-    transition-property: font-size;
-    transition-duration: 200ms;
-    transition-property: top;
-    transition-duration: 200ms;
     cursor: text;
   }
 
