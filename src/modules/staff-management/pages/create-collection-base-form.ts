@@ -4,7 +4,7 @@ import { FormData } from "@/modules/staff-management/models/collection-base.mode
 import { localStorageKeys } from "@/services/local-storage-keys";
 import { Rule } from "ant-design-vue/lib/form";
 
-export const formData = (): FormData => {
+export const  formData = (): FormData => {
   const currentLanguage =
     localStorage.getItem(localStorageKeys.currentLanguage) || "en";
   return {

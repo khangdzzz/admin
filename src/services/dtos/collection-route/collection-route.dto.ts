@@ -9,6 +9,7 @@ export interface CollectionRouteResponseDTO {
   collect_point_ids: number[];
   collect_points: CollectionPointResponseDTO[];
   notice: string;
+  workplace_id: string | number;
 }
 
 export interface CollectionPointResponseDTO {

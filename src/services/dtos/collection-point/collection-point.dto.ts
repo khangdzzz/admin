@@ -26,7 +26,7 @@ export interface CollectionPointResponseDto {
   deleted_by?: number | string | null;
   id: number;
   tenant_id: number;
-  workplace_id: number;
+  workplace_id?: number;
   name: string;
   name_kana: string;
   short_name: string;
@@ -39,8 +39,9 @@ export interface CollectionPointResponseDto {
   telephone: string;
   latitude: number;
   longitude: number;
-  workplace___name: string;
+  workplace___name?: string;
   customer?: string;
+  customer___name: string;
 }
 
 export interface CollectionPointRequestDTO {

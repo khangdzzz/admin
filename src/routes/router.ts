@@ -451,6 +451,44 @@ const routes: RouteRecordRaw[] = [
     }
   },
   {
+    path: "/collection-base-management",
+    name: routeNames.collectionBaseManagement,
+    meta: {
+      layout: ScreenLayout.DEFAULT_LAYOUT
+    },
+    redirect: {
+      name: routeNames.default
+    },
+    children: [
+      {
+        path: "list",
+        name: routeNames.listCollectionBase,
+        component: () =>
+          import("@/modules/staff-management/pages/CollectionBase.vue")
+      },
+      {
+        path: "create-new",
+        name: routeNames.createCollectionBase,
+        component: () =>
+          import("@/modules/staff-management/pages/CreateCollectionBase.vue")
+      },
+      {
+        path: "edit/:id",
+        name: routeNames.editCollectionBase,
+        component: () =>
+          import("@/modules/staff-management/pages/EditCollectionBase.vue")
+      },
+      {
+        path: "detail/:id",
+        name: routeNames.collectionBaseDetail,
+        component: () =>
+          import(
+            "@/modules/staff-management/pages/CollectionBaseDetailPage.vue"
+          )
+      }
+    ]
+  },
+  {
     path: "/collection-route-management",
     name: routeNames.collectionRouteManagement,
     meta: {
@@ -465,7 +503,7 @@ const routes: RouteRecordRaw[] = [
         path: "list",
         component: () =>
           import(
-            "@/modules/collection-route-order/pages/CollectionRouteList.vue"
+            "@/modules/collection-route-management/pages/CollectionRouteList.vue"
           )
       },
       {
@@ -473,7 +511,23 @@ const routes: RouteRecordRaw[] = [
         path: "detail/:id",
         component: () =>
           import(
-            "@/modules/collection-route-order/pages/CollectionRouteDetail.vue"
+            "@/modules/collection-route-management/pages/CollectionRouteDetail.vue"
+          )
+      },
+      {
+        path: "create",
+        name: routeNames.createCollectionRouteOrder,
+        component: () =>
+          import(
+            "@/modules/collection-route-management/pages/CreateCollectionRouteOrder.vue"
+          )
+      },
+      {
+        path: "edit/:id",
+        name: routeNames.editCollectionRouteOrder,
+        component: () =>
+          import(
+            "@/modules/collection-route-management/pages/EditCollectionRouteOrder.vue"
           )
       }
     ]

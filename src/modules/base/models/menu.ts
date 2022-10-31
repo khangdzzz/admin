@@ -192,9 +192,9 @@ const sideMenuItems: SideMenuItems[] = [
       },
       {
         title: "menu_lbl_collection_route_management",
-        pathName: routeNames.collectionRouteManagement,
+        pathName: routeNames.listCollectionRoute,
         qaAttr: "qa_menu_collection_route_management",
-        requireUserType: []
+        requireUserType: [UserType.TenantAdmin]
       },
       {
         title: "menu_lbl_delivery_management",

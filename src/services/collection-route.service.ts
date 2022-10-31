@@ -1,11 +1,18 @@
-import { CollectionRoute } from "@/modules/collection-route-order/models/collection-route.model";
 import { calculateSortQuery } from "@/modules/common/helpers";
-import { Pagination } from "@/modules/common/models";
+import {
+  CollectionRoute,
+  CreateCollectionRouteModel,
+  CreateCollectionRouteResponseDto
+} from "@/modules/collection-route-management/models/collection-route.model";
+import { Pagination, ServiceResponse } from "@/modules/common/models";
 import { Sort } from "@/modules/common/models/sort.enum";
 import { transformRequest } from "./base.service";
 import { DEFAULT_SORT_ORDER } from "./constants";
 import { CollectionRouteResponseDTO } from "./dtos/collection-route/collection-route.dto";
 import { PaginationDto } from "./dtos/common/pagination.dto";
+import { CollectionBaseResponseDto } from "./dtos/collection-base/collection-base.dto";
+import { CollectionPointResponseDto } from "./dtos/collection-point/collection-point.dto";
+import { AxiosError } from "axios";
 
 interface SortCollectionRouteDto {
   sortName: Sort;
@@ -95,7 +102,8 @@ export async function getListCollectionRoutes(
         name,
         numberOfStore: number_collect_points,
         navigationId: navigation_id,
-        notice
+        notice,
+        
       };
     })
   };
@@ -130,7 +138,8 @@ export async function getCollectionRouteById(
     number_collect_points,
     navigation_id,
     notice,
-    collect_points
+    collect_points,
+    workplace_id
   } = res;
 
   return {
@@ -142,6 +151,78 @@ export async function getCollectionRouteById(
     numberOfStore: number_collect_points,
     navigationId: navigation_id,
     notice,
-    listCollectionPoint: collect_points
+    listCollectionPoint: collect_points,
+    workplaceId: workplace_id
+  };
+}
+export async function getWorkplace(): Promise<
+  CollectionBaseResponseDto[] | undefined
+> {
+  const [err, res] = await transformRequest<
+    PaginationDto<CollectionBaseResponseDto>
+  >({
+    url: `/workplace/options?workplace_type_in=3,2`,
+    method: "get"
+  });
+  if (err) return undefined;
+  return res.results;
+}
+
+export async function getCollectionPoint(): Promise<
+  CollectionPointResponseDto[] | undefined
+> {
+  const [err, res] = await transformRequest<
+    PaginationDto<CollectionPointResponseDto>
+  >({
+    url: `/collect_point`,
+    method: "get"
+  });
+  if (err) return undefined;
+  return res.results;
+}
+export async function createCollectionRoute(
+  data: CreateCollectionRouteModel
+): Promise<ServiceResponse<boolean>> {
+  const [error, res] = await transformRequest<CreateCollectionRouteResponseDto>(
+    {
+      url: "/collect_order",
+      method: "POST",
+      data
+    }
+  );
+  if (error || !res) {
+    return {
+      error: (error?.response?.data as { details: { msg: string }[] })
+        .details[0].msg
+    };
+  }
+  return {
+    res: true
+  };
+}
+
+export async function editCollectionRoute(
+  id: number,
+  data: CreateCollectionRouteModel
+): Promise<
+  | [AxiosError<unknown, unknown>, null]
+  | [null, CreateCollectionRouteResponseDto]
+  | any
+> {
+  const [error, res] = await transformRequest<CreateCollectionRouteResponseDto>(
+    {
+      url: `/collect_order/${id}`,
+      method: "PUT",
+      data
+    }
+  );
+  if (error || !res) {
+    return {
+      error: (error?.response?.data as { details: { msg: string }[] })
+        .details[0].msg
+    };
+  }
+  return {
+    res
   };
 }
