@@ -381,7 +381,9 @@ watch(
       dynamicValidateForm.formData[1].value &&
       handleValidateFields(dynamicValidateForm.formData[2].value, 50, true) &&
       handleValidateFields(dynamicValidateForm.formData[3].value, 50, true) &&
-      handleValidateFields(dynamicValidateForm.formData[4].value, 10, false)
+      (dynamicValidateForm.formData[4].value
+        ? regex.test(dynamicValidateForm.formData[4].value)
+        : true)
     ) {
       isValidated.value = true;
     } else {
@@ -429,7 +431,7 @@ watch(
 
   .check-permision {
     width: 100%;
-    margin-top: 6px;
+    margin-top: 11px;
 
     h3 {
       font-weight: 600;
@@ -465,6 +467,7 @@ watch(
           .ant-form-item-explain {
             .ant-form-item-explain-error {
               line-height: 14.06px;
+              margin-bottom: 5px;
             }
           }
           .ant-form-item-control-input {

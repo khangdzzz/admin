@@ -113,10 +113,10 @@
   "vehicle_edit": "車両編集",
   "vehicle_industrial_waste": "産業廃棄物収集運搬業許可",
   "vehicle_permission": "許可",
-  "vehicle_owner_type": "利用先",
+  "vehicle_owner_type": "タイプ",
   "collection_base": "回収拠点",
   "partner": "パートナー",
-  "owner": "所属",
+  "owner": "職場",
   "owner_type": "利用先",
   "btn_cancel": "キャンセル",
   "btn_submit": "登録",
@@ -272,6 +272,6 @@
   "last_login_time": "最終ログイン日時",
   "staff_detail": "ユーザー詳細",
   "enable_account": "Enable Account",
-  "yes": "はい",
-  "no": "いいえ"
+  "yes": "Yes",
+  "no": "No"
 }

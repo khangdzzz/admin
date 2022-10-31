@@ -178,7 +178,7 @@ export async function getVehicleDetail(
     id,
     name,
     workplace___name,
-    vehicle_type_id,
+    vehicle_type___name,
     workplace___workplace_type,
     plate_number,
     permission_flag,
@@ -186,7 +186,7 @@ export async function getVehicleDetail(
   } = res;
   const detail = {
     ownerName: workplace___name,
-    vehicleType: vehicle_type_id,
+    vehicleType: vehicle_type___name,
     vehicleName: name,
     vehiclePlate: plate_number,
     maxWeight: max_capacity,
