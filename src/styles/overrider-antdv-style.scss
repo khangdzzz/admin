@@ -312,6 +312,11 @@
   .ant-radio-disabled+span {
     color: $text-1;
   }
+  .ant-radio-checked{
+    .ant-radio-inner{
+      border-color: $primary !important;
+    }
+  }
 
   .ant-radio {
     font-size: 0px;
@@ -319,6 +324,7 @@
     .ant-radio-inner {
       width: 24px;
       height: 24px;
+      border-color: $neutral-200;
 
       &::after {
         width: 24px;
