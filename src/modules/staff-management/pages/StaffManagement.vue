@@ -372,13 +372,13 @@ const customRow = (
 ): { onClick: (_event: PointerEvent) => void } => {
   return {
     onClick: (_event: PointerEvent): void => {
-      console.log("staff Detail: ", record.id);
-      // router.push({
-      //   name: routeNames.staffDetail,
-      //   params: {
-      //     id: record.id
-      //   }
-      // });
+      _event.stopPropagation();
+      router.push({
+        name: routeNames.staffDetail,
+        params: {
+          id: record.id
+        }
+      });
     }
   };
 };

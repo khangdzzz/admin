@@ -3,5 +3,6 @@ export const localStorageKeys = {
   currentLanguage: "CURRENT_LANGUAGE",
   refreshToken: "_REFRESH_TOKEN_",
   userType: "USER_TYPE_KEY",
-  userName: "USER_NAME_KEY"
+  userName: "USER_NAME_KEY",
+  userInfo: "USER_INFO_KEY"
 };
