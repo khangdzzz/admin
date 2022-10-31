@@ -56,7 +56,9 @@
           </a-col>
           <a-col :span="5" class="mr-2">
             <a-checkbox v-model:checked="checkPermission" :disabled="isLoading">
-              {{ $t("vehicle_permission") }}
+              <span class="check-permision__label">{{
+                $t("vehicle_permission")
+              }}</span>
             </a-checkbox>
           </a-col>
         </a-row>
@@ -423,12 +425,15 @@ watch(
 
   .check-permision {
     width: 100%;
-    margin-top: 6px;
+    margin-top: 11px;
     h3 {
       font-weight: 600;
       font-size: 16px;
       line-height: 20px;
       margin: 0;
+      color: $neutral-600;
+    }
+    &__label {
       color: $neutral-600;
     }
   }
@@ -455,6 +460,7 @@ watch(
           .ant-form-item-explain {
             .ant-form-item-explain-error {
               line-height: 14.06px;
+              margin-bottom: 5px;
             }
           }
           .ant-form-item-control-input {
