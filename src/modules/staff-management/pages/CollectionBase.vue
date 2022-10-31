@@ -342,7 +342,7 @@ const totalPages = (): number => {
 const deleteCollectionBase = (e: MouseEvent, id?: number): void => {
   if (e && e.stopPropagation) e.stopPropagation();
   messenger({
-    title: "common_confirm",
+    title: "popup_msg_confirm_delete",
     message: "",
     type: MessengerType.Confirm,
     buttonOkTitle: "btn_delete",
