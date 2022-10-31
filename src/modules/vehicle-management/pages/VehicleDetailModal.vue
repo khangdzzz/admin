@@ -70,6 +70,7 @@ import QRCode from "qrcode";
 import { onMounted, PropType, reactive, ref, toRefs } from "vue";
 import { Vehicle } from "../models/vehicle.model";
 import { Base64 } from "js-base64";
+import { NULL_VALUE_DISPLAY } from "@/utils/constants";
 
 interface Information {
   title: string;
@@ -106,28 +107,28 @@ const WorkPlaceTypeEnum = ref<string[]>([
 const form = reactive<{ information: Information[] }>({
   information: [
     {
-      title: i18n.global.t("owner_type"),
+      title: i18n.global.t("vehicle_owner_type"),
       value: WorkPlaceTypeEnum.value[currentVehicle.ownerType - 1]
     },
     {
       title: i18n.global.t("owner"),
-      value: currentVehicle.ownerName ?? '---'
+      value: currentVehicle.ownerName ?? NULL_VALUE_DISPLAY
     },
     {
       title: i18n.global.t("vehicle_type"),
-      value: currentVehicle.vehicleType ?? '---'
+      value: currentVehicle.vehicleType ?? NULL_VALUE_DISPLAY
     },
     {
       title: i18n.global.t("vehicle_name"),
-      value: currentVehicle.vehicleName ?? '---'
+      value: currentVehicle.vehicleName ?? NULL_VALUE_DISPLAY
     },
     {
       title: i18n.global.t("number_plate"),
-      value: currentVehicle.vehiclePlate ?? '---'
+      value: currentVehicle.vehiclePlate ?? NULL_VALUE_DISPLAY
     },
     {
       title: i18n.global.t("vehicle_max_loading_weight"),
-      value: currentVehicle.maxWeight ?? '---'
+      value: currentVehicle.maxWeight ?? NULL_VALUE_DISPLAY
     },
 
     {
