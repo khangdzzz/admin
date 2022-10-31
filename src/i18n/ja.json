@@ -35,7 +35,7 @@
   "forgot_password_msg_err_email_invalid": "メールアドレスを正しくご入力ください。",
   "forgot_password_msg_err_password_invalid": "パスワードは6〜32文字でご入力ください。スペースは使用できません。",
   "forgot_password_msg_err_password_not_match": "新しいパスワードと新しいパスワード(再入力)が一致していません。",
-  "forgot_password_msg_err_code_invalid": "確認コードを6数字でご入力ください。",
+  "forgot_password_msg_err_code_invalid": "確認コードの桁数を間違っています。",
   "vehicle": "車両",
   "number_plate": "ナンバープレート",
   "edit_container_type": "風袋種別の編集",
@@ -185,7 +185,7 @@
   "both": "収集・生産",
   "next_btn": "次へ",
   "previous_btn": "前へ",
-  "popup_msg_confirm_delete": "削除しますか？",
+  "popup_msg_confirm_delete": "削除します。よろしいでしょうか？",
   "popup_delete_fail_lbl_title": "削除に失敗しました",
   "error_unique_constraint": "{fieldName}は既に存在しています。",
   "popup_create_fail_title": "作成に失敗しました",
@@ -261,5 +261,7 @@
   "staff_workplace": "参照先",
   "last_login_time": "最終ログイン日時",
   "staff_detail": "ユーザー詳細",
-  "enable_account": "Enable Account"
+  "enable_account": "Enable Account",
+  "yes": "はい",
+  "no": "いいえ"
 }
