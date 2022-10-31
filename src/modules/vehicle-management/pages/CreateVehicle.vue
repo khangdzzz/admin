@@ -348,7 +348,7 @@ const onCreate = async (): Promise<void> => {
 
   if (res) {
     messenger({
-      title: "vehicle_create_success",
+      title: "common_msg_create_successfully",
       message: "",
       type: MessengerType.Success
     });
@@ -496,13 +496,18 @@ watch(
       text-align: left;
       padding-right: 10px;
       color: $neutral-600;
-
       span {
         font-weight: 400;
         font-size: 14px;
         line-height: 100%;
         color: $red-1;
       }
+    }
+  }
+
+  .ant-radio-checked {
+    .ant-radio-inner {
+      border-color: $primary !important;
     }
   }
 

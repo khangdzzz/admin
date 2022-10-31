@@ -1,3 +1,5 @@
+import { UserRoleOptions } from "./create-new-staff.model";
+
 export interface Staff {
   key?: number;
   id?: number;
@@ -7,4 +9,32 @@ export interface Staff {
   userRole: string;
   tenant: string;
   collectionBase: string;
+  workplace?: string;
+  lastLoggedIn?: string;
+  isDisabled: boolean;
+}
+
+export interface StaffDto {
+  employee_code: string;
+  name: string;
+  email: string;
+  telephone: string;
+  user_role: UserRoleOptions | undefined;
+  user_type?: number;
+  workplace_ids: string | string[] | undefined;
+  belongs: number;
+  password: string;
+}
+
+export interface workPlace {
+  id: number;
+  name: string;
+  tenantId?: number;
+  workPlaceType?: number;
+}
+export interface workPlaceDTO {
+  id: number;
+  name: string;
+  tenant_id?: number;
+  workplace_type?: number;
 }

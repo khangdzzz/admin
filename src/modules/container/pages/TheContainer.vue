@@ -384,7 +384,7 @@ const onDeleteContainer = async (deleteIds: number[]): Promise<void> => {
     return;
   }
   messenger({
-    title: "delete_container_msg_delete_successfully",
+    title: "common_msg_delete_successfully",
     message: "",
     type: MessengerType.Success,
     callback: (isConfirm: boolean): void => {

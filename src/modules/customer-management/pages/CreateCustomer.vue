@@ -139,7 +139,7 @@ const handleClickSubmit = async (): Promise<void> => {
   isSubmitting.value = false;
   if (!error && res) {
     messenger({
-      title: "customer_created_successfully",
+      title: "common_msg_create_successfully",
       message: "",
       type: MessengerType.Success,
       callback: (isConfirm: boolean) => {
@@ -167,7 +167,7 @@ const isNotValidToSubmit = computed(() => {
     singleInput[3].value.toString().length && isNaN(+singleInput[3].value);
   const isNotValidPhoneNumber =
     (singleInput[5].value.toString().length &&
-      !/^[+][0-9]{6,15}$/.test(singleInput[5].value.toString())) ||
+      !/^[+][0-9]{5,14}$/.test(singleInput[5].value.toString())) ||
     singleInput[5].value.toString().length > 15;
   const isNotValidEmail =
     singleInput[6].value.toString().length &&

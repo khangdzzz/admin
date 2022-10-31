@@ -9,36 +9,58 @@ import {
   CognitoRefreshToken
 } from "amazon-cognito-identity-js";
 import { service } from ".";
+import { transformRequest } from "./base.service";
 import UserInfomationDto from "./dtos/auth/user-information.dto";
 import { localStorageKeys } from "./local-storage-keys";
-import * as mockGetMe from "./mocks/auth/get-me.response.json";
+const userRoles = [
+  UserType.SystemAdmin,
+  UserType.TenantAdmin,
+  UserType.CollectionBaseAdmin,
+  UserType.Dischanger,
+  UserType.DashboardUser,
+  UserType.Consignee,
+  UserType.Driver,
+  UserType.ManufacturingStaff,
+  UserType.DriverManufacturingStaff
+];
 
 export async function getCurrentUserInformation(): Promise<
   UserInfo | undefined
 > {
-  // const [error, res] = await transformRequest<UserInfomationDto>({
-  //   url: "auth/me",
-  //   method: "post"
-  // });
-  // if (error || !res) {
-  //   return undefined;
-  // }
-  const res: UserInfomationDto = mockGetMe;
-  const mockRole: UserType = (localStorage.getItem(localStorageKeys.userType) ||
-    UserType.TenantAdmin) as UserType;
-  const { id, email, full_name: fullName, tenant_id: tenantId } = res;
+  try {
+    const [error, res] = await transformRequest<UserInfomationDto>({
+      url: "user/me",
+      method: "get"
+    });
+    if (error || !res) {
+      const userInfoString = localStorage.getItem(localStorageKeys.userInfo);
+      if (userInfoString) {
+        return JSON.parse(userInfoString) as UserInfo;
+      }
+      return undefined;
+    }
+    const { id, email, name: fullName, tenant_id: tenantId, user_role } = res;
 
-  const userInfo = {
-    id,
-    email,
-    fullName,
-    tenantId,
-    userType: mockRole
-  };
+    const userInfo = {
+      id,
+      email,
+      fullName,
+      tenantId,
+      userType: userRoles[user_role - 1]
+    };
 
-  const userStore = commonStore();
-  userStore.user = userInfo;
-  return userInfo;
+    const userStore = commonStore();
+    userStore.user = userInfo;
+    localStorage.setItem(localStorageKeys.userName, email);
+    localStorage.setItem(localStorageKeys.userInfo, JSON.stringify(userInfo));
+    return userInfo;
+  } catch (error) {
+    const userInfoString = localStorage.getItem(localStorageKeys.userInfo);
+    if (userInfoString) {
+      return JSON.parse(userInfoString) as UserInfo;
+    }
+    return undefined;
+  }
 }
 
 export function logout(): void {
@@ -56,8 +78,7 @@ export function refreshToken(): void {
   const refreshToken = service.localStorage.getItem(
     localStorageKeys.refreshToken
   ) as string;
-  const userStore = commonStore();
-  const userEmail = userStore.user?.email as string;
+  const userEmail = localStorage.getItem(localStorageKeys.userName);
   const poolData = {
     UserPoolId: import.meta.env.VITE_COGNITO_USER_POOL_ID,
     ClientId: import.meta.env.VITE_COGNITO_CLIENT_ID
@@ -65,7 +86,7 @@ export function refreshToken(): void {
   const userPool = new CognitoUserPool(poolData);
 
   const cognitoUser = new CognitoUser({
-    Username: userEmail,
+    Username: userEmail || "",
     Pool: userPool
   });
 

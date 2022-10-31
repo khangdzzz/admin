@@ -11,7 +11,7 @@ export function loginGuard(
   if (service.localStorage.getAccessToken()) {
     let nextRoute = routeNames.collectionBusiness;
     const userRole: UserType = (service.localStorage.getItem("USER_TYPE_KEY") ||
-      UserType.DischargerCustomer) as UserType;
+      UserType.DashboardUser) as UserType;
     switch (userRole) {
       case UserType.TenantAdmin:
         nextRoute = routeNames.internalDashboard;

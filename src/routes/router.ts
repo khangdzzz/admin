@@ -12,6 +12,14 @@ const routes: RouteRecordRaw[] = [
     }
   },
   {
+    path: "/demo",
+    name: routeNames.demo,
+    component: () => import("@/modules/common/pages/DemoPage.vue"),
+    meta: {
+      layout: ScreenLayout.AUTH_LAYOUT
+    }
+  },
+  {
     path: "/login",
     name: routeNames.login,
     component: () => import("@/modules/auth/pages/LoginPage.vue"),
@@ -210,6 +218,12 @@ const routes: RouteRecordRaw[] = [
         name: routeNames.createNewStaff,
         component: () =>
           import("@/modules/staff-management/pages/CreateNewStaff.vue")
+      },
+      {
+        path: "detail/:id",
+        name: routeNames.staffDetail,
+        component: () =>
+          import("@/modules/staff-management/pages/StaffDetailPage.vue")
       }
     ]
   },
@@ -481,7 +495,7 @@ const routes: RouteRecordRaw[] = [
       layout: ScreenLayout.DEFAULT_LAYOUT
     },
     redirect: {
-      name: routeNames.default
+      name: routeNames.listCollectionRoute
     },
     children: [
       {

@@ -212,7 +212,7 @@ const formData = reactive<FormData>({
           trigger: "change"
         },
         {
-          pattern: /^[+][0-9]{6,15}$/,
+          pattern: /^[+][0-9]{5,14}$/,
           message: i18n.global.t("invalid_field_name", {
             fieldName: i18n.global.t("collection_phone_number").toLowerCase()
           }),
@@ -394,7 +394,7 @@ const handleClickSave = async (): Promise<void> => {
 
   if (!error) {
     messenger({
-      title: "edit_customer_successfully",
+      title: "common_msg_edit_successfully",
       message: "",
       type: MessengerType.Success,
       callback: (isConfirm: boolean) => {

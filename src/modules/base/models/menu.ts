@@ -27,9 +27,9 @@ const sideMenuItems: SideMenuItems[] = [
     requireUserType: [
       UserType.TenantAdmin,
       UserType.CollectionBaseAdmin,
-      UserType.PartnerAdmin,
+      UserType.Consignee,
       UserType.SystemAdmin,
-      UserType.DischargerCustomer
+      UserType.Dischanger
     ],
     items: [
       {
@@ -55,7 +55,7 @@ const sideMenuItems: SideMenuItems[] = [
     requireUserType: [
       UserType.TenantAdmin,
       UserType.CollectionBaseAdmin,
-      UserType.PartnerAdmin
+      UserType.Consignee
     ],
     items: [
       {
@@ -97,7 +97,7 @@ const sideMenuItems: SideMenuItems[] = [
     requireUserType: [
       UserType.TenantAdmin,
       UserType.CollectionBaseAdmin,
-      UserType.PartnerAdmin
+      UserType.Consignee
     ],
     items: [
       {
@@ -257,9 +257,9 @@ const sideMenuItems: SideMenuItems[] = [
     requireUserType: [
       UserType.TenantAdmin,
       UserType.CollectionBaseAdmin,
-      UserType.PartnerAdmin,
+      UserType.Consignee,
       UserType.SystemAdmin,
-      UserType.DischargerCustomer
+      UserType.Dischanger
     ],
     items: [
       {

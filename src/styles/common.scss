@@ -24,6 +24,9 @@
 
 .header-title {
   font-size: 14px;
+  line-height: 18px;
+  font-weight: 700;
+  color: $neutral-400;
 }
 
 .btn-delete {
@@ -42,6 +45,9 @@
   color: $primary;
   .btn-icon {
     margin-right: 10px;
+  }
+  &:hover{
+    background-color: $white;
   }
 }
 .btn-add-new {

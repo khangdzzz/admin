@@ -305,7 +305,7 @@ const handleSubmit = async (): Promise<void> => {
 
   if (res && !error) {
     messenger({
-      title: "collection_point_created_successfully",
+      title: "common_msg_create_successfully",
       message: "",
       type: MessengerType.Success,
       callback: (isConfirm: boolean) => {
@@ -350,7 +350,7 @@ const getLatLongFromAddress = async (address: string): Promise<void> => {
   const { error, res } = await service.location.getLatLongFromAddress(address);
 
   if (!error && res && res.length > 0) {
-    geoLocations.value.push([+res[0].lon, +res[0].lat]);
+    geoLocations.value = [[+res[0].lon, +res[0].lat]];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (view?.value as any)?.fit(
       [+res[0].lon, +res[0].lat, +res[0].lon, +res[0].lat],
@@ -450,7 +450,7 @@ const isAllowSubmit = computed(() => {
     !data[6].value ||
     (data[6].value &&
       checkMaxLength(data[6].value.toString(), 15) &&
-      /^[+][0-9]{6,15}$/.test(data[6].value.toString()));
+      /^[+][0-9]{5,14}$/.test(data[6].value.toString()));
   const isValidName =
     checkMaxLength(data[1].value.toString(), 50) && data[1].value;
   const isValidShortName =
@@ -479,7 +479,6 @@ const isAllowSubmit = computed(() => {
 watch(
   [isPostalCodeHasError, (): string | number | boolean => data[5].value],
   () => {
-    console.log("data", data[5].value);
     createCollectionPointRef.value.validate();
   }
 );

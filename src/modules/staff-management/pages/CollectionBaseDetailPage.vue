@@ -49,21 +49,16 @@
             <div class="collection-base-detail__form-wrapper__title">
               {{ $t(item.key) }}
             </div>
-            <a-tooltip placement="top">
-              <template #title>
-                <span>{{ item.value }}</span>
-              </template>
-              <div class="collection-base-detail__form-wrapper__value">
-                {{ item.value }}
-              </div>
-            </a-tooltip>
+            <div class="collection-base-detail__form-wrapper__value">
+              {{ item.value || NULL_VALUE_DISPLAY }}
+            </div>
 
             <a-divider style="border-color: #e8e8e8; margin: 10px 0" />
           </div>
         </div>
         <div class="collection-base-detail__map-wrapper">
           <ol-map
-            v-if="geoLocations.length"
+            v-if="!isLoading"
             :loadTilesWhileAnimating="true"
             :loadTilesWhileInteracting="true"
             ref="map"
@@ -122,7 +117,8 @@
             class="collection-base-detail__map-wrapper__position-detail"
             v-if="geoLocations.length && !isLoading"
           >
-            {{ geoLocations[0][0] }}, {{ geoLocations[0][1] }}
+            {{ geoLocations.length ? geoLocations[0][0] : NULL_VALUE_DISPLAY }},
+            {{ geoLocations.length ? geoLocations[0][1] : NULL_VALUE_DISPLAY }}
             <img
               src="@/assets/icons/ic_btn_copy.svg"
               @click="copyLocationToClipboard"
@@ -154,6 +150,7 @@ import { service } from "@/services";
 import IcTrash from "@/assets/icons/IcTrash.vue";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
+import { NULL_VALUE_DISPLAY } from "@/utils/constants";
 //#region import
 //#endregion
 
@@ -291,7 +288,7 @@ const onDeleteCollectionBase = async (deleteId: number): Promise<void> => {
     return;
   }
   messenger({
-    title: "collection_base_msg_delete_successfully",
+    title: "common_msg_delete_successfully",
     message: "",
     type: MessengerType.Success,
     callback: (isConfirm: boolean): void => {

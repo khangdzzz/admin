@@ -35,7 +35,7 @@ export interface CollectionRoute {
   navigationId?: string;
   notice?: string;
   listCollectionPoint?: any[];
-  workplaceId: string | number;
+  workplaceId?: string | number;
 }
 export interface CreateCollectionRouteResponseDto {
   created_at: string;

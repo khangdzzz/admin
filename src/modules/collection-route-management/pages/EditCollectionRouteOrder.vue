@@ -325,10 +325,8 @@ const handleClickCancel = (): void => {
   router.push({ name: routeNames.listCollectionRoute });
 };
 const converListIdToString = (listId: number[]): string => {
-  let str1 = listId.toString().replace(/,/g, ", ");
-  let str2 = str1.slice(0, -1) + "]";
-  let str3 = "[" + str2.slice();
-  return str3;
+  let str = listId.toString().replace(/,/g, ", ");
+  return str;
 };
 const handleClickSubmit = async (): Promise<void> => {
   const listStringId = converListIdToString(getListIdSelectedCP.value);
@@ -345,7 +343,7 @@ const handleClickSubmit = async (): Promise<void> => {
   );
   if (!error && res) {
     messenger({
-      title: "edited_successfully",
+      title: "common_msg_edit_successfully",
       message: "",
       type: MessengerType.Success,
       callback: (isConfirm: boolean) => {
@@ -358,7 +356,7 @@ const handleClickSubmit = async (): Promise<void> => {
     });
   } else {
     messenger({
-      title: "edit_failed",
+      title: "popup_edit_fail_title",
       message: "",
       type: MessengerType.Error
     });

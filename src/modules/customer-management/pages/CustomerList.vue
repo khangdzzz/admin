@@ -94,9 +94,12 @@
                 @click="(event: MouseEvent) => handleClickEdit(event, record.key)"
               />
             </a>
-            <a @click="(event) => deleteCustomer(event, record.id)">
-              <img src="@/assets/icons/ic_btn_delete.svg" class="action-icon"
-            /></a>
+
+            <img
+              @click="(event) => deleteCustomer(event, record.id)"
+              src="@/assets/icons/ic_btn_delete.svg"
+              class="action-icon"
+            />
           </template>
           <template v-if="column.key === 'name'">
             <a-tooltip
@@ -139,6 +142,7 @@
 <script setup lang="ts">
 //#region import
 import IcTrash from "@/assets/icons/IcTrash.vue";
+import { i18n } from "@/i18n";
 import ListSearchHeader from "@/modules/base/components/ListSearchHeader.vue";
 import NoData from "@/modules/base/components/NoData.vue";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
@@ -350,7 +354,12 @@ const onDeleteCustomer = async (deleteIds: number[]): Promise<void> => {
     return;
   }
   messenger({
-    title: "customer_delete_successfully",
+    title:
+      deleteIds.length > 1
+        ? i18n.global.t("common_msg_delete_multiple_successfully", {
+            number: deleteIds.length
+          })
+        : "common_msg_delete_successfully",
     message: "",
     type: MessengerType.Success,
     callback: (isConfirm: boolean): void => {

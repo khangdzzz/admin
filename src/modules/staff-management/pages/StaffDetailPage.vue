@@ -2,17 +2,31 @@
   <a-spin
     :spinning="isLoading"
     :tip="$t('common_loading')"
-    class="customer-detail__spin"
+    class="staff-detail__spin"
   >
-    <div class="d-flex flex-column customer-detail">
+    <div class="d-flex flex-column staff-detail">
       <ListSearchHeader
-        :title="$t('customer_detail')"
+        :title="$t('staff_detail')"
         :enable-search="false"
         :enable-back="true"
         @goBack="handleClickGoBack"
       >
         <template #action>
-          <a-button class="btn-action" type="primary" @click="editCustomer">
+          <div
+            :class="[
+              'staff-detail__enable-account-btn d-flex align-center gap-15 mr-15',
+              isAccountEnable
+                ? 'staff-detail__enable-account-btn__enable'
+                : 'staff-detail__enable-account-btn__disable'
+            ]"
+          >
+            {{ $t("enable_account") }}
+            <a-switch
+              v-model:checked="isAccountEnable"
+              class="temporarily-disable"
+            ></a-switch>
+          </div>
+          <a-button class="btn-action" type="primary">
             <template #icon>
               <img src="@/assets/icons/ic_btn_edit.svg" class="btn-icon" />
             </template>
@@ -31,29 +45,16 @@
           </a-button>
         </template>
       </ListSearchHeader>
-      <div class="customer-detail__infor-wrapper p-20 mx-30">
+      <div class="staff-detail__infor-wrapper p-20 mx-30">
         <div
-          v-for="(item, index) in customerDetails"
+          v-for="(item, index) in staffDetails"
           :key="index + item.key"
-          class="customer-detail__outter-item-wrapper mb-15"
+          class="staff-detail__outter-item-wrapper mb-15"
         >
-          <div
-            v-if="item.key !== 'pair'"
-            class="customer-detail__item-wrapper pb-10"
-          >
-            <div class="customer-detail__label mb-8">{{ $t(item.key) }}</div>
-            <div class="customer-detail__value">{{ item.value }}</div>
-          </div>
-          <div class="d-flex gap-20" v-else>
-            <div
-              v-for="(pairItem, index) in item.value"
-              :key="index + pairItem.key"
-              class="customer-detail__item-wrapper fill-width pb-10"
-            >
-              <div class="customer-detail__label mb-8">
-                {{ $t(pairItem.key) }}
-              </div>
-              <div class="customer-detail__value">{{ pairItem.value }}</div>
+          <div class="staff-detail__item-wrapper pb-10">
+            <div class="staff-detail__label mb-8">{{ $t(item.key) }}</div>
+            <div class="staff-detail__value">
+              {{ displayItemValue(item.key, item.value) }}
             </div>
           </div>
         </div>
@@ -73,6 +74,7 @@ import IcTrash from "@/assets/icons/IcTrash.vue";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import { NULL_VALUE_DISPLAY } from "@/utils/constants";
+import { i18n } from "@/i18n";
 //#endregion
 
 //#region props
@@ -80,10 +82,12 @@ import { NULL_VALUE_DISPLAY } from "@/utils/constants";
 
 //#region variables
 const isLoading = ref<boolean>(false);
-const customerDetails = ref();
+const staffDetails = ref();
 const messenger: (param: MessengerParamModel) => void =
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   inject("messenger")!;
+const staffId = router.currentRoute.value.params.id;
+const isAccountEnable = ref<boolean>(false);
 //#endregion
 
 //#region hooks
@@ -94,55 +98,44 @@ onMounted(async () => {
 
 //#region function
 const initialize = async (): Promise<void> => {
-  const customerId = router.currentRoute.value.params.id;
   isLoading.value = true;
-  const { error, res } = await service.customer.getCustomerDetail(+customerId);
+  const { error, res } = await service.staff.getStaffDetail(+staffId);
   isLoading.value = false;
 
   if (!error && res) {
     const {
       name,
-      short_name,
       name_kana,
-      postal_code,
-      address,
-      mail,
-      representative,
-      external_code,
-      telephone
+      email,
+      telephone,
+      user_role,
+      employee_code,
+      last_logged_in,
+      belongs,
+      is_disable
     } = res;
 
-    customerDetails.value = [
+    staffDetails.value = [
       { key: "name", value: name || NULL_VALUE_DISPLAY },
-      { key: "short_name", value: short_name || NULL_VALUE_DISPLAY },
       { key: "name_kana", value: name_kana || NULL_VALUE_DISPLAY },
-      { key: "postal_code", value: postal_code || NULL_VALUE_DISPLAY },
-      { key: "address", value: address || NULL_VALUE_DISPLAY },
-      { key: "phone_number", value: telephone || NULL_VALUE_DISPLAY },
-      { key: "collection_email", value: mail || NULL_VALUE_DISPLAY },
-      {
-        key: "pair",
-        value: [
-          {
-            key: "representative",
-            value: representative || NULL_VALUE_DISPLAY
-          },
-          {
-            key: "external_code",
-            value: external_code || NULL_VALUE_DISPLAY
-          }
-        ]
-      }
+      { key: "employee_code", value: employee_code || NULL_VALUE_DISPLAY },
+      { key: "email", value: email || NULL_VALUE_DISPLAY },
+      { key: "telephone", value: telephone || NULL_VALUE_DISPLAY },
+      { key: "type", value: belongs || NULL_VALUE_DISPLAY },
+      { key: "user_role", value: user_role || NULL_VALUE_DISPLAY },
+      { key: "staff_workplace", value: NULL_VALUE_DISPLAY },
+      { key: "last_login_time", value: last_logged_in || NULL_VALUE_DISPLAY }
     ];
+    isAccountEnable.value = is_disable;
   }
 };
 
 const handleClickGoBack = (): void => {
-  router.push({ name: routeNames.customerList });
+  router.push({ name: routeNames.staffManagement });
 };
 
 const handleClickDelete = (): void => {
-  if (!router.currentRoute.value.params?.id) return;
+  if (!staffId) return;
 
   messenger({
     title: "popup_msg_confirm_delete",
@@ -153,14 +146,14 @@ const handleClickDelete = (): void => {
       if (!isConfirm) {
         return;
       }
-      deleteCustomer(+router.currentRoute.value.params?.id);
+      deleteStaff(+staffId);
     }
   });
 };
 
-const deleteCustomer = async (id: number): Promise<void> => {
+const deleteStaff = async (id: number): Promise<void> => {
   isLoading.value = true;
-  const isSuccess = await service.customer.deleteCustomerById([id]);
+  const isSuccess = await service.staff.deleteStaffByIds([id]);
   isLoading.value = false;
   if (!isSuccess) {
     messenger({
@@ -178,15 +171,11 @@ const deleteCustomer = async (id: number): Promise<void> => {
       isConfirm;
     }
   });
-  router.push({ name: routeNames.customerList });
+  router.push({ name: routeNames.staffManagement });
 };
 
-const editCustomer = async (): Promise<void> => {
-  const customerId = router.currentRoute.value.params.id;
-  await router.push({
-    name: routeNames.editCustomer,
-    params: { id: customerId }
-  });
+const displayItemValue = (key: string, value: string): string => {
+  return key === "user_role" || key === "type" ? i18n.global.t(value) : value;
 };
 //#endregion
 
@@ -198,15 +187,19 @@ const editCustomer = async (): Promise<void> => {
 </script>
 
 <style lang="scss" scoped>
+.temporarily-disable {
+  pointer-events: none !important;
+}
+
 .ant-spin-nested-loading {
   height: 100%;
 }
-.customer-detail__spin {
+.staff-detail__spin {
   height: 100vh;
   width: 100%;
 }
 
-.customer-detail {
+.staff-detail {
   &__infor-wrapper {
     background-color: $white;
     box-shadow: 4px 2px 8px rgba(0, 0, 0, 0.02);
@@ -237,6 +230,20 @@ const editCustomer = async (): Promise<void> => {
     font-size: 18px;
     line-height: 22px;
     color: $neutral-600;
+  }
+
+  &__enable-account-btn {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 18px;
+    &__enable {
+      color: $primary-400;
+    }
+
+    &__disable {
+      color: $neutral-400;
+    }
   }
 }
 </style>

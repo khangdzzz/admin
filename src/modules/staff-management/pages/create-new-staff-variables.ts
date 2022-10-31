@@ -4,25 +4,6 @@ import {
   TypeOptions,
   UserRoleOptions
 } from "@/modules/staff-management/models/create-new-staff.model";
-import { SelectProps } from "ant-design-vue";
-
-const options: SelectProps["options"] = [
-  {
-    value: "collection_base_1",
-    label: "Collection base",
-    content: "Collection base 1"
-  },
-  {
-    value: "collection_base_2",
-    label: "Collection base",
-    content: "Collection base 2"
-  },
-  {
-    value: "partner1",
-    label: "Partner",
-    content: "Partner 1"
-  }
-];
 
 const radioOptions = {
   typeOptions: [
@@ -50,19 +31,19 @@ const radioOptions = {
     },
     {
       text: i18n.global.t("collection_base_admin"),
-      value: UserRoleOptions.COLLECTIONS_BASE_ADMIN
+      value: UserRoleOptions.COLLECTION_BASE_ADMIN
     },
     {
       text: i18n.global.t("collection_base_driver"),
-      value: UserRoleOptions.COLLECTIONS_BASE_DRIVE
+      value: UserRoleOptions.DRIVER
     },
     {
       text: i18n.global.t("manufacture_staff"),
-      value: UserRoleOptions.MANUFACTURE_STAFF
+      value: UserRoleOptions.MANUFACTURING_STAFF
     },
     {
       text: i18n.global.t("drive_manufacture_staff"),
-      value: UserRoleOptions.DRIVE_MANUFACTURE_STAFF
+      value: UserRoleOptions.DRIVER_MANUFACTURING_STAFF
     }
   ],
   userRoleByPartner: [
@@ -72,7 +53,7 @@ const radioOptions = {
     },
     {
       text: i18n.global.t("partner_driver"),
-      value: UserRoleOptions.PARTNER_DRIVER
+      value: UserRoleOptions.DRIVER
     }
   ],
   userRoleByCustomer: [
@@ -82,7 +63,7 @@ const radioOptions = {
     },
     {
       text: i18n.global.t("dashboard_viewer"),
-      value: UserRoleOptions.DASHBOARD_VIEWER
+      value: UserRoleOptions.DASHBOARD_USER
     }
   ],
   userRoleByDestination: [
@@ -157,7 +138,7 @@ const radioOptions = {
       inputType: "AInput",
       value: "",
       placeHolder: "email",
-      label: "email_address",
+      label: "email",
       name: "email",
       disabled: false,
       required: true,
@@ -186,7 +167,7 @@ const radioOptions = {
           message: i18n.global.t("max_length_input", { maxLength: 15 })
         },
         {
-          pattern: /^[+][0-9]{6,15}$/,
+          pattern: /^[+][0-9]{5,14}$/,
           message: i18n.global.t("allow_input_number")
         }
       ]
@@ -207,7 +188,7 @@ const radioOptions = {
       isFocus: false,
       mode: "multiple",
       hidden: false,
-      options: options,
+
       dropdownClassName: "form-option-content",
       style: {
         padding: "0px"
@@ -223,7 +204,7 @@ const radioOptions = {
       required: true,
       isFocus: false,
       hidden: false,
-      options: options,
+
       dropdownClassName: "form-option-content",
       style: {
         padding: "0px"

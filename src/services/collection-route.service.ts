@@ -4,7 +4,7 @@ import {
   CreateCollectionRouteModel,
   CreateCollectionRouteResponseDto
 } from "@/modules/collection-route-management/models/collection-route.model";
-import { Pagination } from "@/modules/common/models";
+import { Pagination, ServiceResponse } from "@/modules/common/models";
 import { Sort } from "@/modules/common/models/sort.enum";
 import { transformRequest } from "./base.service";
 import { DEFAULT_SORT_ORDER } from "./constants";
@@ -102,7 +102,8 @@ export async function getListCollectionRoutes(
         name,
         numberOfStore: number_collect_points,
         navigationId: navigation_id,
-        notice
+        notice,
+        
       };
     })
   };
@@ -181,11 +182,7 @@ export async function getCollectionPoint(): Promise<
 }
 export async function createCollectionRoute(
   data: CreateCollectionRouteModel
-): Promise<
-  | [AxiosError<unknown, unknown>, null]
-  | [null, CreateCollectionRouteResponseDto]
-  | any
-> {
+): Promise<ServiceResponse<boolean>> {
   const [error, res] = await transformRequest<CreateCollectionRouteResponseDto>(
     {
       url: "/collect_order",
@@ -194,10 +191,13 @@ export async function createCollectionRoute(
     }
   );
   if (error || !res) {
-    false;
+    return {
+      error: (error?.response?.data as { details: { msg: string }[] })
+        .details[0].msg
+    };
   }
   return {
-    res
+    res: true
   };
 }
 

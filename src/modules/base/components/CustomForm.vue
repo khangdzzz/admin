@@ -112,7 +112,7 @@
             />
           </div>
           <div
-            class="content fill-height d-flex flex-column justify-center gap-6"
+            class="content fill-height d-flex flex-column justify-center gap-6z custom-form__custom-option-padding"
           >
             <div class="text-content">{{ content }}</div>
             <div class="text-label">{{ label }}</div>
@@ -171,7 +171,11 @@
           ? $t(item.placeHolder)
           : $t(item.label)
       }}
-      <span class="require" v-if="item.required">*</span>
+      <span
+        :class="[item.disabled ? 'disabled-require' : 'require']"
+        v-if="item.required"
+        >*</span
+      >
     </label>
 
     <div v-if="item.inline && item.spaceStyle" :style="item.spaceStyle"></div>
@@ -274,6 +278,10 @@ const filterOption = (input: string, option: any): boolean => {
   color: $red-1;
   @include text(400, 12px, 100%);
 }
+.disabled-require {
+  color: $text-1;
+  @include text(400, 12px, 100%);
+}
 
 .custom-form {
   &__action-btn {
@@ -288,6 +296,10 @@ const filterOption = (input: string, option: any): boolean => {
 
   &__option-wrapper {
     height: 64px !important;
+  }
+
+  &__custom-option-padding {
+    margin-left: -10px;
   }
 }
 

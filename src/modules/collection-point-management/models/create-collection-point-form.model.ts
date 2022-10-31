@@ -168,7 +168,7 @@ export const formData = (): FormData => {
             trigger: ["blur", "change"]
           },
           {
-            pattern: /^[+][0-9]{6,15}$/,
+            pattern: /^[+][0-9]{5,14}$/,
             message: i18n.global.t("invalid_field_name", currentLanguage, {
               fieldName: i18n.global
                 .t("collection_phone_number", currentLanguage)

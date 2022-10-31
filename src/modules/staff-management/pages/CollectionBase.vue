@@ -77,7 +77,7 @@
             </div>
           </template>
         </template>
-        <template #bodyCell="{ column, record }">
+        <template #bodyCell="{ column, record, text }">
           <template v-if="column.key === 'action'">
             <img
               src="@/assets/icons/ic_user.svg"
@@ -94,6 +94,9 @@
               class="action-icon"
               @click="($event) => deleteCollectionBase($event, record.id)"
             />
+          </template>
+          <template v-else>
+            <span>{{ text || NULL_VALUE_DISPLAY }}</span>
           </template>
         </template>
       </a-table>
@@ -134,6 +137,7 @@ import IcTrash from "@/assets/icons/IcTrash.vue";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import { debounce } from "lodash";
+import { NULL_VALUE_DISPLAY } from "@/utils/constants";
 //#endregion
 
 //#region props
@@ -374,7 +378,12 @@ const onDeleteCollectionBase = async (deleteIds: number[]): Promise<void> => {
     return;
   }
   messenger({
-    title: "collection_base_msg_delete_successfully",
+    title:
+      deleteIds.length > 1
+        ? i18n.global.t("common_msg_delete_multiple_successfully", {
+            number: deleteIds.length
+          })
+        : "common_msg_delete_successfully",
     message: "",
     type: MessengerType.Success,
     callback: (isConfirm: boolean): void => {
@@ -449,7 +458,6 @@ watch(searchString, onSearchChange);
 <style lang="scss" scoped>
 .table-container {
   flex-grow: 1;
-  height: 100%;
 }
 
 .action-icon {
