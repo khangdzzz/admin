@@ -33,7 +33,9 @@
             <div>
               <a-checkbox
                 class="floating-label-select__checkbox"
-                :checked="value?.indexOf(optionValue) !== -1"
+                :checked="
+                  value && value.indexOf(optionValue) !== -1 && value.length > 0
+                "
               ></a-checkbox>
             </div>
             <div class="d-flex flex-column justify-center gap-6">
@@ -89,7 +91,7 @@ const props = defineProps({
   },
   value: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    type: Array<any>
+    type: [Array<string>, String]
   },
   rules: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -136,8 +138,8 @@ const dataChange = (value: any[]): void => {
 //#endregion
 
 //#region computed
-const hasValue = computed(() => {
-  return props.value && props.value.length > 0;
+const hasValue = computed((): boolean => {
+  return !!props.value && props.value.length > 0;
 });
 //#endregion
 

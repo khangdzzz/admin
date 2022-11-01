@@ -213,11 +213,12 @@ const routes: RouteRecordRaw[] = [
         component: () =>
           import("@/modules/staff-management/pages/StaffManagement.vue")
       },
+
       {
         path: "create-new-staff",
         name: routeNames.createNewStaff,
         component: () =>
-          import("@/modules/staff-management/pages/CreateNewStaff.vue")
+          import("@/modules/staff-management/pages/StaffRegistration.vue")
       },
       {
         path: "detail/:id",

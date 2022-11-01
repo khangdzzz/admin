@@ -17,3 +17,11 @@ export enum UserRoleOptions {
   MANUFACTURING_STAFF = 8,
   DRIVER_MANUFACTURING_STAFF = 9
 }
+
+export enum TypeWorkPlace {
+  COLLECTION_BASE = 1,
+  TENANT_ADMIN = 2,
+  CUSTOMER = 3,
+  TENANT_DESTINATION = 4,
+  DISPOSAL = 5
+}
