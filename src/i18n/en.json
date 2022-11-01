@@ -140,6 +140,7 @@
   "edit_failed": "Edit failed",
   "common_loading": "Loading...",
   "invalid_field_name": "Invalid {fieldName}",
+  "field_allow_number_only": "This field allows half-width number input only.",
   "short_name": "Short name",
   "staff": "Staff",
   "staff_add_staff": "Add Staff",

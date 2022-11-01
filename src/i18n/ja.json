@@ -136,6 +136,7 @@
   "edit_failed": "編集に失敗しました",
   "common_loading": "処理中...",
   "invalid_field_name": "{fieldName}を正しく入力してください。 ",
+  "field_allow_number_only": "半角数字で入力してください。",
   "short_name": "略称",
   "staff": "ユーザー",
   "staff_add_staff": "スタッフ追加",
