@@ -467,11 +467,12 @@ watch(
   .create-form {
     .ant-form {
       .ant-form-item {
+        margin-bottom: 20px;
         .ant-form-item-control {
           .ant-form-item-explain {
             .ant-form-item-explain-error {
               line-height: 14.06px;
-              margin-bottom: 5px;
+              margin-bottom: 5px !important;
             }
           }
           .ant-form-item-control-input {
