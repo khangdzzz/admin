@@ -221,7 +221,7 @@ onMounted(async (): Promise<void> => {
             `collection_base_lbl_type_${collectionBaseType?.toString()}`
           )
         },
-        { key: "collection_base_lbl_postal_code", value: postalCode || "" },
+        { key: "common_postal_code_field_name", value: postalCode || "" },
         { key: "collection_base_lbl_address", value: address || "" },
         { key: "collection_base_lbl_phone_number", value: telephone || "" },
         { key: "collection_base_lbl_email", value: mail || "" },

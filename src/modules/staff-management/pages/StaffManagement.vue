@@ -198,7 +198,7 @@ const columns = [
     width: "10%"
   },
   {
-    title: "staff_name",
+    title: "human_name",
     dataIndex: "name",
     key: "name"
   },

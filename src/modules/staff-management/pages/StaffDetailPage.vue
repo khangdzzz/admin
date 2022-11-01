@@ -116,8 +116,8 @@ const initialize = async (): Promise<void> => {
     } = res;
 
     staffDetails.value = [
-      { key: "name", value: name || NULL_VALUE_DISPLAY },
-      { key: "name_kana", value: name_kana || NULL_VALUE_DISPLAY },
+      { key: "human_name", value: name || NULL_VALUE_DISPLAY },
+      { key: "human_name_kana", value: name_kana || NULL_VALUE_DISPLAY },
       { key: "employee_code", value: employee_code || NULL_VALUE_DISPLAY },
       { key: "staff_email_detail", value: email || NULL_VALUE_DISPLAY },
       { key: "telephone", value: telephone || NULL_VALUE_DISPLAY },

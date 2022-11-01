@@ -35,8 +35,8 @@
             ></FloatingLabelInput>
             <div class="d-flex gap-20">
               <FloatingLabelInput
-                place-holder="name"
-                label="name"
+                place-holder="human_name"
+                label="human_name"
                 control-name="name"
                 v-model:value="formState.name"
                 :required="true"
@@ -57,8 +57,8 @@
                 class="fill-width"
               ></FloatingLabelInput>
               <FloatingLabelInput
-                place-holder="name_kana"
-                label="name_kana"
+                place-holder="human_name_kana"
+                label="human_name_kana"
                 control-name="nameKana"
                 v-model:value="formState.nameKana"
                 class="fill-width"
@@ -145,8 +145,8 @@
               </div>
             </div>
             <FloatingLabelMultipleSelect
-              place-holder="Workplace"
-              label="Workplace"
+              place-holder="staff_workplace"
+              label="staff_workplace"
               control-name="workPlace"
               :required="true"
               v-if="modeSelectWorkPlace === 'multiple'"
@@ -154,8 +154,8 @@
               v-model:value="formState.workplaces"
             ></FloatingLabelMultipleSelect>
             <FloatingLabelSelect
-              place-holder="Workplace"
-              label="Workplace"
+              place-holder="staff_workplace"
+              label="staff_workplace"
               :required="true"
               control-name="workPlace"
               v-if="modeSelectWorkPlace === 'single'"
