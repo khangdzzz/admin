@@ -31,10 +31,12 @@ export interface workPlace {
   name: string;
   tenantId?: number;
   workPlaceType?: number;
+  baseType?: number;
 }
 export interface workPlaceDTO {
   id: number;
   name: string;
   tenant_id?: number;
   workplace_type?: number;
+  base_type?: number;
 }

@@ -1,217 +1,225 @@
 <template>
-  <a-spin
-    :spinning="isFetching"
-    :tip="$t('common_loading')"
-    class="customer-detail__spin"
+  <a-row
+    type="flex"
+    justify="center"
+    align="middle"
+    class="create-staff-container"
   >
-    <div
-      class="create-staff fill-height fill-width d-flex justify-center align-center"
+    <a-spin
+      :spinning="isFetching"
+      :tip="$t('common_loading')"
+      class="staff-detail__spin"
     >
-      <a-card class="create-staff__card px-20 py-30">
-        <div
-          class="create-staff__title d-flex mb-30 justify-center align-center"
-        >
-          {{ $t("add_new_staff") }}
-        </div>
-        <a-form :model="formState" ref="createStaffRef">
-          <FloatingLabelInput
-            place-holder="staff_employee_code"
-            label="staff_employee_code"
-            control-name="employeeCode"
-            v-model:value="formState.employeeCode"
-            :rules="[
-              {
-                max: 50,
-                message: $t('max_length_input', { maxLength: 50 }),
-                trigger: ['blur', 'change']
-              }
-            ]"
-          ></FloatingLabelInput>
-          <div class="d-flex gap-20">
+      <div
+        class="create-staff fill-height fill-width d-flex justify-center align-center"
+      >
+        <a-card class="create-staff__card px-20 py-30">
+          <div
+            class="create-staff__title d-flex mb-30 justify-center align-center"
+          >
+            {{ $t("add_new_staff") }}
+          </div>
+          <a-form :model="formState" ref="createStaffRef">
             <FloatingLabelInput
-              place-holder="name"
-              label="name"
-              control-name="name"
-              v-model:value="formState.name"
+              place-holder="staff_employee_code"
+              label="staff_employee_code"
+              control-name="employeeCode"
+              v-model:value="formState.employeeCode"
+              :rules="[
+                {
+                  max: 50,
+                  message: $t('max_length_input', { maxLength: 50 }),
+                  trigger: ['blur', 'change']
+                }
+              ]"
+            ></FloatingLabelInput>
+            <div class="d-flex gap-20">
+              <FloatingLabelInput
+                place-holder="name"
+                label="name"
+                control-name="name"
+                v-model:value="formState.name"
+                :required="true"
+                :rules="[
+                  {
+                    required: true,
+                    message: $t('please_enter_input', {
+                      fieldName: $t('name')
+                    }),
+                    trigger: ['blur', 'change']
+                  },
+                  {
+                    max: 50,
+                    message: $t('max_length_input', { maxLength: 50 }),
+                    trigger: ['blur', 'change']
+                  }
+                ]"
+                class="fill-width"
+              ></FloatingLabelInput>
+              <FloatingLabelInput
+                place-holder="name_kana"
+                label="name_kana"
+                control-name="nameKana"
+                v-model:value="formState.nameKana"
+                class="fill-width"
+                :rules="[
+                  {
+                    max: 50,
+                    message: $t('max_length_input', { maxLength: 50 }),
+                    trigger: ['blur', 'change']
+                  }
+                ]"
+              ></FloatingLabelInput>
+            </div>
+            <FloatingLabelInput
+              place-holder="email"
+              label="email"
+              control-name="email"
+              v-model:value="formState.email"
               :required="true"
               :rules="[
                 {
-                  required: true,
-                  message: $t('please_enter_input', {
-                    fieldName: $t('name')
-                  }),
-                  trigger: ['blur', 'change']
-                },
-                {
-                  max: 50,
-                  message: $t('max_length_input', { maxLength: 50 }),
+                  validator: validator.validateEmail,
                   trigger: ['blur', 'change']
                 }
               ]"
-              class="fill-width"
             ></FloatingLabelInput>
             <FloatingLabelInput
-              place-holder="name_kana"
-              label="name_kana"
-              control-name="nameKana"
-              v-model:value="formState.nameKana"
-              class="fill-width"
+              place-holder="telephone"
+              label="telephone"
+              control-name="telephone"
+              v-model:value="formState.telephone"
               :rules="[
                 {
-                  max: 50,
-                  message: $t('max_length_input', { maxLength: 50 }),
+                  validator: validator.validatePhone,
                   trigger: ['blur', 'change']
                 }
               ]"
             ></FloatingLabelInput>
-          </div>
-          <FloatingLabelInput
-            place-holder="email"
-            label="email"
-            control-name="email"
-            v-model:value="formState.email"
-            :required="true"
-            :rules="[
-              {
-                validator: validator.validateEmail,
-                trigger: ['blur', 'change']
-              }
-            ]"
-          ></FloatingLabelInput>
-          <FloatingLabelInput
-            place-holder="telephone"
-            label="telephone"
-            control-name="telephone"
-            v-model:value="formState.telephone"
-            :rules="[
-              {
-                validator: validator.validatePhone,
-                trigger: ['blur', 'change']
-              }
-            ]"
-          ></FloatingLabelInput>
 
-          <div
-            class="d-flex align-center gap-24 pt-10 align-flex-start radio"
-            v-if="userStore.user?.userType !== UserType.SystemAdmin"
-          >
-            <div class="create-staff__type-selector-title">
-              {{ $t("type") }}
-              <span class="create-staff__require-mark">*</span>
-            </div>
-            <div class="d-flex gap-24">
-              <a-radio-group
-                v-model:value="optionValue.type"
-                :disabled="isCollectionBaseAdmin"
-              >
-                <a-radio
-                  class="create-staff__radio-title"
-                  v-for="item in optionValue.typeOptions"
-                  :value="item.value"
-                  :key="item.value"
-                  >{{ $t(item.text) }}</a-radio
-                >
-              </a-radio-group>
-            </div>
-          </div>
-
-          <div
-            class="d-flex align-center gap-24 align-flex-start radio mb-6"
-            v-if="optionValue.userRoleOptions?.length"
-          >
-            <div class="create-staff__type-selector-title">
-              {{ $t("user_role") }}
-              <span class="create-staff__require-mark">*</span>
-            </div>
-            <div class="d-flex gap-24">
-              <a-radio-group
-                v-model:value="optionValue.userRole"
-                :disabled="optionValue.type === TypeOptions.DESTINATION"
-              >
-                <a-radio
-                  class="create-staff__radio-title"
-                  v-for="item in optionValue.userRoleOptions"
-                  :value="item.value"
-                  :key="item.value"
-                  >{{ $t(item.text) }}</a-radio
-                >
-              </a-radio-group>
-            </div>
-          </div>
-          <FloatingLabelMultipleSelect
-            place-holder="Workplace"
-            label="Workplace"
-            control-name="workPlace"
-            :required="true"
-            v-if="modeSelectWorkPlace === 'multiple'"
-            :options="optionValue.workPlaceOptions"
-            v-model:value="formState.workplaces"
-          ></FloatingLabelMultipleSelect>
-          <FloatingLabelSelect
-            place-holder="Workplace"
-            label="Workplace"
-            control-name="workPlace"
-            v-if="modeSelectWorkPlace === 'single'"
-            :options="optionValue.workPlaceOptions"
-            v-model:value="formState.workplaces"
-          ></FloatingLabelSelect>
-        </a-form>
-        <div class="d-flex justify-center align-center gap-20 mt-10">
-          <a-button
-            class="create-staff__btn-style create-staff__cancel-btn"
-            type="secondary"
-            :disabled="isLoading"
-            @click="handleCancel"
-          >
-            {{ $t("btn_cancel") }}
-          </a-button>
-          <a-button
-            class="create-staff__btn-style create-staff__submit-btn"
-            type="primary"
-            :loading="isLoading"
-            :disabled="!isValidated"
-            @click="handleSubmit"
-          >
-            {{ $t("btn_submit") }}
-          </a-button>
-        </div>
-        <a-modal
-          v-model:visible="visibleModalSuccess"
-          width="420px"
-          :closable="false"
-          class="custom-modal"
-          centered
-          :footer="null"
-          :maskClosable="false"
-        >
-          <div class="modal-content">
-            <img src="@/assets/icons/ic_success.png" class="modal-icon" />
-            <h3 class="modal-title mb-10">
-              {{ $t("common_msg_create_successfully") }}
-            </h3>
-            <p class="modal-message mb-10 mt-0">
-              {{ $t("email") }}: {{ staffEmail }}
-            </p>
-            <p class="modal-message mb-10 mt-0">
-              {{ $t("login_password") }}: {{ staffPassword }}
-              <img
-                class="ic-clipboard"
-                src="@/assets/icons/ic_clipboard.png"
-                @click="handleCopy"
-              />
-            </p>
-            <a-button
-              type="primary"
-              class="btn-ok mt-10"
-              @click="handleCloseModal"
+            <div
+              class="d-flex align-center gap-4 pt-10 align-flex-start radio"
+              v-if="userStore.user?.userType !== UserType.SystemAdmin"
             >
-              OK
+              <div class="create-staff__type-selector-title">
+                {{ $t("type") }}
+                <span class="create-staff__require-mark">*</span>
+              </div>
+              <div class="d-flex gap-16">
+                <a-radio-group
+                  v-model:value="optionValue.type"
+                  :disabled="isCollectionBaseAdmin"
+                >
+                  <a-radio
+                    class="create-staff__radio-title"
+                    v-for="item in optionValue.typeOptions"
+                    :value="item.value"
+                    :key="item.value"
+                    >{{ $t(item.text) }}</a-radio
+                  >
+                </a-radio-group>
+              </div>
+            </div>
+
+            <div
+              class="d-flex align-center gap-4 align-flex-start radio mb-6"
+              v-if="optionValue.userRoleOptions?.length"
+            >
+              <div class="create-staff__type-selector-title">
+                {{ $t("user_role") }}
+                <span class="create-staff__require-mark">*</span>
+              </div>
+              <div class="d-flex gap-32">
+                <a-radio-group
+                  v-model:value="optionValue.userRole"
+                  :disabled="optionValue.type === TypeOptions.DESTINATION"
+                >
+                  <a-radio
+                    class="create-staff__radio-title"
+                    v-for="item in optionValue.userRoleOptions"
+                    :value="item.value"
+                    :key="item.value"
+                    >{{ $t(item.text) }}</a-radio
+                  >
+                </a-radio-group>
+              </div>
+            </div>
+            <FloatingLabelMultipleSelect
+              place-holder="Workplace"
+              label="Workplace"
+              control-name="workPlace"
+              :required="true"
+              v-if="modeSelectWorkPlace === 'multiple'"
+              :options="optionValue.workPlaceOptions"
+              v-model:value="formState.workplaces"
+            ></FloatingLabelMultipleSelect>
+            <FloatingLabelSelect
+              place-holder="Workplace"
+              label="Workplace"
+              :required="true"
+              control-name="workPlace"
+              v-if="modeSelectWorkPlace === 'single'"
+              :options="optionValue.workPlaceOptions"
+              v-model:value="formState.workplaces"
+            ></FloatingLabelSelect>
+          </a-form>
+          <div class="d-flex justify-center align-center gap-20 mt-10">
+            <a-button
+              class="create-staff__btn-style create-staff__cancel-btn"
+              type="secondary"
+              :disabled="isLoading"
+              @click="handleCancel"
+            >
+              {{ $t("btn_cancel") }}
+            </a-button>
+            <a-button
+              class="create-staff__btn-style create-staff__submit-btn"
+              type="primary"
+              :loading="isLoading"
+              :disabled="!isValidated"
+              @click="handleSubmit"
+            >
+              {{ $t("btn_submit") }}
             </a-button>
           </div>
-        </a-modal>
-      </a-card>
-    </div>
-  </a-spin>
+          <a-modal
+            v-model:visible="visibleModalSuccess"
+            width="420px"
+            :closable="false"
+            class="custom-modal"
+            centered
+            :footer="null"
+            :maskClosable="false"
+          >
+            <div class="modal-content">
+              <img src="@/assets/icons/ic_success.png" class="modal-icon" />
+              <h3 class="modal-title mb-10">
+                {{ $t("common_msg_create_successfully") }}
+              </h3>
+              <p class="modal-message mb-10 mt-0">
+                {{ $t("email") }}: {{ staffEmail }}
+              </p>
+              <p class="modal-message mb-10 mt-0">
+                {{ $t("login_password") }}: {{ staffPassword }}
+                <img
+                  class="ic-clipboard"
+                  src="@/assets/icons/ic_clipboard.png"
+                  @click="handleCopy"
+                />
+              </p>
+              <a-button
+                type="primary"
+                class="btn-ok mt-10"
+                @click="handleCloseModal"
+              >
+                OK
+              </a-button>
+            </div>
+          </a-modal>
+        </a-card>
+      </div>
+    </a-spin>
+  </a-row>
 </template>
 
 <script setup lang="ts">
@@ -242,12 +250,16 @@ interface FormState {
 interface options {
   text: string;
   value: string | number;
+  workPlaceType?: number[];
+  baseType?: number[];
 }
 interface selects {
   label: string;
   value: string;
   content: string;
-  type: number;
+  workPlaceType: number;
+  baseType?: number;
+  tenantId?: number;
 }
 //#endregion
 
@@ -300,6 +312,8 @@ const optionValue = reactive<{
 
 //#region hooks
 onMounted(() => {
+  console.log(userStore.user);
+
   if (userStore.user?.userType === UserType.CollectionBaseAdmin) {
     optionValue.typeOptions = radioOptions.typeOptions.filter(
       (item) => item.value === TypeOptions.TENANT
@@ -322,14 +336,18 @@ const getListWorkPlace = async (): Promise<void> => {
         value: item.id,
         content: handleFormatLabelSelect(Number(item.workPlaceType)),
         label: item.name,
-        type: item.workPlaceType
+        workPlaceType: item.workPlaceType,
+        baseType: item.baseType,
+        tenantId: item.tenantId
       };
     });
   }
 };
-const filterWorkPlaceByType = async (type: number): Promise<void> => {
-  const filter = await listWorkPlace.value?.filter(
-    (item: selects) => item.type === type
+const filterWorkPlaceByType = async (role: any): Promise<void> => {
+  const filter = await listWorkPlace.value?.filter((item: selects) =>
+    role.workPlaceType.includes(item.workPlaceType) && role.baseType
+      ? role.baseType.includes(item.baseType)
+      : true && item.tenantId === userStore.user?.tenantId
   );
 
   optionValue.workPlaceOptions = filter;
@@ -488,7 +506,11 @@ watch(
   () => optionValue.userRole,
   () => {
     if (optionValue.userRole) {
-      filterWorkPlaceByType(optionValue.userRole);
+      const userRole = optionValue.userRoleOptions?.find((item) => {
+        return item.value === optionValue.userRole;
+      });
+
+      filterWorkPlaceByType(userRole);
       handleSelectWorkPlace();
     }
 
@@ -532,6 +554,9 @@ watch([optionValue, formState], () => {
 </script>
 
 <style lang="scss" scoped>
+.create-staff-container {
+  height: 100vh;
+}
 .radio {
   width: 660px;
 }
@@ -625,6 +650,7 @@ watch([optionValue, formState], () => {
   }
   .create-staff__radio-title {
     align-items: center;
+    margin-left: 20px;
   }
   .form-create-staff {
     .ant-form-item {

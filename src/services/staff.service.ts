@@ -240,11 +240,13 @@ export async function getListWorkPlace(): Promise<
   //const results = data.results;
   return {
     results: res.map((item) => {
-      const { id, name, workplace_type } = item;
+      const { id, name, workplace_type, base_type, tenant_id } = item;
       return {
         id,
         name,
-        workPlaceType: workplace_type
+        workPlaceType: workplace_type,
+        baseType: base_type,
+        tenantId: tenant_id
       };
     })
   };
