@@ -306,8 +306,8 @@ const converListIdToString = (listId: number[]): string => {
 const handleClickSubmit = async (): Promise<void> => {
   const listStringId = converListIdToString(getListIdSelectedCP.value);
   const data = {
-    name: makeUniqueName(formData.duoInputs[0].value.toString()),
-    workplace_id: formData.duoInputs2[0].value,
+    name: makeUniqueName(formData.duoInputs[0].value.toString()) as string,
+    workplace_id: +formData.duoInputs2[0].value,
     collect_point_ids: listStringId,
     notice: makeUniqueName(formNote.note.toString())
   };
@@ -611,6 +611,14 @@ watch(handleSubmitBtn, () => {
   }
   .create-collection-route-order__duo-inputs-wrapper .ant-row .ant-form-item {
     margin-bottom: 0px !important;
+  }
+  .create-collection-route-order__note {
+    .ant-input {
+      border-color: transparent;
+      border: 1px solid transparent;
+      outline: none;
+      border-radius: 10px;
+    }
   }
 }
 </style>

@@ -17,7 +17,7 @@
               class="btn-action"
               ghost
               type="primary"
-              @click="editCollectionRoute(id)"
+              @click="editCollectionRoute()"
             >
               <template #icon>
                 <img src="@/assets/icons/ic_btn_edit.svg" class="btn-icon" />
@@ -141,7 +141,7 @@ const getCollectionRouteDetail = async (): Promise<void> => {
   isLoading.value = false;
   collectionRouteDetail.value = res;
 };
-const editCollectionRoute = (id: string): void => {
+const editCollectionRoute = (): void => {
   router.push({
     params: { id },
     name: routeNames.editCollectionRouteOrder

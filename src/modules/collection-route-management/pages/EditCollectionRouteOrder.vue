@@ -252,10 +252,10 @@ const fetchData = async (): Promise<void> => {
   }
   const res = await service.collectionRoute.getCollectionRouteById(Number(id));
   if (res) {
-    formData.duoInputs[0].value = res.name;
-    formNote.note = res.notice;
-    formData.duoInputs2[0].value = res.workplaceId;
-    listSelectedCollectionPoint.value = res.listCollectionPoint;
+    formData.duoInputs[0].value = res.name ?? "";
+    formNote.note = res.notice ?? "";
+    formData.duoInputs2[0].value = res.workplaceId ?? "";
+    listSelectedCollectionPoint.value = res.listCollectionPoint ?? [];
   }
   isLoading.value = false;
 };
@@ -331,8 +331,8 @@ const converListIdToString = (listId: number[]): string => {
 const handleClickSubmit = async (): Promise<void> => {
   const listStringId = converListIdToString(getListIdSelectedCP.value);
   const data = {
-    name: makeUniqueName(formData.duoInputs[0].value.toString()),
-    workplace_id: formData.duoInputs2[0].value,
+    name: makeUniqueName(formData.duoInputs[0].value.toString()) as string,
+    workplace_id: +formData.duoInputs2[0].value,
     collect_point_ids: listStringId,
     notice: makeUniqueName(formNote.note.toString())
   };

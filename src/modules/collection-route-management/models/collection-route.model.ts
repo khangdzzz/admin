@@ -13,8 +13,8 @@ export interface CreateCollectionRoute {
 export interface CreateCollectionRouteModel {
   name: string;
   workplace_id: string | number;
-  collect_point_ids: number[] | string[];
-  notice: string | undefined;
+  collect_point_ids: number | string;
+  notice: string | null;
 }
 export interface CollectionBase {
   label: string;
@@ -37,6 +37,7 @@ export interface CollectionRoute {
   listCollectionPoint?: any[];
   workplaceId?: string | number;
 }
+
 export interface CreateCollectionRouteResponseDto {
   created_at: string;
   created_by: number;
