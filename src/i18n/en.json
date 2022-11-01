@@ -281,5 +281,7 @@
   "staff_workplace": "Workplace",
   "last_login_time": "Last login time",
   "staff_detail": "Staff Detail",
-  "enable_account": "Enable Account"
+  "enable_account": "Enable Account",
+  "lbl_admin": "Admin",
+  "lbl_driver": "Driver"
 }

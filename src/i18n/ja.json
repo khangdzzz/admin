@@ -275,5 +275,7 @@
   "staff_detail": "ユーザー詳細",
   "enable_account": "Enable Account",
   "yes": "Yes",
-  "no": "No"
+  "no": "No",
+  "lbl_admin": "事務者",
+  "lbl_driver": "ドライバー"
 }

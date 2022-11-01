@@ -30,46 +30,58 @@ const radioOptions = {
       value: UserRoleOptions.TENANT_ADMIN
     },
     {
-      text: i18n.global.t("collection_base_admin"),
-      value: UserRoleOptions.COLLECTION_BASE_ADMIN
+      text: i18n.global.t("lbl_admin"),
+      value: UserRoleOptions.COLLECTION_BASE_ADMIN,
+      workPlaceType: [1, 2]
     },
     {
-      text: i18n.global.t("collection_base_driver"),
-      value: UserRoleOptions.DRIVER
+      text: i18n.global.t("lbl_driver"),
+      value: UserRoleOptions.DRIVER,
+      workPlaceType: [1],
+      baseType: [1, 3]
     },
     {
       text: i18n.global.t("manufacture_staff"),
-      value: UserRoleOptions.MANUFACTURING_STAFF
+      value: UserRoleOptions.MANUFACTURING_STAFF,
+      workPlaceType: [1],
+      baseType: [2, 3]
     },
     {
       text: i18n.global.t("drive_manufacture_staff"),
-      value: UserRoleOptions.DRIVER_MANUFACTURING_STAFF
+      value: UserRoleOptions.DRIVER_MANUFACTURING_STAFF,
+      workPlaceType: [1],
+      baseType: [3]
     }
   ],
   userRoleByPartner: [
     {
-      text: i18n.global.t("partner_admin"),
-      value: UserRoleOptions.PARTNER_ADMIN
+      text: i18n.global.t("lbl_admin"),
+      value: UserRoleOptions.PARTNER_ADMIN,
+      workPlaceType: [2]
     },
     {
-      text: i18n.global.t("partner_driver"),
-      value: UserRoleOptions.DRIVER
+      text: i18n.global.t("lbl_driver"),
+      value: UserRoleOptions.DRIVER,
+      workPlaceType: [2]
     }
   ],
   userRoleByCustomer: [
     {
       text: i18n.global.t("discharger"),
-      value: UserRoleOptions.DISCHARGER
+      value: UserRoleOptions.DISCHARGER,
+      workPlaceType: [3]
     },
     {
       text: i18n.global.t("dashboard_viewer"),
-      value: UserRoleOptions.DASHBOARD_USER
+      value: UserRoleOptions.DASHBOARD_USER,
+      workPlaceType: [3]
     }
   ],
   userRoleByDestination: [
     {
       text: i18n.global.t("consignee"),
-      value: UserRoleOptions.CONSIGNEE
+      value: UserRoleOptions.CONSIGNEE,
+      workPlaceType: [4]
     }
   ],
   formData: [
