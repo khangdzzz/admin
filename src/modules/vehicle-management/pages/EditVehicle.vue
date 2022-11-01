@@ -274,7 +274,7 @@ const fetchVehicleById = async (): Promise<void> => {
   const res = await service.vehicle.getVehicleDetail(id.toString());
   if (res) {
     owner.value = res.ownerName;
-    vehicleType.value = res.vehicleType;
+    vehicleType.value = res.vehicleTypeId;
     name.value = res.vehicleName;
     numberPlate.value = res.vehiclePlate;
     maxWeight.value = res.maxWeight;
