@@ -65,6 +65,8 @@ import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import { i18n } from "@/i18n";
 import validator from "@/modules/base/components/validator/validator";
 import { makeUniqueName } from "@/utils/string.helper";
+import { Rule } from "ant-design-vue/lib/form";
+import { localStorageKeys } from "@/services/local-storage-keys";
 //#endregion
 
 //#region props
@@ -83,6 +85,9 @@ let isExistName = async (): Promise<void> => {
   }
   return Promise.resolve();
 };
+
+const currentLanguage =
+  localStorage.getItem(localStorageKeys.currentLanguage) || "en";
 
 const formData = reactive<FormData>({
   singleInput: [
@@ -207,16 +212,31 @@ const formData = reactive<FormData>({
       isFocus: false,
       rules: [
         {
-          max: 15,
-          message: i18n.global.t("max_length_input", { maxLength: 15 }),
-          trigger: "change"
-        },
-        {
-          pattern: /^[+][0-9]{5,14}$/,
-          message: i18n.global.t("invalid_field_name", {
-            fieldName: i18n.global.t("collection_phone_number").toLowerCase()
-          }),
-          trigger: "change"
+          validator: (rule: Rule, value: string): Promise<void> => {
+            if (!value) Promise.resolve();
+
+            const regex = /^[+][0-9]{5,14}$/;
+            if (value && value.length > 15) {
+              return Promise.reject(
+                i18n.global.t("max_length_input", currentLanguage, {
+                  maxLength: 15
+                })
+              );
+            }
+
+            if (value && value.length > 0 && !regex.test(value)) {
+              return Promise.reject(
+                i18n.global.t("invalid_field_name", currentLanguage, {
+                  fieldName: i18n.global
+                    .t("collection_phone_number", currentLanguage)
+                    .toLowerCase()
+                })
+              );
+            }
+
+            return Promise.resolve();
+          },
+          trigger: ["change", "blur"]
         }
       ],
       parent: "singleInput"
@@ -485,7 +505,6 @@ const isSubmitDisable = computed(() => {
   }
   .ant-form-item-explain-error {
     color: $red-500 !important;
-    margin-bottom: 20px;
   }
 }
 </style>

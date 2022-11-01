@@ -132,7 +132,6 @@ const dataChange = (e: { target: { value: string | undefined } }): void => {
 :deep() {
   .ant-form-item-explain-error {
     color: $red-500 !important;
-    margin-bottom: 20px;
     margin-top: 8px;
   }
 }

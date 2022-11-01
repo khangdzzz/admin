@@ -100,6 +100,7 @@ import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
 import { commonStore } from "@/stores";
+import { Rule } from "ant-design-vue/lib/form";
 import { inject, onMounted, reactive, ref, watch } from "vue";
 import { VehicleSelection } from "../models/vehicle.model";
 //#endregion
@@ -241,13 +242,22 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
       disabled: isLoading,
       rules: [
         {
-          max: 10,
-          message: i18n.global.t("max_length_input", { maxLength: 10 }),
-          trigger: ["change", "blur"]
-        },
-        {
-          pattern: /[\d.]/,
-          message: i18n.global.t("allow_input_number"),
+          validator: (rule: Rule, value: string): Promise<void> => {
+            if (!value) return Promise.resolve();
+
+            const regex = /[\d.]/;
+            if (value && value.length > 10) {
+              return Promise.reject(
+                i18n.global.t("max_length_input", { maxLength: 10 })
+              );
+            }
+
+            if (value && !regex.test(value)) {
+              return Promise.reject(i18n.global.t("allow_input_number"));
+            }
+
+            return Promise.resolve();
+          },
           trigger: ["change", "blur"]
         }
       ],
@@ -457,7 +467,6 @@ watch(
   .create-form {
     .ant-form {
       .ant-form-item {
-        margin-bottom: 20px;
         .ant-form-item-control {
           .ant-form-item-explain {
             .ant-form-item-explain-error {

@@ -153,7 +153,7 @@
           :loading="isSubmitting"
           :disabled="isButtonDisabled"
           @click="handleSubmit"
-          >{{ $t("btn_submit") }}</a-button
+          >{{ $t("btn_save") }}</a-button
         >
       </div>
     </a-spin>
@@ -710,7 +710,6 @@ watch(
 
   .ant-form-item-explain-error {
     color: $red-500 !important;
-    margin-bottom: 20px;
   }
 }
 </style>
