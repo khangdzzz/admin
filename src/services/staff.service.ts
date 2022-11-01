@@ -156,6 +156,43 @@ export async function changeUserActiveStatus(
   return true;
 }
 
+export const randomPassword = (): string => {
+  const passwordLength = 8;
+  let password = "";
+  const randomChars = (): string => {
+    const chars = "abcdefghijklmnopqrstuvwxyz";
+    const randomNumber = Math.floor(Math.random() * chars.length);
+    return chars.substring(randomNumber, randomNumber + 1);
+  };
+  const randomUppercases = (): string => {
+    const charsUppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const randomNumber = Math.floor(Math.random() * charsUppercase.length);
+    return charsUppercase.substring(randomNumber, randomNumber + 1);
+  };
+  const randomNumbers = (): string => {
+    const numbers = "0123456789";
+    const randomNumber = Math.floor(Math.random() * numbers.length);
+    return numbers.substring(randomNumber, randomNumber + 1);
+  };
+  const randomSpecialChars = (): string => {
+    const specialChars = "!@#$%^&*()";
+    const randomNumber = Math.floor(Math.random() * specialChars.length);
+    return specialChars.substring(randomNumber, randomNumber + 1);
+  };
+  for (let i = 0; i <= passwordLength; i++) {
+    const randomChar =
+      i % 4 === 0
+        ? randomChars()
+        : i % 5 === 1
+        ? randomUppercases()
+        : i % 5 === 2
+        ? randomNumbers()
+        : randomSpecialChars();
+    password += randomChar;
+  }
+  return password;
+};
+
 export async function createStaff(
   data: StaffDto
 ): Promise<ServiceResponse<StaffDto>> {

@@ -29,7 +29,10 @@
                 <span class="create-staff__require-mark">*</span>
               </div>
               <div class="d-flex gap-24">
-                <a-radio-group v-model:value="formState.type">
+                <a-radio-group
+                  v-model:value="formState.type"
+                  :disabled="isCollectionBaseAdmin"
+                >
                   <a-radio
                     class="create-staff__radio-title"
                     v-for="item in formState.typeOptions"
@@ -160,6 +163,7 @@ const messenger: (
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 ) => void = inject("messenger")!;
 const isValidated = ref<boolean>(false);
+const isCollectionBaseAdmin = ref<boolean>(false);
 const staffPassword = ref<string>("abc12345A");
 const staffEmail = ref<string>("");
 const visibleModalSuccess = ref<boolean>(false);
@@ -193,6 +197,8 @@ onMounted(() => {
     formState.typeOptions = radioOptions.typeOptions.filter(
       (item) => item.value === TypeOptions.TENANT
     );
+    formState.type = TypeOptions.TENANT;
+    isCollectionBaseAdmin.value = true;
   }
   getListWorkPlace();
 });
@@ -428,6 +434,7 @@ watch([dynamicValidateForm, formState], () => {
   margin-left: 17px;
   cursor: pointer;
 }
+
 .create-staff {
   &__card {
     width: 100%;
@@ -501,14 +508,20 @@ watch([dynamicValidateForm, formState], () => {
               padding: 0px 12px;
               width: 620px;
             }
+
             .ant-select-multiple {
               .ant-select-selector {
+                min-height: 80px;
+                overflow: auto;
                 .ant-select-selection-item {
                   top: 10px;
                   padding: 0px 10px 0px 20px;
                   border: 1px solid #07a0b8;
                   border-radius: 38px;
                 }
+              }
+              .tag-select {
+                margin-top: 8px;
               }
             }
             .inline {

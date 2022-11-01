@@ -18,7 +18,7 @@ export interface StaffDto {
   employee_code: string;
   name: string;
   email: string;
-  telephone: string;
+  telephone: string | null;
   user_role: UserRoleOptions | undefined;
   user_type?: number;
   workplace_ids: string | string[] | undefined;

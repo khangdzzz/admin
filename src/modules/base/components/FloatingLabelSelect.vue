@@ -23,12 +23,12 @@
         <template #suffixIcon>
           <div></div>
         </template>
-        <template #option="{ value, label }">
+        <template #option="{ label, content }">
           <div class="d-flex flex-column justify-center gap-6">
-            <div v-if="label" class="floating-label-select__input-label">
-              {{ label }}
+            <div v-if="content" class="floating-label-select__input-label">
+              {{ content }}
             </div>
-            <div class="floating-label-select__input-value">{{ value }}</div>
+            <div class="floating-label-select__input-value">{{ label }}</div>
           </div>
         </template>
       </a-select>
@@ -65,7 +65,7 @@ defineProps({
     require: true
   },
   value: {
-    type: String,
+    type: [String, Array<string>],
     default: ""
   },
   rules: {
