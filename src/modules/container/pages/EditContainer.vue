@@ -145,7 +145,7 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
       rules: [
         {
           validator: (_rule: Rule, value: string): Promise<void> => {
-            const error = validateContainerWeight(value);
+            const error = validateContainerWeight(true, value);
             if (error) return Promise.reject(error);
             return Promise.resolve();
           },
@@ -302,7 +302,7 @@ const isAllowSubmit = computed(() => {
   if (validateContainerName(dynamicValidateForm.formData[0].value, false)) {
     return false;
   }
-  if (validateContainerWeight(dynamicValidateForm.formData[2].value)) {
+  if (validateContainerWeight(true, dynamicValidateForm.formData[2].value)) {
     return false;
   }
   if (validateContainerCapacity(dynamicValidateForm.formData[3].value)) {

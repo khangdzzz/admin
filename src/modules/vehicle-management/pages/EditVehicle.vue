@@ -90,9 +90,11 @@ import { i18n } from "@/i18n";
 import CustomForm from "@/modules/base/components/CustomForm.vue";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
+import { validateContainerWeight } from "@/modules/container/validators/container.validator";
 import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
+import { Rule } from "ant-design-vue/lib/form";
 import { inject, onMounted, reactive, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { VehicleSelection } from "../models/vehicle.model";
@@ -235,14 +237,12 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
       disabled: false,
       rules: [
         {
-          max: 10,
-          message: i18n.global.t("max_length_input", { maxLength: 10 }),
-          trigger: ["change", "blur"]
-        },
-        {
-          pattern: /^\d*$/,
-          message: i18n.global.t("allow_input_number"),
-          trigger: ["change", "blur"]
+          validator: (_rule: Rule, value: string): Promise<void> => {
+            const error = validateContainerWeight(false, value);
+            if (error) return Promise.reject(error);
+            return Promise.resolve();
+          },
+          trigger: ["blur", "change"]
         }
       ],
       required: false,
@@ -277,8 +277,7 @@ const fetchVehicleById = async (): Promise<void> => {
     vehicleType.value = res.vehicleTypeId;
     name.value = res.vehicleName;
     numberPlate.value = res.vehiclePlate;
-    maxWeight.value = res.maxWeight;
-
+    maxWeight.value = res.maxWeight || null;
     checkPermission.value = res.isHasPermission === 1 ? true : false;
   }
   isValidated.value = true;
@@ -374,16 +373,12 @@ const updateVehicle = async (): Promise<void> => {
 watch(
   dynamicValidateForm,
   () => {
-    const regex = /^\d*$/;
     if (
-      regex.test(dynamicValidateForm.formData[4].value) &&
       dynamicValidateForm.formData[0].value &&
       dynamicValidateForm.formData[1].value &&
       handleValidateFields(dynamicValidateForm.formData[2].value, 50, true) &&
       handleValidateFields(dynamicValidateForm.formData[3].value, 50, true) &&
-      (dynamicValidateForm.formData[4].value
-        ? regex.test(dynamicValidateForm.formData[4].value)
-        : true)
+      !validateContainerWeight(false, dynamicValidateForm.formData[4].value)
     ) {
       isValidated.value = true;
     } else {

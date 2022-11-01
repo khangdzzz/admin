@@ -157,7 +157,7 @@ export async function createVehicle(
       vehicle_type_id: vehicleType,
       name: vehicleName,
       plate_number: vehiclePlate,
-      max_capacity: maxWeight,
+      max_capacity: maxWeight || null,
       permission_flag: isHasPermission
     }
   });

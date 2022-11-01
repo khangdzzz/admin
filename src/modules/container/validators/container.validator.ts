@@ -20,7 +20,12 @@ export const validateContainerName = (
   return "";
 };
 
-export const validateContainerWeight = (value: string): string => {
+export const validateContainerWeight = (
+  isRequire: boolean,
+  value: string
+): string => {
+  if (!isRequire && !value) return "";
+
   if (!value) {
     return i18n.global.t("please_enter_input", {
       fieldName: i18n.global.t("container_weight").toLowerCase()
