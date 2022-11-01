@@ -18,6 +18,7 @@ export interface Customer {
   mail: string;
   representative: string;
   external_code: number;
+  id: number
 }
 export interface CustomerDetail {
   tenant_id: number;

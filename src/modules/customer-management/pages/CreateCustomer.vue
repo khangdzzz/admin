@@ -145,7 +145,8 @@ const handleClickSubmit = async (): Promise<void> => {
       callback: (isConfirm: boolean) => {
         isConfirm;
         router.push({
-          name: routeNames.customerList
+          name: routeNames.customerDetail,
+          params: { id: res.id }
         });
         clearInputs();
       }
