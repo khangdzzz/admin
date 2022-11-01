@@ -119,7 +119,7 @@ const initialize = async (): Promise<void> => {
       { key: "name", value: name || NULL_VALUE_DISPLAY },
       { key: "name_kana", value: name_kana || NULL_VALUE_DISPLAY },
       { key: "employee_code", value: employee_code || NULL_VALUE_DISPLAY },
-      { key: "email", value: email || NULL_VALUE_DISPLAY },
+      { key: "staff_email_detail", value: email || NULL_VALUE_DISPLAY },
       { key: "telephone", value: telephone || NULL_VALUE_DISPLAY },
       { key: "type", value: belongs || NULL_VALUE_DISPLAY },
       { key: "user_role", value: user_role || NULL_VALUE_DISPLAY },
