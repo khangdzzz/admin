@@ -218,7 +218,7 @@ export async function updateVehicle(
       vehicle_type_id: vehicleType,
       name: makeUniqueName(vehicleName),
       plate_number: vehiclePlate,
-      max_capacity: maxWeight,
+      max_capacity: maxWeight || null,
       permission_flag: isHasPermission
     }
   });
