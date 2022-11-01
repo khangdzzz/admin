@@ -6,6 +6,7 @@ export interface CustomerModel {
   phoneNumber: string | null;
   address: string | null;
   postalCode: string | null;
+  externalCode?: string | null;
 }
 
 export interface Customer {
@@ -17,8 +18,8 @@ export interface Customer {
   telephone: string;
   mail: string;
   representative: string;
-  external_code: number;
-  id: number
+  external_code?: string;
+  id: number;
 }
 export interface CustomerDetail {
   tenant_id: number;
@@ -36,7 +37,7 @@ export interface CustomerDetail {
   address: string;
   telephone: string;
   report_to: number;
-  external_code: number;
+  external_code?: string;
 }
 
 export interface EditCustomerDto {
@@ -48,7 +49,7 @@ export interface EditCustomerDto {
   telephone?: string;
   mail?: string;
   representative?: string;
-  external_code?: number;
+  external_code?: string;
 }
 
 export interface CustomerDetail {
@@ -67,7 +68,7 @@ export interface CustomerDetail {
   address: string;
   telephone: string;
   report_to: number;
-  external_code: number;
+  external_code?: string;
 }
 
 export interface EditCustomerDto {
@@ -79,5 +80,5 @@ export interface EditCustomerDto {
   telephone?: string;
   mail?: string;
   representative?: string;
-  external_code?: number;
+  external_code?: string;
 }

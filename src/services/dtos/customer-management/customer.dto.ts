@@ -25,4 +25,5 @@ export interface CustomerResponseDto {
   address: string | null;
   telephone: string | null;
   report_to: number;
+  external_code: string | null;
 }

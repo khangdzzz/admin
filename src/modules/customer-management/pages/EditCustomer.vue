@@ -353,9 +353,8 @@ const init = async (): Promise<void> => {
     address.value = res.address;
     phoneNumber.value = res.telephone;
     email.value = res.mail;
-
     representative.value = res.representative;
-    externalCode.value = res.external_code;
+    externalCode.value = res.external_code ?? "";
   }
   isLoading.value = false;
 };
@@ -403,7 +402,7 @@ const handleClickSave = async (): Promise<void> => {
     ...(representative.value && {
       representative: representative.value as string
     }),
-    ...(externalCode.value && { external_code: externalCode.value as number })
+    ...(externalCode.value && { external_code: externalCode.value as string })
   };
   isLoading.value = true;
   const { error } = await service.customerManagement.editCustomerById(

@@ -80,6 +80,7 @@ export async function fetchListCustomer(
         postal_code,
         mail: email,
         address,
+        external_code,
         ...rest
       } = customerDto;
       return {
@@ -88,7 +89,8 @@ export async function fetchListCustomer(
         phoneNumber: telephone || NULL_VALUE_DISPLAY,
         postalCode: postal_code || NULL_VALUE_DISPLAY,
         email: email || NULL_VALUE_DISPLAY,
-        address: address || NULL_VALUE_DISPLAY
+        address: address || NULL_VALUE_DISPLAY,
+        externalCode: external_code || NULL_VALUE_DISPLAY
       };
     })
   };
