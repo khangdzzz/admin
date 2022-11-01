@@ -79,7 +79,7 @@ let isExistName = async (): Promise<void> => {
   if (isExist.value) {
     return Promise.reject(
       i18n.global.t("error_unique_constraint", {
-        fieldName: i18n.global.t("name")
+        fieldName: i18n.global.t("human_name")
       })
     );
   }
@@ -94,8 +94,8 @@ const formData = reactive<FormData>({
     {
       inputType: "AInput",
       value: "",
-      placeHolder: "name",
-      label: "name",
+      placeHolder: "human_name",
+      label: "human_name",
       name: "name",
       disabled: false,
       required: true,
@@ -105,7 +105,7 @@ const formData = reactive<FormData>({
         {
           required: true,
           message: i18n.global.t("please_enter_input", {
-            fieldName: i18n.global.t("name").toLowerCase()
+            fieldName: i18n.global.t("human_name").toLowerCase()
           }),
           trigger: ["blur", "change"]
         },
@@ -154,8 +154,8 @@ const formData = reactive<FormData>({
     {
       inputType: "AInput",
       value: "",
-      placeHolder: "name_kana",
-      label: "name_kana",
+      placeHolder: "human_name_kana",
+      label: "human_name_kana",
       name: "kana",
       disabled: false,
       required: false,
@@ -166,8 +166,8 @@ const formData = reactive<FormData>({
     {
       inputType: "AInput",
       value: "",
-      placeHolder: "postal_code",
-      label: "postal_code",
+      placeHolder: "common_postal_code_label",
+      label: "common_postal_code_label",
       name: "postalCode",
       disabled: false,
       required: false,

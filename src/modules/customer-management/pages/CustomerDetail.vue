@@ -113,10 +113,13 @@ const initialize = async (): Promise<void> => {
     } = res;
 
     customerDetails.value = [
-      { key: "name", value: name || NULL_VALUE_DISPLAY },
+      { key: "human_name", value: name || NULL_VALUE_DISPLAY },
       { key: "short_name", value: short_name || NULL_VALUE_DISPLAY },
-      { key: "name_kana", value: name_kana || NULL_VALUE_DISPLAY },
-      { key: "postal_code", value: postal_code || NULL_VALUE_DISPLAY },
+      { key: "human_name_kana", value: name_kana || NULL_VALUE_DISPLAY },
+      {
+        key: "common_postal_code_field_name",
+        value: postal_code || NULL_VALUE_DISPLAY
+      },
       { key: "address", value: address || NULL_VALUE_DISPLAY },
       { key: "phone_number", value: telephone || NULL_VALUE_DISPLAY },
       { key: "collection_email", value: mail || NULL_VALUE_DISPLAY },

@@ -107,8 +107,8 @@ export const formData = (): FormData => {
       {
         inputType: "AInput",
         value: "",
-        placeHolder: "postal_code",
-        label: "postal_code",
+        placeHolder: "common_postal_code_label",
+        label: "common_postal_code_label",
         name: "postalCode",
         disabled: false,
         required: true,

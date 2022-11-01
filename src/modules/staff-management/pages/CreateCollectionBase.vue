@@ -236,7 +236,7 @@ onMounted(() => {
         return Promise.reject(
           i18n.global.t("please_enter_input", currentLanguage, {
             fieldName: i18n.global
-              .t("postal_code", currentLanguage)
+              .t("common_postal_code_field_name", currentLanguage)
               .toLowerCase()
           })
         );
@@ -249,7 +249,9 @@ onMounted(() => {
       if (isPostalCodeHasError.value)
         return Promise.reject(
           i18n.global.t("cannot_find_address_from_field_name", {
-            fieldName: i18n.global.t("postal_code").toLowerCase()
+            fieldName: i18n.global
+              .t("common_postal_code_field_name")
+              .toLowerCase()
           })
         );
 

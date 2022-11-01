@@ -7,8 +7,8 @@ export const formData: FormData = {
     {
       inputType: "AInput",
       value: "",
-      placeHolder: "name",
-      label: "name",
+      placeHolder: "human_name",
+      label: "human_name",
       name: "name",
       disabled: false,
       required: true,
@@ -18,7 +18,7 @@ export const formData: FormData = {
         {
           required: true,
           message: i18n.global.t("please_enter_input", {
-            fieldName: i18n.global.t("name").toLowerCase()
+            fieldName: i18n.global.t("human_name").toLowerCase()
           }),
           trigger: ["blur", "change"]
         },
@@ -59,8 +59,8 @@ export const formData: FormData = {
     {
       inputType: "AInput",
       value: "",
-      placeHolder: "name_kana",
-      label: "name_kana",
+      placeHolder: "human_name_kana",
+      label: "human_name_kana",
       name: "kana",
       disabled: false,
       required: false,
@@ -71,8 +71,8 @@ export const formData: FormData = {
     {
       inputType: "AInput",
       value: "",
-      placeHolder: "postal_code",
-      label: "postal_code",
+      placeHolder: "common_postal_code_label",
+      label: "common_postal_code_label",
       name: "postalCode",
       disabled: false,
       required: false,

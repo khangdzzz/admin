@@ -51,14 +51,16 @@
         <template #headerCell="{ column }">
           <template v-if="column.key === 'name'">
             <div class="header-title" @click="changeSortName()">
-              <span class="header-title">{{ $t("name") }}</span>
+              <span class="header-title">{{ $t("human_name") }}</span>
               <SortView class="mx-12" :sort="sortName" />
             </div>
           </template>
 
           <template v-if="column.key === 'postalCode'">
             <div class="header-title" @click="changeSortPostalCode()">
-              <span class="header-title">{{ $t("postal_code") }}</span>
+              <span class="header-title">{{
+                $t("common_postal_code_field_name")
+              }}</span>
               <SortView class="mx-12" :sort="sortPostalCode" />
             </div>
           </template>
