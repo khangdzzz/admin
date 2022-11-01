@@ -8,7 +8,7 @@
     <a-spin :tip="$t('common_loading')" :spinning="isLoading">
       <div class="edit-vehicle-content">
         <h2 class="title">{{ $t("vehicle_edit") }}</h2>
-        <div class="create-form">
+        <div class="edit-form">
           <a-form :model="dynamicValidateForm" name="basic" autocomplete="off">
             <a-form-item
               name="formDatavalue"
@@ -462,7 +462,7 @@ watch(
   }
 }
 :deep() {
-  .create-form {
+  .edit-form {
     .ant-form {
       .ant-form-item {
         margin-bottom: 20px;
@@ -470,7 +470,7 @@ watch(
           .ant-form-item-explain {
             .ant-form-item-explain-error {
               line-height: 14.06px;
-              margin-bottom: 5px;
+              margin-bottom: 5px !important;
             }
           }
           .ant-form-item-control-input {
