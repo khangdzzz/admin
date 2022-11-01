@@ -350,6 +350,7 @@ const onChange = (pageNumber: number): void => {
   initialize();
 };
 const handleBackToList = (): void => {
+  isLoading.value = true
   searchString.value = "";
 };
 const customRow = (
