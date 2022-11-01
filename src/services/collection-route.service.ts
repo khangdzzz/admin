@@ -73,10 +73,10 @@ export async function getListCollectionRoutes(
   if (error || !res) return undefined;
   if (!res) return Promise.resolve(undefined);
   const {
-    current_page: currentPage,
-    page_size: pageSize,
-    count: total,
-    total_page: totalPage,
+    current_page: currentPage = page,
+    page_size: pageSize = size,
+    count: total = 0,
+    total_page: totalPage = 1,
     results
   } = res;
   return {
@@ -102,8 +102,7 @@ export async function getListCollectionRoutes(
         name,
         numberOfStore: number_collect_points,
         navigationId: navigation_id,
-        notice,
-        
+        notice
       };
     })
   };
