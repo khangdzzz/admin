@@ -138,7 +138,7 @@ const formData = ref([
     rules: [
       {
         validator: (_rule: Rule, value: string): Promise<void> => {
-          const error = validateContainerWeight(value);
+          const error = validateContainerWeight(true, value);
           if (error) return Promise.reject(error);
           return Promise.resolve();
         },
@@ -282,7 +282,7 @@ const isAllowSubmit = computed(() => {
   if (validateContainerName(formData.value[0].value, false)) {
     return false;
   }
-  if (validateContainerWeight(formData.value[2].value)) {
+  if (validateContainerWeight(true, formData.value[2].value)) {
     return false;
   }
   if (validateContainerCapacity(formData.value[3].value)) {

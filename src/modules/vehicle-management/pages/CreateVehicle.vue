@@ -96,6 +96,7 @@ import CustomForm from "@/modules/base/components/CustomForm.vue";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import { UserType } from "@/modules/base/models/user-type.enum";
+import { validateContainerWeight } from "@/modules/container/validators/container.validator";
 import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
@@ -242,23 +243,12 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
       disabled: isLoading,
       rules: [
         {
-          validator: (rule: Rule, value: string): Promise<void> => {
-            if (!value) return Promise.resolve();
-
-            const regex = /[\d.]/;
-            if (value && value.length > 10) {
-              return Promise.reject(
-                i18n.global.t("max_length_input", { maxLength: 10 })
-              );
-            }
-
-            if (value && !regex.test(value)) {
-              return Promise.reject(i18n.global.t("allow_input_number"));
-            }
-
+          validator: (_rule: Rule, value: string): Promise<void> => {
+            const error = validateContainerWeight(false, value);
+            if (error) return Promise.reject(error);
             return Promise.resolve();
           },
-          trigger: ["change", "blur"]
+          trigger: ["blur", "change"]
         }
       ],
       required: false,
@@ -354,7 +344,8 @@ const onCreate = async (): Promise<void> => {
     vehicleName: dynamicValidateForm.formData[2].value,
     vehiclePlate: dynamicValidateForm.formData[3].value,
     maxWeight: +dynamicValidateForm.formData[4].value,
-    isHasPermission: checkPermission.value ? 1 : 0
+    isHasPermission: checkPermission.value ? 1 : 0,
+    vehicleTypeId: 0 //ignore this value
   };
   const res = await service.vehicle.createVehicle(vehicleInfo);
 
@@ -382,16 +373,12 @@ const onCreate = async (): Promise<void> => {
 //#region reactive
 
 watch(dynamicValidateForm, () => {
-  const regex = /[\d.]/;
   if (
     dynamicValidateForm.formData[0].value &&
     dynamicValidateForm.formData[1].value &&
     handleValidateFields(dynamicValidateForm.formData[2].value, 50, true) &&
     handleValidateFields(dynamicValidateForm.formData[3].value, 50, true) &&
-    handleValidateFields(dynamicValidateForm.formData[4].value, 10, false) &&
-    (dynamicValidateForm.formData[4].value
-      ? regex.test(dynamicValidateForm.formData[4].value)
-      : true)
+    !validateContainerWeight(false, dynamicValidateForm.formData[4].value)
   ) {
     isValidated.value = true;
   } else {
