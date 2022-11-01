@@ -383,13 +383,14 @@ const customRow = (
   };
 };
 
-const editStaff = ($event: MouseEvent, id: number): void => {
-  if ($event.stopPropagation) $event.stopPropagation();
+const editStaff = (e: MouseEvent, id: number): void => {
+  if (e && e.stopPropagation) e.stopPropagation();
   console.log("editStaff: ", id);
   // router.push({name: routeNames.editStaff, params: { id: staff.id}});
 };
 
-const deleteStaff = ($event: MouseEvent, id?: number): void => {
+const deleteStaff = (e: MouseEvent, id?: number): void => {
+  if (e && e.stopPropagation) e.stopPropagation();
   messenger({
     title: "popup_msg_confirm_delete",
     message: "",
