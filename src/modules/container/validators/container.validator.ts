@@ -20,7 +20,8 @@ export const validateContainerName = (
   return "";
 };
 
-export const validateContainerWeight = (
+export const validateWeight = (
+  fieldName: string,
   isRequire: boolean,
   value: string
 ): string => {
@@ -28,7 +29,7 @@ export const validateContainerWeight = (
 
   if (!value) {
     return i18n.global.t("please_enter_input", {
-      fieldName: i18n.global.t("container_weight").toLowerCase()
+      fieldName: i18n.global.t(fieldName).toLowerCase()
     });
   }
   if (!/^[0-9.-]*$/.test(value)) {
@@ -39,7 +40,7 @@ export const validateContainerWeight = (
   }
   if (!/(^0|^[1-9][0-9]{1,5})\.([0-9]{1,2}$)|(^[1-9][0-9]{0,7}$)/.test(value)) {
     return i18n.global.t("invalid_field_name", {
-      fieldName: i18n.global.t("container_weight").toLowerCase()
+      fieldName: i18n.global.t(fieldName).toLowerCase()
     });
   }
   return "";

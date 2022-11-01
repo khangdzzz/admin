@@ -62,7 +62,7 @@ import { useRoute } from "vue-router";
 import { Container, ContainerSelection } from "../models/container.model";
 import {
   validateContainerName,
-  validateContainerWeight,
+  validateWeight,
   validateContainerCapacity
 } from "../validators/container.validator";
 
@@ -145,7 +145,7 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
       rules: [
         {
           validator: (_rule: Rule, value: string): Promise<void> => {
-            const error = validateContainerWeight(true, value);
+            const error = validateWeight("container_weight", true, value);
             if (error) return Promise.reject(error);
             return Promise.resolve();
           },
@@ -302,7 +302,13 @@ const isAllowSubmit = computed(() => {
   if (validateContainerName(dynamicValidateForm.formData[0].value, false)) {
     return false;
   }
-  if (validateContainerWeight(true, dynamicValidateForm.formData[2].value)) {
+  if (
+    validateWeight(
+      "container_weight",
+      true,
+      dynamicValidateForm.formData[2].value
+    )
+  ) {
     return false;
   }
   if (validateContainerCapacity(dynamicValidateForm.formData[3].value)) {

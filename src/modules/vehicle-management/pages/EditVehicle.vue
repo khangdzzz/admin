@@ -90,7 +90,7 @@ import { i18n } from "@/i18n";
 import CustomForm from "@/modules/base/components/CustomForm.vue";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
-import { validateContainerWeight } from "@/modules/container/validators/container.validator";
+import { validateWeight } from "@/modules/container/validators/container.validator";
 import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
@@ -238,7 +238,11 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
       rules: [
         {
           validator: (_rule: Rule, value: string): Promise<void> => {
-            const error = validateContainerWeight(false, value);
+            const error = validateWeight(
+              "vehicle_max_loading_weight",
+              false,
+              value
+            );
             if (error) return Promise.reject(error);
             return Promise.resolve();
           },
@@ -378,7 +382,11 @@ watch(
       dynamicValidateForm.formData[1].value &&
       handleValidateFields(dynamicValidateForm.formData[2].value, 50, true) &&
       handleValidateFields(dynamicValidateForm.formData[3].value, 50, true) &&
-      !validateContainerWeight(false, dynamicValidateForm.formData[4].value)
+      !validateWeight(
+        "vehicle_max_loading_weight",
+        false,
+        dynamicValidateForm.formData[4].value
+      )
     ) {
       isValidated.value = true;
     } else {
