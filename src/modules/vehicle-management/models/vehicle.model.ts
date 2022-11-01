@@ -2,7 +2,7 @@ export interface PageOption {
   pageSize: number;
   pageIndex: number;
   totalItems: number;
-  currentPage:number
+  currentPage: number;
 }
 export interface VehicleSelection {
   value: string | number;
@@ -10,10 +10,11 @@ export interface VehicleSelection {
 }
 export interface Vehicle {
   id: number | undefined | string;
-  ownerType: number ;
+  ownerType: number;
   ownerId?: number;
   ownerName?: string;
   vehicleType: number | string;
+  vehicleTypeId: number;
   vehicleName: string;
   vehiclePlate: string;
   maxWeight?: number;
