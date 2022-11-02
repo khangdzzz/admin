@@ -25,12 +25,29 @@
               @on-blur="handleOnDuoInputs2Blur"
             />
           </div>
-          <a-form-item name="note" label="" class="mb-20 form-item-note">
+          <a-form-item
+            name="note"
+            label=""
+            class="mb-20 form-item-note"
+            :class="
+              formNoteError
+                ? ['ant-form-item-has-error', ' ant-form-item-with-help']
+                : ''
+            "
+          >
             <label class="label-note">{{
               $t("collection_route_detail_note")
             }}</label>
             <div class="edit-collection-route-order__note">
-              <a-textarea :maxlength="255" v-model:value="formNote.note" />
+              <a-textarea :maxlength="777" v-model:value="formNote.note" />
+            </div>
+            <div
+              :class="formNoteError ? '' : 'active'"
+              class="ant-form-item-explain ant-form-item-explain-connected"
+            >
+              <div role="alert" class="ant-form-item-explain-error mt-10 mb-0">
+                {{ $t("max_length_input", { maxLength: 255 }) }}
+              </div>
             </div>
           </a-form-item>
           <div class="">
@@ -202,13 +219,14 @@ const isDisableSubmit = ref<boolean>(true);
 const formNote = reactive<Form>({ note: "" });
 const listCollectionPoint = ref<CollectionPoint[]>([]);
 const listSelectedCollectionPoint = ref<CollectionPoint[]>([]);
+const formNoteError = ref<boolean>(false);
 const listCollectionBase = ref<CollectionBase[]>();
 const handleSubmitBtn = reactive<any>({
   formData: formData,
-  listSelectedCollectionPoint: listSelectedCollectionPoint
+  listSelectedCollectionPoint: listSelectedCollectionPoint,
+  formNoteError: formNoteError
 });
 const isLoading = ref<boolean>(false);
-
 const route = useRoute();
 
 //#endregion
@@ -367,7 +385,8 @@ const activeSubmitButton = (): void => {
   if (
     handleSubmitBtn.formData.duoInputs[0].value &&
     handleSubmitBtn.formData.duoInputs2[0].value &&
-    handleSubmitBtn.listSelectedCollectionPoint.length > 0
+    handleSubmitBtn.listSelectedCollectionPoint.length > 0 &&
+    handleSubmitBtn.formNoteError
   ) {
     isDisableSubmit.value = false;
   } else {
@@ -380,6 +399,13 @@ const activeSubmitButton = (): void => {
 //#region reactive
 watch(handleSubmitBtn, () => {
   activeSubmitButton();
+});
+watch(formNote, () => {
+  if (formNote.note.length > 225) {
+    formNoteError.value = true;
+  } else {
+    formNoteError.value = false;
+  }
 });
 //#endregion
 </script>
@@ -442,8 +468,6 @@ watch(handleSubmitBtn, () => {
     background: $white;
     border: 1px solid $primary;
     color: $primary;
-  }
-  .edit-collection-route-order__duo-inputs-wrapper {
   }
   .collection-point {
     &__head {
@@ -519,10 +543,12 @@ watch(handleSubmitBtn, () => {
   }
   .collection-point__data-left .collection-point__data-item:hover {
     background-color: $primary-100;
+    transition: background-color 0.5s;
   }
 
   .collection-point__data-right .collection-point__data-item:hover {
     background-color: $neutral-0;
+    transition: background-color 0.5s;
   }
   .collection-point__head--title {
     font-family: "Roboto";
@@ -585,10 +611,11 @@ watch(handleSubmitBtn, () => {
       padding-right: 8px;
       font-size: 6px;
       color: $neutral-400;
-      line-height: 17px;
     }
     .helper-item {
-      // line-height: 100%;
+      height: 18px;
+      line-height: 100%;
+      color: $neutral-600;
     }
   }
   .edit-collection-point__btn-style {
@@ -617,7 +644,7 @@ watch(handleSubmitBtn, () => {
     line-height: 100%;
     color: $neutral-400;
     top: 28px;
-    left: 10px;
+    left: 13px;
   }
 
   .form-item-note {
@@ -644,6 +671,27 @@ watch(handleSubmitBtn, () => {
   }
   .ant-row .ant-form-item {
     margin-bottom: 0px !important;
+  }
+  textarea.ant-input {
+    background-color: transparent !important;
+  }
+  .edit-collection-route-order__duo-inputs-wrapper .ant-row.ant-form-item {
+    margin-bottom: 20px !important;
+  }
+  .edit-collection-route-order .ant-form-item-explain-error {
+    margin-bottom: 0px !important;
+  }
+  .edit-collection-route-order__note {
+    .ant-input {
+      border-color: transparent;
+      border: 1px solid transparent;
+      outline: none;
+      border-radius: 10px;
+    }
+  }
+  .form-item-note
+    .ant-form-item-explain.ant-form-item-explain-connected.active {
+    display: none;
   }
 }
 </style>
