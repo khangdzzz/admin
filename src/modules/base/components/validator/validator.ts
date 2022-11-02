@@ -89,7 +89,7 @@ const validator = {
     if (!/\+[0-9]{6,15}/.test(value)) {
       return Promise.reject(
         i18n.global.t("invalid_field_name", {
-          fieldName: i18n.global.t("collection_phone_number").toLowerCase()
+          fieldName: i18n.global.t("common_phone_field_name").toLowerCase()
         })
       );
     }

@@ -203,8 +203,8 @@ const formData = reactive<FormData>({
     {
       inputType: "AInput",
       value: "",
-      placeHolder: "phone_number",
-      label: "phone_number",
+      placeHolder: "common_phone_field_label",
+      label: "common_phone_field_label",
       name: "phoneNumber",
       disabled: false,
       required: false,
@@ -228,7 +228,7 @@ const formData = reactive<FormData>({
               return Promise.reject(
                 i18n.global.t("invalid_field_name", currentLanguage, {
                   fieldName: i18n.global
-                    .t("collection_phone_number", currentLanguage)
+                    .t("common_phone_field_name", currentLanguage)
                     .toLowerCase()
                 })
               );

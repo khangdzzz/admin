@@ -150,7 +150,6 @@ import { formData as reactiveFormData } from "@/modules/collection-point-managem
 import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
-import { commonStore } from "@/stores";
 import { makeUniqueName } from "@/utils/string.helper";
 import { message } from "ant-design-vue";
 import { Rule } from "ant-design-vue/lib/form";
@@ -171,7 +170,6 @@ import {
 //#endregion
 
 //#region variables
-const userStore = commonStore();
 const currentLanguage =
   localStorage.getItem(localStorageKeys.currentLanguage) || "en";
 const formData = reactive<FormData>(reactiveFormData());
@@ -213,7 +211,7 @@ onMounted(async () => {
         return Promise.reject(
           i18n.global.t("please_enter_input", currentLanguage, {
             fieldName: i18n.global
-              .t("common_postal_code_field_name", currentLanguage)
+              .t("common_postal_code_label", currentLanguage)
               .toLowerCase()
           })
         );
@@ -226,9 +224,7 @@ onMounted(async () => {
       if (isPostalCodeHasError.value)
         return Promise.reject(
           i18n.global.t("cannot_find_address_from_field_name", {
-            fieldName: i18n.global
-              .t("common_postal_code_field_name")
-              .toLowerCase()
+            fieldName: i18n.global.t("common_postal_code_label").toLowerCase()
           })
         );
 
@@ -294,8 +290,6 @@ const handleSubmit = async (): Promise<void> => {
     latitude: geoLocations.value.length ? geoLocations.value[0][0] : null,
     longitude: geoLocations.value.length ? geoLocations.value[0][1] : null
   };
-
-  if (!userStore.user) return;
 
   isSubmitting.value = true;
   setBtnActionDisableState(true);

@@ -7,7 +7,7 @@ export const columns = [
     key: "name"
   },
   {
-    title: i18n.global.t("common_postal_code_field_name"),
+    title: i18n.global.t("common_postal_code_label"),
     dataIndex: "postalCode",
     key: "postalCode"
   },
@@ -18,7 +18,7 @@ export const columns = [
     width: "33%"
   },
   {
-    title: i18n.global.t("phone_number"),
+    title: i18n.global.t("common_phone_field_name"),
     dataIndex: "phoneNumber",
     key: "phoneNumber"
   },

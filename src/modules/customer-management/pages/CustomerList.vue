@@ -59,7 +59,7 @@
           <template v-if="column.key === 'postalCode'">
             <div class="header-title" @click="changeSortPostalCode()">
               <span class="header-title">{{
-                $t("common_postal_code_field_name")
+                $t("common_postal_code_label")
               }}</span>
               <SortView class="mx-12" :sort="sortPostalCode" />
             </div>
@@ -73,7 +73,9 @@
 
           <template v-if="column.key === 'phoneNumber'">
             <div class="header-title" @click="changeSortPhoneNumber()">
-              <span class="header-title">{{ $t("phone_number") }}</span>
+              <span class="header-title">{{
+                $t("common_phone_field_name")
+              }}</span>
               <SortView class="mx-12" :sort="sortPhoneNumber" />
             </div>
           </template>

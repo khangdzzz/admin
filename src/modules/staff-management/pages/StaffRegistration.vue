@@ -85,8 +85,8 @@
               ]"
             ></FloatingLabelInput>
             <FloatingLabelInput
-              place-holder="telephone"
-              label="telephone"
+              place-holder="common_phone_field_label"
+              label="common_phone_field_label"
               control-name="telephone"
               v-model:value="formState.telephone"
               :rules="[
