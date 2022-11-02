@@ -68,10 +68,11 @@ const messenger: (
   param: MessengerParamModel
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 ) => void = inject("messenger")!;
-const formData = reactive<FormData>(reactiveFormData);
+const formData = reactive<FormData>(reactiveFormData());
 const { singleInput, duoInputs } = formData;
 const isSubmitting = ref<boolean>(false);
 const createCustomerForm = ref();
+
 //#endregion
 
 //#region hooks
