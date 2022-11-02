@@ -222,9 +222,9 @@ const init = async (): Promise<void> => {
       { key: "name", value: name },
       { key: "short_name", value: short_name },
       { key: "name_kana", value: name_kana },
-      { key: "common_postal_code_field_name", value: postcode || "" },
+      { key: "common_postal_code_label", value: postcode || "" },
       { key: "address", value: address || "" },
-      { key: "phone_number", value: telephone || "" },
+      { key: "common_phone_field_name", value: telephone || "" },
       { key: "collection_base_lbl_email", value: mail || "" },
       { key: "external_code", value: external_code }
     ];

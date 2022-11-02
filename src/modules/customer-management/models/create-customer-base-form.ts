@@ -108,8 +108,8 @@ export const formData: FormData = {
     {
       inputType: "AInput",
       value: "",
-      placeHolder: "phone_number",
-      label: "phone_number",
+      placeHolder: "common_phone_field_label",
+      label: "common_phone_field_label",
       name: "phoneNumber",
       disabled: false,
       required: false,

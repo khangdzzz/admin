@@ -117,11 +117,14 @@ const initialize = async (): Promise<void> => {
       { key: "short_name", value: short_name || NULL_VALUE_DISPLAY },
       { key: "human_name_kana", value: name_kana || NULL_VALUE_DISPLAY },
       {
-        key: "common_postal_code_field_name",
+        key: "common_postal_code_label",
         value: postal_code || NULL_VALUE_DISPLAY
       },
       { key: "address", value: address || NULL_VALUE_DISPLAY },
-      { key: "phone_number", value: telephone || NULL_VALUE_DISPLAY },
+      {
+        key: "common_phone_field_name",
+        value: telephone || NULL_VALUE_DISPLAY
+      },
       { key: "collection_email", value: mail || NULL_VALUE_DISPLAY },
       {
         key: "pair",

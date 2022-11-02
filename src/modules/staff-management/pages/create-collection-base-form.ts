@@ -130,8 +130,8 @@ export const formData = (): FormData => {
       {
         inputType: "AInput",
         value: "",
-        placeHolder: "collection_phone_number",
-        label: "collection_phone_number",
+        placeHolder: "common_phone_field_label",
+        label: "common_phone_field_label",
         name: "telephone",
         disabled: false,
         required: false,
@@ -153,7 +153,7 @@ export const formData = (): FormData => {
                 return Promise.reject(
                   i18n.global.t("invalid_field_name", currentLanguage, {
                     fieldName: i18n.global
-                      .t("collection_phone_number", currentLanguage)
+                      .t("common_phone_field_name", currentLanguage)
                       .toLowerCase()
                   })
                 );

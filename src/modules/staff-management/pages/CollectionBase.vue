@@ -173,7 +173,7 @@ const columns = [
     key: "name"
   },
   {
-    title: i18n.global.t("common_postal_code_field_name"),
+    title: i18n.global.t("common_postal_code_label"),
     dataIndex: "postalCode",
     key: "postal_code"
   },
@@ -183,7 +183,7 @@ const columns = [
     key: "address"
   },
   {
-    title: i18n.global.t("collection_phone_number"),
+    title: i18n.global.t("common_phone_field_name"),
     dataIndex: "telephone",
     key: "telephone"
   },
