@@ -17,8 +17,10 @@
         :bordered="false"
         :value="value"
         :options="options"
+        show-search
         :open="isFocused"
         @change="dataChange"
+        :filter-option="filterOption"
       >
         <template #suffixIcon>
           <div></div>
@@ -104,6 +106,9 @@ const emit = defineEmits<{
 //#region function
 const focus = (id: string): void => {
   document.getElementById(id)?.focus();
+};
+const filterOption = (input: string, option: any): boolean => {
+  return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
 };
 const dataChange = (value: string): void => {
   emit("update:value", value || "");

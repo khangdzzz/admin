@@ -312,8 +312,6 @@ const optionValue = reactive<{
 
 //#region hooks
 onMounted(() => {
-  console.log(userStore.user);
-
   if (userStore.user?.userType === UserType.CollectionBaseAdmin) {
     optionValue.typeOptions = radioOptions.typeOptions.filter(
       (item) => item.value === TypeOptions.TENANT
