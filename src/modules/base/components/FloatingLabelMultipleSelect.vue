@@ -27,6 +27,7 @@
         @focusin="isFocused = true"
         @focusout="isFocused = false"
         @change="dataChange"
+        :filter-option="filterOption"
       >
         <template #option="{ value: optionValue, content, label }">
           <div class="d-flex align-center gap-10">
@@ -130,7 +131,10 @@ const emit = defineEmits<{
 const focus = (id: string): void => {
   document.getElementById(id)?.focus();
 };
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const filterOption = (input: string, option: any): boolean => {
+  return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+};
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const dataChange = (value: any[]): void => {
   emit("update:value", value || []);

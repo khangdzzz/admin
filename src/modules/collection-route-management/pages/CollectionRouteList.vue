@@ -110,18 +110,12 @@
           </template>
           <template v-if="column.dataIndex === 'action'">
             <center>
-              <router-link
-                :to="{
-                  params: {
-                    id: record.id
-                  }
-                }"
-              >
-                <img
-                  src="@/assets/icons/ic_btn_edit.svg"
-                  :class="[collectionRouteList.actionIcon]"
-                />
-              </router-link>
+              <img
+                src="@/assets/icons/ic_btn_edit.svg"
+                :class="[collectionRouteList.actionIcon]"
+                @click="(event: MouseEvent) => goToEditPage(event, record.id)"
+              />
+
               <img
                 src="@/assets/icons/ic_btn_delete.svg"
                 :class="[collectionRouteList.actionIcon]"
@@ -368,6 +362,17 @@ const customRow = (
     }
   };
 };
+
+const goToEditPage = ($event: MouseEvent, id?: number): void => {
+  if ($event.stopPropagation) $event.stopPropagation();
+  router.push({
+    name: routeNames.editCollectionRouteOrder,
+    params: {
+      id
+    }
+  });
+};
+
 const deleteCollectionRoute = ($event: MouseEvent, id?: number): void => {
   if ($event.stopPropagation) $event.stopPropagation();
   messenger({
