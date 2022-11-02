@@ -353,13 +353,29 @@ const getListWorkPlace = async (): Promise<void> => {
   }
 };
 const filterWorkPlaceByType = async (role: any): Promise<void> => {
-  const filter = await listWorkPlace.value?.filter(
-    (item: selects) =>
-      role.workPlaceType?.includes(item.workPlaceType) &&
-      (role.baseType?.includes(item.baseType) || role.baseType.length === 0) &&
-      item.tenantId === userStore.user?.tenantId
-  );
-  optionValue.workPlaceOptions = filter;
+  if (userStore.user?.userType === UserType.TenantAdmin) {
+    const filter = await listWorkPlace.value?.filter(
+      (item: selects) =>
+        ((role.workPlaceType?.includes(item.workPlaceType) &&
+          (role.baseType?.includes(item.baseType) ||
+            role.baseType.length === 0)) ||
+          role.optionalType?.includes(item.workPlaceType)) &&
+        item.tenantId === userStore.user?.tenantId
+    );
+    optionValue.workPlaceOptions = filter;
+  }
+  if (userStore.user?.userType === UserType.CollectionBaseAdmin) {
+    const filter = await listWorkPlace.value?.filter(
+      (item: selects) =>
+        ((role.workPlaceType?.includes(item.workPlaceType) &&
+          (role.baseType?.includes(item.baseType) ||
+            role.baseType.length === 0)) ||
+          role.optionalType?.includes(item.workPlaceType)) &&
+        item.tenantId === userStore.user?.tenantId &&
+        userStore.user?.workplaces.includes(Number(item.value))
+    );
+    optionValue.workPlaceOptions = filter;
+  }
 };
 
 const handleClearInput = (): void => {

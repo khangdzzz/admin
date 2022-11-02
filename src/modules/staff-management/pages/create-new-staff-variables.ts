@@ -40,7 +40,8 @@ const radioOptions = {
       text: "lbl_driver",
       value: UserRoleOptions.DRIVER,
       workPlaceType: [1],
-      baseType: [1, 3]
+      baseType: [1, 3],
+      optionalType: [2]
     },
     {
       text: "manufacture_staff",
