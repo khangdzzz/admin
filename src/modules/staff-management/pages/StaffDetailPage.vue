@@ -112,7 +112,8 @@ const initialize = async (): Promise<void> => {
       employee_code,
       last_logged_in,
       belongs,
-      is_disable
+      is_disable,
+      workplaces
     } = res;
 
     staffDetails.value = [
@@ -126,7 +127,10 @@ const initialize = async (): Promise<void> => {
       },
       { key: "type", value: belongs || NULL_VALUE_DISPLAY },
       { key: "user_role", value: user_role || NULL_VALUE_DISPLAY },
-      { key: "staff_workplace", value: NULL_VALUE_DISPLAY },
+      {
+        key: "staff_workplace",
+        value: workplaces[0]?.name || NULL_VALUE_DISPLAY
+      },
       { key: "last_login_time", value: last_logged_in || NULL_VALUE_DISPLAY }
     ];
     isAccountEnable.value = is_disable;
