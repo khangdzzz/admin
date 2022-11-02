@@ -270,5 +270,20 @@
   "human_name_kana": "氏名（かな）",
   "common_postal_code_label": "郵便番号",
   "common_phone_field_label": "電話番号（ハイフンなし）",
-  "common_phone_field_name": "電話番号"
+  "common_phone_field_name": "電話番号",
+  "realtime_management": "動態管理",
+  "no_refresh": "自動リフレッシュなし",
+  "number_minute": "{number} 分",
+  "refresh": "Refresh",
+  "username": "ユーザー名",
+  "last_active_time": "最後通知日時",
+  "user_location": "ユーザーの位置",
+  "status_active": "アクティブ",
+  "list_of_user": "ユーザー一覧",
+  "current_location": "現在地",
+  "on_going_collection_point": "未回収地点",
+  "collected_collection_point": "回収済み地点",
+  "time": "時間",
+  "route": "ルート",
+  "loading_weight": "積載量"
 }

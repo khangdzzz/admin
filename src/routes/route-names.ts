@@ -64,5 +64,6 @@ export const routeNames = {
   collectionPointDetail: "COLLECTION_POINT_DETAIL",
   editCollectionPoint: "EDIT_COLLECTION_POINT",
   listCollectionPoint: "LIST_COLLECTION_POINT",
-  createCollectionPoint: "CREATE_COLLECTION_POINT"
+  createCollectionPoint: "CREATE_COLLECTION_POINT",
+  realTimeManagement: "REAL_TIME_MANAGEMENT"
 };

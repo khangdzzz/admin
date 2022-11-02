@@ -399,7 +399,15 @@ const routes: RouteRecordRaw[] = [
     },
     redirect: {
       name: routeNames.default
-    }
+    },
+    children: [
+      {
+        path: "/realtime-management",
+        name: routeNames.realTimeManagement,
+        component: () =>
+          import("@/modules/realtime-management/RealTimeManagement.vue")
+      }
+    ]
   },
   {
     path: "/collection-type-management",

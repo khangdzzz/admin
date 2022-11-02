@@ -65,7 +65,7 @@ const sideMenuItems: SideMenuItems[] = [
       },
       {
         title: "menu_lbl_realtime_management",
-        pathName: routeNames.realTimeDynamics,
+        pathName: routeNames.realTimeManagement,
         requireUserType: [],
         qaAttr: "qa_menu_realtime_management"
       }

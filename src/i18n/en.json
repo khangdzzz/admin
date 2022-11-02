@@ -276,5 +276,20 @@
   "human_name_kana": "Name (Kana)",
   "common_postal_code_label": "Postal code",
   "common_phone_field_label": "Telephone",
-  "common_phone_field_name": "Telephone"
+  "common_phone_field_name": "Telephone",
+  "realtime_management": "Realtime management",
+  "no_refresh": "No refresh",
+  "number_minute": "{number} min",
+  "refresh": "Refresh",
+  "username": "Username",
+  "last_active_time": "Last active time",
+  "user_location": "User location",
+  "status_active": "Active",
+  "list_of_user": "List of user",
+  "current_location": "Current Location",
+  "on_going_collection_point": "On-going collection point",
+  "collected_collection_point": "Collected collection point",
+  "time": "Time",
+  "route": "Route",
+  "loading_weight": "Loading Weight"
 }
