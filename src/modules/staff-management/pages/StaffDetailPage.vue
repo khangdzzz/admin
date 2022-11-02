@@ -116,6 +116,9 @@ const initialize = async (): Promise<void> => {
       workplaces
     } = res;
 
+    const listWorkplacesName = workplaces.map((x) => x.name);
+    const workplacesValue = listWorkplacesName.join(" - ");
+
     staffDetails.value = [
       { key: "human_name", value: name || NULL_VALUE_DISPLAY },
       { key: "human_name_kana", value: name_kana || NULL_VALUE_DISPLAY },
@@ -129,7 +132,7 @@ const initialize = async (): Promise<void> => {
       { key: "user_role", value: user_role || NULL_VALUE_DISPLAY },
       {
         key: "staff_workplace",
-        value: workplaces[0]?.name || NULL_VALUE_DISPLAY
+        value: workplacesValue || NULL_VALUE_DISPLAY
       },
       { key: "last_login_time", value: last_logged_in || NULL_VALUE_DISPLAY }
     ];
