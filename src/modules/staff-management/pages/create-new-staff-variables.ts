@@ -8,46 +8,48 @@ import {
 const radioOptions = {
   typeOptions: [
     {
-      text: i18n.global.t("tenant_collection_base"),
+      text: "tenant_collection_base",
       value: TypeOptions.TENANT
     },
     {
-      text: i18n.global.t("partner"),
+      text: "partner",
       value: TypeOptions.PARTNER
     },
     {
-      text: i18n.global.t("customer"),
+      text: "customer",
       value: TypeOptions.CUSTOMER
     },
     {
-      text: i18n.global.t("destination"),
+      text: "destination",
       value: TypeOptions.DESTINATION
     }
   ],
   userRoleByTenantAdmim: [
     {
-      text: i18n.global.t("tenant_admin"),
-      value: UserRoleOptions.TENANT_ADMIN
+      text: "tenant_admin",
+      value: UserRoleOptions.TENANT_ADMIN,
+      baseType: []
     },
     {
-      text: i18n.global.t("lbl_admin"),
+      text: "lbl_admin",
       value: UserRoleOptions.COLLECTION_BASE_ADMIN,
-      workPlaceType: [1, 2]
+      workPlaceType: [1, 2],
+      baseType: []
     },
     {
-      text: i18n.global.t("lbl_driver"),
+      text: "lbl_driver",
       value: UserRoleOptions.DRIVER,
       workPlaceType: [1],
       baseType: [1, 3]
     },
     {
-      text: i18n.global.t("manufacture_staff"),
+      text: "manufacture_staff",
       value: UserRoleOptions.MANUFACTURING_STAFF,
       workPlaceType: [1],
       baseType: [2, 3]
     },
     {
-      text: i18n.global.t("drive_manufacture_staff"),
+      text: "drive_manufacture_staff",
       value: UserRoleOptions.DRIVER_MANUFACTURING_STAFF,
       workPlaceType: [1],
       baseType: [3]
@@ -55,33 +57,38 @@ const radioOptions = {
   ],
   userRoleByPartner: [
     {
-      text: i18n.global.t("lbl_admin"),
+      text: "lbl_admin",
       value: UserRoleOptions.PARTNER_ADMIN,
-      workPlaceType: [2]
+      workPlaceType: [2],
+      baseType: []
     },
     {
-      text: i18n.global.t("lbl_driver"),
+      text: "lbl_driver",
       value: UserRoleOptions.DRIVER,
-      workPlaceType: [2]
+      workPlaceType: [2],
+      baseType: []
     }
   ],
   userRoleByCustomer: [
     {
-      text: i18n.global.t("discharger"),
+      text: "discharger",
       value: UserRoleOptions.DISCHARGER,
-      workPlaceType: [3]
+      workPlaceType: [3],
+      baseType: []
     },
     {
-      text: i18n.global.t("dashboard_viewer"),
+      text: "dashboard_viewer",
       value: UserRoleOptions.DASHBOARD_USER,
-      workPlaceType: [3]
+      workPlaceType: [3],
+      baseType: []
     }
   ],
   userRoleByDestination: [
     {
-      text: i18n.global.t("consignee"),
+      text: "consignee",
       value: UserRoleOptions.CONSIGNEE,
-      workPlaceType: [4]
+      workPlaceType: [4],
+      baseType: []
     }
   ],
   formData: [

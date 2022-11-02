@@ -72,8 +72,8 @@
               ></FloatingLabelInput>
             </div>
             <FloatingLabelInput
-              place-holder="email"
-              label="email"
+              place-holder="staff_email"
+              label="staff_email"
               control-name="email"
               v-model:value="formState.email"
               :required="true"
@@ -112,6 +112,11 @@
                 >
                   <a-radio
                     class="create-staff__radio-title"
+                    :class="
+                      currentLanguage === 'en'
+                        ? 'en-title-margin'
+                        : 'ja-title-margin'
+                    "
                     v-for="item in optionValue.typeOptions"
                     :value="item.value"
                     :key="item.value"
@@ -136,6 +141,11 @@
                 >
                   <a-radio
                     class="create-staff__radio-title"
+                    :class="
+                      currentLanguage === 'en'
+                        ? 'en-title-margin'
+                        : 'ja-title-margin'
+                    "
                     v-for="item in optionValue.userRoleOptions"
                     :value="item.value"
                     :key="item.value"
@@ -258,7 +268,7 @@ interface selects {
   value: string;
   content: string;
   workPlaceType: number;
-  baseType?: number;
+  baseType?: number[];
   tenantId?: number;
 }
 //#endregion
@@ -272,6 +282,7 @@ const isFetching = ref<boolean>(false);
 const isLoading = ref<boolean>(false);
 const listWorkPlace = ref();
 const createStaffRef = ref();
+const currentLanguage = ref<string>(service.language.getCurrentLanguage());
 const formState = reactive<FormState>({
   employeeCode: "",
   name: "",
@@ -342,12 +353,12 @@ const getListWorkPlace = async (): Promise<void> => {
   }
 };
 const filterWorkPlaceByType = async (role: any): Promise<void> => {
-  const filter = await listWorkPlace.value?.filter((item: selects) =>
-    role.workPlaceType.includes(item.workPlaceType) && role.baseType
-      ? role.baseType.includes(item.baseType)
-      : true && item.tenantId === userStore.user?.tenantId
+  const filter = await listWorkPlace.value?.filter(
+    (item: selects) =>
+      role.workPlaceType?.includes(item.workPlaceType) &&
+      (role.baseType?.includes(item.baseType) || role.baseType.length === 0) &&
+      item.tenantId === userStore.user?.tenantId
   );
-
   optionValue.workPlaceOptions = filter;
 };
 
@@ -648,7 +659,12 @@ watch([optionValue, formState], () => {
   }
   .create-staff__radio-title {
     align-items: center;
+  }
+  .ja-title-margin {
     margin-left: 20px;
+  }
+  .en-title-margin:nth-child(even) {
+    margin-left: 32px;
   }
   .form-create-staff {
     .ant-form-item {
