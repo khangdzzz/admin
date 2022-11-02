@@ -266,7 +266,7 @@ const updateContainer = async (): Promise<void> => {
     name: makeUniqueName(name.value.toString()) || "",
     container_type_id: Number(container_type___name.value),
     weight: Number(weight.value),
-    capacity: Number(capacity.value)
+    capacity: capacity.value || null
   });
   isSubmitting.value = false;
   if (!error) {
