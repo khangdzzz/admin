@@ -7,6 +7,8 @@ export interface UserLocationHistoryModel {
       name: string;
       latitude: number;
       longitude: number;
+      id: number;
+      isCollected: boolean;
     }[];
   };
   history: {
@@ -15,4 +17,12 @@ export interface UserLocationHistoryModel {
     currentWeight: number;
   }[];
   listCollectedPoints: number[];
+  vehicleName: string;
+  vehicleId: number;
+  maxWeight: number;
+  routeName: string;
+  loadingWeight: number;
+  userName: string;
+  currentLat: number;
+  currentLong: number;
 }

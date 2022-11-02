@@ -114,9 +114,16 @@ export async function getUserLocationDetail(
   if (!res || err) {
     return undefined;
   }
+  const lastHistory = res.results[0];
+  const collectedPoint = lastHistory?.list_collected_points || [];
   return {
     collectOrder: {
-      collectPoints: res.collect_order.collect_points.map((point) => point)
+      collectPoints: res.collect_order.collect_points.map((point) => {
+        return {
+          ...point,
+          isCollected: collectedPoint.some((p) => p === point.id)
+        };
+      })
     },
     collectRoute: {
       listCoordinates: JSON.parse(
@@ -130,6 +137,14 @@ export async function getUserLocationDetail(
         currentWeight: history.current_weight
       };
     }),
-    listCollectedPoints: res.results[0]?.list_collected_points || []
+    listCollectedPoints: lastHistory?.list_collected_points || [],
+    maxWeight: lastHistory?.max_weight,
+    routeName: lastHistory?.route_order_name,
+    vehicleId: lastHistory?.vehicle_id,
+    vehicleName: lastHistory?.vehicle_name,
+    loadingWeight: lastHistory?.current_weight,
+    userName: lastHistory?.user_name,
+    currentLat: lastHistory.latitude,
+    currentLong: lastHistory.longitude
   };
 }

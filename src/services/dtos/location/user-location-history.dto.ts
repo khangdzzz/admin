@@ -7,6 +7,7 @@ export interface UserLocationHistoryDto {
       name: string;
       latitude: number;
       longitude: number;
+      id: number;
     }[];
   };
   results: {
@@ -14,5 +15,10 @@ export interface UserLocationHistoryDto {
     longitude: number;
     current_weight: number;
     list_collected_points: number[];
+    vehicle_name: string;
+    vehicle_id: number;
+    route_order_name: string;
+    max_weight: number;
+    user_name: string;
   }[];
 }

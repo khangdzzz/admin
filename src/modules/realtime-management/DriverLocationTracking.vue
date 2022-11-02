@@ -14,7 +14,9 @@
               type="primary"
               class="realtime-manage__refresh-button d-flex align-center gap-10"
             >
-              <template #icon><Refresh /></template>
+              <template #icon>
+                <Refresh />
+              </template>
               {{ $t("refresh") }}
             </a-button>
           </div>
@@ -27,13 +29,8 @@
               class="realtime-manage__table-card-title-wrapper d-flex justify-space-between align-center px-15"
             >
               <div class="realtime-manage__table-card-title">
-                {{
-                  selectedUser?.userName
-                    ? $t("list_of_collection_point")
-                    : $t("list_of_user")
-                }}
+                {{ $t("list_of_collection_point") }}
               </div>
-
               <div
                 class="realtime-manage__table-card-search-input d-flex align-center"
                 :style="
@@ -76,73 +73,28 @@
               <div class="realtime-manage__table-container fill-height">
                 <a-table
                   :scroll="{ y: calculatedTableScrollHeight }"
-                  :columns="listOfUserColumns"
+                  :columns="listOfCollectionPointColumns"
                   :data-source="data"
                   :pagination="false"
                   v-if="!isLoading"
                 >
                   <template #headerCell="{ column }">
-                    <template v-if="column.key === 'userName'">
-                      <div class="header-title">
-                        <span class="header-title">{{ column.title }}</span>
-                      </div>
-                    </template>
-
-                    <template v-if="column.key === 'lastUpdateTime'">
-                      <div class="header-title">
-                        <span class="header-title">{{ column.title }}</span>
-                      </div>
-                    </template>
-
                     <template v-if="column.key === 'name'">
                       <div class="header-title">
                         <span class="header-title">{{ column.title }}</span>
                       </div>
                     </template>
                   </template>
-                  <template #bodyCell="{ column, record, text }">
-                    <template v-if="column.key === 'action'">
-                      <div
-                        :class="
-                          !record.isVisible
-                            ? 'user-enable-status-disabled'
-                            : 'user-enable-status'
-                        "
-                        @click="
-                          changeUserVisibleState(
-                            record.userId,
-                            record.isVisible
-                          )
-                        "
+                  <template #bodyCell="{ column, record }">
+                    <template v-if="column.key === 'name'">
+                      <a
+                        :href="`${collectionPointDetailPath}/${record.id}`"
+                        target="blank"
+                        >{{ record.name }}</a
                       >
-                        <div class="indicator"></div>
-                      </div>
-                    </template>
-                    <template v-if="column.key === 'lastUpdateTime'">
-                      <div>
-                        {{ formatDateTime(text, "yyyy/MM/dd hh:mm:ss") }}
-                      </div>
                     </template>
                   </template>
                 </a-table>
-                <ThePagination
-                  :isShowPagination="
-                    !isLoading && data.length > pageOption.pageSize
-                  "
-                  :currentPage="pageOption.currentPage"
-                  :pageSize="pageOption.pageSize"
-                  :total="pageOption.total"
-                  :isShowPrevBtn="isShowPrevBtn()"
-                  :isShowNextBtn="isShowNextBtn()"
-                  @onShowSizeChange="onShowSizeChange"
-                  @onChange="onChange"
-                />
-                <NoData
-                  :value="searchString"
-                  :is-loading="isLoading"
-                  @onClick="handleBackToList"
-                  v-if="isLoading"
-                />
               </div>
             </div>
           </a-card>
@@ -152,12 +104,8 @@
             <div
               class="realtime-manage__map-title-wrapper d-flex justify-space-between align-center px-15"
             >
-              <div class="realtime-manage__map-title" @click="handleChangeUser">
-                {{
-                  selectedUser && selectedUser.userName
-                    ? selectedUser.userName
-                    : $t("user_location")
-                }}
+              <div class="realtime-manage__map-title">
+                {{ userName ? userName : $t("user_location") }}
               </div>
               <div class="d-flex align-center gap-30">
                 <div class="d-flex gap-30">
@@ -175,61 +123,50 @@
                     </div>
                   </div>
                 </div>
-                <div
-                  class="realtime-manage__floating-selector"
-                  v-if="!selectedUser?.userName"
-                >
-                  <FloatingLabelSelect
-                    place-holder="staff_workplace"
-                    label="staff_workplace"
-                    :required="false"
-                    control-name="workPlace"
-                    :options="listCollectionBase"
-                    :no-label="true"
-                    size="small"
-                    v-model:value="selectedCollectionBase"
-                  >
-                  </FloatingLabelSelect>
-                </div>
               </div>
             </div>
             <div
               class="realtime-manage__user-map-info d-flex align-center justify-space-between px-15 gap-30"
-              v-if="selectedUser?.userName"
             >
               <div>
                 <div class="realtime-manage__user-info-title">
                   {{ $t("time") }}
                 </div>
                 <div class="realtime-manage__user-info-data">
-                  2022/10/02 14:30:12
+                  {{ lastUpdateTime }}
                 </div>
               </div>
               <div>
                 <div class="realtime-manage__user-info-title">
                   {{ $t("route") }}
                 </div>
-                <div class="realtime-manage__user-info-data">Shibuya</div>
+                <div class="realtime-manage__user-info-data">
+                  {{ routeName }}
+                </div>
               </div>
               <div>
                 <div class="realtime-manage__user-info-title">
                   {{ $t("vehicle") }}
                 </div>
                 <div class="realtime-manage__user-info-data">
-                  Kagoshima 100Ah 33-66
+                  {{ vehicleName }}
                 </div>
               </div>
               <div>
                 <div class="realtime-manage__user-info-title">
                   {{ $t("loading_weight") }}
                 </div>
-                <div class="realtime-manage__user-info-data">100 kg</div>
+                <div class="realtime-manage__user-info-data">
+                  {{ loadignWeight }}
+                </div>
               </div>
               <div>
                 <div class="realtime-manage__user-info-title">
                   {{ $t("capacity") }}
                 </div>
-                <div class="realtime-manage__user-info-data">500 kg</div>
+                <div class="realtime-manage__user-info-data">
+                  {{ capacity }}
+                </div>
               </div>
             </div>
             <div>
@@ -255,7 +192,34 @@
                 <!-- list collection point -->
                 <ol-geolocation
                   :projection="projection"
-                  v-for="(geoLocation, index) in collectionPointLocations"
+                  v-for="(trackPoint, index) in userTrackingData"
+                  :key="index"
+                >
+                  <template v-slot>
+                    <ol-vector-layer :zIndex="2">
+                      <ol-source-vector>
+                        <ol-feature ref="positionFeature">
+                          <ol-geom-point
+                            :coordinates="trackPoint"
+                          ></ol-geom-point>
+                          <ol-style>
+                            <ol-style-circle :radius="4">
+                              <ol-style-fill color="#F54E4E"></ol-style-fill>
+                              <ol-style-stroke
+                                color="transparent"
+                                :width="0"
+                              ></ol-style-stroke>
+                            </ol-style-circle>
+                          </ol-style>
+                        </ol-feature>
+                      </ol-source-vector>
+                    </ol-vector-layer>
+                  </template>
+                </ol-geolocation>
+
+                <ol-geolocation
+                  :projection="projection"
+                  v-for="(collectionPoint, index) in geoLocations"
                   :key="index"
                 >
                   <template v-slot>
@@ -264,13 +228,14 @@
                         <ol-feature ref="positionFeature">
                           <ol-geom-point
                             :coordinates="[
-                              geoLocation.longitude,
-                              geoLocation.latitude
+                              collectionPoint.longitude,
+                              collectionPoint.latitude
                             ]"
-                          ></ol-geom-point>
+                          >
+                          </ol-geom-point>
                           <ol-style>
                             <ol-style-icon
-                              :src="collectionPoint"
+                              :src="collectionPoint.icon"
                               :scale="1"
                             ></ol-style-icon>
                           </ol-style>
@@ -279,36 +244,14 @@
                     </ol-vector-layer>
                   </template>
                 </ol-geolocation>
-                <!-- list driver -->
-                <ol-overlay
-                  v-for="(geoLocation, index) in driverLocations"
-                  :key="index"
-                  :position="[geoLocation.longitude, geoLocation.latitude]"
-                >
-                  <template v-slot="slotProps">
-                    <div
-                      v-if="slotProps"
-                      class="realtime-management__user-location-pin"
-                      @click="selectUser(geoLocation.userId)"
-                    >
-                      <img
-                        class="realtime-management__user-location-pin__icon"
-                        :src="geoLocation.icon"
-                      />
-                    </div>
-                  </template>
-                </ol-overlay>
-
-                <!-- route -->
                 <ol-vector-layer>
                   <ol-source-vector>
                     <ol-feature>
-                      <ol-geom-line-string
-                        :coordinates="currentRoute"
-                      ></ol-geom-line-string>
+                      <ol-geom-line-string :coordinates="currentRoute">
+                      </ol-geom-line-string>
                       <ol-style>
                         <ol-style-stroke
-                          :color="'red'"
+                          :color="'#82A6FF'"
                           :width="4"
                         ></ol-style-stroke>
                       </ol-style>
@@ -329,18 +272,16 @@
 import CloseIcon from "@/assets/icons/IcCloseIcon.vue";
 import MagnifyingGlass from "@/assets/icons/IcMagnifyingGlass.vue";
 import Refresh from "@/assets/icons/IcRefresh.vue";
-import FloatingLabelSelect from "@/modules/base/components/FloatingLabelSelect.vue";
-import NoData from "@/modules/base/components/NoData.vue";
-import CustomSelect from "@/modules/common/components/CustomSelect.vue";
-import ThePagination from "@/modules/common/components/ThePagination.vue";
 import driverIcon from "@/assets/icons/ic_driver.svg";
-import collectionPoint from "@/assets/icons/ic_route_collection_point.svg";
+import icColectedCollectionPoint from "@/assets/icons/ic_route_collected_collection_point.svg";
+import icCollectionPoint from "@/assets/icons/ic_route_collection_point.svg";
 import { i18n } from "@/i18n";
-import { listOfUserColumns } from "@/modules/realtime-management/models/table-columns";
+import CustomSelect from "@/modules/common/components/CustomSelect.vue";
+import { listOfCollectionPointColumns } from "@/modules/realtime-management/models/table-columns";
+import { router } from "@/routes";
 import { service } from "@/services";
+import { format } from "date-fns";
 import { computed, onMounted, reactive, ref, watch } from "vue";
-import { formatDateTime } from "../base/components/validator/dateFormat";
-import { CurrentUserLocationModel } from "./models/current-user-location.model";
 //#endregion
 
 //#region props
@@ -362,9 +303,18 @@ const pageOption = reactive({
   pageSize: 20,
   total: 1
 });
-const data = ref<CurrentUserLocationModel[]>([]);
-let backupData: CurrentUserLocationModel[] = [];
-const selectedUser = ref<CurrentUserLocationModel | undefined>(undefined);
+const data = ref<{ name: string; id: number }[]>([]);
+let backupData: { name: string; id: number }[] = [];
+const geoLocations = ref<
+  { title: string; latitude: number; longitude: number; icon: string }[]
+>([]);
+const userTrackingData = ref<number[][]>([]);
+const vehicleName = ref<string>("");
+const routeName = ref<string>("");
+const capacity = ref<string>("");
+const loadignWeight = ref<string>("");
+const userName = ref<string>("");
+const lastUpdateTime = ref<string>("");
 const center = ref<number[]>([40, 40]);
 const projection = ref<string>("EPSG:4326");
 const zoom = ref<number>(14);
@@ -372,23 +322,10 @@ const rotation = ref<number>(0);
 const innerHeight = ref<number>(0);
 const view = ref(null);
 const map = ref(null);
-
-const selectedCollectionBase = ref("");
-const listCollectionBase = ref<any[]>([]);
 const mapDots = ref<any[]>([]);
 const driverLocations = ref<
-  { icon: string; latitude: number; longitude: number; userId: number }[]
+  { icon: string; latitude: number; longitude: number }[]
 >([]);
-
-const collectionPointLocations = ref<
-  {
-    name: string;
-    latitude: number;
-    longitude: number;
-    icon: string;
-  }[]
->([]);
-
 const currentRoute = ref<number[][]>([]);
 
 //#endregion
@@ -400,73 +337,27 @@ onMounted(() => {
     innerHeight.value = window.innerHeight;
   });
 
-  initialize();
+  const userId = +router.currentRoute.value.params.id;
+  fetchUserTrackingDetail(userId);
 });
 //#endregion
 
 //#region function
-const initialize = async (): Promise<void> => {
-  isLoading.value = true;
-  data.value = await service.location.getListCurrentUserLocations();
-  isLoading.value = false;
-  backupData = [...data.value];
-
-  driverLocations.value = data.value.map((currentUserLocation) => {
-    return {
-      icon: driverIcon,
-      latitude: currentUserLocation.latitude,
-      longitude: currentUserLocation.longitude,
-      userId: currentUserLocation.userId
-    };
-  });
-
-  if (driverLocations.value.length) {
-    const { longitude, latitude } = driverLocations.value[0];
-    setTimeout(() => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (view?.value as any)?.fit([longitude, latitude, longitude, latitude], {
-        maxZoom: 14
-      });
-    }, 100);
-  }
-};
-
 const generateMapDots = (): void => {
-  if (selectedUser.value?.userName) {
-    mapDots.value = [
-      {
-        title: i18n.global.t("current_location"),
-        color: "#2f6bff"
-      },
-      {
-        title: i18n.global.t("on_going_collection_point"),
-        color: "#07A0B8"
-      },
-      {
-        title: i18n.global.t("collected_collection_point"),
-        color: "#999999"
-      }
-    ];
-  } else {
-    mapDots.value = [
-      {
-        title: i18n.global.t("status_active"),
-        color: "#2f6bff"
-      },
-      {
-        title: "Inactive more than 1 hour",
-        color: "#999999"
-      }
-    ];
-  }
-};
-
-const handleChangeUser = (): void => {
-  // if (selectedUser.value?.userName) {
-  //   selectedUser.value.userName = "";
-  // } else {
-  //   selectedUser.value?.userName = "User B";
-  // }
+  mapDots.value = [
+    {
+      title: i18n.global.t("current_location"),
+      color: "#2f6bff"
+    },
+    {
+      title: i18n.global.t("on_going_collection_point"),
+      color: "#07A0B8"
+    },
+    {
+      title: i18n.global.t("collected_collection_point"),
+      color: "#999999"
+    }
+  ];
 };
 
 const handleClickExpandSearchBox = (): void => {
@@ -478,116 +369,91 @@ const handleClickExpandSearchBox = (): void => {
 
 const handleClickClearButton = (): void => {
   searchString.value = "";
+  isSearchBoxExpanded.value = false;
   onSearchChange();
-};
-
-const handleBackToList = (): void => {
-  if (searchString.value) {
-    isLoading.value = true;
-    searchString.value = "";
-  }
-};
-
-const isShowPrevBtn = (): boolean => {
-  const isFirtPage = pageOption.currentPage === 1;
-  if (totalPages() === 1 || isFirtPage) return false;
-  return true;
-};
-
-const isShowNextBtn = (): boolean => {
-  const isLastPage =
-    pageOption.currentPage ===
-    Math.ceil(Number(pageOption.total) / Number(pageOption?.pageSize));
-  if (totalPages() === 1 || isLastPage) return false;
-  return true;
-};
-
-const totalPages = (): number => {
-  return Math.ceil(Number(pageOption.total) / Number(pageOption.pageSize));
-};
-
-const onShowSizeChange = (current: number, pageSize: number): void => {
-  pageOption.currentPage = current;
-  pageOption.pageSize = pageSize;
-};
-
-const onChange = (pageNumber: number): void => {
-  pageOption.currentPage = pageNumber;
 };
 
 const onSearchUnfocus = (): void => {
   if (!searchString.value) isSearchBoxExpanded.value = false;
 };
 
-const selectUser = async (userId: number): Promise<void> => {
-  selectedUser.value = data.value.find((user) => user.userId === userId);
-  if (selectedUser.value) {
-    driverLocations.value = driverLocations.value.filter(
-      (user) => user.userId === userId
-    );
-  }
-  data.value.forEach((user) => (user.isVisible = user.userId === userId));
+const fetchUserTrackingDetail = async (userId: number): Promise<void> => {
   isLoading.value = true;
   const history = await service.location.getUserLocationDetail(25);
   isLoading.value = false;
   if (!history) {
     return;
   }
-  // collectionPointLocations.value = history.collectOrder.collectPoints;
   currentRoute.value = (history.collectRoute.listCoordinates || []).map(
     (coordinate) => [coordinate[1], coordinate[0]]
   );
-};
-
-const changeUserVisibleState = (
-  userId: number,
-  currentStatus: boolean
-): void => {
-  backupData.forEach((user) => {
-    if (user.userId === userId) {
-      user.isVisible = !currentStatus;
-    }
+  userTrackingData.value = history.history.map((h) => {
+    return [h.longitude, h.latitude];
   });
-
-  data.value.forEach((user) => {
-    if (user.userId === userId) {
-      user.isVisible = !currentStatus;
-    }
+  vehicleName.value = history.vehicleName;
+  routeName.value = history.routeName;
+  capacity.value = `${history.maxWeight || 0} kg`;
+  loadignWeight.value = `${history.loadingWeight || 0} kg`;
+  lastUpdateTime.value = format(Date.now(), "yyyy/MM/dd hh:mm:ss");
+  userName.value = history.userName;
+  backupData = history.collectOrder.collectPoints.map((cp) => {
+    const { name, id } = cp;
+    return { name, id };
   });
+  data.value = [...backupData];
 
-  driverLocations.value = data.value
-    .filter((userLocation) => userLocation.isVisible)
-    .map((currentUserLocation) => {
+  geoLocations.value = [
+    ...history.collectOrder.collectPoints.map((cp) => {
+      const { id, name: title, latitude, longitude } = cp;
       return {
-        icon: driverIcon,
-        latitude: currentUserLocation.latitude,
-        longitude: currentUserLocation.longitude,
-        userId: currentUserLocation.userId
+        id,
+        title,
+        latitude,
+        longitude,
+        icon: cp.isCollected ? icCollectionPoint : icColectedCollectionPoint
       };
-    });
+    }),
+    {
+      id: 0,
+      icon: driverIcon,
+      title: history.userName,
+      latitude: history.currentLat,
+      longitude: history.currentLong
+    }
+  ];
+  driverLocations.value = [
+    {
+      icon: driverIcon,
+      latitude: history.currentLat,
+      longitude: history.currentLong
+    }
+  ];
+  setTimeout(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (view?.value as any)?.fit(
+      [
+        history.currentLong,
+        history.currentLat,
+        history.currentLong,
+        history.currentLat
+      ],
+      {
+        maxZoom: 14
+      }
+    );
+  }, 100);
 };
 
 const onSearchChange = (): void => {
   if (!searchString.value) {
     data.value = [...backupData];
-  } else {
-    data.value = [
-      ...backupData.filter((user) =>
-        user.userName.toLowerCase().includes(searchString.value.toLowerCase())
-      )
-    ];
+    return;
   }
-
-  driverLocations.value = data.value
-    .filter((userLocation) => userLocation.isVisible)
-    .map((currentUserLocation) => {
-      return {
-        icon: driverIcon,
-        latitude: currentUserLocation.latitude,
-        longitude: currentUserLocation.longitude,
-        userId: currentUserLocation.userId
-      };
-    });
+  data.value = [
+    ...backupData.filter((dt) =>
+      dt.name.toLowerCase().includes(searchString.value.toLowerCase())
+    )
+  ];
 };
 //#endregion
 
@@ -610,7 +476,7 @@ const calculatedTableScrollHeight = computed(() => {
 const calculatedHeightForMap = computed((): string | undefined => {
   const pageTitleAndPadding = 128;
   const tableWrapperTitle = 60;
-  const userInfoWrapper = selectedUser.value?.userName ? 72 : 0;
+  const userInfoWrapper = userName.value ? 72 : 0;
   const total =
     innerHeight.value -
     pageTitleAndPadding -
@@ -623,11 +489,18 @@ const calculatedHeightForMap = computed((): string | undefined => {
 
   return undefined;
 });
+const collectionPointDetailPath = computed((): string => {
+  const rootPath = router.currentRoute.value.fullPath.replace(
+    router.currentRoute.value.path,
+    ""
+  );
+  return `${rootPath}/collection-point-management/detail`;
+});
 //#endregion
 
 //#region reactive
 watch(
-  () => selectedUser.value?.userName,
+  () => userName.value,
   () => {
     generateMapDots();
   }

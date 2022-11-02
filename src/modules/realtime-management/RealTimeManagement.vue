@@ -10,7 +10,7 @@
             <CustomSelect
               :options="options"
               v-model:value="refreshTime"
-              :disabled="true"
+              :disabled="!selectedCollectionBase"
             />
           </div>
           <div>
@@ -18,6 +18,7 @@
               type="primary"
               class="realtime-manage__refresh-button d-flex align-center gap-10"
               :disabled="!selectedCollectionBase"
+              @click="onRefreshImmediately"
             >
               <template #icon><Refresh /></template>
               {{ $t("refresh") }}
@@ -511,6 +512,12 @@ const calculatedHeightForMap = computed((): string | undefined => {
 
   return undefined;
 });
+
+const onRefreshImmediately = async (): Promise<void> => {
+  isLoading.value = true;
+  await fetchWorkplaceTrackingInformation();
+  isLoading.value = false;
+};
 //#endregion
 
 //#region reactive
