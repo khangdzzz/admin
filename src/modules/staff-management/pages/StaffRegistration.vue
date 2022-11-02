@@ -72,8 +72,8 @@
               ></FloatingLabelInput>
             </div>
             <FloatingLabelInput
-              place-holder="create_staff_email_field"
-              label="create_staff_email_field"
+              place-holder="staff_email"
+              label="staff_email"
               control-name="email"
               v-model:value="formState.email"
               :required="true"

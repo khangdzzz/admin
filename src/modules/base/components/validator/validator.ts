@@ -43,7 +43,7 @@ const validator = {
   checkPhoneFormat: (phone: string, isRequire: boolean): boolean => {
     const regExpPhone =
       // eslint-disable-next-line no-control-regex, no-useless-escape
-      /\d[+ ]?[0-9]{6,15}/;
+      /^[+][0-9]{5,14}$/;
     return isRequire
       ? regExpPhone.test(phone)
       : regExpPhone.test(phone) || phone.length === 0;
@@ -86,7 +86,7 @@ const validator = {
         i18n.global.t("max_length_input", { maxLength: 15 })
       );
     }
-    if (!/\d[+ ]?[0-9]{6,15}/.test(value)) {
+    if (!/\+[0-9]{6,15}/.test(value)) {
       return Promise.reject(
         i18n.global.t("invalid_field_name", {
           fieldName: i18n.global.t("common_phone_field_name").toLowerCase()
