@@ -270,5 +270,6 @@
   "human_name_kana": "氏名（かな）",
   "common_postal_code_label": "郵便番号",
   "common_phone_field_label": "電話番号（ハイフンなし）",
-  "common_phone_field_name": "電話番号"
+  "common_phone_field_name": "電話番号",
+  "create_staff_email_field": "Eメール"
 }
