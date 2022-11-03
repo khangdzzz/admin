@@ -8,7 +8,7 @@ export enum TypeOptions {
 export enum UserRoleOptions {
   SYSTEM_ADMIN = 1,
   TENANT_ADMIN = 2,
-  PARTNER_ADMIN = 2,
+  PARTNER_ADMIN = 3,
   COLLECTION_BASE_ADMIN = 3,
   DISCHARGER = 4,
   DASHBOARD_USER = 5,

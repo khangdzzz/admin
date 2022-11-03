@@ -39,14 +39,23 @@ export async function getCurrentUserInformation(): Promise<
       }
       return undefined;
     }
-    const { id, email, name: fullName, tenant_id: tenantId, user_role } = res;
+    const {
+      id,
+      email,
+      name: fullName,
+      tenant_id: tenantId,
+      user_role,
+      workplaces
+    } = res;
 
+    const workplacesId = workplaces?.map((item) => item.id);
     const userInfo = {
       id,
       email,
       fullName,
       tenantId,
-      userType: userRoles[user_role - 1]
+      userType: userRoles[user_role - 1],
+      workplaces: workplacesId
     };
 
     const userStore = commonStore();

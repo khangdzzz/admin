@@ -1,3 +1,5 @@
+import { workPlaceDTO } from "@/modules/staff-management/models/staff.model";
+
 export default interface UserInfomationDto {
   id: number;
   email: string;
@@ -9,4 +11,5 @@ export default interface UserInfomationDto {
   telephone: string;
   belongs: number;
   user_role: number;
+  workplaces: workPlaceDTO[];
 }
