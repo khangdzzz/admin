@@ -191,12 +191,8 @@ const initialize = async (): Promise<void> => {
     ""
   );
   isFetchingMasterData.value = false;
-  if (!res?.results?.length) {
-    router.push({ name: routeNames.container });
-    return;
-  }
   if (res && res.results) {
-    const options = res.results.map((ct) => {
+    const options = (res.results || []).map((ct) => {
       return {
         value: ct.id.toString(),
         label: ct.name
@@ -378,6 +374,11 @@ watch(isExist, () => {
         }
       }
     }
+  }
+
+  .ant-form-item-explain-error {
+    color: $red-500 !important;
+    margin-bottom: 0px !important;
   }
 }
 </style>

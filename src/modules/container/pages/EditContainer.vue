@@ -453,5 +453,10 @@ watch(isExist, () => {
       height: 22px;
     }
   }
+
+  .ant-form-item-explain-error {
+    color: $red-500 !important;
+    margin-bottom: 0px !important;
+  }
 }
 </style>
