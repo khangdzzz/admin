@@ -53,8 +53,21 @@
         >
           <div class="staff-detail__item-wrapper pb-10">
             <div class="staff-detail__label mb-8">{{ $t(item.key) }}</div>
-            <div class="staff-detail__value">
+            <div
+              class="staff-detail__value"
+              v-if="item.key !== 'staff_workplace'"
+            >
               {{ displayItemValue(item.key, item.value) }}
+            </div>
+            <div class="staff-detail__value" v-else>
+              <p v-for="workPlace in item.value" :key="workPlace.id">
+                <span class="staff-detail__workplace"
+                  >{{ formatLabelWorkPlaceType(workPlace.workplace_type) }}
+                  -
+                </span>
+
+                {{ workPlace.name }}
+              </p>
             </div>
           </div>
         </div>
@@ -116,9 +129,6 @@ const initialize = async (): Promise<void> => {
       workplaces
     } = res;
 
-    const listWorkplacesName = workplaces.map((x) => x.name);
-    const workplacesValue = listWorkplacesName.join(" - ");
-
     staffDetails.value = [
       { key: "human_name", value: name || NULL_VALUE_DISPLAY },
       { key: "human_name_kana", value: name_kana || NULL_VALUE_DISPLAY },
@@ -132,14 +142,26 @@ const initialize = async (): Promise<void> => {
       { key: "user_role", value: user_role || NULL_VALUE_DISPLAY },
       {
         key: "staff_workplace",
-        value: workplacesValue || NULL_VALUE_DISPLAY
+        value: workplaces || NULL_VALUE_DISPLAY
       },
       { key: "last_login_time", value: last_logged_in || NULL_VALUE_DISPLAY }
     ];
     isAccountEnable.value = is_disable;
   }
 };
-
+const formatLabelWorkPlaceType = (type: number): string => {
+  if (type === 1) {
+    return i18n.global.t("collection_base");
+  } else if (type === 2) {
+    return i18n.global.t("partner");
+  } else if (type === 3) {
+    return i18n.global.t("customer");
+  } else if (type === 4) {
+    return i18n.global.t("destination");
+  } else {
+    return "";
+  }
+};
 const handleClickGoBack = (): void => {
   router.push({ name: routeNames.staffManagement });
 };
@@ -233,7 +255,11 @@ const displayItemValue = (key: string, value: string): string => {
     line-height: 18px;
     color: $neutral-400;
   }
-
+  &__workplace {
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 22px;
+  }
   &__value {
     font-style: normal;
     font-weight: 600;

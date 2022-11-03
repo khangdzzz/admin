@@ -564,7 +564,7 @@ watch([optionValue, formState], () => {
       validator.checkPhoneFormat(formState.telephone, false) &&
       validator.checkEmailFormat(formState.email, true) &&
       optionValue.userRole &&
-      (formState.workplaces ||
+      (formState.workplaces?.length ||
         Number.isInteger(formState.workplaces) ||
         optionValue.userRole === UserRoleOptions.TENANT_ADMIN) &&
       optionValue.type
