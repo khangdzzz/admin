@@ -55,13 +55,13 @@ export async function getLatLongFromAddress(
   };
 }
 
-export async function getListCurrentUserLocations(): Promise<
-  CurrentUserLocationModel[]
-> {
+export async function getListCurrentUserLocations(
+  id: number
+): Promise<CurrentUserLocationModel[]> {
   const [err, res] = await transformRequest<
     PaginationDto<CurrentUserLocationResponseDto>
   >({
-    url: "location/current?workplace_id=132",
+    url: `location/current?workplace_id=${132}`,
     method: "get"
   });
   if (err || !res) return [];

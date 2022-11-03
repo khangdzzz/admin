@@ -2,13 +2,22 @@
   <div class="custom-select" :style="`width: ${width}px; height: ${height}px`">
     <div
       :class="[
-        'custom-select__label fill-width fill-height d-flex align-center px-12',
+        'custom-select__label fill-width fill-height d-flex align-center justify-space-between px-12',
         isOpenOptionsList ? 'custom-select__label-focused' : ''
       ]"
       @click="handleClickCustomSelectLabel"
     >
       {{ displayLabel || "" }}
+
+      <img
+        class="floating-label-select__dropdown"
+        src="@/assets/icons/ic_dropdown.svg"
+        width="20"
+        height="20"
+        style="padding: 4px"
+      />
     </div>
+
     <div
       class="custom-select__options-list"
       v-click-outside="handleClickOutside"
@@ -19,18 +28,24 @@
         :key="option.value + '' + index"
         :class="[
           'custom-select__option-item d-flex align-center px-15',
-          isItemSelected(option) ? 'custom-select__option-item-selected' : ''
+          isItemSelected(option) ? 'custom-select__option-item-selected' : '',
+          disabled ? 'custom-select__option-item-disabled' : ''
         ]"
         @click="handleClickSelectItem(option)"
       >
         {{ option.label }}
       </div>
       <div
-        class="custom-select__action-button-wrapper d-flex align-center px-15"
+        :class="[
+          'custom-select__action-button-wrapper d-flex align-center px-15',
+          ,
+          disabled ? 'custom-select__option-item-disabled' : ''
+        ]"
       >
         <a-button
           class="custom-select__apply-button fill-width"
           type="primary"
+          :disabled="disabled"
           @click="handleApplySelectedItem"
           >Apply</a-button
         >
@@ -67,6 +82,10 @@ const props = defineProps({
   value: {
     type: [String, Number],
     default: ""
+  },
+  disabled: {
+    type: Boolean,
+    default: false
   }
 });
 
@@ -162,7 +181,7 @@ const displayLabel = computed(() => {
     background-color: $white;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
     border-radius: 10px;
-    z-index: 1;
+    z-index: 2;
   }
 
   &__option-item {
@@ -195,6 +214,13 @@ const displayLabel = computed(() => {
     font-size: 16px;
     line-height: 20px;
     color: $neutral-600;
+  }
+
+  &__option-item-disabled {
+    font-weight: 400 !important;
+    background-color: $white !important;
+    opacity: 0.5;
+    pointer-events: none;
   }
 
   &__action-button-wrapper {

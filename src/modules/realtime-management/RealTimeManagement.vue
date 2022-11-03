@@ -7,12 +7,17 @@
         </div>
         <div class="d-flex gap-15">
           <div>
-            <CustomSelect :options="options" v-model:value="refreshTime" />
+            <CustomSelect
+              :options="options"
+              v-model:value="refreshTime"
+              :disabled="true"
+            />
           </div>
           <div>
             <a-button
               type="primary"
               class="realtime-manage__refresh-button d-flex align-center gap-10"
+              :disabled="!selectedCollectionBase"
             >
               <template #icon><Refresh /></template>
               {{ $t("refresh") }}
@@ -48,7 +53,7 @@
                     <div
                       class="d-flex align-center justify-center fill-height"
                       style="width: 40px"
-                      @click="handleClickExpandSearchBox()"
+                      @click="!data.length ? '' : handleClickExpandSearchBox()"
                     >
                       <MagnifyingGlass />
                     </div>
@@ -74,6 +79,7 @@
                 :columns="listOfUserColumns"
                 :data-source="data"
                 :pagination="false"
+                :class="!data.length ? 'realtime-manage__hide-table-body' : ''"
                 v-if="!isLoading"
               >
                 <template #headerCell="{ column }">
@@ -130,7 +136,10 @@
                 @onChange="onChange"
               />
               <NoData
+                class="realtime-manage__no-data"
                 :value="searchString"
+                size="small"
+                :no-action-button="true"
                 @onClick="handleBackToList"
                 v-if="!data.length"
               />
@@ -139,6 +148,13 @@
         </div>
         <div class="realtime-manage__map-wrapper">
           <a-card class="realtime-manage__map-card">
+            <div
+              class="realtime-manage__map-disable-layout d-flex align-center justify-center"
+              :style="calculatedHeightForMap"
+              v-if="!selectedCollectionBase"
+            >
+              {{ $t("please_select_workplace") }}
+            </div>
             <div
               class="realtime-manage__map-title-wrapper d-flex justify-space-between align-center px-15"
             >
@@ -154,6 +170,7 @@
                     control-name="workPlace"
                     :options="listCollectionBase"
                     :no-label="true"
+                    :placeholder="$t('workplace')"
                     size="small"
                     v-model:value="selectedCollectionBase"
                   >
@@ -221,7 +238,14 @@ import CustomSelect from "@/modules/common/components/CustomSelect.vue";
 import ThePagination from "@/modules/common/components/ThePagination.vue";
 import { listOfUserColumns } from "@/modules/realtime-management/models/table-columns";
 import { service } from "@/services";
-import { computed, onMounted, reactive, ref } from "vue";
+import {
+  computed,
+  onBeforeUnmount,
+  onMounted,
+  reactive,
+  ref,
+  watch
+} from "vue";
 import { formatDateTime } from "../base/components/validator/dateFormat";
 import { CurrentUserLocationModel } from "./models/current-user-location.model";
 //#endregion
@@ -256,7 +280,7 @@ const innerHeight = ref<number>(0);
 const view = ref(null);
 const map = ref(null);
 
-const selectedCollectionBase = ref("");
+const selectedCollectionBase = ref();
 const listCollectionBase = ref<{ value: number | undefined; label: string }[]>(
   []
 );
@@ -265,6 +289,7 @@ const driverLocations = ref<
 >([]);
 
 const currentRoute = ref<number[][]>([]);
+const interval = ref();
 
 //#endregion
 
@@ -276,6 +301,10 @@ onMounted(() => {
   });
 
   initialize();
+});
+
+onBeforeUnmount(() => {
+  clearInterval(interval.value);
 });
 //#endregion
 
@@ -301,7 +330,9 @@ const fetchCollectionBase = async (): Promise<void> => {
 
 const fetchWorkplaceTrackingInformation = async (): Promise<void> => {
   isLoading.value = true;
-  data.value = await service.location.getListCurrentUserLocations();
+  data.value = await service.location.getListCurrentUserLocations(
+    selectedCollectionBase.value
+  );
   await fetchCollectionBase();
   isLoading.value = false;
   backupData = [...data.value];
@@ -483,6 +514,23 @@ const calculatedHeightForMap = computed((): string | undefined => {
 //#endregion
 
 //#region reactive
+watch(selectedCollectionBase, async () => {
+  if (selectedCollectionBase.value) {
+    isLoading.value = true;
+    await fetchWorkplaceTrackingInformation();
+    isLoading.value = false;
+  }
+});
+
+watch(refreshTime, () => {
+  if (refreshTime.value) {
+    interval.value = setInterval(async () => {
+      isLoading.value = true;
+      await fetchWorkplaceTrackingInformation();
+      isLoading.value = false;
+    }, refreshTime.value * 60 * 1000);
+  }
+});
 //#endregion
 </script>
 
@@ -675,6 +723,10 @@ const calculatedHeightForMap = computed((): string | undefined => {
     }
   }
 
+  .floating-label__placeholder {
+    top: 10px;
+  }
+
   .realtime-manage {
     &__refresh-option {
       .ant-select-selector {
@@ -714,9 +766,36 @@ const calculatedHeightForMap = computed((): string | undefined => {
     }
 
     &__map-card {
+      position: relative;
       .ant-card-body {
         padding: 0 !important;
       }
+    }
+
+    &__map-disable-layout {
+      position: absolute;
+      width: 100%;
+      height: 500px;
+      background-color: $white;
+      z-index: 1;
+      bottom: 0px;
+      opacity: 0.5;
+
+      font-style: normal;
+      font-weight: 600;
+      font-size: 18px;
+      line-height: 22px;
+      color: $primary-400;
+    }
+
+    &__hide-table-body {
+      .ant-table-placeholder {
+        display: none !important;
+      }
+    }
+
+    &__no-data {
+      height: calc(100vh - 246px) !important;
     }
   }
 }

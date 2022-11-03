@@ -285,5 +285,6 @@
   "collected_collection_point": "回収済み地点",
   "time": "時間",
   "route": "ルート",
-  "loading_weight": "積載量"
+  "loading_weight": "積載量",
+  "please_select_workplace": "拠点を選択"
 }

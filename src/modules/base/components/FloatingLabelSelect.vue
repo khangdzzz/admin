@@ -4,6 +4,7 @@
       class="floating-label-select"
       :is-focused="isFocused || !!value"
       :label="!noLabel ? $t(isFocused || !!value ? label : placeHolder) : ''"
+      :placeholder="!value ? placeholder : ''"
       :control-name="controlName"
       :required="required"
       @click="focus(`${label}-input`)"
@@ -100,6 +101,10 @@ defineProps({
   size: {
     type: String,
     default: "medium"
+  },
+  placeholder: {
+    type: String,
+    default: ""
   }
 });
 //#endregion

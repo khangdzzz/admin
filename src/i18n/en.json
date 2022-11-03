@@ -291,5 +291,6 @@
   "collected_collection_point": "Collected collection point",
   "time": "Time",
   "route": "Route",
-  "loading_weight": "Loading Weight"
+  "loading_weight": "Loading Weight",
+  "please_select_workplace": "Please select workplace!"
 }
