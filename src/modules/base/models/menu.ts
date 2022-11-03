@@ -27,21 +27,21 @@ const sideMenuItems: SideMenuItems[] = [
     requireUserType: [
       UserType.TenantAdmin,
       UserType.CollectionBaseAdmin,
-      UserType.Consignee,
       UserType.SystemAdmin,
-      UserType.Dischanger
+      UserType.Dischanger,
+      UserType.DashboardUser
     ],
     items: [
       {
         title: "menu_lbl_dashboard_internal",
         pathName: routeNames.internalDashboard,
-        requireUserType: [UserType.TenantAdmin],
+        requireUserType: [UserType.TenantAdmin,UserType.DashboardUser],
         qaAttr: "qa_menu_dashboard_internal"
       },
       {
         title: "menu_lbl_dashboard_extenal",
         pathName: routeNames.externalDashboard,
-        requireUserType: [UserType.TenantAdmin],
+        requireUserType: [UserType.TenantAdmin,UserType.DashboardUser],
         qaAttr: "qa_menu_dashboard_external"
       }
     ]
@@ -55,7 +55,6 @@ const sideMenuItems: SideMenuItems[] = [
     requireUserType: [
       UserType.TenantAdmin,
       UserType.CollectionBaseAdmin,
-      UserType.Consignee
     ],
     items: [
       {
@@ -96,8 +95,7 @@ const sideMenuItems: SideMenuItems[] = [
     qaAttr: "qa_menu_master_data",
     requireUserType: [
       UserType.TenantAdmin,
-      UserType.CollectionBaseAdmin,
-      UserType.Consignee
+      UserType.CollectionBaseAdmin
     ],
     items: [
       {
@@ -257,7 +255,6 @@ const sideMenuItems: SideMenuItems[] = [
     requireUserType: [
       UserType.TenantAdmin,
       UserType.CollectionBaseAdmin,
-      UserType.Consignee,
       UserType.SystemAdmin,
       UserType.Dischanger
     ],
