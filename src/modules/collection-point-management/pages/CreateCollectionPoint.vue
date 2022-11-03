@@ -462,12 +462,9 @@ const isAllowSubmit = computed(() => {
 //#endregion
 
 //#region reactive
-watch(
-  [isPostalCodeHasError, (): string | number | boolean => data[5].value],
-  () => {
-    createCollectionPointRef.value.validate();
-  }
-);
+watch(isPostalCodeHasError, () => {
+  createCollectionPointRef.value.validate();
+});
 
 watch(
   () => data[4].value,
