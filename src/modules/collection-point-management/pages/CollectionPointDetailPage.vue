@@ -116,8 +116,8 @@
             class="collection-point-detail__map-wrapper__position-detail"
             v-if="geoLocations.length && !isLoading"
           >
-            {{ geoLocations.length ? geoLocations[0][0] : NULL_VALUE_DISPLAY }},
-            {{ geoLocations.length ? geoLocations[0][1] : NULL_VALUE_DISPLAY }}
+            {{ geoLocations.length ? geoLocations[0][1] : NULL_VALUE_DISPLAY }},
+            {{ geoLocations.length ? geoLocations[0][0] : NULL_VALUE_DISPLAY }}
             <img
               src="@/assets/icons/ic_btn_copy.svg"
               @click="copyLocationToClipboard"

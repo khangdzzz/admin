@@ -117,8 +117,8 @@
             class="collection-base-detail__map-wrapper__position-detail"
             v-if="geoLocations.length && !isLoading"
           >
-            {{ geoLocations.length ? geoLocations[0][0] : NULL_VALUE_DISPLAY }},
-            {{ geoLocations.length ? geoLocations[0][1] : NULL_VALUE_DISPLAY }}
+            {{ geoLocations.length ? geoLocations[0][1] : NULL_VALUE_DISPLAY }},
+            {{ geoLocations.length ? geoLocations[0][0] : NULL_VALUE_DISPLAY }}
             <img
               src="@/assets/icons/ic_btn_copy.svg"
               @click="copyLocationToClipboard"
@@ -197,10 +197,10 @@ onMounted(async (): Promise<void> => {
       if (longitude && latitude) {
         const lat = +latitude;
         const long = +longitude;
-        geoLocations.value.push([lat, long]);
+        geoLocations.value.push([long, lat]);
         setTimeout(() => {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (view?.value as any)?.fit([lat, long, lat, long], {
+          (view?.value as any)?.fit([long, lat, long, lat], {
             maxZoom: 14
           });
         }, 300);

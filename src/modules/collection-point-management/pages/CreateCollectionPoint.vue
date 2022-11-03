@@ -39,10 +39,7 @@
             <ol-tile-layer>
               <ol-source-osm />
             </ol-tile-layer>
-            <ol-geolocation
-              :projection="projection"
-              @positionChanged="geoLocChange"
-            >
+            <ol-geolocation :projection="projection">
               <template v-slot>
                 <ol-vector-layer :zIndex="2">
                   <ol-source-vector>
@@ -100,8 +97,8 @@
             </ol-vector-layer>
           </ol-map>
           <div class="create-collection-point__map-wrapper__position-detail">
-            {{ geoLocations.length ? geoLocations[0][0] : NULL_VALUE_DISPLAY }},
-            {{ geoLocations.length ? geoLocations[0][1] : NULL_VALUE_DISPLAY }}
+            {{ geoLocations.length ? geoLocations[0][1] : NULL_VALUE_DISPLAY }},
+            {{ geoLocations.length ? geoLocations[0][0] : NULL_VALUE_DISPLAY }}
             <img
               src="@/assets/icons/ic_btn_copy.svg"
               @click="copyLocationToClipboard"
@@ -233,6 +230,7 @@ onMounted(async () => {
     trigger: ["blur", "change"]
   });
 
+  focusCurrentLocation();
   isLoading.value = true;
   await initialize();
   isLoading.value = false;
@@ -271,8 +269,8 @@ const handleSubmit = async (): Promise<void> => {
     telephone: makeUniqueName(data[6].value.toString()) || null,
     mail: makeUniqueName(data[7].value.toString()) || null,
     external_code: makeUniqueName(data[8].value.toString()) || "",
-    latitude: geoLocations.value.length ? geoLocations.value[0][0] : null,
-    longitude: geoLocations.value.length ? geoLocations.value[0][1] : null
+    longitude: geoLocations.value.length ? geoLocations.value[0][0] : null,
+    latitude: geoLocations.value.length ? geoLocations.value[0][1] : null
   };
 
   isSubmitting.value = true;
