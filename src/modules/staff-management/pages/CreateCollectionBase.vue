@@ -458,12 +458,9 @@ const isButtonDisabled = computed((): boolean => {
 //#endregion
 
 //#region reactive
-watch(
-  [isPostalCodeHasError, (): string | number | boolean => contact[1].value],
-  () => {
-    createCollectionBaseRef.value.validate();
-  }
-);
+watch(isPostalCodeHasError, () => {
+  createCollectionBaseRef.value.validate();
+});
 
 watch(
   () => contact[0].value,
