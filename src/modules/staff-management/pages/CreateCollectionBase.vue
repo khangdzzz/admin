@@ -211,6 +211,7 @@ const createCollectionBaseRef = ref();
 const isSubmitting = ref<boolean>(false);
 const { name, contact } = formData;
 const isPostalCodeHasError = ref<boolean>(false);
+const isExitsField = ref<string[]>([]);
 //#endregion
 
 //#region hooks
@@ -225,6 +226,34 @@ onMounted(() => {
     contact[0].actionBtn.disabled = isEnableSearchAddress();
     contact[0].class = "input-with-action-btn";
   }
+
+  name[0].rules?.push({
+    validator: (rule: Rule, value: string): Promise<void> => {
+      if (isExitsField.value.includes("name")) {
+        return Promise.reject(
+          i18n.global.t("error_unique_constraint", {
+            fieldName: i18n.global.t("name")
+          })
+        );
+      }
+      return Promise.resolve();
+    },
+    trigger: ["blur", "change"]
+  });
+
+  name[1].rules?.push({
+    validator: (rule: Rule, value: string): Promise<void> => {
+      if (isExitsField.value.includes("short_name")) {
+        return Promise.reject(
+          i18n.global.t("error_unique_constraint", {
+            fieldName: i18n.global.t("short_name")
+          })
+        );
+      }
+      return Promise.resolve();
+    },
+    trigger: ["blur", "change"]
+  });
 
   contact[0].rules?.push({
     validator: (rule: Rule, value: string): Promise<void> => {
@@ -337,11 +366,16 @@ const handleSubmit = async (): Promise<void> => {
       }
     });
   } else {
-    messenger({
-      title: "popup_create_fail_title",
-      message: "",
-      type: MessengerType.Error
-    });
+    if (error.msg === "error_unique_constraint") {
+      isExitsField.value = error.loc as string[];
+      createCollectionBaseRef.value.validate();
+    } else {
+      messenger({
+        title: "popup_create_fail_title",
+        message: "",
+        type: MessengerType.Error
+      });
+    }
   }
   setBtnActionDisableState(false);
   isSubmitting.value = false;
