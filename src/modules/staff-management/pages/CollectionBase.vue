@@ -457,6 +457,7 @@ watch(searchString, onSearchChange);
 
 <style lang="scss" scoped>
 .table-container {
+  height: 100%;
   flex-grow: 1;
 }
 
