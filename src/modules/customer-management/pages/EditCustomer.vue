@@ -212,30 +212,7 @@ const formData = reactive<FormData>({
       isFocus: false,
       rules: [
         {
-          validator: (rule: Rule, value: string): Promise<void> => {
-            if (!value) Promise.resolve();
-
-            const regex = /^[+][0-9]{5,14}$/;
-            if (value && value.length > 15) {
-              return Promise.reject(
-                i18n.global.t("max_length_input", currentLanguage, {
-                  maxLength: 15
-                })
-              );
-            }
-
-            if (value && value.length > 0 && !regex.test(value)) {
-              return Promise.reject(
-                i18n.global.t("invalid_field_name", currentLanguage, {
-                  fieldName: i18n.global
-                    .t("common_phone_field_name", currentLanguage)
-                    .toLowerCase()
-                })
-              );
-            }
-
-            return Promise.resolve();
-          },
+          validator: validator.validatePhone,
           trigger: ["change", "blur"]
         }
       ],

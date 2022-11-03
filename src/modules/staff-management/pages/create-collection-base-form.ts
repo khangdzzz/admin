@@ -140,26 +140,7 @@ export const formData = (): FormData => {
         parent: "contact",
         rules: [
           {
-            validator: (_rule: Rule, value: string): Promise<void> => {
-              if (!value) return Promise.resolve();
-              if (value.length > 15) {
-                return Promise.reject(
-                  i18n.global.t("max_length_input", currentLanguage, {
-                    maxLength: 15
-                  })
-                );
-              }
-              if (!/^[+][0-9]{5,14}$/.test(value)) {
-                return Promise.reject(
-                  i18n.global.t("invalid_field_name", currentLanguage, {
-                    fieldName: i18n.global
-                      .t("common_phone_field_name", currentLanguage)
-                      .toLowerCase()
-                  })
-                );
-              }
-              return Promise.resolve();
-            },
+            validator: validator.validatePhone,
             trigger: ["blur", "change"]
           }
         ]
