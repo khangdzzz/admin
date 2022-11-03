@@ -40,10 +40,7 @@
             <ol-tile-layer>
               <ol-source-osm />
             </ol-tile-layer>
-            <ol-geolocation
-              :projection="projection"
-              @positionChanged="geoLocChange"
-            >
+            <ol-geolocation :projection="projection">
               <template v-slot>
                 <ol-vector-layer :zIndex="2">
                   <ol-source-vector>
@@ -150,7 +147,6 @@ import { formData as reactiveFormData } from "@/modules/collection-point-managem
 import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
-import { commonStore } from "@/stores";
 import { makeUniqueName } from "@/utils/string.helper";
 import { message } from "ant-design-vue";
 import { Rule } from "ant-design-vue/lib/form";
@@ -426,6 +422,7 @@ const fetchCollectionPointDetail = async (): Promise<void> => {
 
   if (res.longitude && res.latitude) {
     geoLocations.value.push([res.longitude, res.latitude]);
+    geoLocChange([res.longitude, res.latitude]);
   } else {
     setTimeout(() => {
       focusCurrentLocation(), 300;
