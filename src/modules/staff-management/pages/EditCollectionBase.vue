@@ -177,7 +177,15 @@ import { service } from "@/services";
 import { commonStore } from "@/stores";
 import { NULL_VALUE_DISPLAY } from "@/utils/constants";
 import { message } from "ant-design-vue";
-import { computed, inject, onMounted, reactive, ref, watch } from "vue";
+import {
+  computed,
+  inject,
+  onBeforeUnmount,
+  onMounted,
+  reactive,
+  ref,
+  watch
+} from "vue";
 import { Rule } from "ant-design-vue/lib/form";
 import { localStorageKeys } from "@/services/local-storage-keys";
 import { makeUniqueName } from "@/utils/string.helper";
@@ -213,11 +221,15 @@ const isPostalCodeHasError = ref<boolean>(false);
 //#endregion
 
 //#region hooks
+onBeforeUnmount(() => {
+  clearInputs();
+});
+
 onMounted(async () => {
   if (contact[0].actionBtn) {
     contact[0].actionBtn.name = "search_address";
     contact[0].actionBtn.click = handleSearchAddress;
-    contact[0].actionBtn.disabled = isEnableSearchAddress.value;
+    contact[0].actionBtn.disabled = isEnableSearchAddress();
     contact[0].class = "input-with-action-btn";
   }
 
@@ -397,7 +409,6 @@ const handleSubmit = async (): Promise<void> => {
         isConfirm;
         goToCollectionBaseListPage();
         router.go(-1);
-        clearInputs();
       }
     });
   } else {
@@ -494,13 +505,21 @@ const geoLocChange = (loc: number[]): void => {
   });
 };
 
+const isEnableSearchAddress = (): boolean => {
+  if (contact[0]?.actionBtn) {
+    if (!contact[0].value || (contact[0].value && isNaN(+contact[0].value))) {
+      contact[0].actionBtn.disabled = true;
+      return true;
+    }
+
+    contact[0].actionBtn.disabled = false;
+  }
+
+  return false;
+};
 //#endregion
 
 //#region computed
-const isEnableSearchAddress = computed(() => {
-  return !!contact[0].value && isNaN(+contact[0].value);
-});
-
 const isButtonDisabled = computed((): boolean => {
   return (
     !handleValidateFields(name[0].value.toString(), 50, true) ||
@@ -528,6 +547,7 @@ watch(
   () => {
     isPostalCodeHasError.value = false;
     contact[0].class = "input-with-action-btn";
+    isEnableSearchAddress();
   }
 );
 //#endregion

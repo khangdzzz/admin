@@ -197,7 +197,7 @@ onMounted(async () => {
   if (data[4].actionBtn) {
     data[4].actionBtn.name = "search_address";
     data[4].actionBtn.click = handleSearchAddress;
-    data[4].actionBtn.disabled = isEnableSearchAddress.value;
+    data[4].actionBtn.disabled = isEnableSearchAddress();
     data[4].class = "input-with-action-btn";
   }
 
@@ -294,7 +294,6 @@ const handleSubmit = async (): Promise<void> => {
             id: res.id
           }
         });
-        clearInputs();
       }
     });
   } else {
@@ -409,13 +408,22 @@ const focusCurrentLocation = (): void => {
 const initialize = async (): Promise<void> => {
   await fetchListCustomer();
 };
+
+const isEnableSearchAddress = (): boolean => {
+  if (data[4]?.actionBtn) {
+    if (!data[4].value || (data[4].value && isNaN(+data[4].value))) {
+      data[4].actionBtn.disabled = true;
+      return true;
+    }
+
+    data[4].actionBtn.disabled = false;
+  }
+
+  return false;
+};
 //#endregion
 
 //#region computed
-const isEnableSearchAddress = computed(() => {
-  return !!data[4].value && isNaN(+data[4].value);
-});
-
 const isAllowSubmit = computed(() => {
   const isValidEmail =
     !data[7].value ||
@@ -466,6 +474,7 @@ watch(
   () => {
     isPostalCodeHasError.value = false;
     data[4].class = "input-with-action-btn";
+    isEnableSearchAddress();
   }
 );
 //#endregion

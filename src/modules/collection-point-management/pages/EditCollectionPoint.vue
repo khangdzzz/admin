@@ -95,6 +95,21 @@
                 </ol-style-circle>
               </ol-style>
             </ol-vector-layer>
+
+            <ol-overlay
+              v-for="(geoLocation, index) in geoLocations"
+              :key="index"
+              :position="geoLocation"
+            >
+              <template v-slot="slotProps">
+                <div
+                  class="edit-collection-point__map-wrapper__overlay-content"
+                  v-if="slotProps && collectionPointAddress"
+                >
+                  {{ collectionPointAddress }}
+                </div>
+              </template>
+            </ol-overlay>
           </ol-map>
           <div class="edit-collection-point__map-wrapper__position-detail">
             {{ geoLocations.length ? geoLocations[0][1] : NULL_VALUE_DISPLAY }},
@@ -189,6 +204,7 @@ const customerOptions = ref<{ value: number; label: string }[]>();
 const isLoading = ref<boolean>(false);
 const route = useRoute();
 const { id } = route.params;
+const collectionPointAddress = ref<string>("");
 //#endregion
 
 //#region hooks
@@ -200,7 +216,7 @@ onMounted(async () => {
   if (data[4].actionBtn) {
     data[4].actionBtn.name = "search_address";
     data[4].actionBtn.click = handleSearchAddress;
-    data[4].actionBtn.disabled = isEnableSearchAddress.value;
+    data[4].actionBtn.disabled = isEnableSearchAddress();
     data[4].class = "input-with-action-btn";
   }
 
@@ -292,7 +308,6 @@ const handleSubmit = async (): Promise<void> => {
       callback: (isConfirm: boolean) => {
         isConfirm;
         router.go(-1);
-        clearInputs();
       }
     });
   } else {
@@ -351,6 +366,7 @@ const drawstart = (_event: { target: { sketchCoords_: number[] } }): void => {
 
 const drawend = (event: { target: { sketchCoords_: number[] } }): void => {
   geoLocations.value.push(event.target.sketchCoords_);
+  collectionPointAddress.value = "";
 };
 
 const copyLocationToClipboard = (): void => {
@@ -403,6 +419,7 @@ const fetchCollectionPointDetail = async (): Promise<void> => {
   data[6].value = res.telephone || "";
   data[7].value = res.mail || "";
   data[8].value = res.external_code || "";
+  collectionPointAddress.value = res.address || "";
 
   if (res.longitude && res.latitude) {
     geoLocations.value.push([res.longitude, res.latitude]);
@@ -434,6 +451,19 @@ const focusCurrentLocation = (): void => {
   );
 };
 
+const isEnableSearchAddress = (): boolean => {
+  if (data[4]?.actionBtn) {
+    if (!data[4].value || (data[4].value && isNaN(+data[4].value))) {
+      data[4].actionBtn.disabled = true;
+      return true;
+    }
+
+    data[4].actionBtn.disabled = false;
+  }
+
+  return false;
+};
+
 const initialize = async (): Promise<void> => {
   await fetchListCustomer();
   await fetchCollectionPointDetail();
@@ -441,10 +471,6 @@ const initialize = async (): Promise<void> => {
 //#endregion
 
 //#region computed
-const isEnableSearchAddress = computed(() => {
-  return !!data[4].value && isNaN(+data[4].value);
-});
-
 const isAllowSubmit = computed(() => {
   const isValidEmail =
     !data[7].value ||
@@ -495,6 +521,7 @@ watch(
   () => {
     isPostalCodeHasError.value = false;
     data[4].class = "input-with-action-btn";
+    isEnableSearchAddress();
   }
 );
 //#endregion
@@ -550,6 +577,29 @@ watch(
         margin-left: 16px;
         cursor: pointer;
       }
+    }
+
+    &__overlay-content {
+      text-shadow: 2px 0 #fff, -2px 0 #fff, 0 2px #fff, 0 -2px #fff,
+        1px 1px #fff, -1px -1px #fff, 1px -1px #fff, -1px 1px #fff;
+      font-family: "Roboto";
+      font-style: normal;
+      font-weight: 700;
+      font-size: 16px;
+      line-height: 19px;
+      display: flex;
+      align-items: center;
+      color: #f54e4e;
+      margin-top: -15px;
+      margin-left: 30px;
+      max-width: 133px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-height: 38px;
+      word-wrap: break-word;
     }
 
     &__current-location-button {
