@@ -24,7 +24,12 @@
               </template>
               {{ $t("edit_btn") }}
             </a-button>
-            <a-button class="btn-action color-btn-delete" ghost type="primary">
+            <a-button
+              class="btn-action color-btn-delete"
+              ghost
+              type="primary"
+              @click="deleteCollectionRoute"
+            >
               <template #icon>
                 <IcTrash class="btn-icon" :color="'#F54E4E'" />
               </template>
@@ -55,7 +60,7 @@
           <span v-if="collectionRouteDetail?.notice">{{
             collectionRouteDetail?.notice
           }}</span>
-          <span v-else>- - -</span>
+          <span v-else>{{ NULL_VALUE_DISPLAY }}</span>
         </div>
         <a-divider class="mt-10 mb-15" style="border-color: #e8e8e8" />
         <div :class="[CollectionRouteDetail.title, 'mb-8']">
@@ -67,7 +72,20 @@
             v-if="collectionRouteDetail?.navigationId"
             >{{ collectionRouteDetail?.navigationId }}</span
           >
-          <span v-else>- - -</span>
+          <a-button
+            type="primary"
+            class="btn-create-navigation-link"
+            ghost
+            v-else
+          >
+            <template #icon>
+              <img
+                src="@/assets/icons/ic_plus_primary.png"
+                class="btn-navigation-icon"
+              />
+            </template>
+            Create
+          </a-button>
         </div>
         <a-divider class="mt-10 mb-15" style="border-color: #e8e8e8" />
         <div class="list-collection-point">
@@ -108,10 +126,14 @@
 import IcTrash from "@/assets/icons/IcTrash.vue";
 import { routeNames, router } from "@/routes";
 import ListSearchHeader from "@/modules/base/components/ListSearchHeader.vue";
-import { onMounted, ref } from "vue";
+import { inject, onMounted, ref } from "vue";
 import { CollectionRoute } from "../models/collection-route.model";
 import { useRoute } from "vue-router";
 import { service } from "@/services";
+import { MessengerType } from "@/modules/base/models/messenger-type.enum";
+import MessengerParamModel from "@/modules/base/models/messenger-param.model";
+import { i18n } from "@/i18n";
+import { NULL_VALUE_DISPLAY } from "@/utils/constants";
 
 //#endregion
 
@@ -119,6 +141,9 @@ import { service } from "@/services";
 //#endregion
 
 //#region variables
+const messenger: (param: MessengerParamModel) => void =
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  inject("messenger")!;
 const route = useRoute();
 const { id } = route.params;
 const collectionRouteDetail = ref<CollectionRoute>();
@@ -145,6 +170,52 @@ const editCollectionRoute = (): void => {
   router.push({
     params: { id },
     name: routeNames.editCollectionRouteOrder
+  });
+};
+const deleteCollectionRoute = (): void => {
+  messenger({
+    title: "popup_msg_confirm_delete",
+    message: "",
+    type: MessengerType.Confirm,
+    buttonOkTitle: "btn_delete",
+    callback: async (isConfirm: boolean): Promise<void> => {
+      if (!isConfirm) {
+        return;
+      }
+      onDeleteCollectionRoute([Number(id)]);
+    }
+  });
+};
+
+const onDeleteCollectionRoute = async (deleteIds: number[]): Promise<void> => {
+  isLoading.value = true;
+  const isSuccess = await service.collectionRoute.deleteCollectionRoute(
+    deleteIds
+  );
+  isLoading.value = false;
+  if (!isSuccess) {
+    messenger({
+      title: "popup_delete_fail_lbl_title",
+      message: "",
+      type: MessengerType.Error
+    });
+    return;
+  }
+  messenger({
+    title:
+      deleteIds.length > 1
+        ? i18n.global.t("common_msg_delete_multiple_successfully", {
+            number: deleteIds.length
+          })
+        : "common_msg_delete_successfully",
+    message: "",
+    type: MessengerType.Success,
+    callback: (isConfirm: boolean): void => {
+      isConfirm;
+    }
+  });
+  router.push({
+    name: routeNames.collectionRouteManagement
   });
 };
 //#endregion
@@ -188,6 +259,18 @@ const editCollectionRoute = (): void => {
 .collection-route-detail__spin {
   height: 100vh;
   width: 100%;
+}
+.btn-create-navigation-link {
+  width: 89px;
+  height: 32px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 16px;
+  padding: 0px 10px;
+  line-height: 100%;
+  gap: 7px;
+  display: flex;
+  align-items: center;
 }
 .list-collection-point {
   .collection-point-header {
