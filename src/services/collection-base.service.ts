@@ -188,8 +188,8 @@ export async function createCollectionBase(
   });
   if (error || !res) {
     return {
-      error: (error?.response?.data as { details: { msg: string }[] })
-        .details[0].msg
+      error: (error?.response?.data as { details: { msg: string, loc: string[] }[] })
+        .details[0]
     };
   }
   return {
@@ -239,8 +239,8 @@ export async function editCollectionBase(
 
   if (error || !res) {
     return {
-      error: (error?.response?.data as { details: { msg: string }[] })
-        .details[0].msg
+      error: (error?.response?.data as { details: { msg: string, loc: string }[] })
+        .details[0]
     };
   }
   return {

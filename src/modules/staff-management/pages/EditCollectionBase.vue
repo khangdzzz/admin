@@ -174,9 +174,12 @@ import { formData as reactiveFormData } from "@/modules/staff-management/pages/c
 import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
+import { localStorageKeys } from "@/services/local-storage-keys";
 import { commonStore } from "@/stores";
 import { NULL_VALUE_DISPLAY } from "@/utils/constants";
+import { makeUniqueName } from "@/utils/string.helper";
 import { message } from "ant-design-vue";
+import { Rule } from "ant-design-vue/lib/form";
 import {
   computed,
   inject,
@@ -186,9 +189,6 @@ import {
   ref,
   watch
 } from "vue";
-import { Rule } from "ant-design-vue/lib/form";
-import { localStorageKeys } from "@/services/local-storage-keys";
-import { makeUniqueName } from "@/utils/string.helper";
 //#region import
 //#endregion
 
@@ -218,6 +218,7 @@ const isSubmitting = ref<boolean>(false);
 const collectionBaseAddress = ref<string>("");
 const { name, contact } = formData;
 const isPostalCodeHasError = ref<boolean>(false);
+const isExitsField = ref<string[]>([]);
 //#endregion
 
 //#region hooks
@@ -232,6 +233,34 @@ onMounted(async () => {
     contact[0].actionBtn.disabled = isEnableSearchAddress();
     contact[0].class = "input-with-action-btn";
   }
+
+  name[0].rules?.push({
+    validator: (rule: Rule, value: string): Promise<void> => {
+      if (isExitsField.value.includes("name")) {
+        return Promise.reject(
+          i18n.global.t("error_unique_constraint", {
+            fieldName: i18n.global.t("name")
+          })
+        );
+      }
+      return Promise.resolve();
+    },
+    trigger: ["blur", "change"]
+  });
+
+  name[1].rules?.push({
+    validator: (rule: Rule, value: string): Promise<void> => {
+      if (isExitsField.value.includes("short_name")) {
+        return Promise.reject(
+          i18n.global.t("error_unique_constraint", {
+            fieldName: i18n.global.t("short_name")
+          })
+        );
+      }
+      return Promise.resolve();
+    },
+    trigger: ["blur", "change"]
+  });
 
   contact[0].rules?.push({
     validator: (rule: Rule, value: string): Promise<void> => {
@@ -266,6 +295,11 @@ onMounted(async () => {
   await initialize();
   isLoading.value = false;
 });
+
+onBeforeUnmount(() => {
+  clearInputs();
+});
+
 //#endregion
 
 //#region function
@@ -412,11 +446,16 @@ const handleSubmit = async (): Promise<void> => {
       }
     });
   } else {
-    messenger({
-      title: "popup_edit_fail_title",
-      message: "",
-      type: MessengerType.Error
-    });
+    if (error.msg === "error_unique_constraint") {
+      isExitsField.value = error.loc as string[];
+      editCollectionBaseRef.value.validate();
+    } else {
+      messenger({
+        title: "popup_create_fail_title",
+        message: "",
+        type: MessengerType.Error
+      });
+    }
   }
 };
 
