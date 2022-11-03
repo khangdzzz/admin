@@ -123,8 +123,8 @@
             </ol-overlay>
           </ol-map>
           <div class="create-collection-base__map-wrapper__position-detail">
-            {{ geoLocations.length ? geoLocations[0][0] : NULL_VALUE_DISPLAY }},
-            {{ geoLocations.length ? geoLocations[0][1] : NULL_VALUE_DISPLAY }}
+            {{ geoLocations.length ? geoLocations[0][1] : NULL_VALUE_DISPLAY }},
+            {{ geoLocations.length ? geoLocations[0][0] : NULL_VALUE_DISPLAY }}
 
             <img
               src="@/assets/icons/ic_btn_copy.svg"
@@ -287,10 +287,10 @@ const initialize = async (): Promise<void> => {
     if (longitude && latitude) {
       const lat = +latitude;
       const long = +longitude;
-      geoLocations.value.push([lat, long]);
+      geoLocations.value.push([long, lat]);
       setTimeout(() => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (view?.value as any)?.fit([lat, long, lat, long], {
+        (view?.value as any)?.fit([long, lat, long, lat], {
           maxZoom: 14
         });
       }, 300);
@@ -376,8 +376,8 @@ const handleSubmit = async (): Promise<void> => {
     telephone: contact[2].value?.toString(),
     email: contact[3].value?.toString(),
     representative: contact[4].value?.toString(),
-    latitude: geoLocations.value.length ? geoLocations.value[0][0] : null,
-    longitude: geoLocations.value.length ? geoLocations.value[0][1] : null,
+    longitude: geoLocations.value.length ? geoLocations.value[0][0] : null,
+    latitude: geoLocations.value.length ? geoLocations.value[0][1] : null,
     collectionBaseType: collectionBaseType.value || 1
   };
 
