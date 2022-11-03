@@ -41,7 +41,6 @@
             :form-data="formData.contact"
             @on-focus="handleOnContactFocus"
             @on-blur="handleOnContactBlur"
-            @on-key-press="handleOnKeyPress"
           />
         </div>
       </a-form>
@@ -231,7 +230,8 @@ onMounted(() => {
   }
 
   contact[0].rules?.push({
-    validator: (rule: Rule, value: number): Promise<void> => {
+    validator: (rule: Rule, value: string): Promise<void> => {
+      const regex = /^[0-9]*$/;
       if (!value) {
         return Promise.reject(
           i18n.global.t("please_enter_input", currentLanguage, {
@@ -242,7 +242,7 @@ onMounted(() => {
         );
       }
 
-      if (value && isNaN(value)) {
+      if (value && !regex.test(value)) {
         return Promise.reject(i18n.global.t("allow_input_number"));
       }
 
@@ -429,21 +429,6 @@ const focusCurrentLocation = (): void => {
   );
 };
 
-const handleOnKeyPress = (
-  value: string | number,
-  index: number
-): void | boolean => {
-  if (index === 0) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const e: any = window.event;
-    let charCode = e.which ? e.which : e.keyCode;
-    if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode === 46) {
-      e.preventDefault();
-    } else {
-      return true;
-    }
-  }
-};
 //#endregion
 
 //#region computed

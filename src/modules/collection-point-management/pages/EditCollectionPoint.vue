@@ -18,7 +18,6 @@
               :form-data="formData.data"
               @on-focus="handleOnDataFocus"
               @on-blur="handleOnDataBlur"
-              @on-key-press="handleOnKeyPress"
             />
           </div>
         </a-form>
@@ -206,7 +205,8 @@ onMounted(async () => {
   }
 
   data[4].rules?.push({
-    validator: (rule: Rule, value: number): Promise<void> => {
+    validator: (rule: Rule, value: string): Promise<void> => {
+      const regex = /^[0-9]*$/;
       if (!value) {
         return Promise.reject(
           i18n.global.t("please_enter_input", currentLanguage, {
@@ -217,7 +217,7 @@ onMounted(async () => {
         );
       }
 
-      if (value && isNaN(value)) {
+      if (value && !regex.test(value)) {
         return Promise.reject(i18n.global.t("allow_input_number"));
       }
 
@@ -258,22 +258,6 @@ const clearInputs = (): void => {
 const handleCancel = (): void => {
   router.go(-1);
   clearInputs();
-};
-
-const handleOnKeyPress = (
-  value: string | number,
-  index: number
-): void | boolean => {
-  if (index === 4) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const e: any = window.event;
-    let charCode = e.which ? e.which : e.keyCode;
-    if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode === 46) {
-      e.preventDefault();
-    } else {
-      return true;
-    }
-  }
 };
 
 const handleSubmit = async (): Promise<void> => {
