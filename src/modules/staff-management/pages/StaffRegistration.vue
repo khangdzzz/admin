@@ -372,7 +372,7 @@ const filterWorkPlaceByType = async (role: any): Promise<void> => {
             role.baseType.length === 0)) ||
           role.optionalType?.includes(item.workPlaceType)) &&
         item.tenantId === userStore.user?.tenantId &&
-        userStore.user?.workplaces.includes(Number(item.value))
+        userStore.user?.workplaces?.includes(Number(item.value))
     );
     optionValue.workPlaceOptions = filter;
   }

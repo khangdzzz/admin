@@ -21,10 +21,7 @@
       v-if="!isLoading && value"
       class="fill-width d-flex flex-column justify-center align-center"
     >
-      <div
-        class="no-data-container__message mb-30 d-flex"
-        v-html="getMessage"
-      ></div>
+      <div class="no-data-container__message mb-30" v-html="getMessage"></div>
       <div class="no-data-container__sub-message mb-30">
         {{ $t("try_searching_for_another_term") }}
       </div>
@@ -114,7 +111,7 @@ const getMessage = computed(() => {
     line-height: 32.81px;
     color: $neutral-600;
     max-width: 70%;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     word-break: break-all;
   }
 
