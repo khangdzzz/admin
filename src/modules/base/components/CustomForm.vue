@@ -15,7 +15,7 @@
       :style="item.style"
       :dropdownClassName="item.dropdownClassName"
       autocomplete="new-password"
-      @change="handleChange(item.value, index)"
+      @change="handleChange(item, item.value, index)"
       @select="onSelect"
       @pressEnter="onPressEnter"
       @focus="onFocus(index)"
@@ -73,7 +73,7 @@
       autocomplete="new-password"
       show-search
       :filter-option="filterOption"
-      @change="handleChange(item.value, index)"
+      @change="handleChange(item, item.value, index)"
       @select="onSelect"
       @pressEnter="onPressEnter"
       @focus="onFocus(index)"
@@ -198,6 +198,7 @@ import LoadingSpinner from "@/modules/base/components/InputLoadingSpinner.vue";
 //*===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍Emits
 const emit = defineEmits<{
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (e: "input", value: any, index: number): void;
   (e: "change", value: any, index: number): void;
   (e: "select", value: string | Event): void;
   (e: "pressEnter"): void;
@@ -236,8 +237,29 @@ const checked = (values: string[], value: string): boolean => {
   return (values || []).includes(value);
 };
 
-const handleChange = (value: any, index: number): void =>
-  emit("change", value, index);
+const convertJpNumber = (value: string): string => {
+  const replaceFn = (
+    text: string,
+    search = "０１２３４５６７８９．　",
+    replace = "0123456789. "
+  ): string => {
+    // Make the search string a regex.
+    var regex = RegExp("[" + search + "]", "g");
+    var t = text.replace(regex, function (chr) {
+      var ind = search.indexOf(chr);
+      var r = replace.charAt(ind);
+      return r;
+    });
+    return t;
+  };
+  return replaceFn(value);
+};
+
+const handleChange = (item: any, value: any, index: number): void => {
+  const unicodeValue = convertJpNumber(value);
+  item.value = unicodeValue;
+  emit("change", unicodeValue, index);
+};
 
 const onSelect = (value: string | Event): void => emit("select", value);
 
