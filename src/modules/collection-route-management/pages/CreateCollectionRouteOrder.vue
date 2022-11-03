@@ -54,6 +54,7 @@
           <div class="">
             <p class="collection-point-title">
               {{ $t("collection_route_point_selection") }}
+              <IcRequired />
             </p>
             <div class="collection-point-content d-flex">
               <div class="collection-point__data-left">
@@ -124,13 +125,16 @@
                   item-key="id"
                   class="collection-point__data mh-300"
                 >
-                  <template #item="{ element }">
+                  <template #item="{ element, index }">
                     <div
                       class="collection-point__data-item d-flex justify-space-between"
                       @dblclick="onHandleRemoveCollectionPointById(element.id)"
                     >
                       <div class="collection-point__data-item--cp">
-                        {{ element.name }}
+                        <span class="item-index">
+                          <div class="item-index__content">{{ index + 1 }}</div>
+                        </span>
+                        <span> {{ element.name }}</span>
                       </div>
                       <div class="collection-point__data-item--cn">
                         {{ element.customerName }}
@@ -177,6 +181,7 @@
 <script setup lang="ts">
 //#region import
 import IcSwap from "@/assets/icons/IcSwap.vue";
+import IcRequired from "@/assets/icons/IcRequired.vue";
 import CustomForm from "@/modules/base/components/CustomForm.vue";
 import {
   computed,
@@ -518,7 +523,28 @@ watch(formNote, () => {
     background-color: $primary-100;
     transition: background-color 0.5s;
   }
-
+  .item-index {
+    min-height: 20px;
+    min-width: 20px;
+    width: auto;
+    background: $primary-400;
+    border-radius: 24px;
+    color: $white;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 14px;
+    margin-right: 10px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    &__content {
+      align-content: center;
+      text-align: center;
+      margin-left: 4px;
+      margin-right: 4px;
+      padding: 1px 1px 0 0;
+    }
+  }
   .collection-point__data-right .collection-point__data-item:hover {
     background-color: $neutral-0;
     transition: background-color 0.5s;
@@ -536,6 +562,7 @@ watch(formNote, () => {
     font-size: 16px;
     line-height: 20px;
     color: $neutral-600;
+    display: flex;
   }
   .collection-point__data-item--cn {
     font-weight: 400;
@@ -607,6 +634,7 @@ watch(formNote, () => {
   .collection-point__data-item.active {
     background-color: $primary-100;
     pointer-events: none;
+    display: none;
   }
   .label-note {
     position: relative;
@@ -642,9 +670,7 @@ watch(formNote, () => {
   .create-collection-route-order__duo-inputs-wrapper .ant-row.ant-form-item {
     margin-bottom: 20px !important;
   }
-  .create-collection-route-order .ant-form-item-explain-error {
-    margin-bottom: 0px !important;
-  }
+
   .create-collection-route-order__note {
     .ant-input {
       border-color: transparent;
@@ -659,6 +685,9 @@ watch(formNote, () => {
   .form-item-note
     .ant-form-item-explain.ant-form-item-explain-connected.active {
     display: none;
+  }
+  .ant-form-item-explain .ant-form-item-explain-error {
+    margin-bottom: 0px !important;
   }
 }
 </style>
