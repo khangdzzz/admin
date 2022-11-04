@@ -1,4 +1,5 @@
 export interface ServiceResponse<T> {
-  error?: string;
+  error?: string
   res?: T;
+  errorParams?: string[];
 }

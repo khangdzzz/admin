@@ -50,7 +50,14 @@
 <script setup lang="ts">
 //#region import
 import CustomForm from "@/modules/base/components/CustomForm.vue";
-import { computed, inject, onBeforeUnmount, reactive, ref } from "vue";
+import {
+  computed,
+  inject,
+  onBeforeUnmount,
+  onMounted,
+  reactive,
+  ref
+} from "vue";
 import { formData as reactiveFormData } from "../models/create-customer-base-form";
 import { FormData } from "@/modules/staff-management/models/collection-base.model";
 import { routeNames, router } from "@/routes";
@@ -58,6 +65,8 @@ import { service } from "@/services";
 import { makeUniqueName } from "@/utils/string.helper";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
+import { i18n } from "@/i18n";
+import { Rule } from "ant-design-vue/lib/form";
 //#endregion
 
 //#region props
@@ -72,10 +81,41 @@ const formData = reactive<FormData>(reactiveFormData());
 const { singleInput, duoInputs } = formData;
 const isSubmitting = ref<boolean>(false);
 const createCustomerForm = ref();
+const isExitsField = ref<string[]>([]);
 
 //#endregion
 
 //#region hooks
+onMounted(() => {
+  singleInput[0].rules?.push({
+    validator: (rule: Rule, value: string): Promise<void> => {
+      if (isExitsField.value.includes("name")) {
+        return Promise.reject(
+          i18n.global.t("error_unique_constraint", {
+            fieldName: i18n.global.t("name")
+          })
+        );
+      }
+      return Promise.resolve();
+    },
+    trigger: ["blur", "change"]
+  });
+
+  singleInput[1].rules?.push({
+    validator: (rule: Rule, value: string): Promise<void> => {
+      if (isExitsField.value.includes("short_name")) {
+        return Promise.reject(
+          i18n.global.t("error_unique_constraint", {
+            fieldName: i18n.global.t("short_name")
+          })
+        );
+      }
+      return Promise.resolve();
+    },
+    trigger: ["blur", "change"]
+  });
+});
+
 onBeforeUnmount(() => {
   clearInputs();
 });
@@ -136,7 +176,9 @@ const handleClickSubmit = async (): Promise<void> => {
   };
 
   isSubmitting.value = true;
-  const { error, res } = await service.customer.createCustomer(data);
+  const { error, errorParams, res } = await service.customer.createCustomer(
+    data
+  );
   isSubmitting.value = false;
   if (!error && res) {
     messenger({
@@ -153,11 +195,18 @@ const handleClickSubmit = async (): Promise<void> => {
       }
     });
   } else {
-    messenger({
-      title: "customer_create_failed",
-      message: "",
-      type: MessengerType.Error
-    });
+    if ((error as string) === "error_unique_constraint") {
+      if (errorParams) {
+        isExitsField.value = errorParams;
+      }
+      createCustomerForm.value.validate();
+    } else {
+      messenger({
+        title: "popup_create_fail_title",
+        message: "",
+        type: MessengerType.Error
+      });
+    }
   }
 };
 //#endregion

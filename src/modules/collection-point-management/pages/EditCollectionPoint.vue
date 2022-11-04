@@ -205,6 +205,7 @@ const isLoading = ref<boolean>(false);
 const route = useRoute();
 const { id } = route.params;
 const collectionPointAddress = ref<string>("");
+const isExitsField = ref<string[]>([]);
 //#endregion
 
 //#region hooks
@@ -244,6 +245,34 @@ onMounted(async () => {
           })
         );
 
+      return Promise.resolve();
+    },
+    trigger: ["blur", "change"]
+  });
+
+  data[1].rules?.push({
+    validator: (rule: Rule, value: string): Promise<void> => {
+      if (isExitsField.value.includes("name")) {
+        return Promise.reject(
+          i18n.global.t("error_unique_constraint", {
+            fieldName: i18n.global.t("name")
+          })
+        );
+      }
+      return Promise.resolve();
+    },
+    trigger: ["blur", "change"]
+  });
+
+  data[2].rules?.push({
+    validator: (rule: Rule, value: string): Promise<void> => {
+      if (isExitsField.value.includes("short_name")) {
+        return Promise.reject(
+          i18n.global.t("error_unique_constraint", {
+            fieldName: i18n.global.t("short_name")
+          })
+        );
+      }
       return Promise.resolve();
     },
     trigger: ["blur", "change"]
@@ -294,9 +323,8 @@ const handleSubmit = async (): Promise<void> => {
 
   isSubmitting.value = true;
   setBtnActionDisableState(true);
-  const { error, res } = await service.collectionPoint.editCollectionPoint(
-    collectionPoint
-  );
+  const { error, errorParams, res } =
+    await service.collectionPoint.editCollectionPoint(collectionPoint);
   isSubmitting.value = false;
   setBtnActionDisableState(false);
 
@@ -311,11 +339,18 @@ const handleSubmit = async (): Promise<void> => {
       }
     });
   } else {
-    messenger({
-      title: "popup_edit_fail_title",
-      message: "",
-      type: MessengerType.Error
-    });
+    if ((error as string) === "error_unique_constraint") {
+      if (errorParams) {
+        isExitsField.value = errorParams;
+      }
+      editCollectionPointRef.value.validate();
+    } else {
+      messenger({
+        title: "popup_create_fail_title",
+        message: "",
+        type: MessengerType.Error
+      });
+    }
   }
 };
 
