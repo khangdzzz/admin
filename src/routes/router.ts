@@ -406,6 +406,12 @@ const routes: RouteRecordRaw[] = [
         name: routeNames.realTimeManagement,
         component: () =>
           import("@/modules/realtime-management/RealTimeManagement.vue")
+      },
+      {
+        path: "/driver-location-tracking/:id",
+        name: routeNames.driverLocationTracking,
+        component: () =>
+          import("@/modules/realtime-management/DriverLocationTracking.vue")
       }
     ]
   },
