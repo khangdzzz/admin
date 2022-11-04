@@ -22,9 +22,7 @@
           <div class="d-flex my-30 gap-40">
             <div class="create-collection-base__type-selector">
               {{ $t("type") }}
-              <span class="create-collection-base__required-mark"
-                >&nbsp;*
-              </span>
+              <IcRequired />
             </div>
             <div>
               <a-radio-group
@@ -189,6 +187,7 @@ import {
   ref,
   watch
 } from "vue";
+import IcRequired from "@/assets/icons/IcRequired.vue";
 //#region import
 //#endregion
 
@@ -707,6 +706,8 @@ watch(
     font-size: 16px;
     line-height: 20px;
     color: $neutral-600;
+    min-width: 51px;
+    margin-right: -12px;
   }
 
   &__radio-group {
