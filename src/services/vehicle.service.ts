@@ -41,7 +41,7 @@ export async function getListVehicle(
     sortPermission
   } = sort;
 
-  const orderSortType = calculateSortQuery("vehicle_type", sortType);
+  const orderSortType = calculateSortQuery("vehicle_type___name", sortType);
   const orderSortName = calculateSortQuery("name", sortName);
   const orderSortPlateNumber = calculateSortQuery(
     "plate_number",
