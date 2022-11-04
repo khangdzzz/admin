@@ -2,17 +2,23 @@
   <a-spin :spinning="isLoading" :tip="$t('common_loading')">
     <div class="p-30">
       <div class="d-flex justify-space-between align-center mb-20">
-        <div class="realtime-manage__title">
+        <div class="driver-tracking-location__title">
           {{ $t("realtime_management") }}
         </div>
         <div class="d-flex gap-15">
           <div>
-            <CustomSelect :options="options" v-model:value="refreshTime" />
+            <CustomSelect
+              :options="options"
+              v-model:value="refreshTime"
+              :disabled="!data.length"
+            />
           </div>
           <div>
             <a-button
               type="primary"
-              class="realtime-manage__refresh-button d-flex align-center gap-10"
+              class="driver-tracking-location__refresh-button d-flex align-center gap-10"
+              :disabled="!data.length"
+              @click="immediatelyRefresh"
             >
               <template #icon>
                 <Refresh />
@@ -22,22 +28,28 @@
           </div>
         </div>
       </div>
-      <div class="realtime-manage__body d-flex gap-20">
-        <div class="realtime-manage__table-wrapper fill-height">
-          <a-card class="realtime-manage__table-card fill-height">
+      <div class="driver-tracking-location__body d-flex gap-20">
+        <div class="driver-tracking-location__table-wrapper fill-height">
+          <a-card class="driver-tracking-location__table-card fill-height">
             <div
-              class="realtime-manage__table-card-title-wrapper d-flex justify-space-between align-center px-15"
+              class="driver-tracking-location__table-card-title-wrapper d-flex justify-space-between align-center px-15"
             >
-              <div class="realtime-manage__table-card-title">
+              <div class="driver-tracking-location__table-card-title">
                 {{ $t("list_of_collection_point") }}
               </div>
               <div
-                class="realtime-manage__table-card-search-input d-flex align-center"
-                :style="
+                :class="[
+                  'driver-tracking-location__table-card-search-input d-flex align-center',
+                  !data.length
+                    ? 'driver-tracking-location__table-card-search-input__disabled'
+                    : ''
+                ]"
+                :style="[
                   isSearchBoxExpanded
                     ? 'width: calc(100% - 30px)'
-                    : 'width: 40px; cursor:pointer;'
-                "
+                    : 'width: 40px;',
+                  data.length ? 'cursor:pointer;' : ''
+                ]"
               >
                 <a-input
                   id="searchInput"
@@ -49,7 +61,7 @@
                     <div
                       class="d-flex align-center justify-center fill-height"
                       style="width: 40px"
-                      @click="handleClickExpandSearchBox()"
+                      @click="data.length ? handleClickExpandSearchBox() : ''"
                     >
                       <MagnifyingGlass />
                     </div>
@@ -57,7 +69,7 @@
                   <template #suffix>
                     <a-button
                       shape="circle"
-                      class="realtime-manage__clear-input-button d-flex align-center justify-center"
+                      class="driver-tracking-location__clear-input-button d-flex align-center justify-center"
                       @click="handleClickClearButton"
                       v-if="searchString"
                     >
@@ -70,18 +82,30 @@
               </div>
             </div>
             <div>
-              <div class="realtime-manage__table-container fill-height">
+              <div
+                class="driver-tracking-location__table-container fill-height"
+              >
                 <a-table
                   :scroll="{ y: calculatedTableScrollHeight }"
                   :columns="listOfCollectionPointColumns"
                   :data-source="data"
                   :pagination="false"
+                  :class="
+                    !data.length
+                      ? 'driver-tracking-location__hide-table-body'
+                      : ''
+                  "
                   v-if="!isLoading"
                 >
                   <template #headerCell="{ column }">
                     <template v-if="column.key === 'name'">
                       <div class="header-title">
                         <span class="header-title">{{ column.title }}</span>
+                        <SortView
+                          class="mx-12"
+                          :sort="sortName"
+                          @click="changeSortName"
+                        />
                       </div>
                     </template>
                   </template>
@@ -90,35 +114,43 @@
                       <a
                         :href="`${collectionPointDetailPath}/${record.id}`"
                         target="blank"
+                        class="driver-tracking-location__href-name"
                         >{{ record.name }}</a
                       >
                     </template>
                   </template>
                 </a-table>
+                <NoData
+                  class="driver-tracking-location__no-data"
+                  :value="searchString"
+                  size="small"
+                  :no-action-button="true"
+                  v-if="!data.length"
+                />
               </div>
             </div>
           </a-card>
         </div>
-        <div class="realtime-manage__map-wrapper">
-          <a-card class="realtime-manage__map-card">
+        <div class="driver-tracking-location__map-wrapper">
+          <a-card class="driver-tracking-location__map-card">
             <div
-              class="realtime-manage__map-title-wrapper d-flex justify-space-between align-center px-15"
+              class="driver-tracking-location__map-title-wrapper d-flex justify-space-between align-center px-15"
             >
-              <div class="realtime-manage__map-title">
+              <div class="driver-tracking-location__map-title">
                 {{ userName ? userName : $t("user_location") }}
               </div>
               <div class="d-flex align-center gap-30">
                 <div class="d-flex gap-30">
                   <div
-                    class="d-flex gap-8"
+                    class="d-flex gap-8 align-center justify-center"
                     v-for="(dot, index) in mapDots"
                     :key="dot.title + '' + index"
                   >
                     <div
-                      class="realtime-manage__active-dot realtime-manage__dot-size"
+                      class="driver-tracking-location__active-dot driver-tracking-location__dot-size"
                       :style="`background-color: ${dot.color}`"
                     ></div>
-                    <div class="realtime-manage__map-status-text">
+                    <div class="driver-tracking-location__map-status-text">
                       {{ dot.title }}
                     </div>
                   </div>
@@ -126,45 +158,45 @@
               </div>
             </div>
             <div
-              class="realtime-manage__user-map-info d-flex align-center justify-space-between px-15 gap-30"
+              class="driver-tracking-location__user-map-info d-flex align-center justify-space-between px-15 gap-30"
             >
               <div>
-                <div class="realtime-manage__user-info-title">
+                <div class="driver-tracking-location__user-info-title">
                   {{ $t("time") }}
                 </div>
-                <div class="realtime-manage__user-info-data">
+                <div class="driver-tracking-location__user-info-data">
                   {{ lastUpdateTime }}
                 </div>
               </div>
               <div>
-                <div class="realtime-manage__user-info-title">
+                <div class="driver-tracking-location__user-info-title">
                   {{ $t("route") }}
                 </div>
-                <div class="realtime-manage__user-info-data">
+                <div class="driver-tracking-location__user-info-data">
                   {{ routeName }}
                 </div>
               </div>
               <div>
-                <div class="realtime-manage__user-info-title">
+                <div class="driver-tracking-location__user-info-title">
                   {{ $t("vehicle") }}
                 </div>
-                <div class="realtime-manage__user-info-data">
+                <div class="driver-tracking-location__user-info-data">
                   {{ vehicleName }}
                 </div>
               </div>
               <div>
-                <div class="realtime-manage__user-info-title">
+                <div class="driver-tracking-location__user-info-title">
                   {{ $t("loading_weight") }}
                 </div>
-                <div class="realtime-manage__user-info-data">
+                <div class="driver-tracking-location__user-info-data">
                   {{ loadignWeight }}
                 </div>
               </div>
               <div>
-                <div class="realtime-manage__user-info-title">
+                <div class="driver-tracking-location__user-info-title">
                   {{ $t("capacity") }}
                 </div>
-                <div class="realtime-manage__user-info-data">
+                <div class="driver-tracking-location__user-info-data">
                   {{ capacity }}
                 </div>
               </div>
@@ -275,13 +307,23 @@ import Refresh from "@/assets/icons/IcRefresh.vue";
 import driverIcon from "@/assets/icons/ic_driver.svg";
 import icColectedCollectionPoint from "@/assets/icons/ic_route_collected_collection_point.svg";
 import icCollectionPoint from "@/assets/icons/ic_route_collection_point.svg";
+import NoData from "@/modules/base/components/NoData.vue";
 import { i18n } from "@/i18n";
 import CustomSelect from "@/modules/common/components/CustomSelect.vue";
 import { listOfCollectionPointColumns } from "@/modules/realtime-management/models/table-columns";
+import SortView from "@/modules/common/components/SortView.vue";
 import { router } from "@/routes";
 import { service } from "@/services";
 import { format } from "date-fns";
-import { computed, onMounted, reactive, ref, watch } from "vue";
+import {
+  computed,
+  onBeforeUnmount,
+  onMounted,
+  reactive,
+  ref,
+  watch
+} from "vue";
+import { Sort } from "../common/models/sort.enum";
 //#endregion
 
 //#region props
@@ -327,17 +369,22 @@ const driverLocations = ref<
   { icon: string; latitude: number; longitude: number }[]
 >([]);
 const currentRoute = ref<number[][]>([]);
-
+const sortName = ref<Sort>(Sort.None);
+const interval = ref();
+const userId = +router.currentRoute.value.params.id;
 //#endregion
 
 //#region hooks
+onBeforeUnmount(() => {
+  clearInterval(interval.value);
+});
+
 onMounted(() => {
   innerHeight.value = window.innerHeight;
   window.addEventListener("resize", () => {
     innerHeight.value = window.innerHeight;
   });
 
-  const userId = +router.currentRoute.value.params.id;
   fetchUserTrackingDetail(userId);
 });
 //#endregion
@@ -379,7 +426,7 @@ const onSearchUnfocus = (): void => {
 
 const fetchUserTrackingDetail = async (userId: number): Promise<void> => {
   isLoading.value = true;
-  const history = await service.location.getUserLocationDetail(25);
+  const history = await service.location.getUserLocationDetail(userId);
   isLoading.value = false;
   if (!history) {
     return;
@@ -445,15 +492,46 @@ const fetchUserTrackingDetail = async (userId: number): Promise<void> => {
 };
 
 const onSearchChange = (): void => {
-  if (!searchString.value) {
-    data.value = [...backupData];
-    return;
-  }
-  data.value = [
-    ...backupData.filter((dt) =>
-      dt.name.toLowerCase().includes(searchString.value.toLowerCase())
+  const searchResult = [
+    ...backupData.filter(
+      (dt) =>
+        !searchString.value ||
+        dt.name.toLowerCase().includes(searchString.value.toLowerCase())
     )
   ];
+  switch (sortName.value) {
+    case Sort.Asc:
+      data.value = searchResult.sort();
+      break;
+
+    case Sort.Desc:
+      data.value = searchResult.sort().reverse();
+      break;
+
+    default:
+      data.value = searchResult;
+      break;
+  }
+};
+
+const changeSortName = (): void => {
+  const backupSortName = sortName.value;
+  sortName.value = calculateNextSortStatus(backupSortName);
+};
+
+const calculateNextSortStatus = (currentSort: Sort): Sort => {
+  switch (currentSort) {
+    case Sort.Asc:
+      return Sort.Desc;
+    case Sort.Desc:
+      return Sort.None;
+    default:
+      return Sort.Asc;
+  }
+};
+
+const immediatelyRefresh = async (): Promise<void> => {
+  await fetchUserTrackingDetail(+userId);
 };
 //#endregion
 
@@ -505,11 +583,39 @@ watch(
     generateMapDots();
   }
 );
+
+watch(
+  () => sortName.value,
+  () => {
+    switch (sortName.value) {
+      case Sort.Asc:
+        data.value.sort();
+        break;
+
+      case Sort.Desc:
+        data.value.sort().reverse();
+        break;
+
+      default:
+        data.value = [...backupData];
+    }
+  }
+);
+
+watch(refreshTime, () => {
+  if (refreshTime.value) {
+    interval.value = setInterval(async () => {
+      isLoading.value = true;
+      await fetchUserTrackingDetail(+userId);
+      isLoading.value = false;
+    }, refreshTime.value * 60 * 1000);
+  }
+});
 //#endregion
 </script>
 
 <style lang="scss" scoped>
-.realtime-manage {
+.driver-tracking-location {
   &__title {
     font-style: normal;
     font-weight: 700;
@@ -542,6 +648,9 @@ watch(
 
   &__table-card {
     position: relative;
+    border: none !important;
+    box-shadow: 4px 2px 8px rgba(0, 0, 0, 0.02) !important;
+    border-radius: 10px !important;
   }
 
   &__table-card-title-wrapper {
@@ -564,6 +673,20 @@ watch(
     transition: width 300ms ease-out;
     height: 40px;
     border-radius: 10px;
+
+    &__disabled {
+      .ant-input-affix-wrapper {
+        padding: 0 8px 0 0 !important;
+        height: 100%;
+        border-radius: 10px;
+        border: 1px solid $neutral-200;
+        overflow: hidden;
+
+        &:hover {
+          border-color: $neutral-200 !important;
+        }
+      }
+    }
 
     .ant-input-affix-wrapper {
       padding: 0 8px 0 0 !important;
@@ -613,6 +736,8 @@ watch(
   &__user-map-info {
     height: 72px;
     border-top: 1px solid $neutral-100;
+    max-width: 100%;
+    overflow: auto;
   }
 
   &__user-info-title {
@@ -629,6 +754,13 @@ watch(
     font-size: 16px;
     line-height: 20px;
     color: $neutral-600;
+
+    &:nth-child(2) {
+      max-width: 200px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
   }
 
   &__dot-size {
@@ -648,6 +780,14 @@ watch(
   &__floating-selector {
     width: 240px;
     height: 40px;
+  }
+
+  &__href-name {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 20px;
+    color: $neutral-800;
   }
 }
 
@@ -688,7 +828,7 @@ watch(
 }
 
 :deep() {
-  .realtime-management__user-location-pin {
+  .driver-tracking-locationment__user-location-pin {
     position: relative;
     &__icon {
       position: absolute !important;
@@ -697,7 +837,7 @@ watch(
     }
   }
 
-  .realtime-manage {
+  .driver-tracking-location {
     &__refresh-option {
       .ant-select-selector {
         height: 48px !important;
@@ -736,6 +876,9 @@ watch(
     }
 
     &__map-card {
+      border: none !important;
+      box-shadow: 4px 2px 8px rgba(0, 0, 0, 0.02) !important;
+      border-radius: 10px !important;
       .ant-card-body {
         padding: 0 !important;
       }
@@ -745,7 +888,7 @@ watch(
 </style>
 
 <style lang="scss">
-.realtime-manage {
+.driver-tracking-location {
   &__refresh-option-wrapper {
     padding: 0 !important;
 
@@ -759,6 +902,22 @@ watch(
         height: 60px !important;
       }
     }
+  }
+
+  &__map-wrapper {
+    canvas {
+      width: 100% !important;
+    }
+  }
+
+  &__hide-table-body {
+    .ant-table-placeholder {
+      display: none !important;
+    }
+  }
+
+  &__no-data {
+    height: calc(100vh - 246px) !important;
   }
 }
 </style>

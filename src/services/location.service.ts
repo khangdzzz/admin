@@ -61,7 +61,7 @@ export async function getListCurrentUserLocations(
   const [err, res] = await transformRequest<
     PaginationDto<CurrentUserLocationResponseDto>
   >({
-    url: `location/current?workplace_id=${132}`,
+    url: `location/current?workplace_id=${id}`,
     method: "get"
   });
   if (err || !res) return [];
