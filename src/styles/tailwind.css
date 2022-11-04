@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer components {
+  .card {
+    background: #ffffff;
+    box-shadow: 4px 2px 8px rgba(0, 0, 0, 0.02);
+    border-radius: 10px;
+    padding: 20px;
+  }
+  .btn {
+    @apply flex justify-center text-white text-lg font-bold h-12 cursor-pointer items-center;
+    gap: 5px;
+    line-height: 1.125rem;
+    border-radius: 10px;
+    padding: 15px 10px;
+  }
+  .btn--text {
+    @apply border justify-center flex text-lg font-bold h-12 cursor-pointer items-center;
+    border-style: solid;
+    gap: 5px;
+    line-height: 1.125rem;
+    border-radius: 10px;
+    padding: 15px 10px;
+  }
+  .btn--text-blue-500 {
+    @apply btn--text text-blue-500 border-blue-500 bg-white;
+  }
+  .btn--text-primary-400 {
+    @apply btn--text text-primary-400 border-primary-400 bg-white;
+  }
+  .btn--text-red-500 {
+    @apply btn--text text-red-500 border-red-400 bg-white;
+  }
+  .btn--disabled {
+    @apply btn bg-neutral-200 text-white pointer-events-none cursor-not-allowed;
+  }
+}

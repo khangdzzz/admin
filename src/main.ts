@@ -14,7 +14,8 @@ import OpenLayersMap from "vue3-openlayers";
 import "vue3-openlayers/dist/vue3-openlayers.css";
 import { i18n } from "./i18n";
 import { router } from "./routes";
-import vClickOutside from "click-outside-vue3";
+import "@/styles/tailwind.css";
+import vClickOutside from "click-outside-vue3"
 
 const app = createApp(App);
 const pinia = createPinia();
@@ -44,3 +45,4 @@ app.provide("messenger", messenger);
 app.provide("emitter", emitter);
 app.use(vClickOutside);
 app.mount("#app");
+app.use(vClickOutside)

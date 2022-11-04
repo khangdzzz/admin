@@ -608,6 +608,25 @@ const routes: RouteRecordRaw[] = [
     }
   },
   {
+    path: "/collection-route/:id",
+    name: routeNames.collectionRoute,
+    meta: {
+      layout: ScreenLayout.DEFAULT_LAYOUT
+    },
+    redirect: {
+      name: routeNames.detailCollectionRoute
+    },
+    children: [
+      {
+        path: ":mode",
+        name: routeNames.detailCollectionRoute,
+        component: () =>
+          import("@/modules/collect-route/pages/CollectRouteDetail.vue"),
+        alias: ["/:id", ""]
+      }
+    ]
+  },
+  {
     path: "/:pathMatch(.*)*",
     name: "NOT_FOUND",
     redirect: {

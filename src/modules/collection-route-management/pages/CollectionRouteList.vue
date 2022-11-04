@@ -95,6 +95,7 @@
               class="btn-create-navigation-link"
               ghost
               v-else
+              @click="(event) => addCollectionRoute(event, record.id)"
             >
               <template #icon>
                 <img
@@ -432,6 +433,16 @@ const onDeleteCollectionRoute = async (deleteIds: number[]): Promise<void> => {
   searchString.value = "";
 };
 
+const addCollectionRoute = (event: MouseEvent, id: number): void => {
+  if (event.stopPropagation) {
+    event.stopPropagation();
+  }
+  console.log(id);
+  router.push({
+    name: routeNames.detailCollectionRoute,
+    params: { id, mode: "create" }
+  });
+};
 //#endregion
 
 //#region computed

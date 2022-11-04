@@ -31,6 +31,8 @@ export interface workPlace {
   name: string;
   tenantId?: number;
   workPlaceType?: number;
+  longitude: number;
+  latitude: number;
   baseType?: number;
 }
 export interface workPlaceDTO {
@@ -38,5 +40,7 @@ export interface workPlaceDTO {
   name: string;
   tenant_id?: number;
   workplace_type?: number;
+  longitude: number;
+  latitude: number;
   base_type?: number;
 }
