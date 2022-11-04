@@ -170,14 +170,15 @@ export async function getWorkplace(): Promise<
 export async function getCollectionPoint(): Promise<
   CollectionPointResponseDto[] | undefined
 > {
-  const [err, res] = await transformRequest<
-    PaginationDto<CollectionPointResponseDto>
-  >({
+  const [err, res] = await transformRequest<CollectionPointResponseDto[]>({
     url: `/collect_point`,
-    method: "get"
+    method: "get",
+    params: {
+      page_size: "full"
+    }
   });
   if (err) return undefined;
-  return res.results;
+  return res;
 }
 export async function createCollectionRoute(
   data: CreateCollectionRouteModel

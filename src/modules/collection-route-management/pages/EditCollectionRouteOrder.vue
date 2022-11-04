@@ -164,14 +164,14 @@
           type="secondary"
           class="edit-collection-point__btn-style edit-collection-point__cancel-btn"
           @click="handleClickCancel"
-          :disabled="isLoading"
+          :disabled="isLoading || isSubmitting"
           >{{ $t("btn_cancel") }}</a-button
         >
         <a-button
           type="primary"
           class="edit-collection-point__btn-style"
           :disabled="isDisableSubmit"
-          :loading="false"
+          :loading="isSubmitting"
           @click="handleClickSubmit"
           >{{ $t("btn_save") }}</a-button
         >
@@ -223,6 +223,7 @@ const messenger: (
 const searchCollectionPoint = ref<string>("");
 const drag = ref<boolean>(false);
 const formData = reactive<FormDataCreateCollectionRoute>(reactiveFormData);
+const isSubmitting = ref<boolean>(false);
 const isDisableSubmit = ref<boolean>(true);
 const formNote = reactive<Form>({ note: "" });
 const listCollectionPoint = ref<CollectionPoint[]>([]);
@@ -323,7 +324,7 @@ const getListIdSelectedCP = computed(() => {
 });
 
 const onHandleAddCollectionPointByIdById = (id: number): void => {
-  listSelectedCollectionPoint.value.push(listCollectionPoint.value[id]);
+  listSelectedCollectionPoint.value.push(filteredCollectionPointList.value[id]);
 };
 const onHandleRemoveCollectionPointById = (id: number): void => {
   listSelectedCollectionPoint.value.splice(
@@ -367,11 +368,12 @@ const handleClickSubmit = async (): Promise<void> => {
     collect_point_ids: listStringId,
     notice: makeUniqueName(formNote.note.toString())
   };
-
+  isSubmitting.value = true;
   const { error, res } = await service.collectionRoute.editCollectionRoute(
     +id,
     data
   );
+  isSubmitting.value = true;
   if (!error && res) {
     messenger({
       title: "common_msg_edit_successfully",
