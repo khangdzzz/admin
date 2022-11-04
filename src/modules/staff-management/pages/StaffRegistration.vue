@@ -395,6 +395,8 @@ const handleFormatLabelSelect = (type: number): string => {
     return i18n.global.t("customer");
   } else if (type === 4) {
     return i18n.global.t("destination");
+  } else if (type === 5) {
+    return i18n.global.t("disposal");
   } else {
     return "";
   }

@@ -45,7 +45,7 @@ export async function getListCollectionRoutes(
   );
   const orderSortLastUpdate = calculateSortQuery("updated_at", sortLastUpdate);
   const orderSortNavigationRouteId = calculateSortQuery(
-    "",
+    "collect_route___id",
     sortNavigationRouteId
   );
 
@@ -53,7 +53,8 @@ export async function getListCollectionRoutes(
     orderSortName,
     orderSortWorkPlace,
     orderSortWNumberStore,
-    orderSortLastUpdate
+    orderSortLastUpdate,
+    orderSortNavigationRouteId
   ]
     .filter((item) => !!item)
     .toString();
@@ -91,7 +92,7 @@ export async function getListCollectionRoutes(
         workplace___name,
         name,
         number_collect_points,
-        navigation_id,
+        collect_route___id,
         notice
       } = item;
       return {
@@ -101,7 +102,7 @@ export async function getListCollectionRoutes(
         workPlace: workplace___name,
         name,
         numberOfStore: number_collect_points,
-        navigationId: navigation_id,
+        navigationId: collect_route___id,
         notice
       };
     })
@@ -135,7 +136,7 @@ export async function getCollectionRouteById(
     workplace___name,
     name,
     number_collect_points,
-    navigation_id,
+    collect_route___id,
     notice,
     collect_points,
     workplace_id
@@ -148,7 +149,7 @@ export async function getCollectionRouteById(
     workPlace: workplace___name,
     name,
     numberOfStore: number_collect_points,
-    navigationId: navigation_id,
+    navigationId: collect_route___id,
     notice,
     listCollectionPoint: collect_points,
     workplaceId: workplace_id
