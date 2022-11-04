@@ -138,12 +138,12 @@
                       {{ formatDateTime(text, "yyyy/MM/dd hh:mm:ss") }}
                     </div>
                   </template>
-                  <template v-if="column.key === 'name'">
+                  <template v-if="column.key === 'userName'">
                     <a
                       :href="`${userTrackingPath}/${record.id}`"
                       target="blank"
                       class="realtime-manage__href-name"
-                      >{{ record.name }}</a
+                      >{{ record.userName }}</a
                     >
                   </template>
                 </template>
@@ -232,12 +232,14 @@
                   <div
                     v-if="slotProps"
                     class="realtime-management__user-location-pin"
-                    @click="selectUser(geoLocation.userId)"
                   >
-                    <img
-                      class="realtime-management__user-location-pin__icon"
-                      :src="geoLocation.icon"
-                    />
+                    <router-link
+                      :to="`${userTrackingPath}/${geoLocation.userId}`"
+                    >
+                      <img
+                        class="realtime-management__user-location-pin__icon"
+                        :src="geoLocation.icon"
+                    /></router-link>
                   </div>
                 </template>
               </ol-overlay>
@@ -262,7 +264,7 @@ import CustomSelect from "@/modules/common/components/CustomSelect.vue";
 import ThePagination from "@/modules/common/components/ThePagination.vue";
 import SortView from "@/modules/common/components/SortView.vue";
 import { listOfUserColumns } from "@/modules/realtime-management/models/table-columns";
-import { router } from "@/routes";
+import { routeNames, router } from "@/routes";
 import { service } from "@/services";
 import {
   computed,
@@ -427,26 +429,6 @@ const onChange = (pageNumber: number): void => {
 
 const onSearchUnfocus = (): void => {
   if (!searchString.value) isSearchBoxExpanded.value = false;
-};
-
-const selectUser = async (userId: number): Promise<void> => {
-  selectedUser.value = data.value.find((user) => user.userId === userId);
-  if (selectedUser.value) {
-    driverLocations.value = driverLocations.value.filter(
-      (user) => user.userId === userId
-    );
-  }
-  data.value.forEach((user) => (user.isVisible = user.userId === userId));
-  isLoading.value = true;
-  const history = await service.location.getUserLocationDetail(25);
-  isLoading.value = false;
-  if (!history) {
-    return;
-  }
-  // collectionPointLocations.value = history.collectOrder.collectPoints;
-  currentRoute.value = (history.collectRoute.listCoordinates || []).map(
-    (coordinate) => [coordinate[1], coordinate[0]]
-  );
 };
 
 const changeUserVisibleState = (
