@@ -291,7 +291,7 @@ const getListIdSelectedCP = computed(() => {
 });
 
 const onHandleAddCollectionPointByIdById = (id: number): void => {
-  listSelectedCollectionPoint.value.push(listCollectionPoint.value[id]);
+  listSelectedCollectionPoint.value.push(filteredCollectionPointList.value[id]);
 };
 const onHandleRemoveCollectionPointById = (id: number): void => {
   listSelectedCollectionPoint.value.splice(
@@ -335,10 +335,11 @@ const handleClickSubmit = async (): Promise<void> => {
     collect_point_ids: listStringId,
     notice: makeUniqueName(formNote.note.toString())
   };
-
+  isSubmitting.value = true;
   const { error, res } = await service.collectionRoute.createCollectionRoute(
     data
   );
+  isSubmitting.value = false;
   if (!error && res) {
     messenger({
       title: "common_msg_create_successfully",
