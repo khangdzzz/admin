@@ -365,9 +365,6 @@ const innerHeight = ref<number>(0);
 const view = ref(null);
 const map = ref(null);
 const mapDots = ref<any[]>([]);
-const driverLocations = ref<
-  { icon: string; latitude: number; longitude: number }[]
->([]);
 const currentRoute = ref<number[][]>([]);
 const sortName = ref<Sort>(Sort.None);
 const interval = ref();
@@ -457,20 +454,13 @@ const fetchUserTrackingDetail = async (userId: number): Promise<void> => {
         title,
         latitude,
         longitude,
-        icon: cp.isCollected ? icCollectionPoint : icColectedCollectionPoint
+        icon: cp.isCollected ? icColectedCollectionPoint : icCollectionPoint
       };
     }),
     {
       id: 0,
       icon: driverIcon,
       title: history.userName,
-      latitude: history.currentLat,
-      longitude: history.currentLong
-    }
-  ];
-  driverLocations.value = [
-    {
-      icon: driverIcon,
       latitude: history.currentLat,
       longitude: history.currentLong
     }
