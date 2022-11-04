@@ -275,6 +275,7 @@ const initialize = async (): Promise<void> => {
   pageOption.total = res?.total;
   pageOption.totalPage = res?.totalPage;
 };
+
 const calculateNextSortStatus = (currentSort: Sort): Sort => {
   switch (currentSort) {
     case Sort.Asc:
@@ -285,6 +286,7 @@ const calculateNextSortStatus = (currentSort: Sort): Sort => {
       return Sort.Asc;
   }
 };
+
 const resetSort = (): void => {
   sortName.value = Sort.None;
   sortPostalCode.value = Sort.None;
@@ -292,39 +294,46 @@ const resetSort = (): void => {
   sortPhoneNumber.value = Sort.None;
   sortEmail.value = Sort.None;
 };
+
 const changeSortName = (): void => {
   const backupSortName = sortName.value;
   resetSort();
   sortName.value = calculateNextSortStatus(backupSortName);
   initialize();
 };
+
 const changeSortPostalCode = (): void => {
   const backupSortPostalCode = sortPostalCode.value;
   resetSort();
   sortPostalCode.value = calculateNextSortStatus(backupSortPostalCode);
   initialize();
 };
+
 const changeSortAddress = (): void => {
   const changeSortAddress = sortAddress.value;
   resetSort();
   sortAddress.value = calculateNextSortStatus(changeSortAddress);
   initialize();
 };
+
 const changeSortPhoneNumber = (): void => {
   const changeSortPhoneNumber = sortPhoneNumber.value;
   resetSort();
   sortPhoneNumber.value = calculateNextSortStatus(changeSortPhoneNumber);
   initialize();
 };
+
 const changeSortEmail = (): void => {
   const changeSortEmail = sortEmail.value;
   resetSort();
   sortEmail.value = calculateNextSortStatus(changeSortEmail);
   initialize();
 };
+
 const totalPages = (): number => {
   return Math.ceil(Number(pageOption.total) / Number(pageOption.pageSize));
 };
+
 const deleteCustomer = ($event: MouseEvent, id?: number): void => {
   if ($event.stopPropagation) $event.stopPropagation();
   messenger({
@@ -345,6 +354,7 @@ const deleteCustomer = ($event: MouseEvent, id?: number): void => {
     }
   });
 };
+
 const onDeleteCustomer = async (deleteIds: number[]): Promise<void> => {
   isLoading.value = true;
   const isSuccess = await service.customer.deleteCustomerById(deleteIds);
@@ -375,11 +385,13 @@ const onDeleteCustomer = async (deleteIds: number[]): Promise<void> => {
   selectedKeys.value = [];
   searchString.value = "";
 };
+
 const onSearchChange = debounce((): void => {
   pageOption.currentPage = 1;
   selectedKeys.value = [];
   initialize();
 }, 500);
+
 const handleClickEdit = ($event: MouseEvent, id: string): void => {
   if ($event.stopPropagation) $event.stopPropagation();
   router.push({ name: routeNames.editCustomer, params: { id } });

@@ -37,12 +37,18 @@
               </div>
 
               <div
-                class="realtime-manage__table-card-search-input d-flex align-center"
-                :style="
+                :class="[
+                  'realtime-manage__table-card-search-input d-flex align-center',
+                  !data.length
+                    ? 'realtime-manage__table-card-search-input__disabled'
+                    : ''
+                ]"
+                :style="[
                   isSearchBoxExpanded
                     ? 'width: calc(100% - 30px)'
-                    : 'width: 40px; cursor:pointer;'
-                "
+                    : 'width: 40px;',
+                  data.length ? 'cursor:pointer;' : ''
+                ]"
               >
                 <a-input
                   id="searchInput"
@@ -87,12 +93,22 @@
                   <template v-if="column.key === 'userName'">
                     <div class="header-title">
                       <span class="header-title">{{ column.title }}</span>
+                      <SortView
+                        class="mx-12"
+                        :sort="sortUsername"
+                        @click="changeSortUsername"
+                      />
                     </div>
                   </template>
 
                   <template v-if="column.key === 'lastUpdateTime'">
                     <div class="header-title">
                       <span class="header-title">{{ column.title }}</span>
+                      <SortView
+                        class="mx-12"
+                        :sort="sortLastActiveTime"
+                        @click="changeSortLastActiveTime"
+                      />
                     </div>
                   </template>
 
@@ -122,6 +138,14 @@
                       {{ formatDateTime(text, "yyyy/MM/dd hh:mm:ss") }}
                     </div>
                   </template>
+                  <template v-if="column.key === 'name'">
+                    <a
+                      :href="`${userTrackingPath}/${record.id}`"
+                      target="blank"
+                      class="realtime-manage__href-name"
+                      >{{ record.name }}</a
+                    >
+                  </template>
                 </template>
               </a-table>
               <ThePagination
@@ -141,7 +165,6 @@
                 :value="searchString"
                 size="small"
                 :no-action-button="true"
-                @onClick="handleBackToList"
                 v-if="!data.length"
               />
             </div>
@@ -237,7 +260,9 @@ import FloatingLabelSelect from "@/modules/base/components/FloatingLabelSelect.v
 import NoData from "@/modules/base/components/NoData.vue";
 import CustomSelect from "@/modules/common/components/CustomSelect.vue";
 import ThePagination from "@/modules/common/components/ThePagination.vue";
+import SortView from "@/modules/common/components/SortView.vue";
 import { listOfUserColumns } from "@/modules/realtime-management/models/table-columns";
+import { router } from "@/routes";
 import { service } from "@/services";
 import {
   computed,
@@ -248,6 +273,7 @@ import {
   watch
 } from "vue";
 import { formatDateTime } from "../base/components/validator/dateFormat";
+import { Sort } from "../common/models/sort.enum";
 import { CurrentUserLocationModel } from "./models/current-user-location.model";
 //#endregion
 
@@ -291,6 +317,8 @@ const driverLocations = ref<
 
 const currentRoute = ref<number[][]>([]);
 const interval = ref();
+const sortUsername = ref(Sort.None);
+const sortLastActiveTime = ref(Sort.None);
 
 //#endregion
 
@@ -368,13 +396,6 @@ const handleClickExpandSearchBox = (): void => {
 const handleClickClearButton = (): void => {
   searchString.value = "";
   onSearchChange();
-};
-
-const handleBackToList = (): void => {
-  if (searchString.value) {
-    isLoading.value = true;
-    searchString.value = "";
-  }
 };
 
 const isShowPrevBtn = (): boolean => {
@@ -478,6 +499,42 @@ const onSearchChange = (): void => {
       };
     });
 };
+
+const onRefreshImmediately = async (): Promise<void> => {
+  isLoading.value = true;
+  await fetchWorkplaceTrackingInformation();
+  isLoading.value = false;
+};
+
+const resetSort = (): void => {
+  sortUsername.value = Sort.None;
+  sortLastActiveTime.value = Sort.None;
+};
+
+const changeSortUsername = (): void => {
+  const backupSortUsername = sortUsername.value;
+  resetSort();
+  sortUsername.value = calculateNextSortStatus(backupSortUsername);
+  initialize();
+};
+
+const changeSortLastActiveTime = (): void => {
+  const backupSortLastActiveTime = sortLastActiveTime.value;
+  resetSort();
+  sortLastActiveTime.value = calculateNextSortStatus(backupSortLastActiveTime);
+  initialize();
+};
+
+const calculateNextSortStatus = (currentSort: Sort): Sort => {
+  switch (currentSort) {
+    case Sort.Asc:
+      return Sort.Desc;
+    case Sort.Desc:
+      return Sort.None;
+    default:
+      return Sort.Asc;
+  }
+};
 //#endregion
 
 //#region computed
@@ -513,11 +570,14 @@ const calculatedHeightForMap = computed((): string | undefined => {
   return undefined;
 });
 
-const onRefreshImmediately = async (): Promise<void> => {
-  isLoading.value = true;
-  await fetchWorkplaceTrackingInformation();
-  isLoading.value = false;
-};
+const userTrackingPath = computed((): string => {
+  const rootPath = router.currentRoute.value.fullPath.replace(
+    router.currentRoute.value.path,
+    ""
+  );
+  return `${rootPath}/driver-location-tracking`;
+});
+
 //#endregion
 
 //#region reactive
@@ -575,6 +635,9 @@ watch(refreshTime, () => {
 
   &__table-card {
     position: relative;
+    border: none !important;
+    box-shadow: 4px 2px 8px rgba(0, 0, 0, 0.02) !important;
+    border-radius: 10px !important;
   }
 
   &__table-card-title-wrapper {
@@ -597,6 +660,20 @@ watch(refreshTime, () => {
     transition: width 300ms ease-out;
     height: 40px;
     border-radius: 10px;
+
+    &__disabled {
+      .ant-input-affix-wrapper {
+        padding: 0 8px 0 0 !important;
+        height: 100%;
+        border-radius: 10px;
+        border: 1px solid $neutral-200;
+        overflow: hidden;
+
+        &:hover {
+          border-color: $neutral-200 !important;
+        }
+      }
+    }
 
     .ant-input-affix-wrapper {
       padding: 0 8px 0 0 !important;
@@ -681,6 +758,14 @@ watch(refreshTime, () => {
   &__floating-selector {
     width: 240px;
     height: 40px;
+  }
+
+  &__href-name {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 20px;
+    color: $neutral-800;
   }
 }
 
@@ -774,6 +859,9 @@ watch(refreshTime, () => {
 
     &__map-card {
       position: relative;
+      border: none !important;
+      box-shadow: 4px 2px 8px rgba(0, 0, 0, 0.02) !important;
+      border-radius: 10px !important;
       .ant-card-body {
         padding: 0 !important;
       }
