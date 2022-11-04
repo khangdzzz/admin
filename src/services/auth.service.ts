@@ -83,7 +83,7 @@ export function logout(): void {
   localStorage.setItem(localStorageKeys.currentLanguage, currentLanguage);
 }
 
-export function refreshToken(): void {
+export function refreshToken(callback): void {
   const refreshToken = service.localStorage.getItem(
     localStorageKeys.refreshToken
   ) as string;
@@ -103,8 +103,7 @@ export function refreshToken(): void {
     new CognitoRefreshToken({ RefreshToken: refreshToken }),
     (err, session): void => {
       if (!err && session) {
-        const idToken = session.getIdToken().getJwtToken();
-        service.localStorage.setAccessToken(idToken);
+        callback(session);
       } else {
         logout();
         router.push({ name: routeNames.login });

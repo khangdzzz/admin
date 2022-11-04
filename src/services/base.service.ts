@@ -41,9 +41,20 @@ const handleRequestResponse = (data: any): any => {
   }
   return data;
 };
+interface MyAxiosRequestConfig extends AxiosRequestConfig {
+  _retry?: boolean;
+}
 const handleRequestError = async (error: AxiosError): Promise<void> => {
-  if (error.code == "ERR_NETWORK") {
-    service.auth.refreshToken();
+  const config: MyAxiosRequestConfig = error.config;
+  if (error.code == "ERR_NETWORK" && !config._retry) {
+    config._retry = true;
+    service.auth.refreshToken((session): void => {
+      if (session) {
+        const idToken = session.getIdToken().getJwtToken();
+        service.localStorage.setAccessToken(idToken);
+        axiosIntance(config);
+      }
+    });
   }
   return Promise.reject(error);
 };

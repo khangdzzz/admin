@@ -66,5 +66,9 @@ export const routeNames = {
   listCollectionPoint: "LIST_COLLECTION_POINT",
   createCollectionPoint: "CREATE_COLLECTION_POINT",
   realTimeManagement: "REAL_TIME_MANAGEMENT",
-  driverLocationTracking: "DRIVER_LOCATION_TRACKING"
+  driverLocationTracking: "DRIVER_LOCATION_TRACKING",
+  collectionRoute: "COLLECTION_ROUTE",
+  createCollectionRoute: "CREATE_COLLECTION_ROUTE",
+  detailCollectionRoute: "DETAIL_COLLECTION_ROUTE",
+  demoMap: "DEMO_MAP"
 };
