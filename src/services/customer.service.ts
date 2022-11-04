@@ -119,8 +119,10 @@ export async function createCustomer(
 
   if (!res && err) {
     return {
-      error: (err?.response?.data as { details: { msg: string }[] }).details[0]
-        .msg
+      error: (err?.response?.data as { details: { msg: string, loc: string[] }[] })
+        .details[0].msg,
+      errorParams: (err?.response?.data as { details: { msg: string, loc: string[] }[] })
+        .details[0].loc
     };
   }
 

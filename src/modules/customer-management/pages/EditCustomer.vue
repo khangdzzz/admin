@@ -298,11 +298,40 @@ const { singleInput, duoInputs } = formData;
 const [name, shortName, kana, postalCode, address, phoneNumber, email] =
   singleInput;
 const [representative, externalCode] = duoInputs;
+
+const isExitsField = ref<string[]>([]);
 //#endregion
 
 //#region hooks
 onMounted(async () => {
   await init();
+  singleInput[0].rules?.push({
+    validator: (rule: Rule, value: string): Promise<void> => {
+      if (isExitsField.value.includes("name")) {
+        return Promise.reject(
+          i18n.global.t("error_unique_constraint", {
+            fieldName: i18n.global.t("name")
+          })
+        );
+      }
+      return Promise.resolve();
+    },
+    trigger: ["blur", "change"]
+  });
+
+  singleInput[1].rules?.push({
+    validator: (rule: Rule, value: string): Promise<void> => {
+      if (isExitsField.value.includes("short_name")) {
+        return Promise.reject(
+          i18n.global.t("error_unique_constraint", {
+            fieldName: i18n.global.t("short_name")
+          })
+        );
+      }
+      return Promise.resolve();
+    },
+    trigger: ["blur", "change"]
+  });
   onCheckValidFields();
 });
 //#endregion
@@ -382,10 +411,8 @@ const handleClickSave = async (): Promise<void> => {
     ...(externalCode.value && { external_code: externalCode.value as string })
   };
   isLoading.value = true;
-  const { error } = await service.customerManagement.editCustomerById(
-    +id,
-    payload
-  );
+  const { error, errorParams } =
+    await service.customerManagement.editCustomerById(+id, payload);
   isLoading.value = false;
 
   if (!error) {
@@ -399,15 +426,18 @@ const handleClickSave = async (): Promise<void> => {
       }
     });
   } else {
-    if (error === "error_unique_constraint") {
-      isExist.value = true;
-      return;
+    if ((error as string) === "error_unique_constraint") {
+      if (errorParams) {
+        isExitsField.value = errorParams;
+      }
+      formRef.value.validate();
+    } else {
+      messenger({
+        title: "popup_create_fail_title",
+        message: "",
+        type: MessengerType.Error
+      });
     }
-    messenger({
-      title: "create_failed",
-      message: "",
-      type: MessengerType.Error
-    });
   }
 };
 //#endregion
