@@ -76,6 +76,7 @@
             type="primary"
             class="btn-create-navigation-link"
             ghost
+            @click="addCollectionRoute"
             v-else
           >
             <template #icon>
@@ -172,6 +173,14 @@ const editCollectionRoute = (): void => {
     name: routeNames.editCollectionRouteOrder
   });
 };
+
+const addCollectionRoute = (): void => {
+  router.push({
+    name: routeNames.createRoute,
+    params: { id, mode: "create" }
+  });
+};
+
 const deleteCollectionRoute = (): void => {
   messenger({
     title: "popup_msg_confirm_delete",
