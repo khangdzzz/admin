@@ -2,7 +2,7 @@
   <div
     class="no-data-container fill-height fill-width d-flex flex-column justify-center align-center"
   >
-    <div class="mb-60" v-if="!isLoading">
+    <div :class="isSmall ? 'mb-10' : 'mb-60'" v-if="!isLoading">
       <ImNotFound
         dashed-file="#07A0B8"
         background-color="#E6F6F9"
@@ -15,17 +15,30 @@
         glass-handle-color="#07A0B8"
         glass-conector-color="#3DC0D5"
         ray-color="#FFFFFF"
+        :width="isSmall ? '120px' : '240px'"
+        :height="isSmall ? '120px' : '240px'"
       />
     </div>
     <div
       v-if="!isLoading && value"
       class="fill-width d-flex flex-column justify-center align-center"
     >
-      <div class="no-data-container__message mb-30" v-html="getMessage"></div>
-      <div class="no-data-container__sub-message mb-30">
+      <div
+        :class="[
+          'no-data-container__message ',
+          isSmall ? 'no-data-container__message__small mb-10' : 'mb-30'
+        ]"
+        v-html="getMessage"
+      ></div>
+      <div
+        :class="[
+          'no-data-container__sub-message mb-30',
+          isSmall ? 'no-data-container__sub-message__small' : ''
+        ]"
+      >
         {{ $t("try_searching_for_another_term") }}
       </div>
-      <div>
+      <div v-if="!noActionButton">
         <a-button
           type="primary"
           class="no-data-container__back-to-list-btn d-flex justify-center align-center gap-10"
@@ -36,7 +49,13 @@
         >
       </div>
     </div>
-    <div class="no-data-container__no-data" v-if="!isLoading && !value">
+    <div
+      :class="[
+        'no-data-container__no-data',
+        isSmall ? 'no-data-container__no-data__small' : ''
+      ]"
+      v-if="!isLoading && !value"
+    >
       {{ $t("no_data") }}
     </div>
     <div v-if="isLoading">
@@ -66,6 +85,14 @@ const props = defineProps({
   },
   isLoading: {
     type: Boolean
+  },
+  noActionButton: {
+    type: Boolean,
+    default: false
+  },
+  size: {
+    type: String,
+    default: "medium"
   }
 });
 
@@ -88,10 +115,17 @@ const handleClick = (): void => {
 const getMessage = computed(() => {
   const currentLanguage = service.language.getCurrentLanguage();
   if (currentLanguage === SupportedLanguage.English) {
-    return `Sorry we couldn't find any matches for<span class="no-data-container__value">&nbsp;“${props.value}”</span>`;
+    return `Sorry we couldn't find any matches for<span class="no-data-container__value ${
+      isSmall.value ? "no-data-container__value__small" : ""
+    }">&nbsp;“${props.value}”</span>`;
   }
+  return ` <span class="no-data-container__value ${
+    isSmall.value ? "no-data-container__value__small" : ""
+  }">&nbsp;“${props.value}”</span>に一致する情報は見つかりませんでした。`;
+});
 
-  return ` <span class="no-data-container__value">&nbsp;“${props.value}”</span>に一致する情報は見つかりませんでした。`;
+const isSmall = computed(() => {
+  return props.size === "small";
 });
 //#endregion
 
@@ -113,6 +147,11 @@ const getMessage = computed(() => {
     max-width: 70%;
     flex-wrap: nowrap;
     word-break: break-all;
+
+    &__small {
+      font-size: 18px !important;
+      line-height: 21px !important;
+    }
   }
 
   &__sub-message {
@@ -121,6 +160,11 @@ const getMessage = computed(() => {
     font-size: 22px;
     line-height: 25.78px;
     color: $neutral-400;
+
+    &__small {
+      font-size: 12px !important;
+      line-height: 14px !important;
+    }
   }
 
   &__back-to-list-btn {
@@ -139,6 +183,11 @@ const getMessage = computed(() => {
     font-size: 28px;
     line-height: 33px;
     color: $neutral-400;
+
+    &__small {
+      font-size: 18px !important;
+      line-height: 21px !important;
+    }
   }
 
   &__loading {
@@ -154,6 +203,11 @@ const getMessage = computed(() => {
   .no-data-container {
     &__value {
       font-weight: 700 !important;
+
+      &__small {
+        font-size: 18px !important;
+        line-height: 21px !important;
+      }
     }
   }
 }

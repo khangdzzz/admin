@@ -14,6 +14,7 @@
     "src/modules/base/components/validator/validator.ts",
     "src/modules/common/helpers.ts",
     "src/modules/common/models/date.model.ts",
+    "src/modules/realtime-management/DriverLocationTracking.vue",
     "src/modules/staff-management/pages/CreateNewStaff.vue",
     "src/modules/staff-management/pages/StaffRegistration.vue",
     "src/modules/staff-management/pages/create-new-staff-variables.ts",

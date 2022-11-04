@@ -3,15 +3,20 @@
     <FloatingLabel
       class="floating-label-select"
       :is-focused="isFocused || !!value"
-      :label="$t(isFocused || !!value ? label : placeHolder)"
+      :label="!noLabel ? $t(isFocused || !!value ? label : placeHolder) : ''"
+      :placeholder="!value ? placeholder : ''"
       :control-name="controlName"
       :required="required"
       @click="focus(`${label}-input`)"
       :prefix="prefix"
+      :style="size === 'small' ? 'height: 40px' : 'height: 60px'"
     >
       <a-select
         :id="`${label}-input`"
-        class="floating-label-select__input"
+        :class="[
+          'floating-label-select__input',
+          size === 'small' ? 'floating-label-select__input-small' : ''
+        ]"
         @focusin="isFocused = true"
         @focusout="isFocused = false"
         :bordered="false"
@@ -57,6 +62,10 @@ defineProps({
     type: String,
     default: ""
   },
+  noLabel: {
+    type: Boolean,
+    default: false
+  },
   placeHolder: {
     type: String,
     default: ""
@@ -88,6 +97,14 @@ defineProps({
   },
   className: {
     type: String
+  },
+  size: {
+    type: String,
+    default: "medium"
+  },
+  placeholder: {
+    type: String,
+    default: ""
   }
 });
 //#endregion
@@ -124,7 +141,6 @@ const dataChange = (value: string): void => {
 
 <style lang="scss" scoped>
 .floating-label-select {
-  height: 60px;
   position: relative;
   cursor: text;
 
@@ -152,6 +168,10 @@ const dataChange = (value: string): void => {
     font-size: 16px;
     line-height: 100%;
     color: #222222;
+  }
+
+  &__input-small {
+    top: 0px !important;
   }
 
   &__input:focus {
