@@ -221,6 +221,34 @@
                   <ol-source-osm />
                 </ol-tile-layer>
 
+                <ol-geolocation
+                  :projection="projection"
+                  v-for="(collectionPoint, index) in geoLocations"
+                  :key="index"
+                >
+                  <template v-slot>
+                    <ol-vector-layer :zIndex="2">
+                      <ol-source-vector>
+                        <ol-feature ref="positionFeature">
+                          <ol-geom-point
+                            :coordinates="[
+                              collectionPoint.longitude,
+                              collectionPoint.latitude
+                            ]"
+                          >
+                          </ol-geom-point>
+                          <ol-style>
+                            <ol-style-icon
+                              :src="collectionPoint.icon"
+                              :scale="1"
+                            ></ol-style-icon>
+                          </ol-style>
+                        </ol-feature>
+                      </ol-source-vector>
+                    </ol-vector-layer>
+                  </template>
+                </ol-geolocation>
+
                 <!-- list collection point -->
                 <ol-geolocation
                   :projection="projection"
@@ -249,33 +277,6 @@
                   </template>
                 </ol-geolocation>
 
-                <ol-geolocation
-                  :projection="projection"
-                  v-for="(collectionPoint, index) in geoLocations"
-                  :key="index"
-                >
-                  <template v-slot>
-                    <ol-vector-layer :zIndex="2">
-                      <ol-source-vector>
-                        <ol-feature ref="positionFeature">
-                          <ol-geom-point
-                            :coordinates="[
-                              collectionPoint.longitude,
-                              collectionPoint.latitude
-                            ]"
-                          >
-                          </ol-geom-point>
-                          <ol-style>
-                            <ol-style-icon
-                              :src="collectionPoint.icon"
-                              :scale="1"
-                            ></ol-style-icon>
-                          </ol-style>
-                        </ol-feature>
-                      </ol-source-vector>
-                    </ol-vector-layer>
-                  </template>
-                </ol-geolocation>
                 <ol-vector-layer>
                   <ol-source-vector>
                     <ol-feature>
@@ -434,6 +435,7 @@ const fetchUserTrackingDetail = async (userId: number): Promise<void> => {
   userTrackingData.value = history.history.map((h) => {
     return [h.longitude, h.latitude];
   });
+  console.log("geoLocations", userTrackingData);
   vehicleName.value = history.vehicleName;
   routeName.value = history.routeName;
   capacity.value = `${history.maxWeight || 0} kg`;
