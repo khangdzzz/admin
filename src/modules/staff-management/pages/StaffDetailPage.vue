@@ -60,14 +60,21 @@
               {{ displayItemValue(item.key, item.value) }}
             </div>
             <div class="staff-detail__value" v-else>
-              <p v-for="workPlace in item.value" :key="workPlace.id">
-                <span class="staff-detail__workplace"
-                  >{{ formatLabelWorkPlaceType(workPlace.workplace_type) }}
-                  -
-                </span>
+              <div v-if="item.value.length">
+                <p
+                  v-for="workPlace in item.value"
+                  :key="workPlace.id"
+                  class="mb-8"
+                >
+                  <span class="staff-detail__workplace"
+                    >{{ formatLabelWorkPlaceType(workPlace.workplace_type) }}
+                    -
+                  </span>
 
-                {{ workPlace.name }}
-              </p>
+                  {{ workPlace.name }}
+                </p>
+              </div>
+              <span v-else>{{ NULL_VALUE_DISPLAY }}</span>
             </div>
           </div>
         </div>
