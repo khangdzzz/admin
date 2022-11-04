@@ -187,13 +187,13 @@ const columns: TableColumnType<CollectionPointModel>[] = [
     title: i18n.global.t("address"),
     dataIndex: "address",
     key: "address",
-    width: "27%"
+    width: "20%"
   },
   {
     title: i18n.global.t("common_phone_field_name"),
     dataIndex: "phoneNumber",
     key: "phoneNumber",
-    width: "23%"
+    width: "20%"
   },
   {
     dataIndex: "action",

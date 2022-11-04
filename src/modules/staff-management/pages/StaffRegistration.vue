@@ -13,7 +13,7 @@
       <div
         class="create-staff fill-height fill-width d-flex justify-center align-center"
       >
-        <a-card class="create-staff__card px-20 py-30">
+        <a-card :bordered="false" class="create-staff__card px-20 py-30">
           <div
             class="create-staff__title d-flex mb-30 justify-center align-center"
           >
@@ -98,7 +98,7 @@
             ></FloatingLabelInput>
 
             <div
-              class="d-flex align-center gap-4 pt-10 align-flex-start radio"
+              class="d-flex align-center gap-4 pt-10 align-flex-start radio mb-10"
               v-if="userStore.user?.userType !== UserType.SystemAdmin"
             >
               <div class="create-staff__type-selector-title">
@@ -127,7 +127,7 @@
             </div>
 
             <div
-              class="d-flex align-center gap-4 align-flex-start radio mb-6"
+              class="d-flex align-center gap-4 align-flex-start radio mb-10"
               v-if="optionValue.userRoleOptions?.length"
             >
               <div class="create-staff__type-selector-title">
@@ -162,6 +162,7 @@
               v-if="modeSelectWorkPlace === 'multiple'"
               :options="optionValue.workPlaceOptions"
               v-model:value="formState.workplaces"
+              class="style-workplace"
             ></FloatingLabelMultipleSelect>
             <FloatingLabelSelect
               place-holder="staff_workplace"
@@ -171,9 +172,10 @@
               v-if="modeSelectWorkPlace === 'single'"
               :options="optionValue.workPlaceOptions"
               v-model:value="formState.workplaces"
+              class="style-workplace"
             ></FloatingLabelSelect>
           </a-form>
-          <div class="d-flex justify-center align-center gap-20 mt-10">
+          <div class="d-flex justify-center align-center gap-20 mt-0">
             <a-button
               class="create-staff__btn-style create-staff__cancel-btn"
               type="secondary"
@@ -620,7 +622,7 @@ watch([optionValue, formState], () => {
     font-style: normal;
     color: $neutral-600;
     min-width: 233px;
-    margin-bottom: 26px;
+    margin-bottom: 20px;
     @include text(400, 18px, 100%);
   }
 
@@ -713,6 +715,15 @@ watch([optionValue, formState], () => {
         }
       }
     }
+  }
+  .ant-form-item {
+    margin-bottom: 20px !important;
+  }
+  .ant-form-item-explain .ant-form-item-explain-error {
+    margin-bottom: 0px !important;
+  }
+  .style-workplace.ant-form-item {
+    margin-bottom: 30px !important;
   }
 }
 </style>

@@ -26,7 +26,7 @@
           </div>
         </a-form>
       </div>
-      <div class="d-flex justify-center gap-20 mt-12">
+      <div class="d-flex justify-center gap-20 mt-10">
         <a-button
           type="secondary"
           class="create-customer__btn-style create-customer__cancel-btn"
@@ -300,9 +300,12 @@ const isSubmitDisable = computed(() => {
     }
   }
 
-  .ant-form-item-explain-error {
+  .ant-form-item-explain .ant-form-item-explain-error {
     color: $red-500 !important;
-    margin-bottom: 20px;
+    margin-bottom: 0px !important;
+  }
+  .ant-form-item {
+    margin-bottom: 20px !important;
   }
 }
 </style>
