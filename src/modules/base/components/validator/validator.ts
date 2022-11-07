@@ -119,14 +119,19 @@ const validator = {
     return "";
   },
   validatePostalCode: (_rule: Rule, value: string): Promise<void> => {
-    const pattern = /^\d+\.?\d*$/;
-    if (!value || !pattern.test(value)) {
+    if (!value) {
       return Promise.reject(
         i18n.global.t("please_enter_input", {
-          fieldName: i18n.global.t("common_postal_code_label")
+          fieldName: i18n.global.t("common_postal_code_label").toLowerCase()
         })
       );
     }
+
+    const regex = /^[0-9]*$/;
+    if (value && !regex.test(value)) {
+      return Promise.reject(i18n.global.t("allow_input_number"));
+    }
+
     if (value.length > 8) {
       return Promise.reject(
         i18n.global.t("max_length_input", { maxLength: 8 })

@@ -29,6 +29,7 @@
     "src/stores/common.store.ts",
     "src/stores/index.ts",
     "src/stores/store-ids.ts",
+    "src/utils/emitter.ts",
     "src/utils/input-behaviours.helper.ts"
   ]
 }

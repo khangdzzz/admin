@@ -171,7 +171,10 @@ import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
 import { commonStore } from "@/stores";
+import { NULL_VALUE_DISPLAY } from "@/utils/constants";
+import { makeUniqueName } from "@/utils/string.helper";
 import { message } from "ant-design-vue";
+import { Rule } from "ant-design-vue/lib/form";
 import {
   computed,
   inject,
@@ -181,10 +184,6 @@ import {
   ref,
   watch
 } from "vue";
-import { Rule } from "ant-design-vue/lib/form";
-import { localStorageKeys } from "@/services/local-storage-keys";
-import { makeUniqueName } from "@/utils/string.helper";
-import { NULL_VALUE_DISPLAY } from "@/utils/constants";
 //#region import
 //#endregion
 
@@ -193,8 +192,6 @@ import { NULL_VALUE_DISPLAY } from "@/utils/constants";
 
 //#region variables
 const userStore = commonStore();
-const currentLanguage =
-  localStorage.getItem(localStorageKeys.currentLanguage) || "en";
 const formData = reactive<FormData>(reactiveFormData());
 const collectionBaseType = ref<number>(1);
 const center = ref<number[]>([40, 40]);
@@ -258,29 +255,13 @@ onMounted(() => {
 
   contact[0].rules?.push({
     validator: (rule: Rule, value: string): Promise<void> => {
-      const regex = /^[0-9]*$/;
-      if (!value) {
-        return Promise.reject(
-          i18n.global.t("please_enter_input", currentLanguage, {
-            fieldName: i18n.global
-              .t("common_postal_code_label", currentLanguage)
-              .toLowerCase()
-          })
-        );
-      }
-
-      if (value && !regex.test(value)) {
-        return Promise.reject(i18n.global.t("allow_input_number"));
-      }
-
       if (isPostalCodeHasError.value)
         return Promise.reject(
           i18n.global.t("cannot_find_address_from_field_name", {
             fieldName: i18n.global.t("common_postal_code_label").toLowerCase()
           })
         );
-
-      return Promise.resolve();
+      return validator.validatePostalCode(rule, value);
     },
     trigger: ["blur", "change"]
   });

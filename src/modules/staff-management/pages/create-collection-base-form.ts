@@ -96,12 +96,7 @@ export const formData = (): FormData => {
           click: undefined
         },
         class: "",
-        rules: [
-          {
-            validator: validator.validatePostalCode,
-            trigger: ["blur", "change"]
-          }
-        ]
+        rules: []
       },
       {
         inputType: "AInput",
