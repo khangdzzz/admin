@@ -61,7 +61,7 @@ export async function getListCollectionRoutes(
   const params = {
     page,
     page_size: size,
-    name__like: searchKeyword ? `%${searchKeyword}%` : undefined,
+    __all__: searchKeyword ? `%${searchKeyword}%` : undefined,
     order_by: order_by?.length ? order_by : DEFAULT_SORT_ORDER
   };
   const [error, res] = await transformRequest<

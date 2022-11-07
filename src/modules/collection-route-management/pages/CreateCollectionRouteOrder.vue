@@ -65,7 +65,10 @@
                   <div class="collection-point__head--total">
                     <span>{{ $t("collection_route_total") }}: </span>
                     <span class="number-total">
-                      {{ listCollectionPoint.length || 0 }}
+                      {{
+                        listCollectionPoint.length -
+                          numberOfSelectedCollectionPoint || 0
+                      }}
                     </span>
                   </div>
                 </div>
@@ -290,14 +293,12 @@ const getListIdSelectedCP = computed(() => {
 
 const onHandleAddCollectionPointByIdById = (id: number): void => {
   listSelectedCollectionPoint.value.push(filteredCollectionPointList.value[id]);
-  listCollectionPoint.value.length -= 1;
 };
 const onHandleRemoveCollectionPointById = (id: number): void => {
   listSelectedCollectionPoint.value.splice(
     listSelectedCollectionPoint.value.findIndex((item) => item.id == id),
     1
   );
-  listCollectionPoint.value.length += 1;
 };
 const handleOnDuoInputsFocus = (index: number | boolean | Event): void => {
   formData.duoInputs[Number(index)].isFocus = true;
