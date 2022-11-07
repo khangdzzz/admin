@@ -93,7 +93,7 @@ export const formData = (): FormData => {
         isFocus: false,
         rules: [
           {
-            validator: validator.validateNumber,
+            validator: validator.validatePostalCode,
             trigger: ["blur", "change"]
           }
         ],

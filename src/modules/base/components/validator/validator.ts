@@ -117,6 +117,22 @@ const validator = {
       });
     }
     return "";
+  },
+  validatePostalCode: (_rule: Rule, value: string): Promise<void> => {
+    const pattern = /^\d+\.?\d*$/;
+    if (!value || !pattern.test(value)) {
+      return Promise.reject(
+        i18n.global.t("please_enter_input", {
+          fieldName: i18n.global.t("common_postal_code_label")
+        })
+      );
+    }
+    if (value.length > 8) {
+      return Promise.reject(
+        i18n.global.t("max_length_input", { maxLength: 8 })
+      );
+    }
+    return Promise.resolve();
   }
 };
 
