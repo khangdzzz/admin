@@ -8,7 +8,6 @@
             ref="formRef"
             :model="dynamicValidateForm"
             name="editContainer"
-            layout="inline"
             class="edit-form-container"
           >
             <CustomForm
@@ -50,6 +49,7 @@
 //#region import
 import { i18n } from "@/i18n";
 import CustomForm from "@/modules/base/components/CustomForm.vue";
+import validator from "@/modules/base/components/validator/validator";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import { router } from "@/routes";
@@ -60,11 +60,7 @@ import { Rule } from "ant-design-vue/lib/form";
 import { computed, inject, onMounted, reactive, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { Container, ContainerSelection } from "../models/container.model";
-import {
-  validateContainerName,
-  validateWeight,
-  validateContainerCapacity
-} from "../validators/container.validator";
+import { validateContainerName } from "../validators/container.validator";
 
 const route = useRoute();
 
@@ -136,16 +132,15 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
       placeHolder: "container_weight",
       label: "container_weight",
       name: "weight",
-      inline: true,
       disabled: false,
-      spaceStyle: {
-        display: "inline-block",
-        width: "16px"
-      },
       rules: [
         {
           validator: (_rule: Rule, value: string): Promise<void> => {
-            const error = validateWeight("container_weight", true, value);
+            const error = validator.validateDecimal(
+              "container_weight",
+              true,
+              value
+            );
             if (error) return Promise.reject(error);
             return Promise.resolve();
           },
@@ -162,12 +157,15 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
       placeHolder: "container_capacity",
       label: "container_capacity",
       name: "capacity",
-      inline: true,
       disabled: false,
       rules: [
         {
           validator: (_rule: Rule, value: string): Promise<void> => {
-            const error = validateContainerCapacity(value);
+            const error = validator.validateDecimal(
+              "container_capacity",
+              false,
+              value
+            );
             if (error) return Promise.reject(error);
             return Promise.resolve();
           },
@@ -303,7 +301,7 @@ const isAllowSubmit = computed(() => {
     return false;
   }
   if (
-    validateWeight(
+    validator.validateDecimal(
       "container_weight",
       true,
       dynamicValidateForm.formData[2].value
@@ -311,7 +309,13 @@ const isAllowSubmit = computed(() => {
   ) {
     return false;
   }
-  if (validateContainerCapacity(dynamicValidateForm.formData[3].value)) {
+  if (
+    validator.validateDecimal(
+      "container_capacity",
+      false,
+      dynamicValidateForm.formData[3].value
+    )
+  ) {
     return false;
   }
   return dynamicValidateForm.formData[1].value;
@@ -425,9 +429,6 @@ watch(isExist, () => {
             }
             .not-has-icon {
               padding-left: 12px;
-            }
-            .inline {
-              width: 300px !important;
             }
           }
         }

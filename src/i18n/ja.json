@@ -293,5 +293,6 @@
   "time": "時間",
   "route": "ルート",
   "loading_weight": "積載量",
-  "please_select_workplace": "拠点を選択"
+  "please_select_workplace": "拠点を選択",
+  "common_invalid_weigth_or_capacity": "999999.99まで{fieldName}をご入力ください。（最大小数点以下２桁）"
 }

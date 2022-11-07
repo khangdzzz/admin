@@ -299,5 +299,6 @@
   "time": "Time",
   "route": "Route",
   "loading_weight": "Loading Weight",
-  "please_select_workplace": "Please select workplace!"
+  "please_select_workplace": "Please select workplace!",
+  "common_invalid_weigth_or_capacity": "Allow input {fieldName} upto 999999.99 (upto 2 decimal places)"
 }

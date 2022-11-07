@@ -88,9 +88,9 @@
 //#region import
 import { i18n } from "@/i18n";
 import CustomForm from "@/modules/base/components/CustomForm.vue";
+import validator from "@/modules/base/components/validator/validator";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
-import { validateWeight } from "@/modules/container/validators/container.validator";
 import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
@@ -238,7 +238,7 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
       rules: [
         {
           validator: (_rule: Rule, value: string): Promise<void> => {
-            const error = validateWeight(
+            const error = validator.validateDecimal(
               "vehicle_max_loading_weight",
               false,
               value
@@ -382,7 +382,7 @@ watch(
       dynamicValidateForm.formData[1].value &&
       handleValidateFields(dynamicValidateForm.formData[2].value, 50, true) &&
       handleValidateFields(dynamicValidateForm.formData[3].value, 50, true) &&
-      !validateWeight(
+      !validator.validateDecimal(
         "vehicle_max_loading_weight",
         false,
         dynamicValidateForm.formData[4].value

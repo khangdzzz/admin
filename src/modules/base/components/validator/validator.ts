@@ -96,21 +96,27 @@ const validator = {
     return Promise.resolve();
   },
 
-  validateWeight: (_rule: Rule, value: number): Promise<void> => {
+  validateDecimal: (
+    fieldName: string,
+    isRequire: boolean,
+    value: string
+  ): string => {
+    if (!isRequire && !value) return "";
+
     if (!value) {
-      return Promise.reject(
-        i18n.global.t("please_enter_input", {
-          fieldName: i18n.global.t("container_weight")
-        })
-      );
-    } else if (value && isNaN(value)) {
-      return Promise.reject(i18n.global.t("allow_input_number"));
-    } else if (value.toString().length > 10) {
-      return Promise.reject(
-        i18n.global.t("max_length_input", { maxLength: 10 })
-      );
+      return i18n.global.t("please_enter_input", {
+        fieldName: i18n.global.t(fieldName).toLowerCase()
+      });
     }
-    return Promise.resolve();
+    if (!/^[0-9.-]*$/.test(value)) {
+      return i18n.global.t("field_allow_number_only");
+    }
+    if (!/^(?:\d{0,6}\.\d{1,2})$|^\d{0,6}$/.test(value)) {
+      return i18n.global.t("common_invalid_weigth_or_capacity", {
+        fieldName: i18n.global.t(fieldName).toLowerCase()
+      });
+    }
+    return "";
   }
 };
 

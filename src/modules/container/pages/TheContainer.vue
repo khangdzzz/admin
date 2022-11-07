@@ -78,15 +78,7 @@
           </template>
         </template>
 
-        <template #bodyCell="{ column, record }">
-          <template v-if="column.dataIndex === 'type'">
-            <span>{{ record.type }}</span>
-          </template>
-          <template v-if="column.dataIndex === 'capacity'">
-            <span class="null-value" v-if="record.capacity == null">{{
-              NULL_VALUE_DISPLAY
-            }}</span>
-          </template>
+        <template #bodyCell="{ column, record, text }">
           <template v-if="column.dataIndex === 'action'">
             <router-link
               :to="{
@@ -109,6 +101,10 @@
               :class="[containerList.actionIcon]"
               @click="fetchContainerDetail(record.id)"
             />
+          </template>
+
+          <template v-else>
+            <span>{{ text || NULL_VALUE_DISPLAY }}</span>
           </template>
         </template>
       </a-table>
