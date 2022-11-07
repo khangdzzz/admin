@@ -450,7 +450,7 @@ const handleSubmit = async (): Promise<void> => {
       editCollectionBaseRef.value.validate();
     } else {
       messenger({
-        title: "popup_create_fail_title",
+        title: "popup_edit_fail_title",
         message: "",
         type: MessengerType.Error
       });
