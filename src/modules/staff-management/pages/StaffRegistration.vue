@@ -411,7 +411,7 @@ const handleCancel = (): void => {
   router.push({ name: routeNames.staffManagement });
 };
 const handleSubmit = async (): Promise<void> => {
-  let workPlaceValue = undefined;
+  let workPlaceValue: any[] | undefined = undefined;
   const workPlaceForm = formState.workplaces;
   if (workPlaceForm) {
     if (Array.isArray(workPlaceForm)) {
