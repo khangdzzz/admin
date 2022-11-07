@@ -1,35 +1,67 @@
 <template>
-  <a-form-item :key="name" v-for="(field, name) in currentValue" :has-feedback="hasFeedBack" :name="name">
+  <a-form-item
+    :key="name"
+    v-for="(field, name) in currentValue"
+    :has-feedback="hasFeedBack"
+    :name="name"
+  >
     <template v-if="isAnt(field.component)">
       <!-- <a-skeleton-input v-if="loading" style="width: 100%" :size="size" /> -->
       <div class="h-[60px] border-b border-b-neutral-200" v-if="field.readonly">
-        <div class="text-neutral-400 text-sm leading-[18px] mb-2">{{ field.label }}</div>
-        <div class="text-neutral-600 text-lg leading-[22px] h-[22px] font-bold truncate">{{
-            getFieldText(field)
-        }}</div>
+        <div class="text-neutral-400 text-sm leading-[18px] mb-2">
+          {{ field.label }}
+        </div>
+        <div
+          class="text-neutral-600 text-lg leading-[22px] h-[22px] font-bold truncate"
+        >
+          {{ getFieldText(field) }}
+        </div>
       </div>
-      <FloatLabel v-else v-click-outside="() => field.isFocused = false" class="" :isFocused="field.isFocused"
-        :isFloating="field.isFocused || !!field.value" :label="field.label" :disabled="field.disabled"
-        @click="handleClickLable(field, `field-${name}`)">
-        <component :ref="`field-${name}`" :is="field.component" v-model:value="field.value" :type="field.type"
-          :autocomplete="field.autocomplete" :field-names="field.fieldNames" :loading="loading" :options="field.options"
+      <FloatLabel
+        v-else
+        v-click-outside="() => (field.isFocused = false)"
+        class=""
+        :isFocused="field.isFocused"
+        :isFloating="field.isFocused || !!field.value"
+        :label="field.label"
+        :disabled="field.disabled"
+        @click="handleClickLable(field, `field-${name}`)"
+      >
+        <component
+          :ref="`field-${name}`"
+          :is="field.component"
+          v-model:value="field.value"
+          :type="field.type"
+          :autocomplete="field.autocomplete"
+          :field-names="field.fieldNames"
+          :loading="loading"
+          :options="field.options"
           :class="[
-            field.class, field.isFocused || !!field.value ? 'floating' : ''
-          ]" @focusin="field.isFocused = true" @focusout="field.isFocused = false"
-          @change="value => handleChange(field, value)" />
-
+            field.class,
+            field.isFocused || !!field.value ? 'floating' : ''
+          ]"
+          @focusin="field.isFocused = true"
+          @focusout="field.isFocused = false"
+          @change="(value) => handleChange(field, value)"
+        />
       </FloatLabel>
     </template>
     <template v-else>
-      <component :no-divider="field.noDivider" :is="field.component" v-model:value="field.value"
-        :autocomplete="field.autocomplete" :disabled="field.readonly || field.disabled" :loading="loading" />
+      <component
+        :no-divider="field.noDivider"
+        :is="field.component"
+        v-model:value="field.value"
+        :autocomplete="field.autocomplete"
+        :disabled="field.readonly || field.disabled"
+        :loading="loading"
+      />
     </template>
   </a-form-item>
 </template>
 <script lang="ts">
 import CollectionRouteNote from "@/modules/collect-route/pages/CollectionRouteNote.vue";
 import { defineComponent } from "vue";
-import { FormItems } from '@/modules/base/components/forms/form-models'
+import { FormItems } from "@/modules/base/components/forms/form-models";
 import FloatLabel from "@/modules/base/components/forms/FloatLabel.vue";
 
 interface IField {
@@ -45,6 +77,7 @@ interface IField {
   disabled?: boolean;
   readonly?: boolean;
   loading?: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   options?: any[];
   fieldNames?: {
     label?: string;
@@ -53,10 +86,10 @@ interface IField {
   };
   isFocused?: boolean;
   noDivider?: boolean;
-  change?: (value) => void
+  change?: (value) => void;
 }
 interface IFormField {
-  [name: string]: IField
+  [name: string]: IField;
 }
 export default defineComponent({
   components: {
@@ -87,22 +120,26 @@ export default defineComponent({
       }
     },
     isAnt() {
-      return (component: any) => {
-        return [FormItems.INPUT, FormItems.SELECT].includes(component)
-      }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return (component: any): boolean => {
+        return [FormItems.INPUT, FormItems.SELECT].includes(component);
+      };
     },
     getFieldText() {
-      return (field: IField) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return (field: IField): any => {
         if (field.component === FormItems.SELECT) {
-          const labelKey = field.fieldNames?.label
-          const valueKey = field.fieldNames?.value
-          if (!labelKey || !valueKey) return field.value
-          const option = field.options && field.options.find(x => x[valueKey] === field.value)
-          if (!option) return field.value
-          return option[labelKey]
+          const labelKey = field.fieldNames?.label;
+          const valueKey = field.fieldNames?.value;
+          if (!labelKey || !valueKey) return field.value;
+          const option =
+            field.options &&
+            field.options.find((x) => x[valueKey] === field.value);
+          if (!option) return field.value;
+          return option[labelKey];
         }
-        return field.value
-      }
+        return field.value;
+      };
     }
   },
   setup() {
@@ -110,11 +147,11 @@ export default defineComponent({
   },
   methods: {
     handleChange(field, value) {
-      if (field.change) field.change(value)
+      if (field.change) field.change(value);
     },
     handleClickLable(field, ref) {
       field.isFocused = true;
-      (this.$refs[ref] as HTMLInputElement[])[0].focus()
+      (this.$refs[ref] as HTMLInputElement[])[0].focus();
     }
   }
 });
@@ -122,7 +159,6 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 :deep() {
-
   .ant-input,
   .ant-select,
   .ant-select-selector {

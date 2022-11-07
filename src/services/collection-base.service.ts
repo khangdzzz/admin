@@ -151,6 +151,8 @@ export const getCollectionBaseById = async (
 export async function createCollectionBase(
   collectionBase: CreateCollectionBaseDto
 ): Promise<
+  // Todo: Need to fix this
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [AxiosError<unknown, unknown>, null] | [null, CollectionBaseResponseDto] | any
 > {
   const {
@@ -188,8 +190,9 @@ export async function createCollectionBase(
   });
   if (error || !res) {
     return {
-      error: (error?.response?.data as { details: { msg: string, loc: string[] }[] })
-        .details[0]
+      error: (
+        error?.response?.data as { details: { msg: string; loc: string[] }[] }
+      ).details[0]
     };
   }
   return {
@@ -200,6 +203,8 @@ export async function createCollectionBase(
 export async function editCollectionBase(
   collectionBase: EditCollectionBaseDto
 ): Promise<
+  // Todo: need to fix this
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [AxiosError<unknown, unknown>, null] | [null, CollectionBaseResponseDto] | any
 > {
   const {
@@ -239,8 +244,9 @@ export async function editCollectionBase(
 
   if (error || !res) {
     return {
-      error: (error?.response?.data as { details: { msg: string, loc: string }[] })
-        .details[0]
+      error: (
+        error?.response?.data as { details: { msg: string; loc: string }[] }
+      ).details[0]
     };
   }
   return {

@@ -7,11 +7,11 @@ import {
   workPlace,
   workPlaceDTO
 } from "@/modules/staff-management/models/staff.model";
+import { format } from "date-fns";
 import { transformRequest } from "./base.service";
 import { DEFAULT_SORT_ORDER } from "./constants";
 import { PaginationDto } from "./dtos/common/pagination.dto";
 import { StaffTypeResponseDto } from "./dtos/staff-management/create-staff-type.dto";
-import { format } from "date-fns";
 import {
   StaffDetailsResponse,
   StaffDetailsResponseDTO
@@ -213,21 +213,6 @@ export async function createStaff(
   };
 }
 
-const data = {
-  results: [
-    {
-      id: 238,
-      name: "Collection base 1",
-      workplace_type: 1
-    },
-    {
-      id: 237,
-      name: "Collection base 2",
-      workplace_type: 1
-    }
-  ]
-};
-
 export async function getListWorkPlace(): Promise<
   Pagination<workPlace> | undefined
 > {
@@ -236,11 +221,17 @@ export async function getListWorkPlace(): Promise<
     method: "get"
   });
   if (err) return undefined;
-
-  //const results = data.results;
   return {
     results: res.map((item) => {
-      const { id, name, workplace_type, latitude, longitude, base_type, tenant_id } = item;
+      const {
+        id,
+        name,
+        workplace_type,
+        latitude,
+        longitude,
+        base_type,
+        tenant_id
+      } = item;
       return {
         id,
         name,

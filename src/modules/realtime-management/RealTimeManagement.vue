@@ -261,10 +261,10 @@ import { i18n } from "@/i18n";
 import FloatingLabelSelect from "@/modules/base/components/FloatingLabelSelect.vue";
 import NoData from "@/modules/base/components/NoData.vue";
 import CustomSelect from "@/modules/common/components/CustomSelect.vue";
-import ThePagination from "@/modules/common/components/ThePagination.vue";
 import SortView from "@/modules/common/components/SortView.vue";
+import ThePagination from "@/modules/common/components/ThePagination.vue";
 import { listOfUserColumns } from "@/modules/realtime-management/models/table-columns";
-import { routeNames, router } from "@/routes";
+import { router } from "@/routes";
 import { service } from "@/services";
 import {
   computed,
@@ -317,7 +317,6 @@ const driverLocations = ref<
   { icon: string; latitude: number; longitude: number; userId: number }[]
 >([]);
 
-const currentRoute = ref<number[][]>([]);
 const interval = ref();
 const sortUsername = ref(Sort.None);
 const sortLastActiveTime = ref(Sort.None);

@@ -10,7 +10,7 @@ const MESSAGES = {
   DELETE_MULTI_SUCCESS: "common_msg_delete_multiple_successfully",
   CONFIRM: "common_confirm"
 };
-const handleMessager = (messenger, title, type, callback?) => {
+const handleMessager = (messenger, title, type, callback?): void => {
   messenger({
     title: title,
     message: "",
@@ -22,7 +22,7 @@ const handleMessager = (messenger, title, type, callback?) => {
   });
 };
 const Messager = {
-  confirmDelete: (messenger, callback) =>
+  confirmDelete: (messenger, callback): void =>
     messenger({
       title: MESSAGES.CONFIRM,
       message: "",
@@ -36,28 +36,28 @@ const Messager = {
       }
     }),
   error: {
-    create: (messenger) =>
+    create: (messenger): void =>
       handleMessager(messenger, MESSAGES.CREATE_FAIL, MessengerType.Error),
-    update: (messenger) =>
+    update: (messenger): void =>
       handleMessager(messenger, MESSAGES.EDIT_FAIL, MessengerType.Error),
-    delete: (messenger) =>
+    delete: (messenger): void =>
       handleMessager(messenger, MESSAGES.DELETE_FAIL, MessengerType.Error),
-    custom: (messenger, title) =>
+    custom: (messenger, title): void =>
       handleMessager(messenger, title, MessengerType.Error)
   },
   success: {
-    create: (messenger) =>
+    create: (messenger): void =>
       handleMessager(messenger, MESSAGES.CREATE_SUCCESS, MessengerType.Success),
-    update: (messenger) =>
+    update: (messenger): void =>
       handleMessager(messenger, MESSAGES.EDIT_SUCCESS, MessengerType.Success),
-    delete: (messenger, callback?: () => void) =>
+    delete: (messenger, callback?: () => void): void =>
       handleMessager(
         messenger,
         MESSAGES.DELETE_SUCCESS,
         MessengerType.Success,
         callback
       ),
-    custom: (messenger, title) =>
+    custom: (messenger, title): void =>
       handleMessager(messenger, title, MessengerType.Success)
   }
 };

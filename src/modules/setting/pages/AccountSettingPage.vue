@@ -28,10 +28,6 @@ currentRole.value = (service.localStorage.getItem(localStorageKeys.userType) ||
 //#endregion
 
 //#region function
-const onSelect = (value: string): void => {
-  service.localStorage.setItem(localStorageKeys.userType, value);
-  location.replace(import.meta.env.BASE_URL);
-};
 //#endregion
 
 //#region computed

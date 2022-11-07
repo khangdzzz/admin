@@ -444,6 +444,8 @@ const onDeleteStaff = async (deleteIds: number[]): Promise<void> => {
   searchString.value = "";
 };
 
+// Todo: uncomment when API ready
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const changeStaffActiveStatus = (
   $event: MouseEvent,
   id: number,
