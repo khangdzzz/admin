@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 
 import Logo from "@/assets/images/ImLogo.vue";
 import LogoSignature from "@/assets/images/ImLogoSignature.vue";
@@ -10,6 +10,7 @@ import { router } from "@/routes";
 import { service } from "@/services";
 import { UserType } from "../models/user-type.enum";
 import sideMenuItem, { SideMenuItems } from "../models/menu";
+import emitter, { EMITTER_EVENTS } from '@/utils/emiiter'
 
 type menuItem = {
   pathName: string;
@@ -22,6 +23,16 @@ const selectedKeys = ref<string[]>(["menu_lbl_dashboard_internal"]);
 const openKeys = ref<string[]>([""]);
 const userTypeName = ref();
 const collapsed = ref<boolean>(false);
+
+watch(
+  collapsed,
+  () => {
+    emitter.emit(EMITTER_EVENTS.TOGGLE_SIDE_BAR)
+  },
+  {
+    flush: "post"
+  }
+);
 
 if (service.localStorage.getAccessToken()) {
   const userInfo = await service.auth.getCurrentUserInformation();
@@ -80,84 +91,50 @@ const goHome = (): void => {
 
 <template>
   <div class="default-layout fill-height d-flex">
-    <div
-      :class="[
-        'default-layout__lhs-wrapper',
-        collapsed ? 'default-layout__lhs-wrapper__collapsed' : ''
-      ]"
-    >
-      <div
-        class="default-layout__logo d-flex justify-center align-center gap-18"
-        @click="goHome"
-      >
+    <div :class="[
+      'default-layout__lhs-wrapper',
+      collapsed ? 'default-layout__lhs-wrapper__collapsed' : ''
+    ]">
+      <div class="default-layout__logo d-flex justify-center align-center gap-18" @click="goHome">
         <!-- fake div to center Logo when collapsed -->
         <div v-if="collapsed"></div>
         <div>
           <Logo textColor="#07a0b8" logoColor="#090909" />
         </div>
-        <div
-          :class="[
-            'default-layout__logo__signature d-flex align-flex-end',
-            collapsed ? 'default-layout__logo__signature__collapsed' : ''
-          ]"
-        >
+        <div :class="[
+          'default-layout__logo__signature d-flex align-flex-end',
+          collapsed ? 'default-layout__logo__signature__collapsed' : ''
+        ]">
           <LogoSignature textColor="#07a0b8" signatureColor="#090909" />
         </div>
       </div>
       <a-divider class="m-0" />
-      <div
-        :class="[
-          'default-layout__greeting p-15',
-          collapsed ? 'default-layout__greeting__collapsed' : ''
-        ]"
-        v-if="$t"
-      >
+      <div :class="[
+        'default-layout__greeting p-15',
+        collapsed ? 'default-layout__greeting__collapsed' : ''
+      ]" v-if="$t">
         {{ $t("menu_lbl_hello", { name: user }) }}
       </div>
-      <div
-        :class="[
-          'default-layout__menu-wrapper d-flex flex-column justify-space-between',
-          collapsed ? 'default-layout__menu-wrapper__collapsed' : ''
-        ]"
-      >
+      <div :class="[
+        'default-layout__menu-wrapper d-flex flex-column justify-space-between',
+        collapsed ? 'default-layout__menu-wrapper__collapsed' : ''
+      ]">
         <div class="default-layout__menu fill-height">
-          <a-menu
-            mode="inline"
-            v-model:openKeys="openKeys"
-            v-model:selectedKeys="selectedKeys"
-            :inline-collapsed="collapsed"
-            @openChange="onOpenChange"
-          >
-            <div
-              v-for="(subMenu, idx) in sideMenuItem"
-              :key="subMenu.title + idx"
-            >
-              <span
-                v-if="isHasPermission(subMenu.requireUserType)"
-                :id="subMenu.qaAttr"
-                class="default-layout__menu-item-wrapper"
-                @click="handleClickMenuWhenCollapsed(subMenu)"
-              >
-                <a-sub-menu
-                  v-if="
-                    subMenu.items &&
-                    subMenu.items.length > 0 &&
-                    isShowExpand(subMenu.items)
-                  "
-                  :key="subMenu.title"
-                >
+          <a-menu mode="inline" v-model:openKeys="openKeys" v-model:selectedKeys="selectedKeys"
+            :inline-collapsed="collapsed" @openChange="onOpenChange">
+            <div v-for="(subMenu, idx) in sideMenuItem" :key="subMenu.title + idx">
+              <span v-if="isHasPermission(subMenu.requireUserType)" :id="subMenu.qaAttr"
+                class="default-layout__menu-item-wrapper" @click="handleClickMenuWhenCollapsed(subMenu)">
+                <a-sub-menu v-if="
+                  subMenu.items &&
+                  subMenu.items.length > 0 &&
+                  isShowExpand(subMenu.items)
+                " :key="subMenu.title">
                   <template #icon>
-                    <component
-                      :is="subMenu.icon"
-                      class="default-layout__icon"
-                    ></component>
+                    <component :is="subMenu.icon" class="default-layout__icon"></component>
                   </template>
                   <template #title v-if="!collapsed">
-                    <span
-                      class="default-layout__menu-title"
-                      v-if="$t"
-                      :id="subMenu.qaAttr"
-                    >
+                    <span class="default-layout__menu-title" v-if="$t" :id="subMenu.qaAttr">
                       {{ $t(subMenu.title) }}
                     </span>
                   </template>
@@ -167,20 +144,10 @@ const goHome = (): void => {
                     </span>
                   </template>
                   <div v-show="!collapsed">
-                    <span
-                      v-for="subMenuItem in subMenu.items"
-                      :key="subMenuItem.title"
-                    >
-                      <a-menu-item
-                        :key="subMenuItem.pathName"
-                        v-if="isHasPermission(subMenuItem.requireUserType)"
-                      >
+                    <span v-for="subMenuItem in subMenu.items" :key="subMenuItem.title">
+                      <a-menu-item :key="subMenuItem.pathName" v-if="isHasPermission(subMenuItem.requireUserType)">
                         <router-link :to="{ name: subMenuItem.pathName }">
-                          <span
-                            class="default-layout__sub-menu-title"
-                            v-if="$t"
-                            :id="subMenuItem.qaAttr"
-                          >
+                          <span class="default-layout__sub-menu-title" v-if="$t" :id="subMenuItem.qaAttr">
                             {{ $t(subMenuItem.title) }}
                           </span>
                         </router-link>
@@ -191,17 +158,11 @@ const goHome = (): void => {
                 <a-menu-item v-else :key="subMenu.key">
                   <template #icon>
                     <div class="d-flex align-center">
-                      <component
-                        :is="subMenu.icon"
-                        class="default-layout__icon"
-                      ></component>
+                      <component :is="subMenu.icon" class="default-layout__icon"></component>
                     </div>
                   </template>
                   <router-link :to="{ name: subMenu.pathName }">
-                    <span
-                      class="default-layout__menu-title"
-                      v-if="$t || !collapsed"
-                    >
+                    <span class="default-layout__menu-title" v-if="$t || !collapsed">
                       {{ $t(subMenu.title) }}
                     </span>
                   </router-link>
@@ -210,24 +171,17 @@ const goHome = (): void => {
             </div>
           </a-menu>
         </div>
-        <div
-          :class="[
-            'd-flex justify-space-between align-center default-layout__logout-content',
-            collapsed ? 'default-layout__logout-content__collapsed' : ''
-          ]"
-        >
-          <div
-            :class="[
-              'default-layout__logout-btn-wrapper d-flex justify-center align-center',
-              collapsed ? 'default-layout__logout-btn-wrapper__collapsed' : ''
-            ]"
-          >
-            <a-button
-              type="text"
+        <div :class="[
+          'd-flex justify-space-between align-center default-layout__logout-content',
+          collapsed ? 'default-layout__logout-content__collapsed' : ''
+        ]">
+          <div :class="[
+            'default-layout__logout-btn-wrapper d-flex justify-center align-center',
+            collapsed ? 'default-layout__logout-btn-wrapper__collapsed' : ''
+          ]">
+            <a-button type="text"
               class="default-layout__logout-btn-wrapper__logout-btn d-flex align-center justify-center gap-10"
-              @click="onLogout"
-              v-if="$t"
-            >
+              @click="onLogout" v-if="$t">
               <template #icon>
                 <DoorArrowRight />
               </template>
@@ -236,25 +190,18 @@ const goHome = (): void => {
               </span>
             </a-button>
           </div>
-          <div
-            :class="[
-              'default-layout__toggle-menu-btn-wrapper d-flex justify-center align-center',
+          <div :class="[
+            'default-layout__toggle-menu-btn-wrapper d-flex justify-center align-center',
+            collapsed
+              ? 'default-layout__toggle-menu-btn-wrapper__collapsed'
+              : ''
+          ]">
+            <a-button type="text" shape="round" :class="[
+              'default-layout__toggle-menu-btn-wrapper__toggle-btn d-flex align-center justify-center',
               collapsed
-                ? 'default-layout__toggle-menu-btn-wrapper__collapsed'
+                ? 'default-layout__toggle-menu-btn-wrapper__toggle-btn__close'
                 : ''
-            ]"
-          >
-            <a-button
-              type="text"
-              shape="round"
-              :class="[
-                'default-layout__toggle-menu-btn-wrapper__toggle-btn d-flex align-center justify-center',
-                collapsed
-                  ? 'default-layout__toggle-menu-btn-wrapper__toggle-btn__close'
-                  : ''
-              ]"
-              @click="collapsed = !collapsed"
-            >
+            ]" @click="collapsed = !collapsed">
               <ArrowUp />
             </a-button>
           </div>
@@ -269,6 +216,7 @@ const goHome = (): void => {
 
 <style scoped lang="scss">
 $transition-time: 0.3s;
+
 .default-layout {
   &__lhs-wrapper {
     width: 300px;
@@ -331,6 +279,7 @@ $transition-time: 0.3s;
   &__menu {
     overflow-y: auto;
     overflow-x: hidden;
+
     .ant-menu-root {
       border: none !important;
     }
