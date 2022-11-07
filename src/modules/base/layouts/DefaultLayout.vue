@@ -521,12 +521,16 @@ $transition-time: 0.3s;
   }
   .default-layout__category {
     background-color: $neutral-50;
+    height: 38px !important;
 
     .default-layout__sub-menu-title {
       color: $text-1;
       font-weight: 700;
       font-size: 16px;
       line-height: 20px;
+    }
+    .ant-menu-title-content {
+      height: 38px !important;
     }
   }
   .ant-menu {
@@ -557,7 +561,7 @@ $transition-time: 0.3s;
     }
 
     &-item {
-      height: 48px !important;
+      height: 48px;
       border-left: 3px solid transparent;
       padding-left: 12px !important;
       line-height: 20px !important;
