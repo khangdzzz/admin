@@ -112,8 +112,8 @@ const validator = {
       return i18n.global.t("field_allow_number_only");
     }
     if (!/^(?:\d{0,6}\.\d{1,2})$|^\d{0,6}$/.test(value)) {
-      return i18n.global.t("common_invalid_weigth_or_capacity", {
-        fieldName: i18n.global.t(fieldName).toLowerCase()
+      return i18n.global.t("common_invalid_decimal", {
+        fieldName: i18n.global.t(fieldName)
       });
     }
     return "";
