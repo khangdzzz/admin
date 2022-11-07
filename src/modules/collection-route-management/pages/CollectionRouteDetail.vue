@@ -69,6 +69,7 @@
         <div :class="[CollectionRouteDetail.value]">
           <span
             :class="[CollectionRouteDetail.link]"
+            @click="redirectRouteDetail"
             v-if="collectionRouteDetail?.navigationId"
             >{{ collectionRouteDetail?.navigationId }}</span
           >
@@ -174,6 +175,13 @@ const editCollectionRoute = (): void => {
   });
 };
 
+const redirectRouteDetail = (): void => {
+  router.push({
+    name: routeNames.createRoute,
+    params: { id, mode: "detail" }
+  });
+};
+
 const addCollectionRoute = (): void => {
   router.push({
     name: routeNames.createRoute,
@@ -255,6 +263,7 @@ const onDeleteCollectionRoute = async (deleteIds: number[]): Promise<void> => {
   }
   .link {
     color: $primary;
+    cursor: pointer;
   }
 }
 </style>

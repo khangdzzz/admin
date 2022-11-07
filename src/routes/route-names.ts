@@ -46,6 +46,7 @@ export const routeNames = {
   partnerManagement: "PARTNER_MANAGEMENT",
   collectionManagement: "COLLECTION_MANAGEMENT",
   collectionTypeManagement: "COLLECTION_TYPE_MANAGEMENT",
+  unitItems: "UNIT_ITEMS",
   unitPrice: "UNIT_PRICE",
   unitPriceUpdatePlan: "UNIT_PRICE_UPDATE_PLAN",
   landmarkManagement: "LANDMARK_MANAGEMENT",

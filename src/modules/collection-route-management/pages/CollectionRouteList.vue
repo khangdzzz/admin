@@ -89,7 +89,12 @@
         </template>
         <template #bodyCell="{ column, record, text }">
           <template v-if="column.key === 'navigationId'">
-            <a class="navigation-link" v-if="text">{{ text }}</a>
+            <a
+              class="navigation-link"
+              v-if="text"
+              @click="(event) => redirectRouteDetail(event, record.id)"
+              >{{ text }}</a
+            >
             <a-button
               type="primary"
               class="btn-create-navigation-link"
@@ -431,6 +436,16 @@ const onDeleteCollectionRoute = async (deleteIds: number[]): Promise<void> => {
   pageOption.currentPage = 1;
   selectedKeys.value = [];
   searchString.value = "";
+};
+
+const redirectRouteDetail = (event: MouseEvent, id: number): void => {
+  if (event.stopPropagation) {
+    event.stopPropagation();
+  }
+  router.push({
+    name: routeNames.createRoute,
+    params: { id, mode: "detail" }
+  });
 };
 
 const addCollectionRoute = (event: MouseEvent, id: number): void => {
