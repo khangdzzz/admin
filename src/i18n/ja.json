@@ -73,6 +73,7 @@
   "menu_lbl_container_type_management": "風袋種別管理",
   "menu_lbl_collection_management": "回収品目管理",
   "menu_lbl_collection_type_management": "回収品目管理",
+  "menu_lbl_unit_item": "回収品目単位管理",
   "menu_lbl_unit_price": "単価管理",
   "menu_lbl_unit_price_update_plan": "単価変更予約管理",
   "menu_lbl_landmark_management": "ランドマーク管理",
@@ -80,6 +81,7 @@
   "menu_lbl_collection_route_management": "回収ルート管理",
   "menu_lbl_delivery_management": "出荷管理",
   "menu_lbl_storage_management": "保管場所管理",
+  "menu_lbl_destination_management": "配送先管理",
   "menu_lbl_manufacture_task_management": "生産作業管理",
   "menu_lbl_manufacture_category_management": "生産カテゴリ管理",
   "menu_lbl_manufacture_item_management": "生産品目管理",
@@ -295,5 +297,8 @@
   "route": "ルート",
   "loading_weight": "積載量",
   "please_select_workplace": "拠点を選択",
-  "common_invalid_decimal": "0.00以上999999.99以下で{fieldName}をご入力ください(最大小数点以下２桁)"
+  "common_invalid_decimal": "0.00以上999999.99以下で{fieldName}をご入力ください(最大小数点以下２桁)",
+  "menu_lbl_common": "共通",
+  "menu_lbl_collection": "回収",
+  "menu_lbl_manufacture": "生産"
 }

@@ -5,6 +5,7 @@ export interface UserInfo {
   email: string;
   fullName: string;
   tenantId: number;
+  belongs: number;
   userType: string;
   workplaces: number[];
 }

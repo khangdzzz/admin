@@ -75,8 +75,9 @@
   "menu_lbl_vehicle_type_management": "Vehicle type management",
   "menu_lbl_container_management": "Container management",
   "menu_lbl_container_type_management": "Container type management",
-  "menu_lbl_collection_management": "Collection item management",
+  "menu_lbl_collection_management": "Collection items management",
   "menu_lbl_collection_type_management": "Collection item type management",
+  "menu_lbl_unit_item": "Items unit management",
   "menu_lbl_unit_price": "Unit price management",
   "menu_lbl_unit_price_update_plan": "Unit price update plan management",
   "menu_lbl_landmark_management": "Landmark management",
@@ -84,6 +85,7 @@
   "menu_lbl_collection_route_management": "Collection route management",
   "menu_lbl_delivery_management": "Delivery management",
   "menu_lbl_storage_management": "Storage management",
+  "menu_lbl_destination_management": "Destination management",
   "menu_lbl_manufacture_task_management": "Manufacture task management",
   "menu_lbl_manufacture_category_management": "Manufacture category management",
   "menu_lbl_manufacture_item_management": "Manufacture item management",
@@ -300,5 +302,8 @@
   "route": "Route",
   "loading_weight": "Loading Weight",
   "please_select_workplace": "Please select workplace!",
-  "common_invalid_decimal": "{fieldName} should be greater than 0.00 and up to 999999.99 (up to 2 decimal places)"
+  "common_invalid_decimal": "{fieldName} should be greater than 0.00 and up to 999999.99 (up to 2 decimal places)",
+  "menu_lbl_common": "Common",
+  "menu_lbl_collection": "Collection",
+  "menu_lbl_manufacture": "Manufacture"
 }

@@ -12,6 +12,7 @@ export interface SideMenuItems {
   icon?: Component;
   title: string;
   pathName?: string;
+  category?: string;
   requireUserType?: UserType[];
   items?: SideMenuItems[];
   qaAttr?: string;
@@ -28,20 +29,20 @@ const sideMenuItems: SideMenuItems[] = [
       UserType.TenantAdmin,
       UserType.CollectionBaseAdmin,
       UserType.SystemAdmin,
-      UserType.Dischanger,
-      UserType.DashboardUser
+      UserType.PartnerAdmin,
+      UserType.Dischanger
     ],
     items: [
       {
         title: "menu_lbl_dashboard_internal",
         pathName: routeNames.internalDashboard,
-        requireUserType: [UserType.TenantAdmin,UserType.DashboardUser],
+        requireUserType: [UserType.TenantAdmin],
         qaAttr: "qa_menu_dashboard_internal"
       },
       {
         title: "menu_lbl_dashboard_extenal",
         pathName: routeNames.externalDashboard,
-        requireUserType: [UserType.TenantAdmin,UserType.DashboardUser],
+        requireUserType: [UserType.TenantAdmin],
         qaAttr: "qa_menu_dashboard_external"
       }
     ]
@@ -55,18 +56,27 @@ const sideMenuItems: SideMenuItems[] = [
     requireUserType: [
       UserType.TenantAdmin,
       UserType.CollectionBaseAdmin,
+      UserType.PartnerAdmin
     ],
     items: [
       {
         title: "menu_lbl_collection_history",
         pathName: routeNames.collectionHistory,
-        requireUserType: [],
+        requireUserType: [
+          UserType.TenantAdmin,
+          UserType.CollectionBaseAdmin,
+          UserType.PartnerAdmin
+        ],
         qaAttr: "qa_menu_collection_history"
       },
       {
         title: "menu_lbl_realtime_management",
         pathName: routeNames.realTimeManagement,
-        requireUserType: [],
+        requireUserType: [
+          UserType.TenantAdmin,
+          UserType.CollectionBaseAdmin,
+          UserType.PartnerAdmin
+        ],
         qaAttr: "qa_menu_realtime_management"
       }
     ]
@@ -95,140 +105,226 @@ const sideMenuItems: SideMenuItems[] = [
     qaAttr: "qa_menu_master_data",
     requireUserType: [
       UserType.TenantAdmin,
-      UserType.CollectionBaseAdmin
+      UserType.CollectionBaseAdmin,
+      UserType.PartnerAdmin
     ],
     items: [
       {
         title: "menu_lbl_staff_management",
         pathName: routeNames.staffManagement,
         qaAttr: "qa_menu_staff_management",
-        requireUserType: []
-      },
-      {
-        title: "menu_lbl_collection_base_management",
-        pathName: routeNames.listCollectionBase,
-        qaAttr: "qa_menu_collection_base_management",
-        requireUserType: [UserType.TenantAdmin]
-      },
-      {
-        title: "menu_lbl_partner_management",
-        pathName: routeNames.partnerManagement,
-        qaAttr: "qa_menu_partner_management",
-        requireUserType: [UserType.TenantAdmin]
-      },
-      {
-        title: "menu_lbl_customer_management",
-        pathName: routeNames.customerList,
-        qaAttr: "qa_menu_customer_management",
-        requireUserType: [UserType.TenantAdmin]
-      },
-      {
-        title: "menu_lbl_collection_point_management",
-        pathName: routeNames.collectionPointManagement,
-        qaAttr: "qa_menu_collection_point_management",
-        requireUserType: [UserType.TenantAdmin, UserType.CollectionBaseAdmin]
-      },
-      {
-        title: "menu_lbl_vehicle_type_management",
-        pathName: routeNames.vehicleType,
-        qaAttr: "qa_menu_vehicle_type_management",
-        requireUserType: [UserType.TenantAdmin]
-      },
-      {
-        title: "menu_lbl_vehicle_management",
-        pathName: routeNames.vehicle,
-        qaAttr: "qa_menu_vehicle_management",
-        requireUserType: [UserType.TenantAdmin, UserType.CollectionBaseAdmin]
-      },
-      {
-        title: "menu_lbl_container_type_management",
-        pathName: routeNames.containerType,
-        qaAttr: "qa_menu_container_type_management",
-        requireUserType: [UserType.TenantAdmin]
-      },
-      {
-        title: "menu_lbl_container_management",
-        pathName: routeNames.container,
-        qaAttr: "qa_menu_container_management",
-        requireUserType: [UserType.TenantAdmin, UserType.CollectionBaseAdmin]
-      },
-      {
-        title: "menu_lbl_collection_management",
-        pathName: routeNames.collectionManagement,
-        qaAttr: "qa_menu_collection_management",
-        requireUserType: [UserType.TenantAdmin, UserType.CollectionBaseAdmin]
-      },
-      {
-        title: "menu_lbl_collection_type_management",
-        pathName: routeNames.collectionTypeManagement,
-        qaAttr: "qa_menu_collection_type_management",
-        requireUserType: [UserType.TenantAdmin]
-      },
-      {
-        title: "menu_lbl_unit_price",
-        pathName: routeNames.unitPrice,
-        qaAttr: "qa_menu_unit_price",
-        requireUserType: [UserType.TenantAdmin, UserType.CollectionBaseAdmin]
-      },
-      {
-        title: "menu_lbl_unit_price_update_plan",
-        pathName: routeNames.unitPriceUpdatePlan,
-        qaAttr: "qa_menu_unit_price_update_plan",
-        requireUserType: [UserType.TenantAdmin, UserType.CollectionBaseAdmin]
+        requireUserType: [UserType.PartnerAdmin]
       },
       {
         title: "menu_lbl_landmark_management",
         pathName: routeNames.landmarkManagement,
         qaAttr: "qa_menu_landmark_management",
-        requireUserType: []
-      },
-      {
-        title: "menu_lbl_collection_order_management",
-        pathName: routeNames.collectionOrderManagement,
-        qaAttr: "qa_menu_collection_order_management",
-        requireUserType: []
+        requireUserType: [UserType.PartnerAdmin]
       },
       {
         title: "menu_lbl_collection_route_management",
         pathName: routeNames.listCollectionRoute,
         qaAttr: "qa_menu_collection_route_management",
-        requireUserType: [UserType.TenantAdmin]
+        requireUserType: [UserType.PartnerAdmin]
       },
       {
-        title: "menu_lbl_delivery_management",
-        pathName: routeNames.deliveryManagement,
-        qaAttr: "qa_menu_delivery_management",
-        requireUserType: [UserType.TenantAdmin, UserType.CollectionBaseAdmin]
+        category: "Common",
+        title: "menu_lbl_common",
+        qaAttr: "common_category",
+        requireUserType: [UserType.TenantAdmin, UserType.CollectionBaseAdmin],
+        items: [
+          {
+            title: "menu_lbl_staff_management",
+            pathName: routeNames.staffManagement,
+            qaAttr: "qa_menu_staff_management",
+            requireUserType: [
+              UserType.TenantAdmin,
+              UserType.CollectionBaseAdmin
+            ]
+          },
+          {
+            title: "menu_lbl_role_management",
+            pathName: routeNames.roleManagement,
+            qaAttr: "qa_menu_role_management",
+            requireUserType: [UserType.TenantAdmin]
+          }
+        ]
       },
       {
-        title: "menu_lbl_storage_management",
-        pathName: routeNames.storageManagement,
-        qaAttr: "qa_menu_storage_management",
-        requireUserType: [UserType.TenantAdmin, UserType.CollectionBaseAdmin]
+        category: "Collection",
+        title: "menu_lbl_collection",
+        qaAttr: "collection_category",
+        requireUserType: [UserType.TenantAdmin, UserType.CollectionBaseAdmin],
+        items: [
+          {
+            title: "menu_lbl_collection_base_management",
+            pathName: routeNames.listCollectionBase,
+            qaAttr: "qa_menu_collection_base_management",
+            requireUserType: [UserType.TenantAdmin]
+          },
+          {
+            title: "menu_lbl_partner_management",
+            pathName: routeNames.partnerManagement,
+            qaAttr: "qa_menu_partner_management",
+            requireUserType: [UserType.TenantAdmin]
+          },
+          {
+            title: "menu_lbl_customer_management",
+            pathName: routeNames.customerList,
+            qaAttr: "qa_menu_customer_management",
+            requireUserType: [UserType.TenantAdmin]
+          },
+          {
+            title: "menu_lbl_collection_point_management",
+            pathName: routeNames.collectionPointManagement,
+            qaAttr: "qa_menu_collection_point_management",
+            requireUserType: [
+              UserType.TenantAdmin,
+              UserType.CollectionBaseAdmin
+            ]
+          },
+          {
+            title: "menu_lbl_vehicle_type_management",
+            pathName: routeNames.vehicleType,
+            qaAttr: "qa_menu_vehicle_type_management",
+            requireUserType: [UserType.TenantAdmin]
+          },
+          {
+            title: "menu_lbl_vehicle_management",
+            pathName: routeNames.vehicle,
+            qaAttr: "qa_menu_vehicle_management",
+            requireUserType: [
+              UserType.TenantAdmin,
+              UserType.CollectionBaseAdmin
+            ]
+          },
+          {
+            title: "menu_lbl_container_type_management",
+            pathName: routeNames.containerType,
+            qaAttr: "qa_menu_container_type_management",
+            requireUserType: [UserType.TenantAdmin]
+          },
+          {
+            title: "menu_lbl_container_management",
+            pathName: routeNames.container,
+            qaAttr: "qa_menu_container_management",
+            requireUserType: [
+              UserType.TenantAdmin,
+              UserType.CollectionBaseAdmin
+            ]
+          },
+          {
+            title: "menu_lbl_collection_management",
+            pathName: routeNames.collectionManagement,
+            qaAttr: "qa_menu_collection_management",
+            requireUserType: [
+              UserType.TenantAdmin,
+              UserType.CollectionBaseAdmin
+            ]
+          },
+          {
+            title: "menu_lbl_collection_type_management",
+            pathName: routeNames.collectionTypeManagement,
+            qaAttr: "qa_menu_collection_type_management",
+            requireUserType: [UserType.TenantAdmin]
+          },
+          {
+            title: "menu_lbl_unit_item",
+            pathName: routeNames.unitPrice,
+            qaAttr: "qa_menu_unit_item",
+            requireUserType: [UserType.TenantAdmin]
+          },
+          {
+            title: "menu_lbl_unit_price",
+            pathName: routeNames.unitPrice,
+            qaAttr: "qa_menu_unit_price",
+            requireUserType: [
+              UserType.TenantAdmin,
+              UserType.CollectionBaseAdmin
+            ]
+          },
+          {
+            title: "menu_lbl_unit_price_update_plan",
+            pathName: routeNames.unitPriceUpdatePlan,
+            qaAttr: "qa_menu_unit_price_update_plan",
+            requireUserType: [
+              UserType.TenantAdmin,
+              UserType.CollectionBaseAdmin
+            ]
+          },
+          {
+            title: "menu_lbl_landmark_management",
+            pathName: routeNames.landmarkManagement,
+            qaAttr: "qa_menu_landmark_management",
+            requireUserType: [
+              UserType.TenantAdmin,
+              UserType.CollectionBaseAdmin
+            ]
+          },
+
+          {
+            title: "menu_lbl_collection_route_management",
+            pathName: routeNames.listCollectionRoute,
+            qaAttr: "qa_menu_collection_route_management",
+            requireUserType: [
+              UserType.TenantAdmin,
+              UserType.CollectionBaseAdmin
+            ]
+          }
+        ]
       },
       {
-        title: "menu_lbl_manufacture_task_management",
-        pathName: routeNames.manufactureTaskManagement,
-        qaAttr: "qa_menu_manufacture_task_management",
-        requireUserType: [UserType.TenantAdmin, UserType.CollectionBaseAdmin]
-      },
-      {
-        title: "menu_lbl_manufacture_category_management",
-        pathName: routeNames.manufactureCategoryManagement,
-        qaAttr: "qa_menu_manufacture_category_management",
-        requireUserType: [UserType.TenantAdmin, UserType.CollectionBaseAdmin]
-      },
-      {
-        title: "menu_lbl_manufacture_item_management",
-        pathName: routeNames.manufactureItemManagement,
-        qaAttr: "qa_menu_manufacture_item_management",
-        requireUserType: [UserType.TenantAdmin, UserType.CollectionBaseAdmin]
-      },
-      {
-        title: "menu_lbl_role_management",
-        pathName: routeNames.roleManagement,
-        qaAttr: "qa_menu_role_management",
-        requireUserType: [UserType.TenantAdmin]
+        category: "Manufacture",
+        title: "menu_lbl_manufacture",
+        qaAttr: "manufacture_category",
+        requireUserType: [UserType.TenantAdmin, UserType.CollectionBaseAdmin],
+        items: [
+          {
+            title: "menu_lbl_delivery_management",
+            pathName: routeNames.deliveryManagement,
+            qaAttr: "qa_menu_delivery_management",
+            requireUserType: [
+              UserType.TenantAdmin,
+              UserType.CollectionBaseAdmin
+            ]
+          },
+          {
+            title: "menu_lbl_destination_management",
+            pathName: routeNames.storageManagement,
+            qaAttr: "menu_lbl_destination_management",
+            requireUserType: [
+              UserType.TenantAdmin,
+              UserType.CollectionBaseAdmin
+            ]
+          },
+          {
+            title: "menu_lbl_manufacture_task_management",
+            pathName: routeNames.manufactureTaskManagement,
+            qaAttr: "qa_menu_manufacture_task_management",
+            requireUserType: [
+              UserType.TenantAdmin,
+              UserType.CollectionBaseAdmin
+            ]
+          },
+          {
+            title: "menu_lbl_manufacture_category_management",
+            pathName: routeNames.manufactureCategoryManagement,
+            qaAttr: "qa_menu_manufacture_category_management",
+            requireUserType: [
+              UserType.TenantAdmin,
+              UserType.CollectionBaseAdmin
+            ]
+          },
+          {
+            title: "menu_lbl_manufacture_item_management",
+            pathName: routeNames.manufactureItemManagement,
+            qaAttr: "qa_menu_manufacture_item_management",
+            requireUserType: [
+              UserType.TenantAdmin,
+              UserType.CollectionBaseAdmin
+            ]
+          }
+        ]
       }
     ]
   },
@@ -255,6 +351,7 @@ const sideMenuItems: SideMenuItems[] = [
     requireUserType: [
       UserType.TenantAdmin,
       UserType.CollectionBaseAdmin,
+      UserType.PartnerAdmin,
       UserType.SystemAdmin,
       UserType.Dischanger
     ],

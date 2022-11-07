@@ -21,7 +21,8 @@ const userRoles = [
   UserType.Consignee,
   UserType.Driver,
   UserType.ManufacturingStaff,
-  UserType.DriverManufacturingStaff
+  UserType.DriverManufacturingStaff,
+  UserType.PartnerAdmin
 ];
 
 export async function getCurrentUserInformation(): Promise<
@@ -44,17 +45,24 @@ export async function getCurrentUserInformation(): Promise<
       email,
       name: fullName,
       tenant_id: tenantId,
+      belongs,
       user_role,
       workplaces
     } = res;
 
     const workplacesId = workplaces?.map((item) => item.id);
+    let userType = userRoles[user_role - 1];
+    if (user_role === 3) {
+      userType = belongs === 1 ? userRoles[2] : userRoles[9];
+    }
+
     const userInfo = {
       id,
       email,
       fullName,
       tenantId,
-      userType: userRoles[user_role - 1],
+      belongs,
+      userType: userType,
       workplaces: workplacesId
     };
 
