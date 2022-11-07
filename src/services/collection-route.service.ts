@@ -1,18 +1,18 @@
-import { calculateSortQuery } from "@/modules/common/helpers";
 import {
   CollectionRoute,
   CreateCollectionRouteModel,
   CreateCollectionRouteResponseDto
 } from "@/modules/collection-route-management/models/collection-route.model";
+import { calculateSortQuery } from "@/modules/common/helpers";
 import { Pagination, ServiceResponse } from "@/modules/common/models";
 import { Sort } from "@/modules/common/models/sort.enum";
+import { AxiosError } from "axios";
 import { transformRequest } from "./base.service";
 import { DEFAULT_SORT_ORDER } from "./constants";
-import { CollectionRouteResponseDTO } from "./dtos/collection-route/collection-route.dto";
-import { PaginationDto } from "./dtos/common/pagination.dto";
 import { CollectionBaseResponseDto } from "./dtos/collection-base/collection-base.dto";
 import { CollectionPointResponseDto } from "./dtos/collection-point/collection-point.dto";
-import { AxiosError } from "axios";
+import { CollectionRouteResponseDTO } from "./dtos/collection-route/collection-route.dto";
+import { PaginationDto } from "./dtos/common/pagination.dto";
 
 interface SortCollectionRouteDto {
   sortName: Sort;
@@ -208,6 +208,8 @@ export async function editCollectionRoute(
 ): Promise<
   | [AxiosError<unknown, unknown>, null]
   | [null, CreateCollectionRouteResponseDto]
+  //Todo: Teddy need to fix this
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   | any
 > {
   const [error, res] = await transformRequest<CreateCollectionRouteResponseDto>(

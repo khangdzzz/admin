@@ -154,24 +154,23 @@
 
 <script setup lang="ts">
 //#region import
-import ListSearchHeader from "@/modules/base/components/ListSearchHeader.vue";
-import { computed, inject, onMounted, reactive, ref, watch } from "vue";
 import IcTrash from "@/assets/icons/IcTrash.vue";
-import { RouterLink } from "vue-router";
-import { Sort } from "@/modules/common/models/sort.enum";
-import { Pagination } from "@/modules/common/models";
-import ThePagination from "@/modules/common/components/ThePagination.vue";
-import { debounce } from "lodash";
-import SortView from "@/modules/common/components/SortView.vue";
-import { TableColumnType } from "ant-design-vue";
-import { CollectionRoute } from "../models/collection-route.model";
-import NoData from "@/modules/base/components/NoData.vue";
 import { i18n } from "@/i18n";
-import { service } from "@/services";
+import ListSearchHeader from "@/modules/base/components/ListSearchHeader.vue";
+import NoData from "@/modules/base/components/NoData.vue";
 import { formatDateTime } from "@/modules/base/components/validator/dateFormat";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
+import SortView from "@/modules/common/components/SortView.vue";
+import ThePagination from "@/modules/common/components/ThePagination.vue";
+import { Pagination } from "@/modules/common/models";
+import { Sort } from "@/modules/common/models/sort.enum";
 import { routeNames, router } from "@/routes";
+import { service } from "@/services";
+import { TableColumnType } from "ant-design-vue";
+import { debounce } from "lodash";
+import { computed, inject, onMounted, reactive, ref, watch } from "vue";
+import { CollectionRoute } from "../models/collection-route.model";
 //#endregion
 
 //#region props

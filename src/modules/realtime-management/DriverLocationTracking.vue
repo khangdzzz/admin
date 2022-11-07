@@ -308,11 +308,11 @@ import Refresh from "@/assets/icons/IcRefresh.vue";
 import driverIcon from "@/assets/icons/ic_driver.svg";
 import icColectedCollectionPoint from "@/assets/icons/ic_route_collected_collection_point.svg";
 import icCollectionPoint from "@/assets/icons/ic_route_collection_point.svg";
-import NoData from "@/modules/base/components/NoData.vue";
 import { i18n } from "@/i18n";
+import NoData from "@/modules/base/components/NoData.vue";
 import CustomSelect from "@/modules/common/components/CustomSelect.vue";
-import { listOfCollectionPointColumns } from "@/modules/realtime-management/models/table-columns";
 import SortView from "@/modules/common/components/SortView.vue";
+import { listOfCollectionPointColumns } from "@/modules/realtime-management/models/table-columns";
 import { router } from "@/routes";
 import { service } from "@/services";
 import { format } from "date-fns";
@@ -365,7 +365,12 @@ const rotation = ref<number>(0);
 const innerHeight = ref<number>(0);
 const view = ref(null);
 const map = ref(null);
-const mapDots = ref<any[]>([]);
+const mapDots = ref<
+  {
+    title: string;
+    color: string;
+  }[]
+>([]);
 const currentRoute = ref<number[][]>([]);
 const sortName = ref<Sort>(Sort.None);
 const interval = ref();

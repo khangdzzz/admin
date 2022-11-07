@@ -199,6 +199,7 @@ import LoadingSpinner from "@/modules/base/components/InputLoadingSpinner.vue";
 const emit = defineEmits<{
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (e: "input", value: any, index: number): void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (e: "change", value: any, index: number): void;
   (e: "select", value: string | Event): void;
   (e: "pressEnter"): void;
@@ -255,6 +256,7 @@ const convertJpNumber = (value: string): string => {
   return replaceFn(value);
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const handleChange = (item: any, value: any, index: number): void => {
   const unicodeValue = convertJpNumber(value);
   item.value = unicodeValue;
@@ -282,6 +284,7 @@ const isActivePasswordIcon = (item: any): boolean => {
   return item.name === "password" && item?.value?.length;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const filterOption = (input: string, option: any): boolean => {
   if (!input) return true;
   return option.label.toLowerCase().includes(input.toLowerCase());

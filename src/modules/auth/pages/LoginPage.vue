@@ -184,6 +184,7 @@ const handleLogin = async (): Promise<void> => {
       onLoginSuccessfully();
     },
     onFailure: (_err) => {
+      _err;
       isLoading.value = false;
       messenger({
         title: "login_fail_to_login",

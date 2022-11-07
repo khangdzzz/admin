@@ -244,7 +244,7 @@ import validator from "@/modules/base/components/validator/validator";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import { UserType } from "@/modules/base/models/user-type.enum";
-import { router, routeNames } from "@/routes";
+import { routeNames, router } from "@/routes";
 import { service } from "@/services";
 import { commonStore } from "@/stores";
 import { inject, onMounted, reactive, ref, watch } from "vue";
@@ -354,6 +354,9 @@ const getListWorkPlace = async (): Promise<void> => {
     });
   }
 };
+
+// Tood: Teddy need to fix this
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const filterWorkPlaceByType = async (role: any): Promise<void> => {
   if (userStore.user?.userType === UserType.TenantAdmin) {
     const filter = await listWorkPlace.value?.filter(
@@ -411,6 +414,8 @@ const handleCancel = (): void => {
   router.push({ name: routeNames.staffManagement });
 };
 const handleSubmit = async (): Promise<void> => {
+  // Todo: Teddy need to fix this
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let workPlaceValue: any[] | undefined = undefined;
   const workPlaceForm = formState.workplaces;
   if (workPlaceForm) {

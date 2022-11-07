@@ -65,7 +65,7 @@
                   <div class="collection-point__head--total">
                     <span>{{ $t("collection_route_total") }}: </span>
                     <span class="number-total">
-                      {{ listCollectionPoint.length || 0}}
+                      {{ listCollectionPoint.length || 0 }}
                     </span>
                   </div>
                 </div>
@@ -180,30 +180,30 @@
 
 <script setup lang="ts">
 //#region import
-import IcSwap from "@/assets/icons/IcSwap.vue";
 import IcRequired from "@/assets/icons/IcRequired.vue";
+import IcSwap from "@/assets/icons/IcSwap.vue";
 import CustomForm from "@/modules/base/components/CustomForm.vue";
-import {
-  computed,
-  reactive,
-  ref,
-  inject,
-  onBeforeUnmount,
-  onMounted,
-  watch
-} from "vue";
-import { FormDataCreateCollectionRoute } from "@/modules/collection-route-management/models/collection-route.model";
-import { formData as reactiveFormData } from "@/modules/collection-route-management/models/create-collection-route-order-base-form";
-import { routeNames, router } from "@/routes";
-import draggable from "vuedraggable";
-import { service } from "@/services";
-import { makeUniqueName } from "@/utils/string.helper";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import {
+  CollectionBase,
   CollectionPoint,
-  CollectionBase
+  FormDataCreateCollectionRoute
 } from "@/modules/collection-route-management/models/collection-route.model";
+import { formData as reactiveFormData } from "@/modules/collection-route-management/models/create-collection-route-order-base-form";
+import { routeNames, router } from "@/routes";
+import { service } from "@/services";
+import { makeUniqueName } from "@/utils/string.helper";
+import {
+  computed,
+  inject,
+  onBeforeUnmount,
+  onMounted,
+  reactive,
+  ref,
+  watch
+} from "vue";
+import draggable from "vuedraggable";
 export interface Form {
   note: string;
 }
@@ -228,6 +228,7 @@ const listCollectionPoint = ref<CollectionPoint[]>([]);
 const listSelectedCollectionPoint = ref<CollectionPoint[]>([]);
 const listCollectionBase = ref<CollectionBase[]>();
 const formNoteError = ref<boolean>(false);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const handleSubmitBtn = reactive<any>({
   formData: formData,
   listSelectedCollectionPoint: listSelectedCollectionPoint,

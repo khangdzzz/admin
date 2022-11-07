@@ -1,13 +1,16 @@
-import { ref, onMounted, onUnmounted } from "vue";
+import { onMounted, onUnmounted, ref, Ref } from "vue";
 
 // by convention, composable function names start with "use"
-export function useMouse() {
+export function useMouse(): {
+  x: Ref<number>;
+  y: Ref<number>;
+} {
   // state encapsulated and managed by the composable
   const x = ref(0);
   const y = ref(0);
 
   // a composable can update its managed state over time.
-  function update(event) {
+  function update(event): void {
     x.value = event.pageX;
     y.value = event.pageY;
   }

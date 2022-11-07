@@ -233,7 +233,7 @@ onMounted(async () => {
   });
 
   data[1].rules?.push({
-    validator: (rule: Rule, value: string): Promise<void> => {
+    validator: (): Promise<void> => {
       if (isExitsField.value.includes("name")) {
         return Promise.reject(
           i18n.global.t("error_unique_constraint", {
@@ -247,7 +247,7 @@ onMounted(async () => {
   });
 
   data[2].rules?.push({
-    validator: (rule: Rule, value: string): Promise<void> => {
+    validator: (): Promise<void> => {
       if (isExitsField.value.includes("short_name")) {
         return Promise.reject(
           i18n.global.t("error_unique_constraint", {
@@ -382,7 +382,7 @@ const geoLocChange = (loc: number[]): void => {
   });
 };
 
-const drawstart = (_event: { target: { sketchCoords_: number[] } }): void => {
+const drawstart = (): void => {
   geoLocations.value = [];
 };
 

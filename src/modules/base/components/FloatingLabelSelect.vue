@@ -124,6 +124,7 @@ const emit = defineEmits<{
 const focus = (id: string): void => {
   document.getElementById(id)?.focus();
 };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const filterOption = (input: string, option: any): boolean => {
   return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
 };
