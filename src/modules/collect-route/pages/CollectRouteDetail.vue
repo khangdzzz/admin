@@ -335,7 +335,9 @@ export default defineComponent({
         end_point_workplace
       } = data;
       if (this.pageMode === PageMode.DETAIL) {
-        this.workPlaces = [start_point_workplace, end_point_workplace];
+        this.workPlaces = [start_point_workplace, end_point_workplace].filter(
+          (x) => x
+        );
       }
       this.collect_points = listCollectionPoint || [];
       this.fitMap();

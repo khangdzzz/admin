@@ -291,7 +291,10 @@ export default defineComponent({
         const { map } = mapRef;
         const view = map.getView();
         const boundingEx = boundingExtent(this.pointMaps);
-        view.fit(boundingEx, map.getSize());
+        view.fit(boundingEx, {
+          size: map.getSize(),
+          padding: [80, 80, 80, 80]
+        });
       });
     }
   }
