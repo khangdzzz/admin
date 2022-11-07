@@ -54,19 +54,17 @@
 <script setup lang="ts">
 //#region import
 import CustomForm from "@/modules/base/components/CustomForm.vue";
-import { inject, onMounted, reactive, ref, computed } from "vue";
+import { computed, inject, onMounted, reactive, ref } from "vue";
 // import { formData as reactiveFormData } from "../models/create-customer-base-form";
+import { i18n } from "@/i18n";
+import validator from "@/modules/base/components/validator/validator";
+import MessengerParamModel from "@/modules/base/models/messenger-param.model";
+import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import { FormData } from "@/modules/staff-management/models/collection-base.model";
 import { routeNames, router } from "@/routes";
 import { service } from "@/services";
-import { useRoute } from "vue-router";
-import MessengerParamModel from "@/modules/base/models/messenger-param.model";
-import { MessengerType } from "@/modules/base/models/messenger-type.enum";
-import { i18n } from "@/i18n";
-import validator from "@/modules/base/components/validator/validator";
 import { makeUniqueName } from "@/utils/string.helper";
-import { Rule } from "ant-design-vue/lib/form";
-import { localStorageKeys } from "@/services/local-storage-keys";
+import { useRoute } from "vue-router";
 //#endregion
 
 //#region props
@@ -85,9 +83,6 @@ let isExistName = async (): Promise<void> => {
   }
   return Promise.resolve();
 };
-
-const currentLanguage =
-  localStorage.getItem(localStorageKeys.currentLanguage) || "en";
 
 const formData = reactive<FormData>({
   singleInput: [
@@ -306,7 +301,7 @@ const isExitsField = ref<string[]>([]);
 onMounted(async () => {
   await init();
   singleInput[0].rules?.push({
-    validator: (rule: Rule, value: string): Promise<void> => {
+    validator: (): Promise<void> => {
       if (isExitsField.value.includes("name")) {
         return Promise.reject(
           i18n.global.t("error_unique_constraint", {
@@ -320,7 +315,7 @@ onMounted(async () => {
   });
 
   singleInput[1].rules?.push({
-    validator: (rule: Rule, value: string): Promise<void> => {
+    validator: (): Promise<void> => {
       if (isExitsField.value.includes("short_name")) {
         return Promise.reject(
           i18n.global.t("error_unique_constraint", {

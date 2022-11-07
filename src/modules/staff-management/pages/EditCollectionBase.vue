@@ -158,6 +158,7 @@
 </template>
 
 <script setup lang="ts">
+import IcRequired from "@/assets/icons/IcRequired.vue";
 import locationIcon from "@/assets/icons/ic_collection_base.png";
 import { i18n } from "@/i18n";
 import CustomForm from "@/modules/base/components/CustomForm.vue";
@@ -187,7 +188,6 @@ import {
   ref,
   watch
 } from "vue";
-import IcRequired from "@/assets/icons/IcRequired.vue";
 //#region import
 //#endregion
 
@@ -234,7 +234,7 @@ onMounted(async () => {
   }
 
   name[0].rules?.push({
-    validator: (rule: Rule, value: string): Promise<void> => {
+    validator: (): Promise<void> => {
       if (isExitsField.value.includes("name")) {
         return Promise.reject(
           i18n.global.t("error_unique_constraint", {
@@ -248,7 +248,7 @@ onMounted(async () => {
   });
 
   name[1].rules?.push({
-    validator: (rule: Rule, value: string): Promise<void> => {
+    validator: (): Promise<void> => {
       if (isExitsField.value.includes("short_name")) {
         return Promise.reject(
           i18n.global.t("error_unique_constraint", {
@@ -263,6 +263,7 @@ onMounted(async () => {
 
   contact[0].rules?.push({
     validator: (rule: Rule, value: string): Promise<void> => {
+      rule;
       const regex = /^[0-9]*$/;
       if (!value) {
         return Promise.reject(
@@ -502,7 +503,7 @@ const goToCollectionBaseListPage = (): void => {
   router.push({ name: routeNames.listCollectionBase });
 };
 
-const drawstart = (_event: { target: { sketchCoords_: number[] } }): void => {
+const drawstart = (): void => {
   geoLocations.value = [];
 };
 

@@ -12,7 +12,7 @@ import { UserLocationHistoryDto } from "./dtos/location/user-location-history.dt
 
 export async function isPostalAddressExists(
   postalCode: string
-): Promise<ServiceResponse<any>> {
+): Promise<ServiceResponse<PostalAddressResponseDTO>> {
   const [error, res] = await transformRequest<
     PaginationDto<PostalAddressResponseDTO>
   >({

@@ -1,5 +1,4 @@
 import { Rule } from "ant-design-vue/lib/form";
-import { ComputedRef } from "vue";
 
 export interface InputType {
   inputType: string;

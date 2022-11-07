@@ -1,5 +1,4 @@
 import { InputType } from "@/modules/base/models/input.model";
-import { workPlace } from "@/modules/staff-management/models/staff.model";
 
 export interface FormDataCreateCollectionRoute {
   [key: string]: InputType[];
@@ -35,6 +34,7 @@ export interface CollectionRoute {
   lastUpdate?: string;
   navigationId?: string;
   notice?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   listCollectionPoint?: any[];
   workplaceId?: string | number;
 }

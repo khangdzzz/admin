@@ -1,22 +1,41 @@
 <template>
   <div class="tw">
-    <a-spin :spinning="loading" :tip="$t('common_loading')" class="w-full h-full">
+    <a-spin
+      :spinning="loading"
+      :tip="$t('common_loading')"
+      class="w-full h-full"
+    >
       <div class="flex flex-col h-full p-[30px] bg-primary-50">
-        <CollectRouteHeader :allowBack="allowBack" :title="pageTitle" :disabled="!readOnlyPage" @back="handleCancel"
-          @delete="handleDelete" @edit="handleEdit" />
+        <CollectRouteHeader
+          :allowBack="allowBack"
+          :title="pageTitle"
+          :disabled="!readOnlyPage"
+          @back="handleCancel"
+          @delete="handleDelete"
+          @edit="handleEdit"
+        />
         <div class="card grid grid-cols-2 gap-5">
           <a-form @validate="validate">
             <BaseForm v-model="formFields" :loading="loading" />
           </a-form>
-          <BaseMap ref="map" v-model:linePoints="linePoints" :loading="loading" v-model:center="center"
-            :markers="markers" v-model:drawable="drawable" />
+          <BaseMap
+            ref="map"
+            v-model:linePoints="linePoints"
+            :loading="loading"
+            v-model:center="center"
+            :markers="markers"
+            v-model:drawable="drawable"
+          />
         </div>
         <div class="mt-5 flex justify-center gap-5" v-if="!readOnlyPage">
           <div class="btn--text-primary-400 w-[180px]" @click="handleCancel">
             {{ $t("btn_cancel") }}
           </div>
-          <div class="btn w-[180px]" :class="[disableSubmit ? 'btn--disabled' : 'bg-primary-400']"
-            @click="handleSubmit">
+          <div
+            class="btn w-[180px]"
+            :class="[disableSubmit ? 'btn--disabled' : 'bg-primary-400']"
+            @click="handleSubmit"
+          >
             {{ $t("btn_submit") }}
           </div>
         </div>
@@ -44,8 +63,11 @@ import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
 import { computed, defineComponent, inject, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
-import { CollectRouteDto, CollectRouteViewModel } from "../models/collect-route-model";
-import CollectRouteHeader from './CollectRouteHeader.vue';
+import {
+  CollectRouteDto,
+  CollectRouteViewModel
+} from "../models/collect-route-model";
+import CollectRouteHeader from "./CollectRouteHeader.vue";
 
 enum PageMode {
   DETAIL = "detail",
@@ -60,10 +82,11 @@ export default defineComponent({
     CollectRouteHeader
   },
   setup() {
-    const prevRoute = ref(routeNames.listCollectionRoute)
-    const fetchedWorkplaces = ref(false)
+    const prevRoute = ref(routeNames.listCollectionRoute);
+    const fetchedWorkplaces = ref(false);
     const { t } = i18n.global;
     const messenger: (param: MessengerParamModel) => void =
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       inject("messenger")!;
     const workplaceIcons = ref(ICONS);
     const workPlaces = ref<workPlace[]>([]);
@@ -76,30 +99,32 @@ export default defineComponent({
     const map = ref(null);
     const linePoints = ref<number[][]>([]);
 
-    const fitMap = () => {
-      if (map.value)
-        (map.value as { fitMap: () => void }).fitMap()
-    }
-    const getListWorkplaces = () => {
-      if (fetchedWorkplaces.value) return
-      loading.value = true
-      service.staff.getListWorkPlace().then((res) => {
-        const validTypes = [
-          WorkPlaceType.COLLECTION_BASE,
-          WorkPlaceType.DISPOSAL,
-          WorkPlaceType.PARTNER
-        ];
-        if (!res || !res.results) return;
-        workPlaces.value = res.results.filter(
-          (x) =>
-            x.latitude &&
-            x.longitude &&
-            x.workPlaceType &&
-            x.workPlaceType in validTypes
-        );
-        fetchedWorkplaces.value = true
-      }).finally(() => loading.value = false);
-    }
+    const fitMap = (): void => {
+      if (map.value) (map.value as { fitMap: () => void }).fitMap();
+    };
+    const getListWorkplaces = (): void => {
+      if (fetchedWorkplaces.value) return;
+      loading.value = true;
+      service.staff
+        .getListWorkPlace()
+        .then((res) => {
+          const validTypes = [
+            WorkPlaceType.COLLECTION_BASE,
+            WorkPlaceType.DISPOSAL,
+            WorkPlaceType.PARTNER
+          ];
+          if (!res || !res.results) return;
+          workPlaces.value = res.results.filter(
+            (x) =>
+              x.latitude &&
+              x.longitude &&
+              x.workPlaceType &&
+              x.workPlaceType in validTypes
+          );
+          fetchedWorkplaces.value = true;
+        })
+        .finally(() => (loading.value = false));
+    };
     const formFields = ref<IFormField<CollectRouteViewModel, workPlace>>({
       name: {
         label: t("name"),
@@ -150,8 +175,8 @@ export default defineComponent({
       watch(
         pageMode,
         () => {
-          if (pageMode.value !== 'detail') {
-            getListWorkplaces()
+          if (pageMode.value !== "detail") {
+            getListWorkplaces();
           }
           setTimeout(() => {
             if (map.value) {
@@ -258,23 +283,23 @@ export default defineComponent({
       return this.pageMode === PageMode.EDIT;
     },
     allowBack() {
-      return this.pageMode !== PageMode.CREATE
+      return this.pageMode !== PageMode.CREATE;
     },
     disableSubmit() {
       return !this.formFields.list_coordinates.value;
     }
   },
   beforeRouteEnter(to, from, next) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     next((vm: any) => {
-      if (from.name)
-        vm.prevRoute = from.name
-    })
+      if (from.name) vm.prevRoute = from.name;
+    });
   },
   async mounted() {
     const { id } = this.$route.params;
     if (!id) return;
     this.loading = true;
-    let data = {} as CollectRouteDto
+    let data = {} as CollectRouteDto;
     const collectRes = await service.collectRoute.getCollectRoute(+id);
     data = { ...collectRes } as CollectRouteDto;
     if (collectRes) {
@@ -303,18 +328,21 @@ export default defineComponent({
         ...data,
         ...collectionRes
       };
-      this.initFormData(data)
-      const { listCollectionPoint, start_point_workplace, end_point_workplace } = data
+      this.initFormData(data);
+      const {
+        listCollectionPoint,
+        start_point_workplace,
+        end_point_workplace
+      } = data;
       if (this.pageMode === PageMode.DETAIL) {
-        this.workPlaces = [start_point_workplace, end_point_workplace]
+        this.workPlaces = [start_point_workplace, end_point_workplace];
       }
       this.collect_points = listCollectionPoint || [];
-      this.fitMap()
-    }
-    else {
+      this.fitMap();
+    } else {
       this.$router.push({
         name: routeNames.listCollectionRoute
-      })
+      });
     }
     this.loading = false;
   },
@@ -393,8 +421,8 @@ export default defineComponent({
       this.loading = false;
     },
     handleCancel() {
-      this.$router.push({ name: this.prevRoute })
-    },
+      this.$router.push({ name: this.prevRoute });
+    }
   }
 });
 </script>

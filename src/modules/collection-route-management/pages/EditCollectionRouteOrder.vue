@@ -233,6 +233,8 @@ const listCollectionPoint = ref<CollectionPoint[]>([]);
 const listSelectedCollectionPoint = ref<CollectionPoint[]>([]);
 const formNoteError = ref<boolean>(false);
 const listCollectionBase = ref<CollectionBase[]>();
+// Todo: need to fix this
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const handleSubmitBtn = reactive<any>({
   formData: formData,
   listSelectedCollectionPoint: listSelectedCollectionPoint,

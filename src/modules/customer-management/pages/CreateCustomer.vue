@@ -49,7 +49,14 @@
 
 <script setup lang="ts">
 //#region import
+import { i18n } from "@/i18n";
 import CustomForm from "@/modules/base/components/CustomForm.vue";
+import MessengerParamModel from "@/modules/base/models/messenger-param.model";
+import { MessengerType } from "@/modules/base/models/messenger-type.enum";
+import { FormData } from "@/modules/staff-management/models/collection-base.model";
+import { routeNames, router } from "@/routes";
+import { service } from "@/services";
+import { makeUniqueName } from "@/utils/string.helper";
 import {
   computed,
   inject,
@@ -59,14 +66,6 @@ import {
   ref
 } from "vue";
 import { formData as reactiveFormData } from "../models/create-customer-base-form";
-import { FormData } from "@/modules/staff-management/models/collection-base.model";
-import { routeNames, router } from "@/routes";
-import { service } from "@/services";
-import { makeUniqueName } from "@/utils/string.helper";
-import MessengerParamModel from "@/modules/base/models/messenger-param.model";
-import { MessengerType } from "@/modules/base/models/messenger-type.enum";
-import { i18n } from "@/i18n";
-import { Rule } from "ant-design-vue/lib/form";
 //#endregion
 
 //#region props
@@ -88,7 +87,7 @@ const isExitsField = ref<string[]>([]);
 //#region hooks
 onMounted(() => {
   singleInput[0].rules?.push({
-    validator: (rule: Rule, value: string): Promise<void> => {
+    validator: (): Promise<void> => {
       if (isExitsField.value.includes("name")) {
         return Promise.reject(
           i18n.global.t("error_unique_constraint", {
@@ -102,7 +101,7 @@ onMounted(() => {
   });
 
   singleInput[1].rules?.push({
-    validator: (rule: Rule, value: string): Promise<void> => {
+    validator: (): Promise<void> => {
       if (isExitsField.value.includes("short_name")) {
         return Promise.reject(
           i18n.global.t("error_unique_constraint", {
