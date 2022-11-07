@@ -1,4 +1,5 @@
 import { InputType } from "@/modules/base/models/input.model";
+import { workPlace } from "@/modules/staff-management/models/staff.model";
 
 export interface FormDataCreateCollectionRoute {
   [key: string]: InputType[];

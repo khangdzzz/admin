@@ -1,49 +1,22 @@
 <template>
   <div class="tw">
-    <a-spin
-      :spinning="loading"
-      :tip="$t('common_loading')"
-      class="w-full h-full"
-    >
+    <a-spin :spinning="loading" :tip="$t('common_loading')" class="w-full h-full">
       <div class="flex flex-col h-full p-[30px] bg-primary-50">
-        <div class="flex justify-between mb-5">
-          <div class="flex items-center gap-5">
-            <img src="@/assets/icons/ic_back.svg" />
-            <div class="font-bold text-2.5xl text-neutral-600">
-              {{ pageTitle }}
-            </div>
-          </div>
-          <div v-if="disablePage" class="flex gap-[15px]">
-            <div class="btn--text-primary-400 w-[120px]" @click="handleEdit">
-              <img src="@/assets/icons/ic_btn_edit.svg" />{{ $t("edit_btn") }}
-            </div>
-            <div class="btn--text-red-500 w-[120px]" @click="handleDelete">
-              <IcDelete :color="'#f54e4e'" />{{ $t("delete_btn") }}
-            </div>
-          </div>
-        </div>
+        <CollectRouteHeader :allowBack="allowBack" :title="pageTitle" :disabled="!readOnlyPage" @back="handleCancel"
+          @delete="handleDelete" @edit="handleEdit" />
         <div class="card grid grid-cols-2 gap-5">
           <a-form @validate="validate">
             <BaseForm v-model="formFields" :loading="loading" />
           </a-form>
-          <BaseMap
-            ref="map"
-            v-model:linePoints="linePoints"
-            :loading="loading"
-            :center="center"
-            :markers="markers"
-            v-model:drawable="drawable"
-          />
+          <BaseMap ref="map" v-model:linePoints="linePoints" :loading="loading" v-model:center="center"
+            :markers="markers" v-model:drawable="drawable" />
         </div>
-        <div class="mt-5 flex justify-center gap-5" v-if="!disablePage">
+        <div class="mt-5 flex justify-center gap-5" v-if="!readOnlyPage">
           <div class="btn--text-primary-400 w-[180px]" @click="handleCancel">
             {{ $t("btn_cancel") }}
           </div>
-          <div
-            class="btn w-[180px]"
-            :class="[disableSubmit ? 'btn--disabled' : 'bg-primary-400']"
-            @click="handleSubmit"
-          >
+          <div class="btn w-[180px]" :class="[disableSubmit ? 'btn--disabled' : 'bg-primary-400']"
+            @click="handleSubmit">
             {{ $t("btn_submit") }}
           </div>
         </div>
@@ -52,10 +25,10 @@
   </div>
 </template>
 <script lang="ts">
-import IcDelete from "@/assets/icons/IcDelete.vue";
 import collectionPoint from "@/assets/icons/ic_collection_point_marker.svg";
-import { useForm, getFormRequestData } from "@/composable/form";
+import { getFormRequestData, useForm } from "@/composable/form";
 import Messager from "@/composable/message";
+import { i18n } from "@/i18n";
 import BaseMap from "@/modules/base/components/BaseMap.vue";
 import BaseForm from "@/modules/base/components/forms/BaseForm.vue";
 import {
@@ -64,22 +37,31 @@ import {
 } from "@/modules/base/components/forms/form-models";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { CollectionPoint } from "@/modules/collection-point-management/models/collection-point.model";
-import { service } from "@/services";
-import { defineComponent, inject, onMounted, ref, watch, computed } from "vue";
-import { useRoute } from "vue-router";
-import { CollectRouteViewModel } from "../models/collect-route-model";
 import { workPlace } from "@/modules/staff-management/models/staff.model";
-import { WorkPlaceType } from "@/modules/workplace/models/workplace.model";
 import { ICONS } from "@/modules/workplace/models/workplace.config";
-import { i18n } from "@/i18n";
+import { WorkPlaceType } from "@/modules/workplace/models/workplace.model";
+import { routeNames } from "@/routes/route-names";
+import { service } from "@/services";
+import { computed, defineComponent, inject, onMounted, ref, watch } from "vue";
+import { useRoute } from "vue-router";
+import { CollectRouteDto, CollectRouteViewModel } from "../models/collect-route-model";
+import CollectRouteHeader from './CollectRouteHeader.vue';
+
+enum PageMode {
+  DETAIL = "detail",
+  CREATE = "create",
+  EDIT = "edit"
+}
 
 export default defineComponent({
   components: {
     BaseMap,
     BaseForm,
-    IcDelete
+    CollectRouteHeader
   },
   setup() {
+    const prevRoute = ref(routeNames.listCollectionRoute)
+    const fetchedWorkplaces = ref(false)
     const { t } = i18n.global;
     const messenger: (param: MessengerParamModel) => void =
       inject("messenger")!;
@@ -88,16 +70,36 @@ export default defineComponent({
     const route = ref(useRoute());
     const pageMode = ref(route.value.params.mode);
     const loading = ref(false);
-    const drawable = computed(() => pageMode.value !== "detail");
+    const drawable = computed(() => pageMode.value !== PageMode.DETAIL);
     const center = ref<number[]>([138.322486, 36.848156]);
     const collect_points = ref<CollectionPoint[]>([]);
     const map = ref(null);
     const linePoints = ref<number[][]>([]);
-    const setCenterByWorkplaceId = (id: number) => {
-      const workplace = workPlaces.value.find((x) => x.id === id);
-      if (!workplace) return;
-      center.value = [workplace.longitude, workplace.latitude];
-    };
+
+    const fitMap = () => {
+      if (map.value)
+        (map.value as { fitMap: () => void }).fitMap()
+    }
+    const getListWorkplaces = () => {
+      if (fetchedWorkplaces.value) return
+      loading.value = true
+      service.staff.getListWorkPlace().then((res) => {
+        const validTypes = [
+          WorkPlaceType.COLLECTION_BASE,
+          WorkPlaceType.DISPOSAL,
+          WorkPlaceType.PARTNER
+        ];
+        if (!res || !res.results) return;
+        workPlaces.value = res.results.filter(
+          (x) =>
+            x.latitude &&
+            x.longitude &&
+            x.workPlaceType &&
+            x.workPlaceType in validTypes
+        );
+        fetchedWorkplaces.value = true
+      }).finally(() => loading.value = false);
+    }
     const formFields = ref<IFormField<CollectRouteViewModel, workPlace>>({
       name: {
         label: t("name"),
@@ -117,7 +119,7 @@ export default defineComponent({
         value: "",
         options: [],
         fieldNames: { label: "name", value: "id" },
-        change: (id) => setCenterByWorkplaceId(id)
+        change: fitMap
       },
       end_point_id: {
         label: t("end_point"),
@@ -125,7 +127,7 @@ export default defineComponent({
         value: "",
         options: [],
         fieldNames: { label: "name", value: "id" },
-        change: (id) => setCenterByWorkplaceId(id)
+        change: fitMap
       },
       list_coordinates: {
         label: t("route"),
@@ -148,22 +150,26 @@ export default defineComponent({
       watch(
         pageMode,
         () => {
+          if (pageMode.value !== 'detail') {
+            getListWorkplaces()
+          }
           setTimeout(() => {
             if (map.value) {
               (map.value as { refreshMap: () => void }).refreshMap();
             }
           }, 300);
           ["start_point_id", "end_point_id"].forEach((key) => {
-            formFields.value[key].disabled = pageMode.value === "detail";
+            formFields.value[key].disabled = pageMode.value === PageMode.DETAIL;
           });
           Object.keys(formFields.value).forEach((key) => {
-            formFields.value[key].readonly = pageMode.value === "detail";
+            formFields.value[key].readonly = pageMode.value === PageMode.DETAIL;
           });
           formFields.value.list_coordinates.noDivider =
-            pageMode.value === "detail";
+            pageMode.value === PageMode.DETAIL;
         },
         {
           deep: true,
+          immediate: true,
           flush: "post"
         }
       );
@@ -204,7 +210,11 @@ export default defineComponent({
       pageMode,
       workPlaces,
       t,
-      workplaceIcons
+      workplaceIcons,
+      fetchedWorkplaces,
+      getListWorkplaces,
+      fitMap,
+      prevRoute
     };
   },
   computed: {
@@ -233,49 +243,44 @@ export default defineComponent({
     },
     pageTitle() {
       switch (this.pageMode) {
-        case "detail":
+        case PageMode.DETAIL:
           return this.$t("route_detail");
-        case "edit":
+        case PageMode.EDIT:
           return this.$t("edit_route");
         default:
           return this.$t("create_new_route");
       }
     },
-    disablePage() {
-      return this.pageMode === "detail";
+    readOnlyPage() {
+      return this.pageMode === PageMode.DETAIL;
     },
     isEditing() {
-      return this.pageMode === "edit";
+      return this.pageMode === PageMode.EDIT;
+    },
+    allowBack() {
+      return this.pageMode !== PageMode.CREATE
     },
     disableSubmit() {
       return !this.formFields.list_coordinates.value;
     }
   },
+  beforeRouteEnter(to, from, next) {
+    next((vm: any) => {
+      if (from.name)
+        vm.prevRoute = from.name
+    })
+  },
   async mounted() {
     const { id } = this.$route.params;
     if (!id) return;
     this.loading = true;
-    await service.staff.getListWorkPlace().then((res) => {
-      const validTypes = [
-        WorkPlaceType.COLLECTION_BASE,
-        WorkPlaceType.DISPOSAL,
-        WorkPlaceType.PARTNER
-      ];
-      if (!res || !res.results) return;
-      this.workPlaces = res.results.filter(
-        (x) =>
-          x.latitude &&
-          x.longitude &&
-          x.workPlaceType &&
-          x.workPlaceType in validTypes
-      );
-    });
+    let data = {} as CollectRouteDto
     const collectRes = await service.collectRoute.getCollectRoute(+id);
-    let data = { ...collectRes };
+    data = { ...collectRes } as CollectRouteDto;
     if (collectRes) {
       this.linePoints = this.parseListCoordinates(collectRes.list_coordinates);
       if (!this.pageMode) {
-        this.pageMode = "detail";
+        this.pageMode = PageMode.DETAIL;
         this.$router.replace({
           params: {
             mode: this.pageMode
@@ -283,7 +288,7 @@ export default defineComponent({
         });
       }
     } else {
-      this.pageMode = "create";
+      this.pageMode = PageMode.CREATE;
       this.$router.replace({
         params: {
           mode: this.pageMode
@@ -298,28 +303,25 @@ export default defineComponent({
         ...data,
         ...collectionRes
       };
-      this.formFields = useForm(this.formFields, data);
-      this.collect_points = collectionRes.listCollectionPoint || [];
-      const { start_point_id, end_point_id } = this.formFields;
-      if (start_point_id.value) {
-        const workplace = this.workPlaces.find(
-          (x) => x.id === start_point_id.value
-        );
-        if (workplace) this.center = [workplace.longitude, workplace.latitude];
-      } else if (end_point_id.value) {
-        const workplace = this.workPlaces.find(
-          (x) => x.id === end_point_id.value
-        );
-        if (workplace) this.center = [workplace.longitude, workplace.latitude];
-      } else
-        this.center = collectionRes.listCollectionPoint?.map((x) => [
-          x.longitude,
-          x.latitude
-        ])[0] || [138.322486, 36.848156];
+      this.initFormData(data)
+      const { listCollectionPoint, start_point_workplace, end_point_workplace } = data
+      if (this.pageMode === PageMode.DETAIL) {
+        this.workPlaces = [start_point_workplace, end_point_workplace]
+      }
+      this.collect_points = listCollectionPoint || [];
+      this.fitMap()
+    }
+    else {
+      this.$router.push({
+        name: routeNames.listCollectionRoute
+      })
     }
     this.loading = false;
   },
   methods: {
+    initFormData(data) {
+      this.formFields = useForm(this.formFields, data);
+    },
     parseListCoordinates(list_coordinates: string) {
       try {
         return JSON.parse(list_coordinates);
@@ -331,7 +333,7 @@ export default defineComponent({
       console.log(e);
     },
     handleEdit() {
-      this.pageMode = "edit";
+      this.pageMode = PageMode.EDIT;
       this.$router.replace({
         params: {
           mode: this.pageMode
@@ -348,7 +350,7 @@ export default defineComponent({
       const success = await service.collectRoute.deleteCollectRoute([+id]);
       this.loading = false;
       if (success) {
-        Messager.success.delete(this.messenger, () => history.back());
+        Messager.success.delete(this.messenger, () => this.handleCancel());
         this.resetForm();
       } else Messager.error.delete(this.messenger);
     },
@@ -377,7 +379,7 @@ export default defineComponent({
       if (res) {
         if (this.isEditing) Messager.success.update(this.messenger);
         else Messager.success.create(this.messenger);
-        this.pageMode = "detail";
+        this.pageMode = PageMode.DETAIL;
         this.$router.replace({
           params: {
             mode: this.pageMode
@@ -391,8 +393,8 @@ export default defineComponent({
       this.loading = false;
     },
     handleCancel() {
-      history.back();
-    }
+      this.$router.push({ name: this.prevRoute })
+    },
   }
 });
 </script>
