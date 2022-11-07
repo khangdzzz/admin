@@ -12,7 +12,6 @@
         <a-form
           ref="formRef"
           :model="{ formData }"
-          layout="inline"
           class="form-create-container"
         >
           <CustomForm
@@ -51,16 +50,13 @@ import { computed, inject, onMounted, ref, watch } from "vue";
 
 import { i18n } from "@/i18n";
 import CustomForm from "@/modules/base/components/CustomForm.vue";
+import validator from "@/modules/base/components/validator/validator";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import { routeNames, router } from "@/routes";
 import { service } from "@/services";
 import { Rule } from "ant-design-vue/lib/form";
-import {
-  validateContainerCapacity,
-  validateContainerName,
-  validateWeight
-} from "../validators/container.validator";
+import { validateContainerName } from "../validators/container.validator";
 //#endregion
 
 //#region props
@@ -129,16 +125,15 @@ const formData = ref([
     placeHolder: "container_weight",
     label: "container_weight",
     name: "weight",
-    inline: true,
     disabled: false,
-    spaceStyle: {
-      display: "inline-block",
-      width: "16px"
-    },
     rules: [
       {
         validator: (_rule: Rule, value: string): Promise<void> => {
-          const error = validateWeight("container_weight", true, value);
+          const error = validator.validateDecimal(
+            "container_weight",
+            true,
+            value
+          );
           if (error) return Promise.reject(error);
           return Promise.resolve();
         },
@@ -155,12 +150,15 @@ const formData = ref([
     placeHolder: "container_capacity",
     label: "container_capacity",
     name: "capacity",
-    inline: true,
     disabled: false,
     rules: [
       {
         validator: (_rule: Rule, value: string): Promise<void> => {
-          const error = validateContainerCapacity(value);
+          const error = validator.validateDecimal(
+            "container_capacity",
+            false,
+            value
+          );
           if (error) return Promise.reject(error);
           return Promise.resolve();
         },
@@ -278,10 +276,18 @@ const isAllowSubmit = computed(() => {
   if (validateContainerName(formData.value[0].value, false)) {
     return false;
   }
-  if (validateWeight("container_weight", true, formData.value[2].value)) {
+  if (
+    validator.validateDecimal("container_weight", true, formData.value[2].value)
+  ) {
     return false;
   }
-  if (validateContainerCapacity(formData.value[3].value)) {
+  if (
+    validator.validateDecimal(
+      "container_capacity",
+      false,
+      formData.value[3].value
+    )
+  ) {
     return false;
   }
   return formData.value[1].value;
@@ -366,9 +372,6 @@ watch(isExist, () => {
           .ant-form-item-control-input-content {
             .input-item {
               width: 620px;
-            }
-            .inline {
-              width: 300px !important;
             }
           }
         }
