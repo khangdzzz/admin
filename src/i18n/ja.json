@@ -211,6 +211,7 @@
   "create_vehicle_lbl_vehicle_name": "車両名称",
   "create_vehicle_lbl_vehicle_number_plate": "ナンバープレート",
   "collection_route": "回収ルート管理",
+  "collection_route_order": "新規回収順の追加",
   "collection_route_order_edit_title": "回収順の編集",
   "collection_route_name": "ルート名称",
   "collection_route_workplace": "参照先",

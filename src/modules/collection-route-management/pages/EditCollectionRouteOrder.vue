@@ -415,7 +415,7 @@ watch(handleSubmitBtn, () => {
   activeSubmitButton();
 });
 watch(formNote, () => {
-  if (formNote.note?.length > 225) {
+  if (formNote.note?.length > 255) {
     formNoteError.value = true;
   } else {
     formNoteError.value = false;
@@ -555,6 +555,9 @@ watch(formNote, () => {
   .collection-point__data-right {
     border: 1px solid $neutral-100;
     border-radius: 6px;
+  }
+  .collection-point__data-right {
+    background-color: $primary-100;
   }
   .collection-point__head {
     border-top-left-radius: 6px;
