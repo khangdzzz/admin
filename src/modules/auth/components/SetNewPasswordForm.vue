@@ -421,6 +421,11 @@ const setColorIconInputConfirmPassword = computed((): string => {
     font-weight: 400;
     color: $neutral-800;
   }
+
+  .ant-form-item-explain-error {
+    margin-bottom: 0px !important;
+  }
+
   .ant-input:not(.set-password-form__input-code) {
     padding: 20px 0px 0px 0px !important;
     height: 50px;
@@ -445,6 +450,12 @@ const setColorIconInputConfirmPassword = computed((): string => {
     background-color: $neutral-200;
   }
 
+  .set-password-form__action-wrap--save {
+    height: 48px;
+  }
+  .set-password-form__action-wrap--cancel {
+    height: 48px;
+  }
   .set-password-form__action-wrap--save.active {
     background: $primary;
     color: $neutral-0;
