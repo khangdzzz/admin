@@ -614,12 +614,12 @@ const routes: RouteRecordRaw[] = [
       layout: ScreenLayout.DEFAULT_LAYOUT
     },
     redirect: {
-      name: routeNames.detailCollectionRoute
+      name: routeNames.createRoute
     },
     children: [
       {
         path: ":mode",
-        name: routeNames.detailCollectionRoute,
+        name: routeNames.createRoute,
         component: () =>
           import("@/modules/collect-route/pages/CollectRouteDetail.vue"),
         alias: ["/:id", ""]

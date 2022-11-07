@@ -70,5 +70,6 @@ export const routeNames = {
   collectionRoute: "COLLECTION_ROUTE",
   createCollectionRoute: "CREATE_COLLECTION_ROUTE",
   detailCollectionRoute: "DETAIL_COLLECTION_ROUTE",
+  createRoute: "CREATE_ROUTE",
   demoMap: "DEMO_MAP"
 };

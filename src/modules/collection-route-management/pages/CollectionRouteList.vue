@@ -437,9 +437,8 @@ const addCollectionRoute = (event: MouseEvent, id: number): void => {
   if (event.stopPropagation) {
     event.stopPropagation();
   }
-  console.log(id);
   router.push({
-    name: routeNames.detailCollectionRoute,
+    name: routeNames.createRoute,
     params: { id, mode: "create" }
   });
 };
