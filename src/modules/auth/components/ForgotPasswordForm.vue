@@ -257,7 +257,9 @@ const getIconUserColor = computed((): string => {
     position: relative !important;
     top: 0px !important;
   }
-
+  .ant-form-item-explain-error {
+    margin-bottom: 0px !important;
+  }
   .fgpw-icon-input {
     margin-right: 12px;
   }
@@ -285,7 +287,16 @@ const getIconUserColor = computed((): string => {
     margin-top: 25px;
   }
 
+  .fgpw-form__action-wrap--cancel {
+    height: 48px;
+  }
+
+  .fgpw-form__action-wrap--confirm {
+    height: 48px;
+  }
+
   .fgpw-form__action-wrap--confirm.active-btn {
+    height: 48px;
     background: $primary;
     color: $neutral-0;
   }
