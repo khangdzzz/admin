@@ -129,7 +129,7 @@ const validator = {
 
     const regex = /^[0-9]*$/;
     if (value && !regex.test(value)) {
-      return Promise.reject(i18n.global.t("allow_input_number"));
+      return Promise.reject(i18n.global.t("field_allow_number_only"));
     }
 
     if (value.length > 8) {
