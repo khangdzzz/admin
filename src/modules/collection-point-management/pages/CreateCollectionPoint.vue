@@ -139,19 +139,18 @@
 import locationIcon from "@/assets/icons/ic_collection_point.png";
 import { i18n } from "@/i18n";
 import CustomForm from "@/modules/base/components/CustomForm.vue";
+import validator from "@/modules/base/components/validator/validator";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
-import { FormData } from "@/modules/staff-management/models/collection-base.model";
 import { formData as reactiveFormData } from "@/modules/collection-point-management/models/create-collection-point-form.model";
+import { FormData } from "@/modules/staff-management/models/collection-base.model";
 import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
+import { NULL_VALUE_DISPLAY } from "@/utils/constants";
 import { makeUniqueName } from "@/utils/string.helper";
 import { message } from "ant-design-vue";
 import { Rule } from "ant-design-vue/lib/form";
-import { localStorageKeys } from "@/services/local-storage-keys";
-import { NULL_VALUE_DISPLAY } from "@/utils/constants";
-import validator from "@/modules/base/components/validator/validator";
 import {
   computed,
   inject,
@@ -167,8 +166,6 @@ import {
 //#endregion
 
 //#region variables
-const currentLanguage =
-  localStorage.getItem(localStorageKeys.currentLanguage) || "en";
 const formData = reactive<FormData>(reactiveFormData());
 const center = ref<number[]>([40, 40]);
 const projection = ref<string>("EPSG:4326");

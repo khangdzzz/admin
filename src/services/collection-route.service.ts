@@ -155,17 +155,19 @@ export async function getCollectionRouteById(
     workplaceId: workplace_id
   };
 }
-export async function getWorkplace(): Promise<
-  CollectionBaseResponseDto[] | undefined
-> {
-  const [err, res] = await transformRequest<
-    PaginationDto<CollectionBaseResponseDto>
-  >({
-    url: `/workplace/options?workplace_type_in=3,2`,
-    method: "get"
+export async function getWorkplace(
+  workplaceTypes: number[]
+): Promise<CollectionBaseResponseDto[] | undefined> {
+  const [err, res] = await transformRequest<CollectionBaseResponseDto[]>({
+    url: "/workplace/options",
+    method: "get",
+    params: {
+      workplace_type__in: workplaceTypes.join(","),
+      page_size: "full"
+    }
   });
   if (err) return undefined;
-  return res.results;
+  return res;
 }
 
 export async function getCollectionPoint(): Promise<

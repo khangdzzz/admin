@@ -276,6 +276,7 @@ import {
 } from "vue";
 import { formatDateTime } from "../base/components/validator/dateFormat";
 import { Sort } from "../common/models/sort.enum";
+import { WorkPlaceType } from "../workplace/models/workplace.model";
 import { CurrentUserLocationModel } from "./models/current-user-location.model";
 //#endregion
 
@@ -346,7 +347,10 @@ const initialize = async (): Promise<void> => {
 };
 
 const fetchCollectionBase = async (): Promise<void> => {
-  const res = await service.collectionRoute.getWorkplace();
+  const res = await service.collectionRoute.getWorkplace([
+    WorkPlaceType.COLLECTION_BASE,
+    WorkPlaceType.PARTNER
+  ]);
   if (res) {
     listCollectionBase.value = (res || []).map((collectionBase) => {
       const { name, id } = collectionBase;
