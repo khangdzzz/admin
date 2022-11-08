@@ -96,6 +96,7 @@ import CustomForm from "@/modules/base/components/CustomForm.vue";
 import validator from "@/modules/base/components/validator/validator";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
+import { sortDropdown } from "@/modules/common/helpers";
 import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
@@ -330,19 +331,19 @@ const fetchVehicleById = async (): Promise<void> => {
 const fetchVehicleType = async (): Promise<void> => {
   const res = await service.vehicleType.getAllVehicleType();
   if (res) {
-    vehicleTypes.value = res?.map((item) => ({
+    vehicleTypes.value = sortDropdown(res?.map((item) => ({
       value: item.id,
       label: item.name
-    }));
+    })));
   }
 };
 const fetchCollectionBase = async (): Promise<void> => {
   const res = await service.vehicle.getCollectionBase();
   if (res) {
-    listCollectionBase.value = res?.map((item) => ({
+    listCollectionBase.value = sortDropdown(res?.map((item) => ({
       value: item.id || 0,
       label: item.name
-    }));
+    })));
   }
 };
 const fetchMockData = (): void => {

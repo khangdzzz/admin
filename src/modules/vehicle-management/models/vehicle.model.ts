@@ -5,7 +5,7 @@ export interface PageOption {
   currentPage: number;
 }
 export interface VehicleSelection {
-  value: string | number;
+  value: string | number | boolean | undefined;
   label: string;
 }
 export interface Vehicle {

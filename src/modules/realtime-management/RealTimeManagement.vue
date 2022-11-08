@@ -275,6 +275,7 @@ import {
   watch
 } from "vue";
 import { formatDateTime } from "../base/components/validator/dateFormat";
+import { sortDropdown } from "../common/helpers";
 import { Sort } from "../common/models/sort.enum";
 import { WorkPlaceType } from "../workplace/models/workplace.model";
 import { CurrentUserLocationModel } from "./models/current-user-location.model";
@@ -311,7 +312,7 @@ const view = ref(null);
 const map = ref(null);
 
 const selectedCollectionBase = ref();
-const listCollectionBase = ref<{ value: number | undefined; label: string }[]>(
+const listCollectionBase = ref<{ value: string | boolean | number | undefined; label: string }[]>(
   []
 );
 const driverLocations = ref<
@@ -352,13 +353,13 @@ const fetchCollectionBase = async (): Promise<void> => {
     WorkPlaceType.PARTNER
   ]);
   if (res) {
-    listCollectionBase.value = (res || []).map((collectionBase) => {
+    listCollectionBase.value = sortDropdown((res || []).map((collectionBase) => {
       const { name, id } = collectionBase;
       return {
         value: id,
         label: name
       };
-    });
+    }));
   }
 };
 

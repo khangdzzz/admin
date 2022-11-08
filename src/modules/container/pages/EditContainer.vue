@@ -52,6 +52,7 @@ import CustomForm from "@/modules/base/components/CustomForm.vue";
 import validator from "@/modules/base/components/validator/validator";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
+import { sortDropdown } from "@/modules/common/helpers";
 import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
@@ -204,12 +205,12 @@ onMounted(() => {
 const fetchContainerType = async (): Promise<void> => {
   const res = await service.container.getListContainerType(1, "full");
   if (res && res.results) {
-    containerTypes.value = res?.results.map(
+    containerTypes.value = sortDropdown(res?.results.map(
       ({ id, name }: { id: number; name: string }) => ({
         value: id || "",
         label: name
       })
-    );
+    ));
   }
 };
 
