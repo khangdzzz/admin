@@ -263,22 +263,6 @@ onMounted(async () => {
 
   contact[0].rules?.push({
     validator: (rule: Rule, value: string): Promise<void> => {
-      rule;
-      const regex = /^[0-9]*$/;
-      if (!value) {
-        return Promise.reject(
-          i18n.global.t("please_enter_input", currentLanguage, {
-            fieldName: i18n.global
-              .t("common_postal_code_label", currentLanguage)
-              .toLowerCase()
-          })
-        );
-      }
-
-      if (value && !regex.test(value)) {
-        return Promise.reject(i18n.global.t("allow_input_number"));
-      }
-
       if (isPostalCodeHasError.value)
         return Promise.reject(
           i18n.global.t("cannot_find_address_from_field_name", {
@@ -286,7 +270,7 @@ onMounted(async () => {
           })
         );
 
-      return Promise.resolve();
+      return validator.validatePostalCode(rule, value);
     },
     trigger: ["blur", "change"]
   });
