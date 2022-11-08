@@ -125,7 +125,7 @@ const checkPermission = ref<boolean>(false);
 const isLoading = ref<boolean>(false);
 const isFetchingMasterData = ref<boolean>(false);
 const userStore = commonStore();
-const ownerType = ref<string>("");
+const ownerType = ref<string>("collectionBase");
 const mockPartner = ref<VehicleSelection[]>([{ value: "", label: "" }]);
 const listCollectionBase = ref<VehicleSelection[]>();
 const defaultOwner = ref();
@@ -320,10 +320,12 @@ onMounted(async () => {
 const fetchVehicleType = async (): Promise<void> => {
   const res = await service.vehicleType.getAllVehicleType();
   if (res) {
-    vehicleTypes.value = sortDropdown(res?.map((item) => ({
-      value: item.id,
-      label: item.name
-    })));
+    vehicleTypes.value = sortDropdown(
+      res?.map((item) => ({
+        value: item.id,
+        label: item.name
+      }))
+    );
   }
 };
 
@@ -334,10 +336,12 @@ const isTenantAdmin = (): boolean => {
 const fetchCollectionBase = async (): Promise<void> => {
   const res = await service.vehicle.getCollectionBase();
   if (res) {
-    listCollectionBase.value = sortDropdown(res?.map((item) => ({
-      value: item.id || 0,
-      label: item.name
-    })))
+    listCollectionBase.value = sortDropdown(
+      res?.map((item) => ({
+        value: item.id || 0,
+        label: item.name
+      }))
+    );
     if (!isTenantAdmin() && listCollectionBase.value.length === 1) {
       defaultOwner.value = listCollectionBase.value[0].value;
     }
