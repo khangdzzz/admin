@@ -618,7 +618,7 @@ const routes: RouteRecordRaw[] = [
     }
   },
   {
-    path: "/collection-route/:id",
+    path: "/collection-route",
     name: routeNames.collectionRoute,
     meta: {
       layout: ScreenLayout.DEFAULT_LAYOUT
@@ -628,11 +628,10 @@ const routes: RouteRecordRaw[] = [
     },
     children: [
       {
-        path: ":mode",
+        path: ":routeId?/:mode/:id",
         name: routeNames.createRoute,
         component: () =>
-          import("@/modules/collect-route/pages/CollectRouteDetail.vue"),
-        alias: ["/:id", ""]
+          import("@/modules/collect-route/pages/CollectRouteDetail.vue")
       }
     ]
   },

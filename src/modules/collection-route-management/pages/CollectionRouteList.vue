@@ -92,7 +92,7 @@
             <a
               class="navigation-link"
               v-if="text"
-              @click="(event) => redirectRouteDetail(event, record.id)"
+              @click="(event) => redirectRouteDetail(event, record.id, text)"
               >{{ text }}</a
             >
             <a-button
@@ -437,13 +437,13 @@ const onDeleteCollectionRoute = async (deleteIds: number[]): Promise<void> => {
   searchString.value = "";
 };
 
-const redirectRouteDetail = (event: MouseEvent, id: number): void => {
+const redirectRouteDetail = (event: MouseEvent, id: number, routeId: number): void => {
   if (event.stopPropagation) {
     event.stopPropagation();
   }
   router.push({
     name: routeNames.createRoute,
-    params: { id, mode: "detail" }
+    params: { id, mode: "detail", routeId }
   });
 };
 
