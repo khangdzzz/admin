@@ -194,6 +194,7 @@ import {
   FormDataCreateCollectionRoute
 } from "@/modules/collection-route-management/models/collection-route.model";
 import { formData as reactiveFormData } from "@/modules/collection-route-management/models/create-collection-route-order-base-form";
+import { WorkPlaceType } from "@/modules/workplace/models/workplace.model";
 import { routeNames, router } from "@/routes";
 import { service } from "@/services";
 import { makeUniqueName } from "@/utils/string.helper";
@@ -263,7 +264,10 @@ const fetchListCollectionPoint = async (): Promise<void> => {
   }
 };
 const fetchCollectionBase = async (): Promise<void> => {
-  const res = await service.collectionRoute.getWorkplace();
+  const res = await service.collectionRoute.getWorkplace([
+    WorkPlaceType.COLLECTION_BASE,
+    WorkPlaceType.PARTNER
+  ]);
   if (res) {
     listCollectionBase.value = res?.map((item) => ({
       value: item.id || 0,
