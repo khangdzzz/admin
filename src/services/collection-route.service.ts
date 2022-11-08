@@ -13,6 +13,7 @@ import { CollectionBaseResponseDto } from "./dtos/collection-base/collection-bas
 import { CollectionPointResponseDto } from "./dtos/collection-point/collection-point.dto";
 import { CollectionRouteResponseDTO } from "./dtos/collection-route/collection-route.dto";
 import { PaginationDto } from "./dtos/common/pagination.dto";
+import { TypeWorkPlace } from "@/modules/staff-management/models/create-new-staff.model";
 
 interface SortCollectionRouteDto {
   sortName: Sort;
@@ -177,7 +178,8 @@ export async function getCollectionPoint(): Promise<
     url: `/collect_point`,
     method: "get",
     params: {
-      page_size: "full"
+      page_size: "full",
+      customer___workplace_type: TypeWorkPlace.CUSTOMER
     }
   });
   if (err) return undefined;
