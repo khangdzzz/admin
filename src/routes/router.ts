@@ -412,6 +412,12 @@ const routes: RouteRecordRaw[] = [
         name: routeNames.driverLocationTracking,
         component: () =>
           import("@/modules/realtime-management/DriverLocationTracking.vue")
+      },
+      {
+        path: "collection-history/:id/edit",
+        name: routeNames.editCollectionHistory,
+        component: () =>
+          import("@/modules/collection-history/pages/CollectionHistoryList.vue")
       }
     ]
   },

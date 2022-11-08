@@ -301,5 +301,6 @@
   "menu_lbl_common": "共通",
   "menu_lbl_collection": "回収",
   "menu_lbl_manufacture": "生産",
-  "customer_phone_number": "電話番号"
+  "customer_phone_number": "電話番号",
+  "edit_collection_history": "回収履歴の編集"
 }

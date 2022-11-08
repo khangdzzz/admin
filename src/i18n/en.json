@@ -306,5 +306,6 @@
   "menu_lbl_common": "Common",
   "menu_lbl_collection": "Collection",
   "menu_lbl_manufacture": "Manufacture",
-  "customer_phone_number": "Phone number"
+  "customer_phone_number": "Phone number",
+  "edit_collection_history": "Edit collection history"
 }
