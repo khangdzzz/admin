@@ -573,14 +573,15 @@ watch(formNote, () => {
   }
 
   .collection-point__data {
-    max-height: 240px;
+    max-height: 360px;
   }
   .collection-point__data-item {
-    height: 40px;
+    height: 60px;
     padding: 10px 15px;
     border-right: transparent;
     border-top: 0px;
     cursor: pointer;
+    align-items: center;
   }
   .collection-point__data-left .collection-point__data-item:hover {
     background-color: $primary-100;
@@ -635,7 +636,7 @@ watch(formNote, () => {
     }
   }
   .mh-300 {
-    max-height: 300px;
+    max-height: 420px;
   }
   ul {
     list-style: none; /* Remove list bullets */
