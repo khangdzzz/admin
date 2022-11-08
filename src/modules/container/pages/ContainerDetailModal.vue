@@ -104,25 +104,25 @@ const form = reactive<{
   information: [
     {
       title: i18n.global.t("container_container_name"),
-      value: detail.containerName ?? '---',
+      value: detail.containerName ?? "---",
       width: "100%",
       marginRight: "0"
     },
     {
       title: i18n.global.t("container_container_type"),
-      value: detail.containerType ?? '---',
+      value: detail.containerType ?? "---",
       width: "100%",
       marginRight: "0"
     },
     {
       title: i18n.global.t("container_weight"),
-      value: detail.weight ?? '---',
+      value: detail.weight ?? "---",
       width: "190px",
       marginRight: "20px"
     },
     {
       title: i18n.global.t("container_capacity"),
-      value: detail.capacity ?? '---',
+      value: detail.capacity ?? "---",
       width: "190px",
       marginRight: "0"
     }
@@ -136,7 +136,7 @@ const { information } = toRefs(form);
 onMounted(async () => {
   const qrValue = {
     sys: "EVP",
-    type: "container ¥",
+    type: "container",
     id: detail.id
   };
   const data = Base64.encode(JSON.stringify(qrValue));
