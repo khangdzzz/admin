@@ -154,18 +154,18 @@
 import locationIcon from "@/assets/icons/ic_collection_point.png";
 import { i18n } from "@/i18n";
 import CustomForm from "@/modules/base/components/CustomForm.vue";
+import validator from "@/modules/base/components/validator/validator";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
-import { FormData } from "@/modules/staff-management/models/collection-base.model";
 import { formData as reactiveFormData } from "@/modules/collection-point-management/models/create-collection-point-form.model";
+import { FormData } from "@/modules/staff-management/models/collection-base.model";
 import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
+import { NULL_VALUE_DISPLAY } from "@/utils/constants";
 import { makeUniqueName } from "@/utils/string.helper";
 import { message } from "ant-design-vue";
 import { Rule } from "ant-design-vue/lib/form";
-import { localStorageKeys } from "@/services/local-storage-keys";
-import { NULL_VALUE_DISPLAY } from "@/utils/constants";
 import {
   computed,
   inject,
@@ -176,15 +176,12 @@ import {
   watch
 } from "vue";
 import { useRoute } from "vue-router";
-import validator from "@/modules/base/components/validator/validator";
 //#endregion
 
 //#region props
 //#endregion
 
 //#region variables
-const currentLanguage =
-  localStorage.getItem(localStorageKeys.currentLanguage) || "en";
 const formData = reactive<FormData>(reactiveFormData());
 const center = ref<number[]>([40, 40]);
 const projection = ref<string>("EPSG:4326");
@@ -222,6 +219,7 @@ onMounted(async () => {
     data[4].class = "input-with-action-btn";
   }
 
+  data[4].id = "edit-collection-point_postal-code";
   data[4].rules?.push({
     validator: (rule: Rule, value: string): Promise<void> => {
       if (isPostalCodeHasError.value)
@@ -356,6 +354,9 @@ const handleSearchAddress = async (): Promise<void> => {
     await getLatLongFromAddress(res.full_address);
   }
   data[5].loading = false;
+
+  document.getElementById("edit-collection-point_postal-code")?.focus();
+  document.getElementById("edit-collection-point_postal-code")?.blur();
 };
 
 const getLatLongFromAddress = async (address: string): Promise<void> => {
@@ -370,7 +371,7 @@ const getLatLongFromAddress = async (address: string): Promise<void> => {
         maxZoom: 14
       }
     );
-    data[5].value = res[0].display_name;
+    data[5].value = address;
   }
 };
 
@@ -530,10 +531,6 @@ const isAllowSubmit = computed(() => {
 //#endregion
 
 //#region reactive
-watch(isPostalCodeHasError, () => {
-  editCollectionPointRef.value.validate();
-});
-
 watch(
   () => data[4].value,
   () => {

@@ -54,7 +54,7 @@
 <script setup lang="ts">
 //#region import
 import CustomForm from "@/modules/base/components/CustomForm.vue";
-import { computed, inject, onMounted, reactive, ref } from "vue";
+import { computed, inject, onMounted, reactive, ref, watch } from "vue";
 // import { formData as reactiveFormData } from "../models/create-customer-base-form";
 import { i18n } from "@/i18n";
 import validator from "@/modules/base/components/validator/validator";
@@ -65,6 +65,7 @@ import { routeNames, router } from "@/routes";
 import { service } from "@/services";
 import { makeUniqueName } from "@/utils/string.helper";
 import { useRoute } from "vue-router";
+import { Rule } from "ant-design-vue/lib/form";
 //#endregion
 
 //#region props
@@ -84,6 +85,7 @@ let isExistName = async (): Promise<void> => {
   return Promise.resolve();
 };
 
+const isPostalCodeHasError = ref<boolean>(false);
 const formData = reactive<FormData>({
   singleInput: [
     {
@@ -159,6 +161,7 @@ const formData = reactive<FormData>({
       parent: "singleInput"
     },
     {
+      id: "edit-customer_postal-code",
       inputType: "AInput",
       value: "",
       placeHolder: "common_postal_code_label",
@@ -170,10 +173,28 @@ const formData = reactive<FormData>({
       isFocus: false,
       rules: [
         {
-          validator: validator.validateNumber,
-          trigger: "change"
+          validator: (rule: Rule, value: string): Promise<void> => {
+            if (!value) {
+              return Promise.resolve();
+            }
+            if (isPostalCodeHasError.value) {
+              return Promise.reject(
+                i18n.global.t("cannot_find_address_from_field_name", {
+                  fieldName: i18n.global
+                    .t("common_postal_code_label")
+                    .toLowerCase()
+                })
+              );
+            }
+            return validator.validatePostalCode(rule, value);
+          },
+          trigger: ["change", "blur"]
         }
       ],
+      actionBtn: {
+        name: "search_address",
+        click: undefined
+      },
       parent: "singleInput"
     },
     {
@@ -327,6 +348,13 @@ onMounted(async () => {
     },
     trigger: ["blur", "change"]
   });
+
+  if (singleInput[3].actionBtn) {
+    singleInput[3].actionBtn.name = "search_address";
+    singleInput[3].actionBtn.click = handleSearchAddress;
+    singleInput[3].actionBtn.disabled = isEnableSearchAddress();
+    singleInput[3].class = "input-with-action-btn";
+  }
   onCheckValidFields();
 });
 //#endregion
@@ -381,6 +409,49 @@ const handleOnDuoInputsBlur = (
   index: string | number | Event
 ): void => {
   formData.duoInputs[Number(index)].isFocus = false;
+};
+
+const setBtnActionDisableState = (state: boolean): void => {
+  if (singleInput[3].actionBtn) {
+    singleInput[3].actionBtn.disabled = state;
+  }
+};
+
+const isEnableSearchAddress = (): boolean => {
+  if (singleInput[3]?.actionBtn) {
+    if (
+      !singleInput[3].value ||
+      (singleInput[3].value && isNaN(+singleInput[3].value))
+    ) {
+      singleInput[3].actionBtn.disabled = true;
+      return true;
+    }
+
+    singleInput[3].actionBtn.disabled = false;
+  }
+
+  return false;
+};
+
+const handleSearchAddress = async (): Promise<void> => {
+  setBtnActionDisableState(true);
+  singleInput[4].loading = true;
+  const { res } = await service.location.isPostalAddressExists(
+    makeUniqueName(singleInput[3].value.toString()) || ""
+  );
+  singleInput[4].loading = false;
+  setBtnActionDisableState(false);
+  if (!res) {
+    isPostalCodeHasError.value = true;
+    singleInput[3].class = "input-with-action-btn postal-code__uniq-warning";
+  } else {
+    singleInput[4].value = res?.full_address;
+    isPostalCodeHasError.value = !res?.full_address;
+  }
+  singleInput[3].loading = false;
+
+  document.getElementById("edit-customer_postal-code")?.focus();
+  document.getElementById("edit-customer_postal-code")?.blur();
 };
 
 const handleOnChange = (): void => {
@@ -453,7 +524,14 @@ const isSubmitDisable = computed(() => {
 //#endregion
 
 //#region reactive
-
+watch(
+  () => singleInput[3].value,
+  () => {
+    isPostalCodeHasError.value = false;
+    singleInput[3].class = "input-with-action-btn";
+    isEnableSearchAddress();
+  }
+);
 //#endregion
 </script>
 

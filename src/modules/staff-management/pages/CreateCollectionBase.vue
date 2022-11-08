@@ -253,6 +253,7 @@ onMounted(() => {
     trigger: ["blur", "change"]
   });
 
+  contact[0].id = "create-collection-base_postal-code";
   contact[0].rules?.push({
     validator: (rule: Rule, value: string): Promise<void> => {
       if (isPostalCodeHasError.value)
@@ -385,6 +386,8 @@ const handleSearchAddress = async (): Promise<void> => {
     await getLatLongFromAddress(res.full_address);
   }
   contact[1].loading = false;
+  document.getElementById("create-collection-base_postal-code")?.focus();
+  document.getElementById("create-collection-base_postal-code")?.blur();
 };
 
 const getLatLongFromAddress = async (address: string): Promise<void> => {
@@ -399,7 +402,7 @@ const getLatLongFromAddress = async (address: string): Promise<void> => {
         maxZoom: 14
       }
     );
-    contact[1].value = res[0].display_name;
+    contact[1].value = address;
   }
 };
 
@@ -474,10 +477,6 @@ const isButtonDisabled = computed((): boolean => {
 //#endregion
 
 //#region reactive
-watch(isPostalCodeHasError, () => {
-  createCollectionBaseRef.value.validate();
-});
-
 watch(
   () => contact[0].value,
   () => {

@@ -16,6 +16,7 @@ export interface InputType {
   options?: InputOptions[];
   class?: string;
   loading?: boolean;
+  id?: string;
 }
 
 interface InputOptions {

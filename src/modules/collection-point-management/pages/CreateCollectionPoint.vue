@@ -200,7 +200,7 @@ onMounted(async () => {
     data[4].actionBtn.disabled = isEnableSearchAddress();
     data[4].class = "input-with-action-btn";
   }
-
+  data[4].id = "create-collection-point_postal-code";
   data[4].rules?.push({
     validator: (rule: Rule, value: string): Promise<void> => {
       if (isPostalCodeHasError.value)
@@ -340,6 +340,9 @@ const handleSearchAddress = async (): Promise<void> => {
     await getLatLongFromAddress(res.full_address);
   }
   data[5].loading = false;
+
+  document.getElementById("create-collection-point_postal-code")?.focus();
+  document.getElementById("create-collection-point_postal-code")?.blur();
 };
 
 const getLatLongFromAddress = async (address: string): Promise<void> => {
@@ -354,7 +357,11 @@ const getLatLongFromAddress = async (address: string): Promise<void> => {
         maxZoom: 14
       }
     );
-    data[5].value = res[0].display_name;
+    data[5].value = address;
+    if (isPostalCodeHasError.value) {
+      isPostalCodeHasError.value = false;
+      createCollectionPointRef.value.clearValidate();
+    }
   }
 };
 
@@ -481,10 +488,6 @@ const isAllowSubmit = computed(() => {
 //#endregion
 
 //#region reactive
-watch(isPostalCodeHasError, () => {
-  createCollectionPointRef.value.validate();
-});
-
 watch(
   () => data[4].value,
   () => {
