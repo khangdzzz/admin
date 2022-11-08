@@ -1,6 +1,6 @@
 import { i18n } from "@/i18n";
-import { FormData } from "@/modules/staff-management/models/collection-base.model";
 import validator from "@/modules/base/components/validator/validator";
+import { FormData } from "@/modules/staff-management/models/collection-base.model";
 import { localStorageKeys } from "@/services/local-storage-keys";
 
 export const formData = (): FormData => {
@@ -82,6 +82,7 @@ export const formData = (): FormData => {
         parent: "singleInput"
       },
       {
+        id: "create-customer_postal-code",
         inputType: "AInput",
         value: "",
         placeHolder: "common_postal_code_label",
@@ -91,12 +92,11 @@ export const formData = (): FormData => {
         required: false,
         key: 4,
         isFocus: false,
-        rules: [
-          {
-            validator: validator.validatePostalCode,
-            trigger: ["blur", "change"]
-          }
-        ],
+        rules: [],
+        actionBtn: {
+          name: "",
+          click: undefined
+        },
         parent: "singleInput"
       },
       {

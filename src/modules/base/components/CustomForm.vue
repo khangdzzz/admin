@@ -7,6 +7,7 @@
     :rules="item.rules"
   >
     <component
+      :id="item.id"
       v-if="item.name === 'email'"
       :is="item.inputType"
       v-model:value.trim="item.value"
@@ -61,6 +62,7 @@
       <!-- endregion -->
     </component>
     <component
+      :id="item.id"
       v-else-if="item.name !== 'radio'"
       :is="item.inputType"
       v-model:value="item.value"

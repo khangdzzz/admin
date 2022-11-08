@@ -173,7 +173,6 @@ import { formData as reactiveFormData } from "@/modules/staff-management/pages/c
 import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
-import { localStorageKeys } from "@/services/local-storage-keys";
 import { commonStore } from "@/stores";
 import { NULL_VALUE_DISPLAY } from "@/utils/constants";
 import { makeUniqueName } from "@/utils/string.helper";
@@ -196,8 +195,6 @@ import {
 
 //#region variables
 const userStore = commonStore();
-const currentLanguage =
-  localStorage.getItem(localStorageKeys.currentLanguage) || "en";
 const isLoading = ref<boolean>(false);
 const formData = reactive<FormData>(reactiveFormData());
 const collectionBaseType = ref<number>();
@@ -260,7 +257,7 @@ onMounted(async () => {
     },
     trigger: ["blur", "change"]
   });
-
+  contact[0].id = "edit-collection-base_postal-code";
   contact[0].rules?.push({
     validator: (rule: Rule, value: string): Promise<void> => {
       if (isPostalCodeHasError.value)
@@ -465,6 +462,8 @@ const handleSearchAddress = async (): Promise<void> => {
     await getLatLongFromAddress(res.full_address);
   }
   contact[1].loading = false;
+  document.getElementById("edit-collection-base_postal-code")?.focus();
+  document.getElementById("edit-collection-base_postal-code")?.blur();
 };
 
 const getLatLongFromAddress = async (address: string): Promise<void> => {
@@ -479,7 +478,7 @@ const getLatLongFromAddress = async (address: string): Promise<void> => {
         maxZoom: 14
       }
     );
-    contact[1].value = res[0].display_name;
+    contact[1].value = address;
   }
 };
 
@@ -558,10 +557,6 @@ const isButtonDisabled = computed((): boolean => {
 //#endregion
 
 //#region reactive
-watch(isPostalCodeHasError, () => {
-  editCollectionBaseRef.value.validate();
-});
-
 watch(
   () => contact[0].value,
   () => {
