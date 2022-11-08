@@ -426,6 +426,16 @@ const routes: RouteRecordRaw[] = [
     }
   },
   {
+    path: "/unit-items",
+    name: routeNames.unitItems,
+    meta: {
+      layout: ScreenLayout.DEFAULT_LAYOUT
+    },
+    redirect: {
+      name: routeNames.default
+    }
+  },
+  {
     path: "/unit-price",
     name: routeNames.unitPrice,
     meta: {
