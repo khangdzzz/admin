@@ -79,7 +79,7 @@
               :required="true"
               :rules="[
                 {
-                  validator: validator.validateEmail,
+                  validator: validateEmail,
                   trigger: ['blur', 'change']
                 }
               ]"
@@ -247,6 +247,7 @@ import { UserType } from "@/modules/base/models/user-type.enum";
 import { routeNames, router } from "@/routes";
 import { service } from "@/services";
 import { commonStore } from "@/stores";
+import { Rule } from "ant-design-vue/lib/form";
 import { inject, onMounted, reactive, ref, watch } from "vue";
 import { TypeOptions, UserRoleOptions } from "../models/create-new-staff.model";
 import radioOptions from "./create-new-staff-variables";
@@ -279,6 +280,7 @@ interface selects {
 //#endregion
 
 //#region variables
+const isExitsField = ref<string[]>([]);
 const isValidated = ref<boolean>(false);
 const isFetching = ref<boolean>(false);
 const isLoading = ref<boolean>(false);
@@ -320,6 +322,18 @@ const optionValue = reactive<{
   workPlaceOptions: [],
   userType: ""
 });
+
+let validateEmail = async (rule: Rule, value: string): Promise<void> => {
+  if (isExitsField.value.includes("email")) {
+    return Promise.reject(
+      i18n.global.t("error_unique_constraint", {
+        fieldName: i18n.global.t("email")
+      })
+    );
+  }
+
+  return validator.validateEmail(rule, value);
+};
 
 //#endregion
 
@@ -440,17 +454,24 @@ const handleSubmit = async (): Promise<void> => {
     password: staffPassword.value
   };
   isLoading.value = true;
-  const res = await service.staff.createStaff(data);
+  const { res, error, errorParams } = await service.staff.createStaff(data);
   isLoading.value = false;
-  if (res.res) {
+  if (res) {
     visibleModalSuccess.value = true;
-    staffEmail.value = res.res.email;
+    staffEmail.value = res.email;
   } else {
-    messenger({
-      title: "popup_create_fail_title",
-      message: "",
-      type: MessengerType.Error
-    });
+    if ((error as string) === "error_unique_constraint") {
+      if (errorParams) {
+        isExitsField.value = errorParams;
+      }
+      createStaffRef.value.validate();
+    } else {
+      messenger({
+        title: "popup_create_fail_title",
+        message: "",
+        type: MessengerType.Error
+      });
+    }
   }
 };
 const setUserRoleOptions = (): void => {
