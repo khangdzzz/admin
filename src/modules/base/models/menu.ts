@@ -230,7 +230,7 @@ const sideMenuItems: SideMenuItems[] = [
           },
           {
             title: "menu_lbl_unit_item",
-            pathName: routeNames.unitPrice,
+            pathName: routeNames.unitItems,
             qaAttr: "qa_menu_unit_item",
             requireUserType: [UserType.TenantAdmin]
           },
