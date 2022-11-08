@@ -412,7 +412,8 @@ const handleSubmit = async (): Promise<void> => {
 
   setBtnActionDisableState(true);
   isSubmitting.value = true;
-  const { error, res } = await service.collectionBase.editCollectionBase(data);
+  const { error, res, errorParams } =
+    await service.collectionBase.editCollectionBase(data);
   setBtnActionDisableState(false);
   isSubmitting.value = false;
   if (res && !error) {
@@ -427,8 +428,10 @@ const handleSubmit = async (): Promise<void> => {
       }
     });
   } else {
-    if (error.msg === "error_unique_constraint") {
-      isExitsField.value = error.loc as string[];
+    if ((error as string) === "error_unique_constraint") {
+      if (errorParams) {
+        isExitsField.value = errorParams;
+      }
       editCollectionBaseRef.value.validate();
     } else {
       messenger({

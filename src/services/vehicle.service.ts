@@ -14,6 +14,7 @@ import { VehicleResponseDto } from "./dtos/vehicle-management/vehicle-type.dto";
 import { CollectionBaseResponseDto } from "./dtos/collection-base/collection-base.dto";
 import { calculateSortQuery } from "@/modules/common/helpers";
 import { makeUniqueName } from "@/utils/string.helper";
+import { ServiceResponse } from "@/modules/common/models";
 
 interface sortVehicleDto {
   sortType: Sort;
@@ -138,7 +139,7 @@ export function getVehicleTypes(): VehicleTypeModel[] {
 
 export async function createVehicle(
   vehicleInfo: Vehicle
-): Promise<Vehicle | unknown> {
+): Promise<ServiceResponse<Vehicle>> {
   const {
     ownerId,
     ownerType,
@@ -148,7 +149,7 @@ export async function createVehicle(
     maxWeight,
     isHasPermission
   } = vehicleInfo;
-  const [error, res] = await transformRequest({
+  const [error, res] = await transformRequest<Vehicle>({
     url: "/vehicle",
     method: "post",
     data: {
@@ -161,8 +162,18 @@ export async function createVehicle(
       permission_flag: isHasPermission
     }
   });
-  if (error) return undefined;
-  return res;
+  if (error || !res) {
+    return {
+      error: (error?.response?.data as { details: { msg: string }[] })
+        .details[0].msg,
+      errorParams: (error?.response?.data as { details: { msg: string, loc: string[] }[] })
+        .details[0].loc
+    };
+  }
+
+  return {
+    res
+  };
 }
 
 export async function getVehicleDetail(
@@ -201,7 +212,7 @@ export async function getVehicleDetail(
 
 export async function updateVehicle(
   vehicleInfo: EditVehicleDto
-): Promise<Vehicle | unknown> {
+): Promise<ServiceResponse<Vehicle>> {
   const {
     vehicleType,
     vehicleName,
@@ -210,7 +221,7 @@ export async function updateVehicle(
     id,
     isHasPermission
   } = vehicleInfo;
-  const [error, res] = await transformRequest({
+  const [error, res] = await transformRequest<Vehicle>({
     url: `vehicle/${id}`,
     method: "put",
     params: {},
@@ -222,8 +233,18 @@ export async function updateVehicle(
       permission_flag: isHasPermission
     }
   });
-  if (error) return undefined;
-  return res;
+  if (error || !res) {
+    return {
+      error: (error?.response?.data as { details: { msg: string }[] })
+        .details[0].msg,
+      errorParams: (error?.response?.data as { details: { msg: string, loc: string[] }[] })
+        .details[0].loc
+    };
+  }
+
+  return {
+    res
+  };
 }
 
 export function getVehicleById(id: string): VehicleDetail | undefined {

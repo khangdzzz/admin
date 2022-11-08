@@ -9,7 +9,12 @@
       <div class="edit-vehicle-content">
         <h2 class="title">{{ $t("vehicle_edit") }}</h2>
         <div class="edit-form">
-          <a-form :model="dynamicValidateForm" name="basic" autocomplete="off">
+          <a-form
+            :model="dynamicValidateForm"
+            name="basic"
+            autocomplete="off"
+            ref="formRef"
+          >
             <a-form-item
               name="formDatavalue"
               :validateFirst="false"
@@ -118,6 +123,33 @@ const route = useRoute();
 const { id } = route.params;
 const isLoading = ref<boolean>(false);
 const isLoadingBtn = ref<boolean>(false);
+
+const formRef = ref();
+const isExitsField = ref<string[]>([]);
+
+let handleIsExistName = async (): Promise<void> => {
+  if (isExitsField.value.includes("name")) {
+    return Promise.reject(
+      i18n.global.t("error_unique_constraint", {
+        fieldName: i18n.global.t("name")
+      })
+    );
+  }
+
+  return Promise.resolve();
+};
+
+let handleIsExistNumberPlate = async (): Promise<void> => {
+  if (isExitsField.value.includes("number_plate")) {
+    return Promise.reject(
+      i18n.global.t("error_unique_constraint", {
+        fieldName: i18n.global.t("number_plate")
+      })
+    );
+  }
+
+  return Promise.resolve();
+};
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const dynamicValidateForm = reactive<{ formData: any[] }>({
   formData: [
@@ -195,6 +227,10 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
           max: 50,
           message: i18n.global.t("max_length_input", { maxLength: 50 }),
           trigger: ["change", "blur"]
+        },
+        {
+          validator: handleIsExistName,
+          trigger: ["change", "blur"]
         }
       ],
       required: true,
@@ -222,6 +258,10 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
         {
           max: 50,
           message: i18n.global.t("max_length_input", { maxLength: 50 }),
+          trigger: ["change", "blur"]
+        },
+        {
+          validator: handleIsExistNumberPlate,
           trigger: ["change", "blur"]
         }
       ],
@@ -350,7 +390,7 @@ const updateVehicle = async (): Promise<void> => {
     isHasPermission: checkPermission.value ? 1 : 0
   };
   isLoadingBtn.value = true;
-  const res = await service.vehicle.updateVehicle(vehicleInfo);
+  const { res, error, errorParams }  = await service.vehicle.updateVehicle(vehicleInfo);
   isLoadingBtn.value = false;
   if (res) {
     messenger({
@@ -360,11 +400,18 @@ const updateVehicle = async (): Promise<void> => {
     });
     goToVehicleList();
   } else {
-    messenger({
-      title: "edit_failed",
-      message: "",
-      type: MessengerType.Error
-    });
+    if ((error as string) === "error_unique_constraint") {
+      if (errorParams) {
+        isExitsField.value = errorParams;
+      }
+      formRef.value.validate();
+    } else {
+      messenger({
+        title: "popup_create_fail_title",
+        message: "",
+        type: MessengerType.Error
+      });
+    }
   }
 };
 //#endregion

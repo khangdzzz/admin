@@ -330,9 +330,8 @@ const handleSubmit = async (): Promise<void> => {
   if (!userStore.user) return;
   setBtnActionDisableState(true);
   isSubmitting.value = true;
-  const { error, res } = await service.collectionBase.createCollectionBase(
-    data
-  );
+  const { error, res, errorParams } =
+    await service.collectionBase.createCollectionBase(data);
   if (res && !error) {
     messenger({
       title: "common_msg_create_successfully",
@@ -349,8 +348,10 @@ const handleSubmit = async (): Promise<void> => {
       }
     });
   } else {
-    if (error.msg === "error_unique_constraint") {
-      isExitsField.value = error.loc as string[];
+    if ((error as string) === "error_unique_constraint") {
+      if (errorParams) {
+        isExitsField.value = errorParams;
+      }
       createCollectionBaseRef.value.validate();
     } else {
       messenger({

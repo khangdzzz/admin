@@ -190,9 +190,10 @@ export async function createCollectionBase(
   });
   if (error || !res) {
     return {
-      error: (
-        error?.response?.data as { details: { msg: string; loc: string[] }[] }
-      ).details[0]
+      error: (error?.response?.data as { details: { msg: string }[] })
+        .details[0].msg,
+      errorParams: (error?.response?.data as { details: { msg: string, loc: string[] }[] })
+        .details[0].loc
     };
   }
   return {
@@ -244,9 +245,10 @@ export async function editCollectionBase(
 
   if (error || !res) {
     return {
-      error: (
-        error?.response?.data as { details: { msg: string; loc: string }[] }
-      ).details[0]
+      error: (error?.response?.data as { details: { msg: string }[] })
+        .details[0].msg,
+      errorParams: (error?.response?.data as { details: { msg: string, loc: string[] }[] })
+        .details[0].loc
     };
   }
   return {

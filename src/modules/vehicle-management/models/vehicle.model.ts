@@ -9,7 +9,7 @@ export interface VehicleSelection {
   label: string;
 }
 export interface Vehicle {
-  id: number | undefined | string;
+  id: number | undefined;
   ownerType: number;
   ownerId?: number;
   ownerName?: string;
