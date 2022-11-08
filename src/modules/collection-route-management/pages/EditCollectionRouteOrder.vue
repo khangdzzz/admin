@@ -210,6 +210,7 @@ import {
   CollectionPoint,
   CollectionBase
 } from "@/modules/collection-route-management/models/collection-route.model";
+import { sortDropdown } from "@/modules/common/helpers";
 export interface Form {
   note: string;
 }
@@ -299,11 +300,10 @@ const fetchData = async (): Promise<void> => {
 const fetchCollectionBase = async (): Promise<void> => {
   const res = await service.vehicle.getCollectionBase();
   if (res) {
-    listCollectionBase.value = res?.map((item) => ({
+    formData.duoInputs2[0].options = sortDropdown(res?.map((item) => ({
       value: item.id || 0,
       label: item.name
-    }));
-    formData.duoInputs2[0].options = listCollectionBase.value;
+    })))
   }
 };
 

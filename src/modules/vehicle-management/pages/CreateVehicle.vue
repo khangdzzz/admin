@@ -102,6 +102,7 @@ import validator from "@/modules/base/components/validator/validator";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import { UserType } from "@/modules/base/models/user-type.enum";
+import { sortDropdown } from "@/modules/common/helpers";
 import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
@@ -319,10 +320,10 @@ onMounted(async () => {
 const fetchVehicleType = async (): Promise<void> => {
   const res = await service.vehicleType.getAllVehicleType();
   if (res) {
-    vehicleTypes.value = res?.map((item) => ({
+    vehicleTypes.value = sortDropdown(res?.map((item) => ({
       value: item.id,
       label: item.name
-    }));
+    })));
   }
 };
 
@@ -333,10 +334,10 @@ const isTenantAdmin = (): boolean => {
 const fetchCollectionBase = async (): Promise<void> => {
   const res = await service.vehicle.getCollectionBase();
   if (res) {
-    listCollectionBase.value = res?.map((item) => ({
+    listCollectionBase.value = sortDropdown(res?.map((item) => ({
       value: item.id || 0,
       label: item.name
-    }));
+    })))
     if (!isTenantAdmin() && listCollectionBase.value.length === 1) {
       defaultOwner.value = listCollectionBase.value[0].value;
     }

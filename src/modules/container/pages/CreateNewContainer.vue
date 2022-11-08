@@ -57,6 +57,7 @@ import { routeNames, router } from "@/routes";
 import { service } from "@/services";
 import { Rule } from "ant-design-vue/lib/form";
 import { validateContainerName } from "../validators/container.validator";
+import { sortDropdown } from "@/modules/common/helpers";
 //#endregion
 
 //#region props
@@ -108,7 +109,7 @@ const formData = ref([
       width: "620px",
       border: "none"
     },
-    options: [{ value: "", label: "" }],
+    options: [],
     rules: [
       {
         required: true,
@@ -190,13 +191,17 @@ const initialize = async (): Promise<void> => {
   );
   isFetchingMasterData.value = false;
   if (res && res.results) {
-    const options = (res.results || []).map((ct) => {
-      return {
-        value: ct.id.toString(),
-        label: ct.name
-      };
-    });
-    formData.value[1].options = options;
+    (formData.value[1].options as {
+      value: string | boolean | number | undefined;
+      label: string;
+    }[]) = sortDropdown(
+      (res.results || []).map((ct) => {
+        return {
+          value: ct.id.toString(),
+          label: ct.name
+        };
+      })
+    );
   }
 };
 

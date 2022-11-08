@@ -17,7 +17,7 @@ export interface EditContainerDto {
 }
 
 export interface ContainerSelection {
-  value: string | number;
+  value: string | number | boolean | undefined;
   label: string;
 }
 export interface ContainerType {

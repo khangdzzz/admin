@@ -20,7 +20,7 @@ export interface InputType {
 }
 
 interface InputOptions {
-  value?: string | number;
+  value?: string | boolean | number | undefined;
   label: string;
   options?: InputOptions[];
 }

@@ -195,6 +195,7 @@ import {
 } from "@/modules/collection-route-management/models/collection-route.model";
 import { formData as reactiveFormData } from "@/modules/collection-route-management/models/create-collection-route-order-base-form";
 import { WorkPlaceType } from "@/modules/workplace/models/workplace.model";
+import { sortDropdown } from "@/modules/common/helpers";
 import { routeNames, router } from "@/routes";
 import { service } from "@/services";
 import { makeUniqueName } from "@/utils/string.helper";
@@ -269,11 +270,10 @@ const fetchCollectionBase = async (): Promise<void> => {
     WorkPlaceType.PARTNER
   ]);
   if (res) {
-    listCollectionBase.value = res?.map((item) => ({
+    formData.duoInputs2[0].options = sortDropdown(res?.map((item) => ({
       value: item.id || 0,
       label: item.name
-    }));
-    formData.duoInputs2[0].options = listCollectionBase.value;
+    })))
   }
 };
 
