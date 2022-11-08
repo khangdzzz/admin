@@ -54,8 +54,15 @@
 <script setup lang="ts">
 //#region import
 import CustomForm from "@/modules/base/components/CustomForm.vue";
-import { computed, inject, onMounted, reactive, ref, watch } from "vue";
-// import { formData as reactiveFormData } from "../models/create-customer-base-form";
+import {
+  computed,
+  inject,
+  onMounted,
+  reactive,
+  ref,
+  watch,
+  onBeforeUnmount
+} from "vue";
 import { i18n } from "@/i18n";
 import validator from "@/modules/base/components/validator/validator";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
@@ -319,6 +326,11 @@ const isExitsField = ref<string[]>([]);
 //#endregion
 
 //#region hooks
+
+onBeforeUnmount(() => {
+  formRef.value.resetFields();
+});
+
 onMounted(async () => {
   await init();
   singleInput[0].rules?.push({
@@ -454,8 +466,10 @@ const handleSearchAddress = async (): Promise<void> => {
   document.getElementById("edit-customer_postal-code")?.blur();
 };
 
-const handleOnChange = (): void => {
-  onCheckValidFields();
+const handleOnChange = (value: string, index: number): void => {
+  if (index < 2 && !isValid.value) {
+    formRef.value.clearValidate();
+  }
 };
 
 const handleClickCancel = (): void => {
