@@ -13,7 +13,7 @@ import * as customerManagement from "./customer-management.service";
 import * as collectionRoute from "./collection-route.service";
 import * as collectRoute from "./collect-route.service";
 import * as location from "./location.service";
-
+import * as collectionHistory from "./collection-history.service";
 export const service = {
   auth,
   localStorage,
@@ -29,5 +29,6 @@ export const service = {
   customerManagement,
   collectionRoute,
   location,
-  collectRoute
+  collectRoute,
+  collectionHistory
 };

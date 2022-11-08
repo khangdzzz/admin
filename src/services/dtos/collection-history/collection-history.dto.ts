@@ -1,0 +1,38 @@
+export interface CollectionHistoryResponseDto {
+  created_at?: string;
+  created_by?: number | string;
+  updated_at?: string;
+  updated_by?: number | string | null;
+  deleted_at?: string | null;
+  deleted_by?: number | string | null;
+  id: number;
+  collect_date: string;
+  tenant_id: number;
+  workplace_id?: number;
+  user___name: string;
+  is_confirm: number;
+  user_id: number;
+  vehicle___name: string;
+  vehicle___plate_number: number;
+  collect_item___name: string;
+  collect_point_id: string;
+  customer_id: string;
+  packing_weight: string;
+  weight: string;
+  address: string;
+  telephone: string;
+  quantity: number;
+  longitude: number;
+  workplace___name?: string;
+  unit?: string;
+  customer___name: string;
+  temp_quantity: number;
+  unit_price: number;
+  measure_method: number;
+  remarks: string;
+  buy_sell_flag: number;
+  transportation_price: number;
+  disposal_price: number;
+  commission_price: number;
+  other_price: number;
+}

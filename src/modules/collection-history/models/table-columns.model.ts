@@ -1,95 +1,118 @@
+import { i18n } from "@/i18n";
+
 export const columns = [
   {
-    title: "collection_date",
-    dataIndex: "collectionDate",
+    title: i18n.global.t("collection_history_collection_date"),
+    dataIndex: "collectDate",
+    key: "collectDate",
     fixed: true,
     width: 150
   },
   {
-    title: "username",
-    dataIndex: "username",
+    title: i18n.global.t("collection_history_username"),
+    dataIndex: "userName",
+    key: "userName",
     fixed: true,
     width: 150
   },
   {
-    title: "collection_point",
-    dataIndex: "collectionPoint",
+    title: i18n.global.t("collection_history_collection_point"),
+    dataIndex: "collectPointId",
+    key: "collectPointId",
     fixed: true,
     width: 160
   },
   {
-    title: "collection_item",
-    dataIndex: "collectionItem",
+    title: i18n.global.t("collection_history_collection_item"),
+    dataIndex: "collectItemName",
+    key: "collectItemName",
     fixed: true,
     width: 160
   },
+
   {
-    title: "vehicle",
-    dataIndex: "vehicle",
+    title: i18n.global.t("collection_history_vehicle"),
+    dataIndex: "vehicleName",
+    key: "vehicleName",
     width: 140
   },
   {
-    title: "customer",
-    dataIndex: "customer",
+    title: i18n.global.t("collection_history_customer"),
+    dataIndex: "customerName",
     width: 160
   },
   {
-    title: "apportionment",
+    title: i18n.global.t("collection_history_measure_method"),
+    dataIndex: "measureMethod",
+    width: 160
+  },
+  {
+    title: i18n.global.t("collection_history_apportionment"),
     dataIndex: "apportionment",
-    width: 160
+    width: 160,
+    align: "right"
   },
   {
-    title: "weight",
+    title: i18n.global.t("collection_history_weight"),
     dataIndex: "weight",
-    width: 140
+    width: 140,
+    align: "right"
   },
   {
-    title: "quantity",
+    title: i18n.global.t("collection_history_quantity"),
     dataIndex: "quantity",
-    width: 120
+    width: 120,
+    align: "right"
   },
   {
-    title: "package_weight",
-    dataIndex: "packageWeight",
-    width: 160
+    title: i18n.global.t("collection_history_package_weight"),
+    dataIndex: "packingWeight",
+    width: 160,
+    align: "right"
   },
   {
-    title: "unit",
+    title: i18n.global.t("collection_history_unit"),
     dataIndex: "unit",
-    width: 120
+    width: 120,
+    align: "right"
   },
   {
-    title: "buy_or_sell",
+    title: i18n.global.t("collection_history_buy_or_sell"),
     dataIndex: "buyOrSell",
     width: 120
   },
   {
-    title: "price",
+    title: i18n.global.t("collection_history_price"),
     dataIndex: "price",
-    width: 160
+    width: 160,
+    align: "right"
   },
   {
-    title: "transportation_price",
+    title: i18n.global.t("collection_history_transportation_price"),
     dataIndex: "transportationPrice",
-    width: 160
+    width: 180,
+    align: "right"
   },
   {
-    title: "disposal_price",
+    title: i18n.global.t("collection_history_disposal_price"),
     dataIndex: "disposalPrice",
-    width: 160
+    width: 160,
+    align: "right"
   },
   {
-    title: "commission_price",
+    title: i18n.global.t("collection_history_commission_price"),
     dataIndex: "commissionPrice",
-    width: 160
+    width: 160,
+    align: "right"
   },
   {
-    title: "other_price",
+    title: i18n.global.t("collection_history_other_price"),
     dataIndex: "otherPrice",
-    width: 160
+    width: 160,
+    align: "right"
   },
   {
-    title: "action",
+    title: "",
     dataIndex: "action",
     width: 80
   }
