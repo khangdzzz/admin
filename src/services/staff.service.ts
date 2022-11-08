@@ -184,10 +184,10 @@ export const randomPassword = (): string => {
       i % 4 === 0
         ? randomChars()
         : i % 5 === 1
-        ? randomUppercases()
-        : i % 5 === 2
-        ? randomNumbers()
-        : randomSpecialChars();
+          ? randomUppercases()
+          : i % 5 === 2
+            ? randomNumbers()
+            : randomSpecialChars();
     password += randomChar;
   }
   return password;
@@ -196,15 +196,18 @@ export const randomPassword = (): string => {
 export async function createStaff(
   data: StaffDto
 ): Promise<ServiceResponse<StaffDto>> {
-  const [err, res] = await transformRequest<StaffDto>({
+  const [error, res] = await transformRequest<StaffDto>({
     url: "staff_management",
     method: "post",
     data
   });
 
-  if (!res && err) {
+  if (error || !res) {
     return {
-      error: JSON.stringify(err)
+      error: (error?.response?.data as { details: { msg: string }[] })
+        .details[0].msg,
+      errorParams: (error?.response?.data as { details: { msg: string, loc: string[] }[] })
+        .details[0].loc
     };
   }
 
