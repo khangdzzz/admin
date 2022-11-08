@@ -140,7 +140,7 @@
                   </template>
                   <template v-if="column.key === 'userName'">
                     <a
-                      :href="`${userTrackingPath}/${record.id}`"
+                      :href="`${userTrackingPath}/${record.userId}`"
                       target="blank"
                       class="realtime-manage__href-name"
                       >{{ record.userName }}</a
@@ -233,13 +233,14 @@
                     v-if="slotProps"
                     class="realtime-management__user-location-pin"
                   >
-                    <router-link
-                      :to="`${userTrackingPath}/${geoLocation.userId}`"
+                    <a
+                      :href="`${userTrackingPath}/${geoLocation.userId}`"
+                      target="blank"
                     >
                       <img
                         class="realtime-management__user-location-pin__icon"
                         :src="geoLocation.icon"
-                    /></router-link>
+                    /></a>
                   </div>
                 </template>
               </ol-overlay>
@@ -312,9 +313,9 @@ const view = ref(null);
 const map = ref(null);
 
 const selectedCollectionBase = ref();
-const listCollectionBase = ref<{ value: string | boolean | number | undefined; label: string }[]>(
-  []
-);
+const listCollectionBase = ref<
+  { value: string | boolean | number | undefined; label: string }[]
+>([]);
 const driverLocations = ref<
   { icon: string; latitude: number; longitude: number; userId: number }[]
 >([]);
@@ -353,13 +354,15 @@ const fetchCollectionBase = async (): Promise<void> => {
     WorkPlaceType.PARTNER
   ]);
   if (res) {
-    listCollectionBase.value = sortDropdown((res || []).map((collectionBase) => {
-      const { name, id } = collectionBase;
-      return {
-        value: id,
-        label: name
-      };
-    }));
+    listCollectionBase.value = sortDropdown(
+      (res || []).map((collectionBase) => {
+        const { name, id } = collectionBase;
+        return {
+          value: id,
+          label: name
+        };
+      })
+    );
   }
 };
 
