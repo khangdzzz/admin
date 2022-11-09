@@ -25,13 +25,7 @@ const sideMenuItems: SideMenuItems[] = [
     title: "menu_lbl_dashboard",
     pathName: routeNames.dashboard,
     qaAttr: "qa_menu_dashboard",
-    requireUserType: [
-      UserType.TenantAdmin,
-      UserType.CollectionBaseAdmin,
-      UserType.SystemAdmin,
-      UserType.PartnerAdmin,
-      UserType.Dischanger
-    ],
+    requireUserType: [UserType.TenantAdmin],
     items: [
       {
         title: "menu_lbl_dashboard_internal",
@@ -46,6 +40,26 @@ const sideMenuItems: SideMenuItems[] = [
         qaAttr: "qa_menu_dashboard_external"
       }
     ]
+  },
+  {
+    key: "Dashboard",
+    icon: IcDashboard,
+    title: "menu_lbl_dashboard",
+    pathName: routeNames.internalDashboard,
+    qaAttr: "qa_menu_dashboard",
+    requireUserType: [
+      UserType.CollectionBaseAdmin,
+      UserType.SystemAdmin,
+      UserType.PartnerAdmin
+    ]
+  },
+  {
+    key: "Dashboard",
+    icon: IcDashboard,
+    title: "menu_lbl_dashboard",
+    pathName: routeNames.externalDashboard,
+    qaAttr: "qa_menu_dashboard",
+    requireUserType: [UserType.DashboardUser, UserType.Dischanger]
   },
   {
     key: "Collection business",
@@ -106,14 +120,21 @@ const sideMenuItems: SideMenuItems[] = [
     requireUserType: [
       UserType.TenantAdmin,
       UserType.CollectionBaseAdmin,
-      UserType.PartnerAdmin
+      UserType.PartnerAdmin,
+      UserType.SystemAdmin
     ],
     items: [
       {
         title: "menu_lbl_staff_management",
         pathName: routeNames.staffManagement,
         qaAttr: "qa_menu_staff_management",
-        requireUserType: [UserType.PartnerAdmin]
+        requireUserType: [UserType.PartnerAdmin, UserType.SystemAdmin]
+      },
+      {
+        key: "SystemAdminTenant",
+        title: "menu_lbl_tenant_management",
+        pathName: routeNames.roleManagement,
+        requireUserType: [UserType.SystemAdmin]
       },
       {
         title: "menu_lbl_landmark_management",
@@ -328,25 +349,12 @@ const sideMenuItems: SideMenuItems[] = [
       }
     ]
   },
-  {
-    key: "SystemAdminStaff",
-    icon: GroupOfPeople,
-    title: "menu_lbl_staff_management",
-    pathName: routeNames.staffManagement,
-    requireUserType: [UserType.SystemAdmin]
-  },
-  {
-    key: "SystemAdminTenant",
-    icon: GroupOfPeople,
-    title: "menu_lbl_tenant_management",
-    pathName: routeNames.staffManagement,
-    requireUserType: [UserType.SystemAdmin]
-  },
+
   {
     key: "Setting",
     icon: Setting,
     title: "menu_lbl_setting",
-    pathName: routeNames.tenantSetting,
+    pathName: routeNames.accountSetting,
     qaAttr: "qa_menu_setting",
     requireUserType: [
       UserType.TenantAdmin,
@@ -360,13 +368,13 @@ const sideMenuItems: SideMenuItems[] = [
         title: "menu_lbl_tenant_setting",
         pathName: routeNames.tenantSetting,
         qaAttr: "qa_menu_tenant_setting",
-        requireUserType: [UserType.TenantAdmin, UserType.CollectionBaseAdmin]
+        requireUserType: [UserType.TenantAdmin]
       },
       {
         title: "menu_lbl_account_setting",
         pathName: routeNames.accountSetting,
         qaAttr: "qa_menu_account_setting",
-        requireUserType: [UserType.TenantAdmin, UserType.CollectionBaseAdmin]
+        requireUserType: [UserType.TenantAdmin]
       }
     ]
   }
