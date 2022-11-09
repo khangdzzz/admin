@@ -39,7 +39,7 @@
         </a-button>
 
         <component
-          v-else-if="item.type === 'page'"
+          v-else-if="item.type !== 'prev' && item.type !== 'next'"
           :is="item.originalElement"
         ></component>
       </template>
@@ -153,6 +153,28 @@ const emit = defineEmits<{
     @include text(700, 14px, 18px);
     text-align: center;
     color: $neutral-600;
+  }
+}
+</style>
+<style lang="scss" scoped>
+:deep() {
+  .ant-pagination-jump-prev,
+  .ant-pagination-jump-next {
+    margin-top: 10px;
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    border: 1px solid $grey-1;
+    padding: 2px;
+
+    .ant-pagination-item-ellipsis {
+      font-weight: 400;
+      font-size: 14px;
+      color: $neutral-600;
+    }
+  }
+  .ant-pagination-item {
+    border: 1px solid $grey-1;
   }
 }
 </style>

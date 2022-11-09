@@ -74,7 +74,7 @@
           <template v-if="column.key === 'phoneNumber'">
             <div class="header-title" @click="changeSortPhoneNumber()">
               <span class="header-title">{{
-                $t("common_phone_field_name")
+                $t("customer_phone_number")
               }}</span>
               <SortView class="mx-12" :sort="sortPhoneNumber" />
             </div>

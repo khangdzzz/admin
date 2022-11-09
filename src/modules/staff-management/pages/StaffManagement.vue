@@ -41,7 +41,7 @@
         </a-button>
       </template>
     </ListSearchHeader>
-    <div class="staff-management__table-container mx-30 mb-30">
+    <div class="staff-management__table-container mx-30 mb-50">
       <NoData
         :value="searchString"
         :is-loading="isLoading"
