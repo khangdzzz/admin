@@ -115,9 +115,11 @@ const handleClick = (): void => {
 const getMessage = computed(() => {
   const currentLanguage = service.language.getCurrentLanguage();
   if (currentLanguage === SupportedLanguage.English) {
-    return `Sorry we couldn't find any matches for<span class="no-data-container__value ${
+    return `Sorry we couldn't find any matches for<${
+      isSmall.value ? "div" : "span"
+    } class="no-data-container__value ${
       isSmall.value ? "no-data-container__value__small" : ""
-    }">&nbsp;“${props.value}”</span>`;
+    }">&nbsp;“${props.value}”</${isSmall.value ? "div" : "span"}>`;
   }
   return ` <span class="no-data-container__value ${
     isSmall.value ? "no-data-container__value__small" : ""
@@ -141,12 +143,13 @@ const isSmall = computed(() => {
   &__message {
     font-style: normal;
     font-weight: 400;
-    font-size: 28px;
+    font-size: 24px;
     line-height: 32.81px;
     color: $neutral-600;
     max-width: 70%;
     flex-wrap: nowrap;
-    word-break: break-all;
+    word-break: break-word;
+    text-align: center;
 
     &__small {
       font-size: 18px !important;
@@ -203,6 +206,7 @@ const isSmall = computed(() => {
   .no-data-container {
     &__value {
       font-weight: 700 !important;
+      word-break: break-word;
 
       &__small {
         font-size: 18px !important;
