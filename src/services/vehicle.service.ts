@@ -98,17 +98,20 @@ export async function deleteVehicleById(ids: number[]): Promise<boolean> {
   return true;
 }
 
-export async function getCollectionBase(): Promise<
-  CollectionBaseResponseDto[] | undefined
-> {
-  const [err, res] = await transformRequest<
-    PaginationDto<CollectionBaseResponseDto>
-  >({
-    url: `/workplace/collection_base`,
-    method: "get"
+export async function getCollectionBase(
+  type: number | undefined
+): Promise<CollectionBaseResponseDto[] | undefined> {
+  const params = {
+    workplace_type: type,
+    page_size: "full"
+  };
+  const [err, res] = await transformRequest<CollectionBaseResponseDto[]>({
+    url: `workplace/options`,
+    method: "get",
+    params
   });
   if (err) return undefined;
-  return res.results;
+  return res;
 }
 
 export function getMockPartner(): VehicleSelection[] {
@@ -166,8 +169,9 @@ export async function createVehicle(
     return {
       error: (error?.response?.data as { details: { msg: string }[] })
         .details[0].msg,
-      errorParams: (error?.response?.data as { details: { msg: string, loc: string[] }[] })
-        .details[0].loc
+      errorParams: (
+        error?.response?.data as { details: { msg: string; loc: string[] }[] }
+      ).details[0].loc
     };
   }
 
@@ -237,8 +241,9 @@ export async function updateVehicle(
     return {
       error: (error?.response?.data as { details: { msg: string }[] })
         .details[0].msg,
-      errorParams: (error?.response?.data as { details: { msg: string, loc: string[] }[] })
-        .details[0].loc
+      errorParams: (
+        error?.response?.data as { details: { msg: string; loc: string[] }[] }
+      ).details[0].loc
     };
   }
 
