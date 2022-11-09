@@ -20,7 +20,7 @@
       <FloatLabel
         v-else
         v-click-outside="() => (field.isFocused = false)"
-        class=""
+        :class="{ disabled: field.disabled }"
         :isFocused="field.isFocused"
         :isFloating="field.isFocused || !!field.value"
         :label="field.label"
@@ -40,6 +40,7 @@
             field.class,
             field.isFocused || !!field.value ? 'floating' : ''
           ]"
+          :disabled="field.disabled"
           @focusin="field.isFocused = true"
           @focusout="field.isFocused = false"
           @change="(value) => handleChange(field, value)"
@@ -167,15 +168,24 @@ export default defineComponent({
     border: 1px solid $neutral-50 !important;
     border-radius: 10px !important;
     border-color: $neutral-50 !important;
-    color: $neutral-400;
+    color: $neutral-800;
 
     &:focus {
       box-shadow: none;
     }
   }
 
+  .disabled {
+    .ant-input,
+    .ant-select,
+    .ant-select-selector,
+    .ant-select-selection-item {
+      color: $neutral-400;
+    }
+  }
+
   .ant-select-selection-item {
-    color: $neutral-400;
+    color: $neutral-800;
   }
 
   .floating {
