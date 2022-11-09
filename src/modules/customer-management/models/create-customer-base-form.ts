@@ -123,8 +123,8 @@ export const formData = (): FormData => {
       {
         inputType: "AInput",
         value: "",
-        placeHolder: "common_phone_field_label",
-        label: "common_phone_field_label",
+        placeHolder: "customer_phone_number",
+        label: "customer_phone_number",
         name: "phoneNumber",
         disabled: false,
         required: false,

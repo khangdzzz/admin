@@ -300,5 +300,6 @@
   "common_invalid_decimal": "0.00以上999999.99以下で{fieldName}をご入力ください(最大小数点以下２桁)",
   "menu_lbl_common": "共通",
   "menu_lbl_collection": "回収",
-  "menu_lbl_manufacture": "生産"
+  "menu_lbl_manufacture": "生産",
+  "customer_phone_number": "電話番号"
 }
