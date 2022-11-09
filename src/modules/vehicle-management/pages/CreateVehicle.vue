@@ -334,16 +334,35 @@ const isTenantAdmin = (): boolean => {
 };
 
 const fetchCollectionBase = async (): Promise<void> => {
-  const res = await service.vehicle.getCollectionBase();
-  if (res) {
-    listCollectionBase.value = sortDropdown(
-      res?.map((item) => ({
-        value: item.id || 0,
-        label: item.name
-      }))
-    );
-    if (!isTenantAdmin() && listCollectionBase.value.length === 1) {
-      defaultOwner.value = listCollectionBase.value[0].value;
+  if (isTenantAdmin()) {
+    let workplaceType = ownerType.value === "collectionBase" ? 1 : 2;
+    const res = await service.vehicle.getCollectionBase(workplaceType);
+    if (res) {
+      const filter = res?.filter(
+        (item) => item.tenant_id === userStore.user?.tenantId
+      );
+      listCollectionBase.value = sortDropdown(
+        filter?.map((item) => ({
+          value: item.id || 0,
+          label: item.name
+        }))
+      );
+    }
+  } else {
+    const res = await service.vehicle.getCollectionBase(undefined);
+    if (res) {
+      const filter = res?.filter((item) =>
+        userStore.user?.workplaces.includes(Number(item.id))
+      );
+      listCollectionBase.value = sortDropdown(
+        filter?.map((item) => ({
+          value: item.id || 0,
+          label: item.name
+        }))
+      );
+      if (listCollectionBase.value.length === 1) {
+        defaultOwner.value = listCollectionBase.value[0].value;
+      }
     }
   }
 };
