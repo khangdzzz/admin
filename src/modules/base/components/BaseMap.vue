@@ -252,7 +252,7 @@ export default defineComponent({
     drawend(event: { target: { sketchCoords_: number[][] } }) {
       this.$emit("update:linePoints", [
         ...this.linePoints,
-        ...event.target.sketchCoords_
+        ...this.correctFormatCoords(event.target.sketchCoords_)
       ]);
       this.reDraw = true;
       // this.drawEnable = false;
@@ -269,6 +269,15 @@ export default defineComponent({
     //   if (mapRef)
     //     mapRef.updateSize();
     // },
+    correctFormatCoords(coords: number[][]) {
+      coords.forEach((coord) => {
+        const lng = coord[0];
+        const lat = coord[1];
+        coord[0] = lat;
+        coord[1] = lng;
+      });
+      return coords;
+    },
     handleDraw() {
       if (this.reDraw) {
         this.reDraw = false;

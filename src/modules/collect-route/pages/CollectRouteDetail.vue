@@ -1,22 +1,41 @@
 <template>
   <div class="tw">
-    <a-spin :spinning="loading" :tip="$t('common_loading')" class="w-full h-full">
+    <a-spin
+      :spinning="loading"
+      :tip="$t('common_loading')"
+      class="w-full h-full"
+    >
       <div class="flex flex-col h-full p-[30px] bg-primary-50">
-        <CollectRouteHeader :allowBack="allowBack" :title="pageTitle" :disabled="!readOnlyPage" @back="handleCancel"
-          @delete="handleDelete" @edit="handleEdit" />
+        <CollectRouteHeader
+          :allowBack="allowBack"
+          :title="pageTitle"
+          :disabled="!readOnlyPage"
+          @back="handleCancel"
+          @delete="handleDelete"
+          @edit="handleEdit"
+        />
         <div class="card grid grid-cols-2 gap-5">
           <a-form @validate="validate">
             <BaseForm v-model="formFields" :loading="loading" />
           </a-form>
-          <BaseMap ref="map" v-model:linePoints="linePoints" :loading="loading" v-model:center="center"
-            :markers="markers" v-model:drawable="drawable" />
+          <BaseMap
+            ref="map"
+            v-model:linePoints="linePoints"
+            :loading="loading"
+            v-model:center="center"
+            :markers="markers"
+            v-model:drawable="drawable"
+          />
         </div>
         <div class="mt-5 flex justify-center gap-5" v-if="!readOnlyPage">
           <div class="btn--text-primary-400 w-[180px]" @click="handleCancel">
             {{ $t("btn_cancel") }}
           </div>
-          <div class="btn w-[180px]" :class="[disableSubmit ? 'btn--disabled' : 'bg-primary-400']"
-            @click="handleSubmit">
+          <div
+            class="btn w-[180px]"
+            :class="[disableSubmit ? 'btn--disabled' : 'bg-primary-400']"
+            @click="handleSubmit"
+          >
             {{ $t("btn_submit") }}
           </div>
         </div>
@@ -245,7 +264,9 @@ export default defineComponent({
           ][x.id === start_point_id.value ? "start" : "end"],
           name: x.name
         }));
-      return [...workplaces, ...collectPoints];
+      return [...workplaces, ...collectPoints].filter((x) =>
+        x.coordinate.every((x) => x)
+      );
     },
     pageTitle() {
       switch (this.pageMode) {
