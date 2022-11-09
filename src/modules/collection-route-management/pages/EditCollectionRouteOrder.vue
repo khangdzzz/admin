@@ -312,9 +312,29 @@ const clearInputs = (): void => {
   formData.duoInputs2[0].value = "";
 };
 const filteredCollectionPointList = computed(function () {
-  return listCollectionPoint.value.filter((data: CollectionPoint) =>
-    data.name.toLowerCase().includes(searchCollectionPoint.value.toLowerCase())
+  let keyword = searchCollectionPoint.value.toLowerCase();
+  let listName = listCollectionPoint.value?.map((item) => item.name);
+  let listCustomerName = listCollectionPoint.value?.map(
+    (item) => item.customerName
   );
+  let listFilteredCP: CollectionPoint[] = [];
+  for (let i = 0; i < listCollectionPoint.value.length; i++) {
+    let nameValue = listName[i];
+    let customerNameValue = listCustomerName[i];
+    if (nameValue && customerNameValue) {
+      if (
+        nameValue.toLowerCase().indexOf(keyword) > -1 ||
+        customerNameValue.toLowerCase().indexOf(keyword) > -1
+      ) {
+        listFilteredCP.push({
+          id: i,
+          name: nameValue,
+          customerName: customerNameValue
+        });
+      }
+    }
+  }
+  return listFilteredCP;
 });
 const numberOfSelectedCollectionPoint = computed(() => {
   return listSelectedCollectionPoint.value.length;
@@ -384,7 +404,10 @@ const handleClickSubmit = async (): Promise<void> => {
       callback: (isConfirm: boolean) => {
         isConfirm;
         router.push({
-          name: routeNames.listCollectionRoute
+          name: routeNames.collectionRouteDetail,
+          params: {
+            id
+          }
         });
         clearInputs();
       }
@@ -562,6 +585,12 @@ watch(formNote, () => {
   .collection-point__data-right {
     background-color: $primary-100;
   }
+  .collection-point__data-left .collection-point__data {
+    min-height: 360px;
+  }
+  .collection-point__data-right .collection-point__data {
+    min-height: 420px;
+  }
   .collection-point__head {
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
@@ -635,6 +664,7 @@ watch(formNote, () => {
       background-color: $primary-100;
     }
   }
+
   .mh-300 {
     max-height: 420px;
   }

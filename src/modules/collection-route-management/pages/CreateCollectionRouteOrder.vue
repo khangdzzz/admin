@@ -145,7 +145,6 @@
                     </div>
                   </template>
                 </draggable>
-                <div class="collection-point__data mh-300"></div>
                 <ul class="helper">
                   <li class="helper-item mb-12">
                     {{ $t("collection_route_select_store") }}
@@ -172,7 +171,7 @@
           type="primary"
           class="create-collection-base__btn-style"
           :disabled="isDisableSubmit"
-          :loading="false"
+          :loading="isSubmitting"
           @click="handleClickSubmit"
           >{{ $t("btn_submit") }}</a-button
         >
@@ -282,9 +281,29 @@ const clearInputs = (): void => {
   formData.duoInputs2[0].value = "";
 };
 const filteredCollectionPointList = computed(function () {
-  return listCollectionPoint.value.filter((data: CollectionPoint) =>
-    data.name.toLowerCase().includes(searchCollectionPoint.value.toLowerCase())
+  let keyword = searchCollectionPoint.value.toLowerCase();
+  let listName = listCollectionPoint.value?.map((item) => item.name);
+  let listCustomerName = listCollectionPoint.value?.map(
+    (item) => item.customerName
   );
+  let listFilteredCP: CollectionPoint[] = [];
+  for (let i = 0; i < listCollectionPoint.value.length; i++) {
+    let nameValue = listName[i];
+    let customerNameValue = listCustomerName[i];
+    if (nameValue && customerNameValue) {
+      if (
+        nameValue.toLowerCase().indexOf(keyword) > -1 ||
+        customerNameValue.toLowerCase().indexOf(keyword) > -1
+      ) {
+        listFilteredCP.push({
+          id: i,
+          name: nameValue,
+          customerName: customerNameValue
+        });
+      }
+    }
+  }
+  return listFilteredCP;
 });
 const numberOfSelectedCollectionPoint = computed(() => {
   return listSelectedCollectionPoint.value.length;
@@ -507,6 +526,12 @@ watch(formNote, () => {
   }
   .collection-point__data-right {
     background-color: $primary-100;
+  }
+  .collection-point__data-left .collection-point__data {
+    min-height: 360px;
+  }
+  .collection-point__data-right .collection-point__data {
+    min-height: 420px;
   }
   .collection-point__head {
     border-top-left-radius: 6px;
