@@ -269,10 +269,12 @@ const fetchCollectionBase = async (): Promise<void> => {
     WorkPlaceType.PARTNER
   ]);
   if (res) {
-    formData.duoInputs2[0].options = sortDropdown(res?.map((item) => ({
-      value: item.id || 0,
-      label: item.name
-    })))
+    formData.duoInputs2[0].options = sortDropdown(
+      res?.map((item) => ({
+        value: item.id || 0,
+        label: item.name
+      }))
+    );
   }
 };
 
@@ -281,29 +283,9 @@ const clearInputs = (): void => {
   formData.duoInputs2[0].value = "";
 };
 const filteredCollectionPointList = computed(function () {
-  let keyword = searchCollectionPoint.value.toLowerCase();
-  let listName = listCollectionPoint.value?.map((item) => item.name);
-  let listCustomerName = listCollectionPoint.value?.map(
-    (item) => item.customerName
+  return listCollectionPoint.value.filter((data: CollectionPoint) =>
+    data.name.toLowerCase().includes(searchCollectionPoint.value.toLowerCase())
   );
-  let listFilteredCP: CollectionPoint[] = [];
-  for (let i = 0; i < listCollectionPoint.value.length; i++) {
-    let nameValue = listName[i];
-    let customerNameValue = listCustomerName[i];
-    if (nameValue && customerNameValue) {
-      if (
-        nameValue.toLowerCase().indexOf(keyword) > -1 ||
-        customerNameValue.toLowerCase().indexOf(keyword) > -1
-      ) {
-        listFilteredCP.push({
-          id: i,
-          name: nameValue,
-          customerName: customerNameValue
-        });
-      }
-    }
-  }
-  return listFilteredCP;
 });
 const numberOfSelectedCollectionPoint = computed(() => {
   return listSelectedCollectionPoint.value.length;
