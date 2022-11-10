@@ -4,11 +4,18 @@ import { transformRequest } from "./base.service";
 import { CollectionHistoryResponseDto } from "./dtos/collection-history/collection-history.dto";
 import { PaginationDto } from "./dtos/common/pagination.dto";
 
+export interface SummaryPagination<T> extends Pagination<T> {
+  sumApportionment?: number;
+  sumWeight?: number;
+  sumQuantity?: number;
+  sumPackageWeight?: number;
+}
+
 export async function getListCollectionHistory(
   page: number | undefined,
   size: number | string | undefined,
   searchKeyword: string | null | undefined = ""
-): Promise<Pagination<CollectionHistoryModel> | undefined> {
+): Promise<SummaryPagination<CollectionHistoryModel> | undefined> {
   const params = {
     page,
     page_size: size,
@@ -32,6 +39,11 @@ export async function getListCollectionHistory(
     total_page: totalPage = 1,
     results
   } = res;
+
+  let sumApportionment = 0;
+  let sumWeight = 0;
+  let sumQuantity = 0;
+  let sumPackageWeight = 0;
   return {
     currentPage,
     pageSize,
@@ -62,6 +74,10 @@ export async function getListCollectionHistory(
         commission_price,
         other_price
       } = item;
+      sumApportionment += temp_quantity;
+      sumWeight += weight;
+      sumQuantity += quantity;
+      sumPackageWeight += packing_weight;
       return {
         id,
         userName: user___name,
@@ -87,6 +103,10 @@ export async function getListCollectionHistory(
         commissionPrice: commission_price,
         otherPrice: other_price
       };
-    })
+    }),
+    sumApportionment,
+    sumWeight,
+    sumQuantity,
+    sumPackageWeight
   };
 }

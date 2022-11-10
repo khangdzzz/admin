@@ -6,6 +6,7 @@ export interface CollectionHistoryModel {
   deletedAt?: string | null;
   deletedBy?: number | string | null;
   id: number;
+  apportionment: number;
   collectDate: string;
   tenantId: number;
   workplaceId?: number;
@@ -17,8 +18,8 @@ export interface CollectionHistoryModel {
   collectItemName: string;
   collectPointId: string;
   customerId?: string;
-  packingWeight: string;
-  weight: string;
+  packingWeight: number;
+  weight: number;
   quantity: number;
   workplaceName?: string;
   unit?: string;

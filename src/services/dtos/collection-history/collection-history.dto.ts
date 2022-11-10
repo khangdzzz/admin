@@ -17,8 +17,8 @@ export interface CollectionHistoryResponseDto {
   collect_item___name: string;
   collect_point_id: string;
   customer_id: string;
-  packing_weight: string;
-  weight: string;
+  packing_weight: number;
+  weight: number;
   address: string;
   telephone: string;
   quantity: number;

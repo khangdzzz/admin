@@ -50,10 +50,18 @@
           <a-table-summary fixed="top">
             <a-table-summary-row>
               <a-table-summary-cell :index="i" v-for="(item, i) in 20" :key="i">
-                <div v-if="item > 8 && item < 13" style="text-align: right">
-                  0
+                <div v-if="item === 9" style="text-align: right">
+                  {{ floatParser(summary.sumApportionment) }}
                 </div>
-                <div v-else></div>
+                <div v-else-if="item === 10" style="text-align: right">
+                  {{ floatParser(summary.sumWeight) }}
+                </div>
+                <div v-else-if="item === 11" style="text-align: right">
+                  {{ summary.sumQuantity }}
+                </div>
+                <div v-else-if="item === 12" style="text-align: right">
+                  {{ floatParser(summary.sumPackageWeight) }}
+                </div>
               </a-table-summary-cell>
             </a-table-summary-row>
           </a-table-summary>
@@ -176,6 +184,12 @@ const pageOption = reactive<Pagination<CollectionHistoryModel>>({
   total: 0
 });
 const innerHeight = ref<number>(0);
+const summary = reactive<{
+  sumApportionment?: number;
+  sumWeight?: number;
+  sumQuantity?: number;
+  sumPackageWeight?: number;
+}>({});
 //#endregion
 
 //#region hooks
@@ -200,6 +214,10 @@ const fetchCollectionHistory = async (): Promise<void> => {
   isLoading.value = false;
   if (res) {
     data.value = res?.results;
+    summary.sumApportionment = res.sumApportionment;
+    summary.sumWeight = res.sumWeight;
+    summary.sumQuantity = res.sumQuantity;
+    summary.sumPackageWeight = res.sumPackageWeight;
     pageOption.currentPage = res?.currentPage;
     pageOption.pageSize = res?.pageSize || 20;
     pageOption.total = res?.total;
@@ -270,6 +288,11 @@ const isShowNextBtn = (): boolean => {
 
 const totalPages = (): number => {
   return Math.ceil(Number(pageOption.total) / Number(pageOption.pageSize));
+};
+
+const floatParser = (float: number | undefined): string => {
+  if (!float) return "0";
+  return parseFloat(float.toString()).toFixed(2);
 };
 
 //#endregion
