@@ -1,17 +1,17 @@
 // import { CollectionBase } from "@/modules/staff-management/models/collection-base.model";
+import { CollectionPointModel } from "@/modules/collection-point-management/models/collection-point.model";
+import { calculateSortQuery } from "@/modules/common/helpers";
+import { Pagination, ServiceResponse } from "@/modules/common/models";
+import { Sort } from "@/modules/common/models/sort.enum";
+import { DEFAULT_SORT_ORDER } from "@/services/constants";
 import { transformRequest } from "./base.service";
 import {
   CollectionPoint,
-  CollectionPointRequestDTO
+  CollectionPointRequestDTO,
+  CollectionPointResponseDto
 } from "./dtos/collection-point/collection-point.dto";
-import { Pagination } from "@/modules/common/models";
-import { Sort } from "@/modules/common/models/sort.enum";
-import { CollectionPointModel } from "@/modules/collection-point-management/models/collection-point.model";
-import { CollectionPointResponseDto } from "./dtos/collection-point/collection-point.dto";
 import { PaginationDto } from "./dtos/common/pagination.dto";
-import { DEFAULT_SORT_ORDER } from "@/services/constants";
-import { calculateSortQuery } from "@/modules/common/helpers";
-import { ServiceResponse } from "@/modules/common/models";
+import { toUrlEncodedString } from "./utils/search-query.helper";
 
 interface SortCollectionPointDto {
   sortName: Sort;
@@ -54,7 +54,9 @@ export async function getListCollectionPoint(
   const params = {
     page,
     page_size: size,
-    __all__: searchKeyword ? `%${searchKeyword}%` : undefined,
+    __all__: searchKeyword
+      ? `%${toUrlEncodedString(searchKeyword)}%`
+      : undefined,
     order_by: order_by?.length ? order_by : DEFAULT_SORT_ORDER
   };
   const [error, res] = await transformRequest<
@@ -145,8 +147,9 @@ export async function createCollectionPoint(
     return {
       error: (error?.response?.data as { details: { msg: string }[] })
         .details[0].msg,
-      errorParams: (error?.response?.data as { details: { msg: string, loc: string[] }[] })
-        .details[0].loc
+      errorParams: (
+        error?.response?.data as { details: { msg: string; loc: string[] }[] }
+      ).details[0].loc
     };
   }
 

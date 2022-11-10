@@ -1,4 +1,3 @@
-/* eslint-disable no-useless-escape */
 import {
   CollectionRoute,
   CreateCollectionRouteModel,
@@ -7,6 +6,7 @@ import {
 import { calculateSortQuery } from "@/modules/common/helpers";
 import { Pagination, ServiceResponse } from "@/modules/common/models";
 import { Sort } from "@/modules/common/models/sort.enum";
+import { TypeWorkPlace } from "@/modules/staff-management/models/create-new-staff.model";
 import { AxiosError } from "axios";
 import { transformRequest } from "./base.service";
 import { DEFAULT_SORT_ORDER } from "./constants";
@@ -14,7 +14,7 @@ import { CollectionBaseResponseDto } from "./dtos/collection-base/collection-bas
 import { CollectionPointResponseDto } from "./dtos/collection-point/collection-point.dto";
 import { CollectionRouteResponseDTO } from "./dtos/collection-route/collection-route.dto";
 import { PaginationDto } from "./dtos/common/pagination.dto";
-import { TypeWorkPlace } from "@/modules/staff-management/models/create-new-staff.model";
+import { toUrlEncodedString } from "./utils/search-query.helper";
 
 interface SortCollectionRouteDto {
   sortName: Sort;
@@ -64,7 +64,9 @@ export async function getListCollectionRoutes(
   const params = {
     page,
     page_size: size,
-    __all__: searchKeyword ? `%${encode(searchKeyword)}%` : undefined,
+    __all__: searchKeyword
+      ? `%${toUrlEncodedString(searchKeyword)}%`
+      : undefined,
     order_by: order_by?.length ? order_by : DEFAULT_SORT_ORDER
   };
   const [error, res] = await transformRequest<
@@ -111,19 +113,6 @@ export async function getListCollectionRoutes(
     })
   };
 }
-
-const encode = (str: string): string => {
-  return encodeURIComponent(str)
-    .replace(/\-/g, "%2D")
-    .replace(/\_/g, "%5F")
-    .replace(/\./g, "%2E")
-    .replace(/\!/g, "%21")
-    .replace(/\~/g, "%7E")
-    .replace(/\*/g, "%2A")
-    .replace(/\'/g, "%27")
-    .replace(/\(/g, "%28")
-    .replace(/\)/g, "%29");
-};
 
 export async function deleteCollectionRoute(ids: number[]): Promise<boolean> {
   const [error] = await transformRequest({

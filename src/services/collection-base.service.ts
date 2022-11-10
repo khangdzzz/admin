@@ -1,3 +1,4 @@
+import { calculateSortQuery } from "@/modules/common/helpers";
 import { Pagination } from "@/modules/common/models";
 import { Sort } from "@/modules/common/models/sort.enum";
 import {
@@ -5,13 +6,13 @@ import {
   CreateCollectionBaseDto,
   EditCollectionBaseDto
 } from "@/modules/staff-management/models/collection-base.model";
+import { DEFAULT_SORT_ORDER } from "@/services/constants";
+import { makeUniqueName } from "@/utils/string.helper";
+import { AxiosError } from "axios";
 import { transformRequest } from "./base.service";
 import { CollectionBaseResponseDto } from "./dtos/collection-base/collection-base.dto";
 import { PaginationDto } from "./dtos/common/pagination.dto";
-import { DEFAULT_SORT_ORDER } from "@/services/constants";
-import { AxiosError } from "axios";
-import { calculateSortQuery } from "@/modules/common/helpers";
-import { makeUniqueName } from "@/utils/string.helper";
+import { toUrlEncodedString } from "./utils/search-query.helper";
 
 interface SortCollectionBaseDto {
   sortName: Sort;
@@ -48,7 +49,9 @@ export async function getListCollectionBase(
   const params = {
     page,
     page_size: size,
-    __all__: searchKeyword ? `%${searchKeyword}%` : undefined,
+    __all__: searchKeyword
+      ? `%${toUrlEncodedString(searchKeyword)}%`
+      : undefined,
     order_by: order_by?.length ? order_by : DEFAULT_SORT_ORDER
   };
   const [error, res] = await transformRequest<
