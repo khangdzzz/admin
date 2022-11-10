@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 import {
   CollectionRoute,
   CreateCollectionRouteModel,
@@ -59,10 +60,11 @@ export async function getListCollectionRoutes(
   ]
     .filter((item) => !!item)
     .toString();
+
   const params = {
     page,
     page_size: size,
-    __all__: searchKeyword ? `%${searchKeyword}%` : undefined,
+    __all__: searchKeyword ? `%${encode(searchKeyword)}%` : undefined,
     order_by: order_by?.length ? order_by : DEFAULT_SORT_ORDER
   };
   const [error, res] = await transformRequest<
@@ -109,6 +111,19 @@ export async function getListCollectionRoutes(
     })
   };
 }
+
+const encode = (str: string): string => {
+  return encodeURIComponent(str)
+    .replace(/\-/g, "%2D")
+    .replace(/\_/g, "%5F")
+    .replace(/\./g, "%2E")
+    .replace(/\!/g, "%21")
+    .replace(/\~/g, "%7E")
+    .replace(/\*/g, "%2A")
+    .replace(/\'/g, "%27")
+    .replace(/\(/g, "%28")
+    .replace(/\)/g, "%29");
+};
 
 export async function deleteCollectionRoute(ids: number[]): Promise<boolean> {
   const [error] = await transformRequest({
