@@ -95,6 +95,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useUndo } from "@/composable/undo";
 import { boundingExtent } from "ol/extent";
 import emitter, { EMITTER_EVENTS } from "@/utils/emiiter";
+import { cloneDeep } from "lodash";
 
 interface Marker {
   icon: string;
@@ -238,7 +239,9 @@ export default defineComponent({
       return userPin;
     },
     validLinePoints() {
-      return this.linePoints.filter((x) => x[0] && x[1]);
+      return this.correctFormatCoords(
+        this.linePoints.filter((x) => x[0] && x[1])
+      );
     },
     pointMaps() {
       const markerPoints = this.markers.map((x) => x.coordinate);
@@ -250,10 +253,9 @@ export default defineComponent({
       // this.$emit("update:linePoints", [[]])
     },
     drawend(event: { target: { sketchCoords_: number[][] } }) {
-      this.$emit("update:linePoints", [
-        ...this.linePoints,
-        ...this.correctFormatCoords(event.target.sketchCoords_)
-      ]);
+      const coords = this.correctFormatCoords(event.target.sketchCoords_);
+      this.$emit("update:linePoints", [...this.linePoints, ...coords]);
+      this.drawKey = uuidv4();
       this.reDraw = true;
       // this.drawEnable = false;
     },
@@ -269,14 +271,8 @@ export default defineComponent({
     //   if (mapRef)
     //     mapRef.updateSize();
     // },
-    correctFormatCoords(coords: number[][]) {
-      coords.forEach((coord) => {
-        const lng = coord[0];
-        const lat = coord[1];
-        coord[0] = lat;
-        coord[1] = lng;
-      });
-      return coords;
+    correctFormatCoords(value: number[][]) {
+      return value.map((point) => [point[1], point[0]]);
     },
     handleDraw() {
       if (this.reDraw) {
