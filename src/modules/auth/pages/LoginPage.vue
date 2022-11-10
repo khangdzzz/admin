@@ -303,13 +303,6 @@ watch(
     margin-left: 10px;
   }
 
-  .ant-form-item-explain-error {
-    margin-top: 8px;
-  }
-  .ant-form-item {
-    margin-bottom: 25px;
-  }
-
   .ant-btn span {
     font-family: "Roboto";
   }
