@@ -8,7 +8,7 @@ const MESSAGES = {
   EDIT_SUCCESS: "common_msg_edit_successfully",
   DELETE_SUCCESS: "common_msg_delete_successfully",
   DELETE_MULTI_SUCCESS: "common_msg_delete_multiple_successfully",
-  CONFIRM: "common_confirm"
+  CONFIRM_DELETE: "popup_msg_confirm_delete"
 };
 const handleMessager = (messenger, title, type, callback?): void => {
   messenger({
@@ -24,7 +24,7 @@ const handleMessager = (messenger, title, type, callback?): void => {
 const Messager = {
   confirmDelete: (messenger, callback): void =>
     messenger({
-      title: MESSAGES.CONFIRM,
+      title: MESSAGES.CONFIRM_DELETE,
       message: "",
       type: MessengerType.Confirm,
       buttonOkTitle: "btn_delete",
