@@ -132,7 +132,7 @@ let handleIsExistName = async (): Promise<void> => {
   if (existFields.value.includes("name")) {
     return Promise.reject(
       i18n.global.t("error_unique_constraint", {
-        fieldName: i18n.global.t("name")
+        fieldName: i18n.global.t("create_vehicle_lbl_vehicle_name")
       })
     );
   }
