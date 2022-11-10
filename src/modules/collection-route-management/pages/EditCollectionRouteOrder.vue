@@ -455,7 +455,6 @@ const handleClickSubmit = async (): Promise<void> => {
       if (errorParams) {
         isExitsField.value = errorParams;
       }
-      isDisableSubmit.value = true;
       editCollectionRouteOrder.value.validate();
     } else {
       messenger({

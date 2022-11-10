@@ -214,7 +214,7 @@ const isSubmitting = ref<boolean>(false);
 const collectionBaseAddress = ref<string>("");
 const { name, contact } = formData;
 const isPostalCodeHasError = ref<boolean>(false);
-const isExitsField = ref<string[]>([]);
+const existFields = ref<string[]>([]);
 //#endregion
 
 //#region hooks
@@ -232,7 +232,7 @@ onMounted(async () => {
 
   name[0].rules?.push({
     validator: (): Promise<void> => {
-      if (isExitsField.value.includes("name")) {
+      if (existFields.value.includes("name")) {
         return Promise.reject(
           i18n.global.t("error_unique_constraint", {
             fieldName: i18n.global.t("name")
@@ -246,7 +246,7 @@ onMounted(async () => {
 
   name[1].rules?.push({
     validator: (): Promise<void> => {
-      if (isExitsField.value.includes("short_name")) {
+      if (existFields.value.includes("short_name")) {
         return Promise.reject(
           i18n.global.t("error_unique_constraint", {
             fieldName: i18n.global.t("short_name")
@@ -347,10 +347,7 @@ const fetchCollectionBaseById = async (): Promise<
 
 const handleOnNameFocus = (index: number | boolean | Event): void => {
   name[Number(index)].isFocus = true;
-};
-
-const handleOnContactFocus = (index: number | boolean | Event): void => {
-  contact[Number(index)].isFocus = true;
+  if (typeof index === "number") clearExistError(index);
 };
 
 const handleOnNameBlur = (
@@ -358,6 +355,27 @@ const handleOnNameBlur = (
   index: string | number | Event
 ): void => {
   name[Number(index)].isFocus = false;
+  if (typeof index === "number") clearExistError(index);
+};
+
+const clearExistError = (index: number): void => {
+  if (index === 0 && existFields.value.length) {
+    const errorIndex = existFields.value.indexOf("name");
+    if (errorIndex >= 0) {
+      existFields.value.splice(errorIndex, 1);
+    }
+  }
+
+  if (index === 1 && existFields.value.length) {
+    const errorIndex = existFields.value.indexOf("short_name");
+    if (errorIndex >= 0) {
+      existFields.value.splice(errorIndex, 1);
+    }
+  }
+};
+
+const handleOnContactFocus = (index: number | boolean | Event): void => {
+  contact[Number(index)].isFocus = true;
 };
 
 const handleOnContactBlur = (
@@ -430,7 +448,7 @@ const handleSubmit = async (): Promise<void> => {
   } else {
     if ((error as string).includes("error_workplace_unique")) {
       if (errorParams) {
-        isExitsField.value = errorParams;
+        existFields.value = errorParams;
       }
       editCollectionBaseRef.value.validate();
     } else {
