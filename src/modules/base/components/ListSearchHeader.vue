@@ -9,8 +9,33 @@
       <div class="header__content__title">{{ title }}</div>
     </div>
     <div class="d-flex gap-15">
+      <a-tooltip
+        :placement="hintPlacement"
+        overlayClassName="search-header__tooltip"
+        v-if="hintMessage && enableSearch"
+      >
+        <template #title>
+          <div class="search-header__hint-title" v-if="hintTitle">
+            {{ hintTitle }}
+          </div>
+          <div class="search-header__hint-message">
+            {{ hintMessage }}
+          </div>
+        </template>
+        <a-input
+          v-if="enableSearch"
+          :value="modelValue"
+          :placeholder="$t('search_input')"
+          class="search-input"
+          @change="onSeachChange($event.target.value)"
+          allow-clear
+          ><template #prefix>
+            <img src="@/assets/icons/ic_search.svg" />
+          </template>
+        </a-input>
+      </a-tooltip>
       <a-input
-        v-if="enableSearch"
+        v-if="!hintMessage && enableSearch"
         :value="modelValue"
         :placeholder="$t('search_input')"
         class="search-input"
@@ -20,6 +45,7 @@
           <img src="@/assets/icons/ic_search.svg" />
         </template>
       </a-input>
+
       <slot name="action"></slot>
     </div>
   </div>
@@ -54,6 +80,18 @@ defineProps({
   enableBack: {
     type: Boolean,
     default: false
+  },
+  hintTitle: {
+    type: String,
+    default: ""
+  },
+  hintMessage: {
+    type: String,
+    default: ""
+  },
+  hintPlacement: {
+    type: String,
+    default: "bottomLeft"
   }
 });
 
@@ -113,7 +151,18 @@ defineExpose({ clearInput });
     font-size: 20px;
   }
 }
-
+:deep() {
+  .ant-select {
+    .ant-select-selector {
+      width: 180px !important;
+      height: 48px;
+      border: 1px solid $neutral-200;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+    }
+  }
+}
 .search-input {
   width: 330px;
   height: 48px;
@@ -127,6 +176,28 @@ defineExpose({ clearInput });
 .search-input {
   .ant-input {
     font-size: 18px !important;
+  }
+}
+
+.search-header {
+  &__hint-title {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 18px;
+    color: $white;
+  }
+
+  &__hint-message {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 20px;
+    color: $white;
+  }
+
+  &__tooltip {
+    max-width: 538px !important;
   }
 }
 </style>

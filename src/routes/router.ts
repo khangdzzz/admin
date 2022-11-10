@@ -78,12 +78,6 @@ const routes: RouteRecordRaw[] = [
     },
     children: [
       {
-        path: "collection-history",
-        name: routeNames.collectionHistory,
-        component: () =>
-          import("@/modules/vehicle-management/pages/RealTimeDynamics.vue")
-      },
-      {
         path: "real-time-management",
         name: routeNames.realTimeDynamics,
         component: () =>
@@ -412,6 +406,12 @@ const routes: RouteRecordRaw[] = [
         name: routeNames.driverLocationTracking,
         component: () =>
           import("@/modules/realtime-management/DriverLocationTracking.vue")
+      },
+      {
+        path: "collection-history/list",
+        name: routeNames.collectionHistory,
+        component: () =>
+          import("@/modules/collection-history/pages/CollectionHistoryList.vue")
       }
     ]
   },

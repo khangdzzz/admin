@@ -310,8 +310,8 @@
   .ant-radio-disabled .ant-radio-inner {
     border-color: $text-1 !important;
     background-color: #ffffff;
-    &::after{
-      background-color:$text-1;
+    &::after {
+      background-color: $text-1;
     }
   }
 
@@ -352,8 +352,16 @@
   }
 }
 
-.ant-tooltip-arrow {
-  left: 20px !important;
+.ant-tooltip-placement-bottomLeft {
+  .ant-tooltip-arrow {
+    left: 20px !important;
+  }
+}
+
+.ant-tooltip-placement-bottomRight {
+  .ant-tooltip-arrow {
+    right: 3px !important;
+  }
 }
 
 .ant-tooltip-arrow-content {
