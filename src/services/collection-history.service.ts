@@ -3,6 +3,7 @@ import { Pagination } from "@/modules/common/models";
 import { transformRequest } from "./base.service";
 import { CollectionHistoryResponseDto } from "./dtos/collection-history/collection-history.dto";
 import { PaginationDto } from "./dtos/common/pagination.dto";
+import { toUrlEncodedString } from "./utils/search-query.helper";
 
 export interface SummaryPagination<T> extends Pagination<T> {
   sumApportionment?: number;
@@ -19,7 +20,9 @@ export async function getListCollectionHistory(
   const params = {
     page,
     page_size: size,
-    __all__: searchKeyword ? `%${searchKeyword}%` : undefined
+    __all__: searchKeyword
+      ? `%${toUrlEncodedString(searchKeyword)}%`
+      : undefined
   };
 
   const [error, res] = await transformRequest<

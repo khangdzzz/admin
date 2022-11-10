@@ -16,6 +16,7 @@ import {
   StaffDetailsResponse,
   StaffDetailsResponseDTO
 } from "./dtos/staff-management/staff-details.dto";
+import { toUrlEncodedString } from "./utils/search-query.helper";
 
 const UserRoleLabel = [
   "user_role_lbl_system_admin",
@@ -75,7 +76,9 @@ export async function getlistStaff(
   const params = {
     page,
     page_size: size,
-    __all__: searchKeyword ? `%${searchKeyword}%` : undefined,
+    __all__: searchKeyword
+      ? `%${toUrlEncodedString(searchKeyword)}%`
+      : undefined,
     order_by: order_by?.length ? order_by : DEFAULT_SORT_ORDER
   };
   const [err, res] = await transformRequest<
@@ -184,10 +187,10 @@ export const randomPassword = (): string => {
       i % 4 === 0
         ? randomChars()
         : i % 5 === 1
-          ? randomUppercases()
-          : i % 5 === 2
-            ? randomNumbers()
-            : randomSpecialChars();
+        ? randomUppercases()
+        : i % 5 === 2
+        ? randomNumbers()
+        : randomSpecialChars();
     password += randomChar;
   }
   return password;
@@ -206,8 +209,9 @@ export async function createStaff(
     return {
       error: (error?.response?.data as { details: { msg: string }[] })
         .details[0].msg,
-      errorParams: (error?.response?.data as { details: { msg: string, loc: string[] }[] })
-        .details[0].loc
+      errorParams: (
+        error?.response?.data as { details: { msg: string; loc: string[] }[] }
+      ).details[0].loc
     };
   }
 
