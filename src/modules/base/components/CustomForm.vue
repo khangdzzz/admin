@@ -327,7 +327,7 @@ const filterOption = (input: string, option: any): boolean => {
   }
 
   &__option-wrapper {
-    height: 54px !important;
+    height: 64px !important;
   }
 
   &__custom-option-padding {

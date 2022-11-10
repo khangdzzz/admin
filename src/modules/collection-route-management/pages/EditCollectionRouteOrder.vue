@@ -6,7 +6,7 @@
       </div>
       <a-card class="edit-collection-route-order__card">
         <a-form
-          :model="formData"
+          :model="dynamicValidateForm"
           ref="editCollectionRouteOrder"
           name="editCollectionRouteOrder"
         >
@@ -14,14 +14,9 @@
             class="edit-collection-route-order__duo-inputs-wrapper d-flex justify-space-between gap-20"
           >
             <CustomForm
-              :form-data="formData.duoInputs"
-              @on-focus="handleOnDuoInputsFocus"
-              @on-blur="handleOnDuoInputsBlur"
-            />
-            <CustomForm
-              :form-data="formData.duoInputs2"
-              @on-focus="handleOnDuoInputs2Focus"
-              @on-blur="handleOnDuoInputs2Blur"
+              :form-data="dynamicValidateForm.formData"
+              @on-focus="handleOnFocus"
+              @on-blur="handleOnBlur"
             />
           </div>
           <a-form-item
@@ -184,6 +179,7 @@
 
 <script setup lang="ts">
 //#region import
+import { i18n } from "@/i18n";
 import IcSwap from "@/assets/icons/IcSwap.vue";
 import IcRequired from "@/assets/icons/IcRequired.vue";
 import CustomForm from "@/modules/base/components/CustomForm.vue";
@@ -198,18 +194,13 @@ import {
 } from "vue";
 import { WorkPlaceType } from "@/modules/workplace/models/workplace.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
-import { FormDataCreateCollectionRoute } from "@/modules/collection-route-management/models/collection-route.model";
-import { formData as reactiveFormData } from "@/modules/collection-route-management/models/create-collection-route-order-base-form";
 import { routeNames, router } from "@/routes";
 import draggable from "vuedraggable";
 import { service } from "@/services";
 import { useRoute } from "vue-router";
 import { makeUniqueName } from "@/utils/string.helper";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
-import {
-  CollectionPoint,
-  CollectionBase
-} from "@/modules/collection-route-management/models/collection-route.model";
+import { CollectionPoint } from "@/modules/collection-route-management/models/collection-route.model";
 import { sortDropdown } from "@/modules/common/helpers";
 export interface Form {
   note: string;
@@ -220,27 +211,100 @@ export interface Form {
 //#endregion
 
 //#region variables
+
+const isExitsField = ref<string[]>([]);
+let handleIsExistName = async (): Promise<void> => {
+  if (isExitsField.value.includes("name")) {
+    return Promise.reject(
+      i18n.global.t("error_unique_constraint", {
+        fieldName: i18n.global.t("name")
+      })
+    );
+  }
+  return Promise.resolve();
+};
+const dynamicValidateForm = reactive<{ formData: any[] }>({
+  formData: [
+    {
+      inputType: "AInput",
+      value: "",
+      placeHolder: "collection_route_route_name",
+      label: "collection_route_route_name",
+      name: "routeName",
+      disabled: false,
+      required: true,
+      isFocus: false,
+      rules: [
+        {
+          required: true,
+          trigger: ["blur", "change"],
+          message: i18n.global.t("please_enter_input", {
+            fieldName: i18n.global
+              .t("collection_route_route_name")
+              .toLowerCase()
+          })
+        },
+        {
+          max: 50,
+          trigger: ["blur", "change"],
+          message: i18n.global.t("max_length_input", { maxLength: 50 })
+        },
+        {
+          validator: handleIsExistName,
+          trigger: ["change", "blur"]
+        }
+      ],
+      key: 0
+    },
+    {
+      inputType: "ASelect",
+      required: true,
+      isFocus: false,
+      value: "",
+      placeHolder: "collection_route_workplace",
+      label: "collection_route_workplace",
+      name: "workplace",
+      disabled: false,
+      options: [{ value: "", label: "" }],
+      rules: [
+        {
+          required: true,
+          trigger: ["blur", "change"],
+          message: i18n.global.t("please_enter_input", {
+            fieldName: i18n.global.t("collection_route_workplace").toLowerCase()
+          })
+        }
+      ],
+      dropdownClassName: "form-option-content",
+      style: {
+        padding: "0px",
+        width: "100%",
+        border: "none"
+      },
+      key: 1
+    }
+  ]
+});
 const messenger: (
   param: MessengerParamModel
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 ) => void = inject("messenger")!;
 const searchCollectionPoint = ref<string>("");
 const drag = ref<boolean>(false);
-const formData = reactive<FormDataCreateCollectionRoute>(reactiveFormData);
 const isSubmitting = ref<boolean>(false);
 const isDisableSubmit = ref<boolean>(true);
 const formNote = reactive<Form>({ note: "" });
 const listCollectionPoint = ref<CollectionPoint[]>([]);
 const listSelectedCollectionPoint = ref<CollectionPoint[]>([]);
 const formNoteError = ref<boolean>(false);
-const listCollectionBase = ref<CollectionBase[]>();
 // Todo: need to fix this
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const handleSubmitBtn = reactive<any>({
-  formData: formData,
+  formData: dynamicValidateForm.formData,
   listSelectedCollectionPoint: listSelectedCollectionPoint,
   formNoteError: formNoteError
 });
+const editCollectionRouteOrder = ref();
 const isLoading = ref<boolean>(false);
 const route = useRoute();
 
@@ -285,9 +349,9 @@ const fetchData = async (): Promise<void> => {
   }
   const res = await service.collectionRoute.getCollectionRouteById(Number(id));
   if (res) {
-    formData.duoInputs[0].value = res.name ?? "";
+    dynamicValidateForm.formData[0].value = res.name ?? "";
     formNote.note = res.notice ?? "";
-    formData.duoInputs2[0].value = res.workplaceId ?? "";
+    dynamicValidateForm.formData[1].value = res.workplaceId ?? "";
     listSelectedCollectionPoint.value =
       res.listCollectionPoint?.map((item) => ({
         id: item.id,
@@ -303,7 +367,7 @@ const fetchCollectionBase = async (): Promise<void> => {
     WorkPlaceType.PARTNER
   ]);
   if (res) {
-    formData.duoInputs2[0].options = sortDropdown(
+    dynamicValidateForm.formData[1].options = sortDropdown(
       res?.map((item) => ({
         value: item.id || 0,
         label: item.name
@@ -313,8 +377,8 @@ const fetchCollectionBase = async (): Promise<void> => {
 };
 
 const clearInputs = (): void => {
-  formData.duoInputs[0].value = "";
-  formData.duoInputs2[0].value = "";
+  dynamicValidateForm.formData[0].value = "";
+  dynamicValidateForm.formData[1].value = "";
 };
 const filteredCollectionPointList = computed(function () {
   return listCollectionPoint.value.filter((data: CollectionPoint) =>
@@ -339,27 +403,16 @@ const onHandleRemoveCollectionPointById = (id: number): void => {
     1
   );
 };
-const handleOnDuoInputsFocus = (index: number | boolean | Event): void => {
-  formData.duoInputs[Number(index)].isFocus = true;
+const handleOnFocus = (index: number | boolean | Event): void => {
+  dynamicValidateForm.formData[Number(index)].isFocus = true;
 };
 
-const handleOnDuoInputsBlur = (
+const handleOnBlur = (
   value: number | boolean | Event,
   index: string | number | Event
 ): void => {
-  formData.duoInputs[Number(index)].isFocus = false;
+  dynamicValidateForm.formData[Number(index)].isFocus = false;
 };
-const handleOnDuoInputs2Focus = (index: number | boolean | Event): void => {
-  formData.duoInputs2[Number(index)].isFocus = true;
-};
-
-const handleOnDuoInputs2Blur = (
-  value: number | boolean | Event,
-  index: string | number | Event
-): void => {
-  formData.duoInputs2[Number(index)].isFocus = false;
-};
-
 const handleClickCancel = (): void => {
   router.push({ name: routeNames.listCollectionRoute });
 };
@@ -370,17 +423,17 @@ const converListIdToString = (listId: number[]): string => {
 const handleClickSubmit = async (): Promise<void> => {
   const listStringId = converListIdToString(getListIdSelectedCP.value);
   const data = {
-    name: makeUniqueName(formData.duoInputs[0].value.toString()) as string,
-    workplace_id: +formData.duoInputs2[0].value,
+    name: makeUniqueName(
+      dynamicValidateForm.formData[0].value.toString()
+    ) as string,
+    workplace_id: +dynamicValidateForm.formData[1].value,
     collect_point_ids: listStringId,
     notice: makeUniqueName(formNote.note.toString())
   };
   isSubmitting.value = true;
-  const { error, res } = await service.collectionRoute.editCollectionRoute(
-    +id,
-    data
-  );
-  isSubmitting.value = true;
+  const { error, res, errorParams } =
+    await service.collectionRoute.editCollectionRoute(+id, data);
+  isSubmitting.value = false;
   if (!error && res) {
     messenger({
       title: "common_msg_edit_successfully",
@@ -398,18 +451,26 @@ const handleClickSubmit = async (): Promise<void> => {
       }
     });
   } else {
-    messenger({
-      title: "popup_edit_fail_title",
-      message: "",
-      type: MessengerType.Error
-    });
+    if ((error as string) === "error_unique_constraint") {
+      if (errorParams) {
+        isExitsField.value = errorParams;
+      }
+      isDisableSubmit.value = true;
+      editCollectionRouteOrder.value.validate();
+    } else {
+      messenger({
+        title: "popup_edit_fail_title",
+        message: "",
+        type: MessengerType.Error
+      });
+    }
   }
 };
 
 const activeSubmitButton = (): void => {
   if (
-    handleSubmitBtn.formData.duoInputs[0].value &&
-    handleSubmitBtn.formData.duoInputs2[0].value &&
+    handleSubmitBtn.formData[0].value &&
+    handleSubmitBtn.formData[1].value &&
     handleSubmitBtn.listSelectedCollectionPoint.length > 0 &&
     !handleSubmitBtn.formNoteError
   ) {
