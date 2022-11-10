@@ -28,8 +28,8 @@ export async function fetchListCustomer(
       sort === Sort.None
         ? DEFAULT_SORT_ORDER
         : sort === Sort.Asc
-          ? "name"
-          : "-name"
+        ? "name"
+        : "-name"
   };
 
   const [error, res] = await transformRequest<
@@ -108,10 +108,12 @@ export async function editCustomerById(
   });
   if (error || !res) {
     return {
-      error: (error?.response?.data as { details: { msg: string, loc: string[] }[] })
-        .details[0].msg,
-      errorParams: (error?.response?.data as { details: { msg: string, loc: string[] }[] })
-        .details[0].loc
+      error: (
+        error?.response?.data as { details: { msg: string; loc: string[] }[] }
+      ).details[0].msg,
+      errorParams: (
+        error?.response?.data as { details: { msg: string; loc: string[] }[] }
+      ).details?.map((item) => item.loc[0])
     };
   }
   return { res };

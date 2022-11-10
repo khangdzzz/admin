@@ -428,7 +428,7 @@ const handleSubmit = async (): Promise<void> => {
       }
     });
   } else {
-    if ((error as string) === "error_unique_constraint") {
+    if ((error as string).includes("error_workplace_unique")) {
       if (errorParams) {
         isExitsField.value = errorParams;
       }

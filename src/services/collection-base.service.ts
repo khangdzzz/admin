@@ -192,8 +192,9 @@ export async function createCollectionBase(
     return {
       error: (error?.response?.data as { details: { msg: string }[] })
         .details[0].msg,
-      errorParams: (error?.response?.data as { details: { msg: string, loc: string[] }[] })
-        .details[0].loc
+      errorParams: (
+        error?.response?.data as { details: { msg: string; loc: string[] }[] }
+      ).details?.map((item) => item.loc[0])
     };
   }
   return {
@@ -247,8 +248,9 @@ export async function editCollectionBase(
     return {
       error: (error?.response?.data as { details: { msg: string }[] })
         .details[0].msg,
-      errorParams: (error?.response?.data as { details: { msg: string, loc: string[] }[] })
-        .details[0].loc
+      errorParams: (
+        error?.response?.data as { details: { msg: string; loc: string[] }[] }
+      ).details?.map((item) => item.loc[0])
     };
   }
   return {
