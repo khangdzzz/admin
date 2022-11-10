@@ -485,6 +485,7 @@ const filterOption = (input: string, option: any): boolean => {
   }
   .ant-select-item-option {
     padding: 0px !important;
+
     .ant-select-item-option-state {
       display: none;
     }
@@ -498,6 +499,9 @@ const filterOption = (input: string, option: any): boolean => {
         }
       }
     }
+  }
+  .ant-select-item-option:not(:last-child) {
+    border-bottom: 1px solid $neutral-100 !important;
   }
 }
 
