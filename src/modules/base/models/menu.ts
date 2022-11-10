@@ -253,7 +253,10 @@ const sideMenuItems: SideMenuItems[] = [
             title: "menu_lbl_unit_item",
             pathName: routeNames.unitItems,
             qaAttr: "qa_menu_unit_item",
-            requireUserType: [UserType.TenantAdmin]
+            requireUserType: [
+              UserType.TenantAdmin,
+              UserType.CollectionBaseAdmin
+            ]
           },
           {
             title: "menu_lbl_unit_price",
@@ -313,10 +316,7 @@ const sideMenuItems: SideMenuItems[] = [
             title: "menu_lbl_destination_management",
             pathName: routeNames.storageManagement,
             qaAttr: "menu_lbl_destination_management",
-            requireUserType: [
-              UserType.TenantAdmin,
-              UserType.CollectionBaseAdmin
-            ]
+            requireUserType: [UserType.TenantAdmin]
           },
           {
             title: "menu_lbl_manufacture_task_management",
