@@ -9,7 +9,7 @@
       <a-card class="create-collection-route-order__card">
         <a-form
           :model="formData"
-          ref="createCollectionRouteOrder"
+          ref="createCollectionOrderForm"
           name="createCollectionRouteOrder"
         >
           <div
@@ -208,6 +208,7 @@ import {
   watch
 } from "vue";
 import draggable from "vuedraggable";
+import { i18n } from "@/i18n";
 export interface Form {
   note: string;
 }
@@ -225,12 +226,15 @@ const messenger: (
 const searchCollectionPoint = ref<string>("");
 const drag = ref<boolean>(false);
 const formData = reactive<FormDataCreateCollectionRoute>(reactiveFormData);
+const { duoInputs } = formData;
 const isSubmitting = ref<boolean>(false);
 const isDisableSubmit = ref<boolean>(true);
 const formNote = reactive<Form>({ note: "" });
 const listCollectionPoint = ref<CollectionPoint[]>([]);
 const listSelectedCollectionPoint = ref<CollectionPoint[]>([]);
 const listCollectionBase = ref<CollectionBase[]>();
+const createCollectionOrderForm = ref();
+const isExitsField = ref<string[]>([]);
 const formNoteError = ref<boolean>(false);
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const handleSubmitBtn = reactive<any>({
@@ -245,6 +249,19 @@ onMounted(async () => {
   isLoading.value = true;
   await Promise.all([fetchCollectionBase(), fetchListCollectionPoint()]);
   isLoading.value = false;
+  duoInputs[0].rules?.push({
+    validator: (): Promise<void> => {
+      if (isExitsField.value.includes("name")) {
+        return Promise.reject(
+          i18n.global.t("error_unique_constraint", {
+            fieldName: i18n.global.t("name")
+          })
+        );
+      }
+      return Promise.resolve();
+    },
+    trigger: ["blur", "change"]
+  });
 });
 onBeforeUnmount(() => {
   clearInputs();
@@ -342,9 +359,8 @@ const handleClickSubmit = async (): Promise<void> => {
     notice: makeUniqueName(formNote.note.toString())
   };
   isSubmitting.value = true;
-  const { error, res } = await service.collectionRoute.createCollectionRoute(
-    data
-  );
+  const { error, errorParams, res } =
+    await service.collectionRoute.createCollectionRoute(data);
   isSubmitting.value = false;
   if (!error && res) {
     messenger({
@@ -360,11 +376,18 @@ const handleClickSubmit = async (): Promise<void> => {
       }
     });
   } else {
-    messenger({
-      title: "popup_create_fail_title",
-      message: "",
-      type: MessengerType.Error
-    });
+    if ((error as string) === "error_unique_constraint") {
+      if (errorParams) {
+        isExitsField.value = errorParams;
+      }
+      createCollectionOrderForm.value.validate();
+    } else {
+      messenger({
+        title: "popup_create_fail_title",
+        message: "",
+        type: MessengerType.Error
+      });
+    }
   }
 };
 const activeSubmitButton = (): void => {

@@ -257,7 +257,7 @@ const init = async (): Promise<void> => {
       { key: "name_kana", value: name_kana },
       { key: "common_postal_code_label", value: postcode || "" },
       { key: "address", value: address || "" },
-      { key: "common_phone_field_name", value: telephone || "" },
+      { key: "customer_phone_number", value: telephone || "" },
       { key: "collection_base_lbl_email", value: mail || "" },
       { key: "external_code", value: external_code }
     ];
