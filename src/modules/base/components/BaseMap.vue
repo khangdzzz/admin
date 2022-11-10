@@ -80,22 +80,21 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  onMounted,
-  ref,
-  watch,
-  computed,
-  nextTick
-} from "vue";
+import IcDraw from "@/assets/icons/IcDraw.vue";
 import userPin from "@/assets/icons/ic_driver_pin.png";
 import storePin from "@/assets/icons/ic_pin_store.png";
-import IcDraw from "@/assets/icons/IcDraw.vue";
-import { v4 as uuidv4 } from "uuid";
 import { useUndo } from "@/composable/undo";
-import { boundingExtent } from "ol/extent";
 import emitter, { EMITTER_EVENTS } from "@/utils/emiiter";
-import { cloneDeep } from "lodash";
+import { boundingExtent } from "ol/extent";
+import { v4 as uuidv4 } from "uuid";
+import {
+  computed,
+  defineComponent,
+  nextTick,
+  onMounted,
+  ref,
+  watch
+} from "vue";
 
 interface Marker {
   icon: string;

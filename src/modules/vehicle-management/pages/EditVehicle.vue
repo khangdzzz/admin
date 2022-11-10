@@ -126,10 +126,10 @@ const isLoading = ref<boolean>(false);
 const isLoadingBtn = ref<boolean>(false);
 
 const formRef = ref();
-const isExitsField = ref<string[]>([]);
+const existFields = ref<string[]>([]);
 
 let handleIsExistName = async (): Promise<void> => {
-  if (isExitsField.value.includes("name")) {
+  if (existFields.value.includes("name")) {
     return Promise.reject(
       i18n.global.t("error_unique_constraint", {
         fieldName: i18n.global.t("name")
@@ -141,7 +141,7 @@ let handleIsExistName = async (): Promise<void> => {
 };
 
 let handleIsExistNumberPlate = async (): Promise<void> => {
-  if (isExitsField.value.includes("number_plate")) {
+  if (existFields.value.includes("plate_number")) {
     return Promise.reject(
       i18n.global.t("error_unique_constraint", {
         fieldName: i18n.global.t("number_plate")
@@ -331,19 +331,23 @@ const fetchVehicleById = async (): Promise<void> => {
 const fetchVehicleType = async (): Promise<void> => {
   const res = await service.vehicleType.getAllVehicleType();
   if (res) {
-    vehicleTypes.value = sortDropdown(res?.map((item) => ({
-      value: item.id,
-      label: item.name
-    })));
+    vehicleTypes.value = sortDropdown(
+      res?.map((item) => ({
+        value: item.id,
+        label: item.name
+      }))
+    );
   }
 };
 const fetchCollectionBase = async (): Promise<void> => {
-  const res = await service.vehicle.getCollectionBase();
+  const res = await service.vehicle.getCollectionBase(undefined);
   if (res) {
-    listCollectionBase.value = sortDropdown(res?.map((item) => ({
-      value: item.id || 0,
-      label: item.name
-    })));
+    listCollectionBase.value = sortDropdown(
+      res?.map((item) => ({
+        value: item.id || 0,
+        label: item.name
+      }))
+    );
   }
 };
 const fetchMockData = (): void => {
@@ -371,11 +375,29 @@ const handleOnBlur = (
 ): void => {
   index = Number(index);
   dynamicValidateForm.formData[index].isFocus = false;
+  clearExistError(index);
 };
 
 const handleOnFocus = (index: number | boolean | Event): void => {
   index = Number(index);
   dynamicValidateForm.formData[index].isFocus = true;
+  clearExistError(index);
+};
+
+const clearExistError = (index: number): void => {
+  if (index === 2 && existFields.value.length) {
+    const errorIndex = existFields.value.indexOf("name");
+    if (errorIndex >= 0) {
+      existFields.value.splice(errorIndex, 1);
+    }
+  }
+
+  if (index === 3 && existFields.value.length) {
+    const errorIndex = existFields.value.indexOf("plate_number");
+    if (errorIndex >= 0) {
+      existFields.value.splice(errorIndex, 1);
+    }
+  }
 };
 
 const goToVehicleList = (): void => {
@@ -391,7 +413,9 @@ const updateVehicle = async (): Promise<void> => {
     isHasPermission: checkPermission.value ? 1 : 0
   };
   isLoadingBtn.value = true;
-  const { res, error, errorParams }  = await service.vehicle.updateVehicle(vehicleInfo);
+  const { res, error, errorParams } = await service.vehicle.updateVehicle(
+    vehicleInfo
+  );
   isLoadingBtn.value = false;
   if (res) {
     messenger({
@@ -403,7 +427,7 @@ const updateVehicle = async (): Promise<void> => {
   } else {
     if ((error as string) === "error_unique_constraint") {
       if (errorParams) {
-        isExitsField.value = errorParams;
+        existFields.value = errorParams;
       }
       formRef.value.validate();
     } else {

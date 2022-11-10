@@ -83,7 +83,7 @@ const formData = reactive<FormData>(reactiveFormData());
 const { singleInput, duoInputs } = formData;
 const isSubmitting = ref<boolean>(false);
 const createCustomerForm = ref();
-const isExitsField = ref<string[]>([]);
+const existFields = ref<string[]>([]);
 const isPostalCodeHasError = ref<boolean>(false);
 
 //#endregion
@@ -92,7 +92,7 @@ const isPostalCodeHasError = ref<boolean>(false);
 onMounted(() => {
   singleInput[0].rules?.push({
     validator: (): Promise<void> => {
-      if (isExitsField.value.includes("name")) {
+      if (existFields.value.includes("name")) {
         return Promise.reject(
           i18n.global.t("error_unique_constraint", {
             fieldName: i18n.global.t("name")
@@ -106,7 +106,7 @@ onMounted(() => {
 
   singleInput[1].rules?.push({
     validator: (): Promise<void> => {
-      if (isExitsField.value.includes("short_name")) {
+      if (existFields.value.includes("short_name")) {
         return Promise.reject(
           i18n.global.t("error_unique_constraint", {
             fieldName: i18n.global.t("short_name")
@@ -151,6 +151,7 @@ onBeforeUnmount(() => {
 //#region function
 const handleOnSingleInputFocus = (index: number | boolean | Event): void => {
   formData.singleInput[Number(index)].isFocus = true;
+  if (typeof index === "number") clearExistError(index);
 };
 
 const handleOnSingleInputBlur = (
@@ -158,6 +159,23 @@ const handleOnSingleInputBlur = (
   index: string | number | Event
 ): void => {
   formData.singleInput[Number(index)].isFocus = false;
+  if (typeof index === "number") clearExistError(index);
+};
+
+const clearExistError = (index: number): void => {
+  if (index === 0 && existFields.value.length) {
+    const errorIndex = existFields.value.indexOf("name");
+    if (errorIndex >= 0) {
+      existFields.value.splice(errorIndex, 1);
+    }
+  }
+
+  if (index === 1 && existFields.value.length) {
+    const errorIndex = existFields.value.indexOf("short_name");
+    if (errorIndex >= 0) {
+      existFields.value.splice(errorIndex, 1);
+    }
+  }
 };
 
 const handleOnDuoInputsFocus = (index: number | boolean | Event): void => {
@@ -250,7 +268,7 @@ const handleClickSubmit = async (): Promise<void> => {
   } else {
     if ((error as string).includes("error_workplace_unique")) {
       if (errorParams) {
-        isExitsField.value = errorParams;
+        existFields.value = errorParams;
       }
       createCustomerForm.value.validate();
     } else {

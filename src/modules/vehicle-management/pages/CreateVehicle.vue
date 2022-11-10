@@ -130,11 +130,11 @@ const mockPartner = ref<VehicleSelection[]>([{ value: "", label: "" }]);
 const listCollectionBase = ref<VehicleSelection[]>();
 const defaultOwner = ref();
 const formRef = ref();
-const isExitsField = ref<string[]>([]);
+const existFields = ref<string[]>([]);
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 
 let handleIsExistName = async (): Promise<void> => {
-  if (isExitsField.value.includes("name")) {
+  if (existFields.value.includes("name")) {
     return Promise.reject(
       i18n.global.t("error_unique_constraint", {
         fieldName: i18n.global.t("name")
@@ -146,7 +146,7 @@ let handleIsExistName = async (): Promise<void> => {
 };
 
 let handleIsExistNumberPlate = async (): Promise<void> => {
-  if (isExitsField.value.includes("plate_number")) {
+  if (existFields.value.includes("plate_number")) {
     return Promise.reject(
       i18n.global.t("error_unique_constraint", {
         fieldName: i18n.global.t("number_plate")
@@ -222,21 +222,28 @@ const dynamicValidateForm = reactive<{ formData: any[] }>({
       disabled: isLoading,
       rules: [
         {
-          required: true,
-          message: i18n.global.t("please_enter_input", {
-            fieldName: i18n.global
-              .t("create_vehicle_lbl_vehicle_name")
-              .toLowerCase()
-          }),
-          trigger: ["change", "blur"]
-        },
-        {
-          max: 50,
-          message: i18n.global.t("max_length_input", { maxLength: 50 }),
-          trigger: ["change", "blur"]
-        },
-        {
-          validator: handleIsExistName,
+          validator: (rule: Rule, value: string): Promise<void> => {
+            if (!value) {
+              return Promise.reject(
+                i18n.global.t("please_enter_input", {
+                  fieldName: i18n.global
+                    .t("create_vehicle_lbl_vehicle_name")
+                    .toLowerCase()
+                })
+              );
+            }
+
+            if (existFields.value?.length) {
+              return handleIsExistName();
+            }
+
+            if (value.length > 50) {
+              return Promise.reject(
+                i18n.global.t("max_length_input", { maxLength: 50 })
+              );
+            }
+            return Promise.resolve();
+          },
           trigger: ["change", "blur"]
         }
       ],
@@ -392,11 +399,29 @@ const handleOnBlur = (
 ): void => {
   index = Number(index);
   dynamicValidateForm.formData[index].isFocus = false;
+  clearExistError(index);
 };
 
 const handleOnFocus = (index: number | boolean | Event): void => {
   index = Number(index);
   dynamicValidateForm.formData[index].isFocus = true;
+  clearExistError(index);
+};
+
+const clearExistError = (index: number): void => {
+  if (index === 2 && existFields.value.length) {
+    const errorIndex = existFields.value.indexOf("name");
+    if (errorIndex >= 0) {
+      existFields.value.splice(errorIndex, 1);
+    }
+  }
+
+  if (index === 3 && existFields.value.length) {
+    const errorIndex = existFields.value.indexOf("plate_number");
+    if (errorIndex >= 0) {
+      existFields.value.splice(errorIndex, 1);
+    }
+  }
 };
 
 const onCancel = (): void => {
@@ -429,7 +454,7 @@ const onCreate = async (): Promise<void> => {
   } else {
     if ((error as string) === "error_unique_constraint") {
       if (errorParams) {
-        isExitsField.value = errorParams;
+        existFields.value = errorParams;
       }
       formRef.value.validate();
     } else {
