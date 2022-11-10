@@ -198,7 +198,10 @@ export async function createCollectionRoute(
   if (error || !res) {
     return {
       error: (error?.response?.data as { details: { msg: string }[] })
-        .details[0].msg
+        .details[0].msg,
+      errorParams: (
+        error?.response?.data as { details: { msg: string; loc: string[] }[] }
+      ).details[0].loc
     };
   }
   return {

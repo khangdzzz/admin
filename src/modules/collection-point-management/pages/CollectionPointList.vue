@@ -190,7 +190,7 @@ const columns: TableColumnType<CollectionPointModel>[] = [
     width: "20%"
   },
   {
-    title: i18n.global.t("common_phone_field_name"),
+    title: i18n.global.t("customer_phone_number"),
     dataIndex: "phoneNumber",
     key: "phoneNumber",
     width: "20%"
