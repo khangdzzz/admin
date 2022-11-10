@@ -20,9 +20,7 @@ export async function getListCollectionHistory(
   const params = {
     page,
     page_size: size,
-    __all__: searchKeyword
-      ? `%${toUrlEncodedString(searchKeyword)}%`
-      : undefined
+    __all__: searchKeyword ? `${toUrlEncodedString(searchKeyword)}` : undefined
   };
 
   const [error, res] = await transformRequest<

@@ -11,6 +11,7 @@ import { DEFAULT_SORT_ORDER } from "@/services/constants";
 import { calculateSortQuery } from "@/modules/common/helpers";
 import { CreateCustomerDto } from "./dtos/customer-management/create-customer.dto";
 import { NULL_VALUE_DISPLAY } from "@/utils/constants";
+import { toUrlEncodedString } from "./utils/search-query.helper";
 
 // import { makeUniqueName } from "@/utils/string.helper";
 interface sortCustomerDto {
@@ -49,7 +50,7 @@ export async function fetchListCustomer(
   const params = {
     page,
     page_size: size,
-    name__like: searchKeyword ? `%${searchKeyword}%` : undefined,
+    __all__: searchKeyword ? `${toUrlEncodedString(searchKeyword)}` : undefined,
     order_by: order_by?.length ? order_by : DEFAULT_SORT_ORDER
   };
 

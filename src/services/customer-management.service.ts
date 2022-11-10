@@ -12,6 +12,7 @@ import {
   EditCustomerDto,
   CustomerModel
 } from "@/modules/customer-management/models/customer.model";
+import { toUrlEncodedString } from "./utils/search-query.helper";
 // import { makeUniqueName } from "@/utils/string.helper";
 
 export async function fetchListCustomer(
@@ -23,7 +24,9 @@ export async function fetchListCustomer(
   const params = {
     page,
     page_size: size,
-    name__like: searchKeyword ? `%${searchKeyword}%` : undefined,
+    name__like: searchKeyword
+      ? `%${toUrlEncodedString(searchKeyword)}%`
+      : undefined,
     order_by:
       sort === Sort.None
         ? DEFAULT_SORT_ORDER

@@ -6,6 +6,7 @@ import { PaginationDto } from "./dtos/common/pagination.dto";
 import { VehicleTypeResponseDto } from "./dtos/vehicle-management/create-vehicle-type.dto";
 import { DEFAULT_SORT_ORDER } from "@/services/constants";
 import { makeUniqueName } from "@/utils/string.helper";
+import { toUrlEncodedString } from "./utils/search-query.helper";
 
 export async function createVehicleType(
   tenantId: number,
@@ -65,7 +66,10 @@ export async function fetchListVehicleType(
   const params = {
     page,
     page_size: size,
-    name__like: searchKeyword ? `%${searchKeyword}%` : undefined,
+
+    name__like: searchKeyword
+      ? `%${toUrlEncodedString(searchKeyword)}%`
+      : undefined,
     order_by:
       sort === Sort.None
         ? DEFAULT_SORT_ORDER
