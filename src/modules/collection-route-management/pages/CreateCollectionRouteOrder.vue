@@ -189,6 +189,7 @@ import { sortDropdown } from "@/modules/common/helpers";
 import { routeNames, router } from "@/routes";
 import { service } from "@/services";
 import { makeUniqueName } from "@/utils/string.helper";
+import { cloneDeep } from "lodash";
 import {
   computed,
   inject,
@@ -213,7 +214,7 @@ let handleIsExistName = async (): Promise<void> => {
   if (isExitsField.value.includes("name")) {
     return Promise.reject(
       i18n.global.t("error_unique_constraint", {
-        fieldName: i18n.global.t("name")
+        fieldName: i18n.global.t("collection_route_route_name")
       })
     );
   }
@@ -347,10 +348,20 @@ const clearInputs = (): void => {
   dynamicValidateForm.formData[1].value = "";
 };
 const filteredCollectionPointList = computed(function () {
-  return listCollectionPoint.value.filter((data: CollectionPoint) =>
-    data.name.toLowerCase().includes(searchCollectionPoint.value.toLowerCase())
+  let keyword = searchCollectionPoint.value.toLowerCase();
+  if (!keyword) return cloneDeep(listCollectionPoint.value);
+  let listCustomerName = cloneDeep(listCollectionPoint.value)?.filter(
+    (point) => {
+      return (
+        !keyword ||
+        point.name?.toLowerCase().includes(keyword) ||
+        point.customerName?.toLocaleLowerCase().includes(keyword)
+      );
+    }
   );
+  return listCustomerName;
 });
+
 const numberOfSelectedCollectionPoint = computed(() => {
   return listSelectedCollectionPoint.value.length;
 });
