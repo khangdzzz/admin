@@ -17,6 +17,7 @@ import { PaginationDto } from "./dtos/common/pagination.dto";
 import { ContainerTypeResponseDto } from "./dtos/container/create-container-type.dto";
 
 import { ContainerResponseDTO } from "@/services/dtos/container/container.dto";
+import { toUrlEncodedString } from "./utils/search-query.helper";
 
 interface sortContainerDto {
   sortType: Sort;
@@ -42,12 +43,12 @@ export async function getListContainer(
   let params: {
     page: number | undefined;
     page_size: number | undefined;
-    name__like: string | undefined;
+    __all__: string | undefined;
     order_by?: string | undefined;
   } = {
     page,
     page_size: size,
-    name__like: searchKeyword ? `%${searchKeyword}%` : undefined
+    __all__: searchKeyword ? `${toUrlEncodedString(searchKeyword)}` : undefined
   };
   if (sort) {
     const { sortType, sortName, sortWeight, sortCapacity } = sort;
@@ -164,13 +165,13 @@ export async function getListContainerType(
   const params = {
     page,
     page_size: size,
-    name__like: searchKeyword ? `%${searchKeyword}%` : undefined,
+    __all__: searchKeyword ? `${toUrlEncodedString(searchKeyword)}` : undefined,
     order_by:
       sort === Sort.None
         ? DEFAULT_SORT_ORDER
         : sort === Sort.Asc
-          ? "name"
-          : "-name"
+        ? "name"
+        : "-name"
   };
   const [error, res] = await transformRequest<
     PaginationDto<ContainerTypeResponseDto>
