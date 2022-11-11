@@ -44,3 +44,12 @@ export interface workPlaceDTO {
   latitude: number;
   base_type?: number;
 }
+
+export interface workPlaceOption {
+  label: string;
+  value: string;
+  content: string;
+  workPlaceType: number;
+  baseType?: number[] | undefined;
+  tenantId?: number | undefined;
+}

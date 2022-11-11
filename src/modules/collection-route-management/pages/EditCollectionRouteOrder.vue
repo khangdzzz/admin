@@ -201,7 +201,6 @@ import { useRoute } from "vue-router";
 import { makeUniqueName } from "@/utils/string.helper";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { CollectionPoint } from "@/modules/collection-route-management/models/collection-route.model";
-import { sortDropdown } from "@/modules/common/helpers";
 import { cloneDeep } from "lodash";
 export interface Form {
   note: string;
@@ -368,12 +367,10 @@ const fetchCollectionBase = async (): Promise<void> => {
     WorkPlaceType.PARTNER
   ]);
   if (res) {
-    dynamicValidateForm.formData[1].options = sortDropdown(
-      res?.map((item) => ({
-        value: item.id || 0,
-        label: item.name
-      }))
-    );
+    dynamicValidateForm.formData[1].options = res?.map((item) => ({
+      value: item.id || 0,
+      label: item.name
+    }))
   }
 };
 
