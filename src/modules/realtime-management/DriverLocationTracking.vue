@@ -217,34 +217,33 @@
                 <ol-tile-layer>
                   <ol-source-osm />
                 </ol-tile-layer>
-
-                <ol-geolocation
-                  :projection="projection"
-                  v-for="(collectionPoint, index) in geoLocations"
+                <ol-overlay
+                  v-for="(geoLocation, index) in geoLocations"
                   :key="index"
+                  :position="[geoLocation.longitude, geoLocation.latitude]"
                 >
-                  <template v-slot>
-                    <ol-vector-layer :zIndex="2">
-                      <ol-source-vector>
-                        <ol-feature ref="positionFeature">
-                          <ol-geom-point
-                            :coordinates="[
-                              collectionPoint.longitude,
-                              collectionPoint.latitude
-                            ]"
-                          >
-                          </ol-geom-point>
-                          <ol-style>
-                            <ol-style-icon
-                              :src="collectionPoint.icon"
-                              :scale="1"
-                            ></ol-style-icon>
-                          </ol-style>
-                        </ol-feature>
-                      </ol-source-vector>
-                    </ol-vector-layer>
+                  <template v-slot="slotProps">
+                    <div
+                      v-if="slotProps"
+                      class="driver-tracking-location__user-location-pin"
+                    >
+                      <a
+                        :href="`${collectionPointDetailPath}/${geoLocation.id}`"
+                        target="blank"
+                      >
+                        <img
+                          class="driver-tracking-location__user-location-pin__icon"
+                          :src="geoLocation.icon"
+                      /></a>
+                      <div
+                        class="driver-tracking-location__user-name-icon"
+                        :style="`color: ${geoLocation.color};`"
+                      >
+                        {{ geoLocation.title }}
+                      </div>
+                    </div>
                   </template>
-                </ol-geolocation>
+                </ol-overlay>
 
                 <!-- list collection point -->
                 <ol-geolocation
@@ -346,7 +345,14 @@ const pageOption = reactive({
 const data = ref<{ name: string; id: number }[]>([]);
 let backupData: { name: string; id: number }[] = [];
 const geoLocations = ref<
-  { title: string; latitude: number; longitude: number; icon: string }[]
+  {
+    id: number;
+    title: string;
+    latitude: number;
+    longitude: number;
+    icon: string;
+    color: string;
+  }[]
 >([]);
 const userTrackingData = ref<number[][]>([]);
 const vehicleName = ref<string>("");
@@ -437,7 +443,6 @@ const fetchUserTrackingDetail = async (userId: number): Promise<void> => {
   userTrackingData.value = history.history.map((h) => {
     return [h.longitude, h.latitude];
   });
-  console.log("geoLocations", userTrackingData);
   vehicleName.value = history.vehicleName;
   routeName.value = history.routeName;
   capacity.value = `${history.maxWeight || 0} kg`;
@@ -458,7 +463,8 @@ const fetchUserTrackingDetail = async (userId: number): Promise<void> => {
         title,
         latitude,
         longitude,
-        icon: cp.isCollected ? icColectedCollectionPoint : icCollectionPoint
+        icon: cp.isCollected ? icColectedCollectionPoint : icCollectionPoint,
+        color: cp.isCollected ? "#999999" : "#2F6BFF"
       };
     }),
     {
@@ -466,7 +472,8 @@ const fetchUserTrackingDetail = async (userId: number): Promise<void> => {
       icon: driverIcon,
       title: history.userName,
       latitude: history.currentLat,
-      longitude: history.currentLong
+      longitude: history.currentLong,
+      color: "#2F6BFF"
     }
   ];
   setTimeout(() => {
@@ -648,7 +655,7 @@ watch(refreshTime, () => {
   }
 
   &__table-card-title-wrapper {
-    border-bottom: 1px solid $neutral-200;
+    border-bottom: 1px solid $grey-3;
     height: 60px;
   }
 
@@ -666,13 +673,12 @@ watch(refreshTime, () => {
     top: 10px;
     transition: width 300ms ease-out;
     height: 40px;
-    border-radius: 10px;
 
     &__disabled {
       .ant-input-affix-wrapper {
         padding: 0 8px 0 0 !important;
         height: 100%;
-        border-radius: 10px;
+        border-radius: 6px;
         border: 1px solid $neutral-200;
         overflow: hidden;
 
@@ -685,7 +691,7 @@ watch(refreshTime, () => {
     .ant-input-affix-wrapper {
       padding: 0 8px 0 0 !important;
       height: 100%;
-      border-radius: 10px;
+      border-radius: 6px;
       border: 1px solid $neutral-200;
       overflow: hidden;
 
@@ -729,7 +735,8 @@ watch(refreshTime, () => {
 
   &__user-map-info {
     height: 72px;
-    border-top: 1px solid $neutral-100;
+    border-top: 1px solid $grey-3;
+    border-bottom: 1px solid $grey-3;
     max-width: 100%;
     overflow: auto;
   }
@@ -822,7 +829,7 @@ watch(refreshTime, () => {
 }
 
 :deep() {
-  .driver-tracking-locationment__user-location-pin {
+  .driver-tracking-location__user-location-pin {
     position: relative;
     &__icon {
       position: absolute !important;
@@ -912,6 +919,21 @@ watch(refreshTime, () => {
 
   &__no-data {
     height: calc(100vh - 246px) !important;
+  }
+
+  &__user-name-icon {
+    position: absolute !important;
+    left: 50% !important;
+    top: -45px !important;
+    right: 0 !important;
+    min-width: max-content;
+    transform: translateX(-50%);
+
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 19px;
+    color: $blue-500;
   }
 }
 </style>

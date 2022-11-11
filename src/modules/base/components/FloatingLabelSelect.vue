@@ -154,7 +154,7 @@ const handleSearch = (value: string): void => {
   cursor: text;
   background-color: $white !important;
   border-radius: 6px !important;
-  border: 1px solid $neutral-200;
+  border: 1px solid $neutral-200 !important;
 
   &__dropdown {
     position: absolute;
