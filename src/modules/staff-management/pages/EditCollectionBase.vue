@@ -550,7 +550,11 @@ const geoLocChange = (loc: number[]): void => {
 
 const isEnableSearchAddress = (): boolean => {
   if (contact[0]?.actionBtn) {
-    if (!contact[0].value || (contact[0].value && isNaN(+contact[0].value))) {
+    if (
+      !contact[0].value ||
+      (contact[0].value && isNaN(+contact[0].value)) ||
+      contact[0].value.toString().length > 8
+    ) {
       contact[0].actionBtn.disabled = true;
       return true;
     }

@@ -159,16 +159,22 @@ export async function getCollectionRouteById(
   };
 }
 export async function getWorkplace(
-  workplaceTypes: number[]
+  workplaceTypes: number[],
+  isFilterByRole = false
 ): Promise<CollectionBaseResponseDto[] | undefined> {
+  const params = {
+    workplace_type__in: workplaceTypes.join(","),
+    page_size: "full"
+  };
+
+  if (isFilterByRole) params["__filter_scope__"] = true;
+
   const [err, res] = await transformRequest<CollectionBaseResponseDto[]>({
     url: "/workplace/options",
     method: "get",
-    params: {
-      workplace_type__in: workplaceTypes.join(","),
-      page_size: "full"
-    }
+    params
   });
+
   if (err) return undefined;
   return res;
 }
