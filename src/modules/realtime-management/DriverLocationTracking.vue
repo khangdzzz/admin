@@ -230,11 +230,19 @@
                       <a
                         :href="`${collectionPointDetailPath}/${geoLocation.id}`"
                         target="blank"
+                        v-if="!geoLocation.isUser"
                       >
                         <img
                           class="driver-tracking-location__user-location-pin__icon"
                           :src="geoLocation.icon"
-                      /></a>
+                        />
+                      </a>
+                      <div v-else>
+                        <img
+                          class="driver-tracking-location__user-location-pin__icon"
+                          :src="geoLocation.icon"
+                        />
+                      </div>
                       <div
                         class="driver-tracking-location__user-name-icon"
                         :style="`color: ${geoLocation.color};`"
@@ -352,6 +360,7 @@ const geoLocations = ref<
     longitude: number;
     icon: string;
     color: string;
+    isUser: boolean;
   }[]
 >([]);
 const userTrackingData = ref<number[][]>([]);
@@ -456,6 +465,17 @@ const fetchUserTrackingDetail = async (userId: number): Promise<void> => {
   data.value = [...backupData];
 
   geoLocations.value = [
+    ...[
+      {
+        id: 0,
+        icon: driverIcon,
+        title: history.userName,
+        latitude: history.currentLat,
+        longitude: history.currentLong,
+        color: "#2F6BFF",
+        isUser: true
+      }
+    ],
     ...history.collectOrder.collectPoints.map((cp) => {
       const { id, name: title, latitude, longitude } = cp;
       return {
@@ -464,17 +484,10 @@ const fetchUserTrackingDetail = async (userId: number): Promise<void> => {
         latitude,
         longitude,
         icon: cp.isCollected ? icColectedCollectionPoint : icCollectionPoint,
-        color: cp.isCollected ? "#999999" : "#2F6BFF"
+        color: cp.isCollected ? "#999999" : "#2F6BFF",
+        isUser: false
       };
-    }),
-    {
-      id: 0,
-      icon: driverIcon,
-      title: history.userName,
-      latitude: history.currentLat,
-      longitude: history.currentLong,
-      color: "#2F6BFF"
-    }
+    })
   ];
   setTimeout(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
