@@ -289,6 +289,7 @@ import ThePagination from "@/modules/common/components/ThePagination.vue";
 import { listOfUserColumns } from "@/modules/realtime-management/models/table-columns";
 import { router } from "@/routes";
 import { service } from "@/services";
+import { cloneDeep } from "lodash";
 import {
   computed,
   onBeforeUnmount,
@@ -422,7 +423,7 @@ const fetchWorkplaceTrackingInformation = async (): Promise<void> => {
   isLoading.value = false;
   backupData = [...data.value];
 
-  driverLocations.value = data.value.map((currentUserLocation) => {
+  driverLocations.value = cloneDeep(data.value).map((currentUserLocation) => {
     return {
       icon: driverIcon,
       latitude: currentUserLocation.latitude,
@@ -502,7 +503,7 @@ const changeUserVisibleState = (
     }
   });
 
-  driverLocations.value = data.value
+  driverLocations.value = cloneDeep(data.value)
     .filter((userLocation) => userLocation.isVisible)
     .map((currentUserLocation) => {
       return {
@@ -525,18 +526,6 @@ const onSearchChange = (): void => {
       )
     ];
   }
-
-  driverLocations.value = data.value
-    .filter((userLocation) => userLocation.isVisible)
-    .map((currentUserLocation) => {
-      return {
-        icon: driverIcon,
-        latitude: currentUserLocation.latitude,
-        longitude: currentUserLocation.longitude,
-        userId: currentUserLocation.userId,
-        username: currentUserLocation.userName
-      };
-    });
 };
 
 const onRefreshImmediately = async (): Promise<void> => {
