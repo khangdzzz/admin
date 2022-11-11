@@ -119,12 +119,12 @@ let validateShortName = (value: string): string => {
   return "";
 };
 
-let validatePostalCode = (value: string): string => {
+let validatePostalCode = (value: string, ignoreNotExist: boolean): string => {
   if (!value) {
     return "";
   }
 
-  if (isPostalCodeHasError.value) {
+  if (isPostalCodeHasError.value && !ignoreNotExist) {
     return i18n.global.t("cannot_find_address_from_field_name", {
       fieldName: i18n.global.t("common_postal_code_label").toLowerCase()
     });
@@ -221,7 +221,7 @@ const formData = reactive<FormData>({
       rules: [
         {
           validator: (rule: Rule, value: string): Promise<void> => {
-            const error = validatePostalCode(value);
+            const error = validatePostalCode(value, false);
             if (error) {
               return Promise.reject(error);
             }
@@ -563,7 +563,8 @@ const onCheckValidFields = async (): Promise<void> => {
     const nameError = validateName(singleInput[0].value?.toString());
     const shortNameError = validateShortName(singleInput[1].value?.toString());
     const postalCodeError = validatePostalCode(
-      singleInput[3].value?.toString()
+      singleInput[3].value?.toString(),
+      true
     );
     const addressError = validateMaxLength(
       singleInput[4].value?.toString(),
