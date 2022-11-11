@@ -9,9 +9,6 @@
       ]"
       >{{ label }} <span class="required" v-if="required">*</span></label
     >
-    <span class="floating-label__placeholder">
-      {{ placeholder }}
-    </span>
   </div>
 </template>
 
@@ -43,10 +40,6 @@ defineProps({
   prefix: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     type: Object as PropType<{ icon: any; action: any }> | undefined
-  },
-  placeholder: {
-    type: String,
-    default: ""
   }
 });
 //#endregion
@@ -109,18 +102,6 @@ defineProps({
 
   .required {
     color: red;
-  }
-
-  &__placeholder {
-    position: absolute;
-    top: 50%;
-    left: 12px;
-
-    font-style: normal;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 16px;
-    color: $neutral-600;
   }
 }
 </style>

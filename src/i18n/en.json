@@ -330,5 +330,7 @@
   "collection_history_sell": "Sell",
   "collection_history_remarks": "Remarks",
   "collection_history_hint_message": "Username, Workplace, Vehicle, Customer, Collection point, Collection item",
-  "collection_history_hint_title": "Search by:"
+  "collection_history_hint_title": "Search by:",
+  "custom_select_apply": "Apply",
+  "inactive_more_than_1_hour": "Inactive more than 1 hour"
 }
