@@ -14,7 +14,6 @@
                 :form-data="formData.singleInput"
                 @on-focus="handleOnSingleInputFocus"
                 @on-blur="handleOnSingleInputBlur"
-                @change="handleOnChange"
               />
             </div>
             <div
@@ -24,7 +23,6 @@
                 :form-data="formData.duoInputs"
                 @on-focus="handleOnDuoInputsFocus"
                 @on-blur="handleOnDuoInputsBlur"
-                @change="handleOnChange"
               />
             </div>
           </a-form>
@@ -53,17 +51,8 @@
 
 <script setup lang="ts">
 //#region import
-import CustomForm from "@/modules/base/components/CustomForm.vue";
-import {
-  computed,
-  inject,
-  onMounted,
-  reactive,
-  ref,
-  watch,
-  onBeforeUnmount
-} from "vue";
 import { i18n } from "@/i18n";
+import CustomForm from "@/modules/base/components/CustomForm.vue";
 import validator from "@/modules/base/components/validator/validator";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
@@ -71,8 +60,17 @@ import { FormData } from "@/modules/staff-management/models/collection-base.mode
 import { routeNames, router } from "@/routes";
 import { service } from "@/services";
 import { makeUniqueName } from "@/utils/string.helper";
-import { useRoute } from "vue-router";
 import { Rule } from "ant-design-vue/lib/form";
+import {
+  computed,
+  inject,
+  onBeforeUnmount,
+  onMounted,
+  reactive,
+  ref,
+  watch
+} from "vue";
+import { useRoute } from "vue-router";
 //#endregion
 
 //#region props
@@ -81,18 +79,76 @@ import { Rule } from "ant-design-vue/lib/form";
 //#region variables
 const route = useRoute();
 
-let isExistName = async (): Promise<void> => {
-  if (isExist.value) {
-    return Promise.reject(
-      i18n.global.t("error_unique_constraint", {
-        fieldName: i18n.global.t("human_name")
-      })
-    );
+const isPostalCodeHasError = ref<boolean>(false);
+
+let validateName = (value: string): string => {
+  if (!value) {
+    return i18n.global.t("please_enter_input", {
+      fieldName: i18n.global.t("human_name").toLowerCase()
+    });
   }
-  return Promise.resolve();
+
+  if (value.length > 50) {
+    return i18n.global.t("max_length_input", { maxLength: 50 });
+  }
+
+  if (existFields.value.includes("name")) {
+    return i18n.global.t("error_unique_constraint", {
+      fieldName: i18n.global.t("human_name")
+    });
+  }
+  return "";
 };
 
-const isPostalCodeHasError = ref<boolean>(false);
+let validateShortName = (value: string): string => {
+  if (!value) {
+    return i18n.global.t("please_enter_input", {
+      fieldName: i18n.global.t("short_name").toLowerCase()
+    });
+  }
+
+  if (value.length > 50) {
+    return i18n.global.t("max_length_input", { maxLength: 50 });
+  }
+
+  if (existFields.value.includes("short_name")) {
+    return i18n.global.t("error_unique_constraint", {
+      fieldName: i18n.global.t("short_name")
+    });
+  }
+  return "";
+};
+
+let validatePostalCode = (value: string): string => {
+  if (!value) {
+    return "";
+  }
+
+  if (isPostalCodeHasError.value) {
+    return i18n.global.t("cannot_find_address_from_field_name", {
+      fieldName: i18n.global.t("common_postal_code_label").toLowerCase()
+    });
+  }
+
+  const regex = /^[0-9]*$/;
+  if (value && !regex.test(value)) {
+    return i18n.global.t("field_allow_number_only");
+  }
+
+  if (value.length > 8) {
+    return i18n.global.t("max_length_input", { maxLength: 8 });
+  }
+
+  return "";
+};
+
+const validateMaxLength = (value: string, maxLength): string => {
+  if (value?.length > 255) {
+    return i18n.global.t("max_length_input", { maxLength });
+  }
+  return "";
+};
+
 const formData = reactive<FormData>({
   singleInput: [
     {
@@ -107,20 +163,12 @@ const formData = reactive<FormData>({
       isFocus: false,
       rules: [
         {
-          required: true,
-          message: i18n.global.t("please_enter_input", {
-            fieldName: i18n.global.t("human_name").toLowerCase()
-          }),
+          validator: (rule: Rule, value: string): Promise<void> => {
+            const error = validateName(value);
+            if (error) return Promise.reject(error);
+            return Promise.resolve();
+          },
           trigger: ["blur", "change"]
-        },
-        {
-          max: 50,
-          message: i18n.global.t("max_length_input", { maxLength: 50 }),
-          trigger: ["blur", "change"]
-        },
-        {
-          validator: isExistName,
-          trigger: ["change"]
         }
       ],
       parent: "singleInput"
@@ -137,19 +185,11 @@ const formData = reactive<FormData>({
       isFocus: false,
       rules: [
         {
-          required: true,
-          message: i18n.global.t("please_enter_input", {
-            fieldName: i18n.global.t("short_name").toLowerCase()
-          }),
-          trigger: ["blur", "change"]
-        },
-        {
-          max: 50,
-          message: i18n.global.t("max_length_input", { maxLength: 50 }),
-          trigger: ["blur", "change"]
-        },
-        {
-          validator: isExistName,
+          validator: (rule: Rule, value: string): Promise<void> => {
+            const error = validateShortName(value);
+            if (error) return Promise.reject(error);
+            return Promise.resolve();
+          },
           trigger: ["blur", "change"]
         }
       ],
@@ -181,19 +221,11 @@ const formData = reactive<FormData>({
       rules: [
         {
           validator: (rule: Rule, value: string): Promise<void> => {
-            if (!value) {
-              return Promise.resolve();
+            const error = validatePostalCode(value);
+            if (error) {
+              return Promise.reject(error);
             }
-            if (isPostalCodeHasError.value) {
-              return Promise.reject(
-                i18n.global.t("cannot_find_address_from_field_name", {
-                  fieldName: i18n.global
-                    .t("common_postal_code_label")
-                    .toLowerCase()
-                })
-              );
-            }
-            return validator.validatePostalCode(rule, value);
+            return Promise.resolve();
           },
           trigger: ["change", "blur"]
         }
@@ -216,9 +248,15 @@ const formData = reactive<FormData>({
       isFocus: false,
       rules: [
         {
-          max: 255,
-          message: i18n.global.t("max_length_input", { maxLength: 255 }),
-          trigger: "change"
+          validator: (rule: Rule, value: string): Promise<void> => {
+            const maxAddressLength = 255;
+            const error = validateMaxLength(value, maxAddressLength);
+            if (error) {
+              return Promise.reject(error);
+            }
+            return Promise.resolve();
+          },
+          trigger: ["change", "blur"]
         }
       ],
       parent: "singleInput"
@@ -273,9 +311,15 @@ const formData = reactive<FormData>({
       isFocus: false,
       rules: [
         {
-          max: 50,
-          message: i18n.global.t("max_length_input", { maxLength: 50 }),
-          trigger: "change"
+          validator: (rule: Rule, value: string): Promise<void> => {
+            const maxRepresentativeLength = 50;
+            const error = validateMaxLength(value, maxRepresentativeLength);
+            if (error) {
+              return Promise.reject(error);
+            }
+            return Promise.resolve();
+          },
+          trigger: ["change", "blur"]
         }
       ],
       parent: "duoInputs"
@@ -292,9 +336,15 @@ const formData = reactive<FormData>({
       isFocus: false,
       rules: [
         {
-          max: 16,
-          message: i18n.global.t("max_length_input", { maxLength: 16 }),
-          trigger: "change"
+          validator: (rule: Rule, value: string): Promise<void> => {
+            const maxExternalCodeLength = 50;
+            const error = validateMaxLength(value, maxExternalCodeLength);
+            if (error) {
+              return Promise.reject(error);
+            }
+            return Promise.resolve();
+          },
+          trigger: ["change", "blur"]
         }
       ],
       parent: "duoInputs"
@@ -333,33 +383,6 @@ onBeforeUnmount(() => {
 
 onMounted(async () => {
   await init();
-  singleInput[0].rules?.push({
-    validator: (): Promise<void> => {
-      if (existFields.value.includes("name")) {
-        return Promise.reject(
-          i18n.global.t("error_unique_constraint", {
-            fieldName: i18n.global.t("name")
-          })
-        );
-      }
-      return Promise.resolve();
-    },
-    trigger: ["blur", "change"]
-  });
-
-  singleInput[1].rules?.push({
-    validator: (): Promise<void> => {
-      if (existFields.value.includes("short_name")) {
-        return Promise.reject(
-          i18n.global.t("error_unique_constraint", {
-            fieldName: i18n.global.t("short_name")
-          })
-        );
-      }
-      return Promise.resolve();
-    },
-    trigger: ["blur", "change"]
-  });
 
   if (singleInput[3].actionBtn) {
     singleInput[3].actionBtn.name = "search_address";
@@ -421,7 +444,6 @@ const clearExistError = (index: number): void => {
       existFields.value.splice(errorIndex, 1);
     }
   }
-
   if (index === 1 && existFields.value.length) {
     const errorIndex = existFields.value.indexOf("short_name");
     if (errorIndex >= 0) {
@@ -451,7 +473,8 @@ const isEnableSearchAddress = (): boolean => {
   if (singleInput[3]?.actionBtn) {
     if (
       !singleInput[3].value ||
-      (singleInput[3].value && isNaN(+singleInput[3].value))
+      (singleInput[3].value && isNaN(+singleInput[3].value)) ||
+      singleInput[3].value.toString().length > 8
     ) {
       singleInput[3].actionBtn.disabled = true;
       return true;
@@ -482,12 +505,6 @@ const handleSearchAddress = async (): Promise<void> => {
 
   document.getElementById("edit-customer_postal-code")?.focus();
   document.getElementById("edit-customer_postal-code")?.blur();
-};
-
-const handleOnChange = (value: string, index: number): void => {
-  if (index < 2 && !isValid.value) {
-    formRef.value.clearValidate();
-  }
 };
 
 const handleClickCancel = (): void => {
@@ -543,8 +560,35 @@ const handleClickSave = async (): Promise<void> => {
 //#region computed
 const onCheckValidFields = async (): Promise<void> => {
   try {
-    await formRef.value.validateFields();
-    isValid.value = true;
+    const nameError = validateName(singleInput[0].value?.toString());
+    const shortNameError = validateShortName(singleInput[1].value?.toString());
+    const postalCodeError = validatePostalCode(
+      singleInput[3].value?.toString()
+    );
+    const addressError = validateMaxLength(
+      singleInput[4].value?.toString(),
+      255
+    );
+    if (singleInput[5].value)
+      await validator.validatePhone({}, singleInput[5].value?.toString());
+    if (singleInput[6].value)
+      await validator.validateEmail({}, singleInput[6].value?.toString());
+    const representativeError = validateMaxLength(
+      duoInputs[1].value?.toString(),
+      50
+    );
+    const externalCodeError = validateMaxLength(
+      duoInputs[1].value?.toString(),
+      16
+    );
+    isValid.value = !(
+      nameError ||
+      shortNameError ||
+      postalCodeError ||
+      addressError ||
+      representativeError ||
+      externalCodeError
+    );
   } catch {
     isValid.value = false;
   }
@@ -563,6 +607,14 @@ watch(
     singleInput[3].class = "input-with-action-btn";
     isEnableSearchAddress();
   }
+);
+
+watch(
+  () => formData,
+  () => {
+    onCheckValidFields();
+  },
+  { deep: true }
 );
 //#endregion
 </script>
