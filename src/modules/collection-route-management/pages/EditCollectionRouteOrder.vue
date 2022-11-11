@@ -179,6 +179,7 @@
 
 <script setup lang="ts">
 //#region import
+import { UserType } from "@/modules/base/models/user-type.enum";
 import { i18n } from "@/i18n";
 import IcSwap from "@/assets/icons/IcSwap.vue";
 import IcRequired from "@/assets/icons/IcRequired.vue";
@@ -202,6 +203,7 @@ import { makeUniqueName } from "@/utils/string.helper";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { CollectionPoint } from "@/modules/collection-route-management/models/collection-route.model";
 import { cloneDeep } from "lodash";
+import { commonStore } from "@/stores";
 export interface Form {
   note: string;
 }
@@ -211,7 +213,7 @@ export interface Form {
 //#endregion
 
 //#region variables
-
+const userStore = commonStore();
 const isExitsField = ref<string[]>([]);
 let handleIsExistName = async (): Promise<void> => {
   if (isExitsField.value.includes("name")) {
@@ -314,11 +316,9 @@ const route = useRoute();
 
 onMounted(async () => {
   isLoading.value = true;
-  await Promise.all([
-    fetchCollectionBase(),
-    fetchListCollectionPoint(),
-    fetchData()
-  ]);
+  await Promise.all([fetchCollectionBase(), fetchListCollectionPoint()]);
+
+  fetchData();
   isDisableSubmit.value = false;
   isLoading.value = false;
 });
@@ -351,7 +351,13 @@ const fetchData = async (): Promise<void> => {
   if (res) {
     dynamicValidateForm.formData[0].value = res.name ?? "";
     formNote.note = res.notice ?? "";
-    dynamicValidateForm.formData[1].value = res.workplaceId ?? "";
+    if (
+      dynamicValidateForm.formData[1].options.find(
+        (option) => option.value === res.workplaceId
+      )
+    ) {
+      dynamicValidateForm.formData[1].value = res.workplaceId ?? "";
+    }
     listSelectedCollectionPoint.value =
       res.listCollectionPoint?.map((item) => ({
         id: item.id,
@@ -361,11 +367,14 @@ const fetchData = async (): Promise<void> => {
   }
   isLoading.value = false;
 };
+const isCollectionBaseAdmin = computed((): boolean => {
+  return userStore.user?.userType === UserType.CollectionBaseAdmin;
+});
 const fetchCollectionBase = async (): Promise<void> => {
-  const res = await service.collectionRoute.getWorkplace([
-    WorkPlaceType.COLLECTION_BASE,
-    WorkPlaceType.PARTNER
-  ]);
+  const res = await service.collectionRoute.getWorkplace(
+    [WorkPlaceType.COLLECTION_BASE, WorkPlaceType.PARTNER],
+    isCollectionBaseAdmin.value
+  );
   if (res) {
     dynamicValidateForm.formData[1].options = res?.map((item) => ({
       value: item.id || 0,
