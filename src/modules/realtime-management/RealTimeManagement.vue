@@ -633,6 +633,8 @@ watch(selectedCollectionBase, async () => {
 });
 
 watch(refreshTime, () => {
+  clearInterval(interval.value);
+
   if (refreshTime.value) {
     interval.value = setInterval(async () => {
       isLoading.value = true;
