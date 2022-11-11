@@ -532,6 +532,14 @@ const onRefreshImmediately = async (): Promise<void> => {
   isLoading.value = true;
   await fetchWorkplaceTrackingInformation();
   isLoading.value = false;
+  if (interval.value && refreshTime) {
+    clearInterval(interval.value);
+    interval.value = setInterval(async () => {
+      isLoading.value = true;
+      await fetchWorkplaceTrackingInformation();
+      isLoading.value = false;
+    }, refreshTime.value * 60 * 1000);
+  }
 };
 
 const resetSort = (): void => {
