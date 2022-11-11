@@ -227,17 +227,7 @@
                       v-if="slotProps"
                       class="driver-tracking-location__user-location-pin"
                     >
-                      <a
-                        :href="`${collectionPointDetailPath}/${geoLocation.id}`"
-                        target="blank"
-                        v-if="!geoLocation.isUser"
-                      >
-                        <img
-                          class="driver-tracking-location__user-location-pin__icon"
-                          :src="geoLocation.icon"
-                        />
-                      </a>
-                      <div v-else>
+                      <div>
                         <img
                           class="driver-tracking-location__user-location-pin__icon"
                           :src="geoLocation.icon"
@@ -484,7 +474,7 @@ const fetchUserTrackingDetail = async (userId: number): Promise<void> => {
         latitude,
         longitude,
         icon: cp.isCollected ? icColectedCollectionPoint : icCollectionPoint,
-        color: cp.isCollected ? "#999999" : "#2F6BFF",
+        color: cp.isCollected ? "#999999" : "#07A0B8",
         isUser: false
       };
     })
@@ -947,6 +937,8 @@ watch(refreshTime, () => {
     font-size: 16px;
     line-height: 19px;
     color: $blue-500;
+    text-shadow: 2px 0 #fff, -2px 0 #fff, 0 2px #fff, 0 -2px #fff, 1px 1px #fff,
+      -1px -1px #fff, 1px -1px #fff, -1px 1px #fff;
   }
 }
 </style>

@@ -254,13 +254,16 @@
                   >
                     <a
                       :href="`${userTrackingPath}/${geoLocation.userId}`"
-                      target="blank"
+                      target="_blank"
                     >
                       <img
                         class="realtime-management__user-location-pin__icon"
                         :src="geoLocation.icon"
                     /></a>
-                    <div class="realtime-manage__user-name-icon">
+                    <div
+                      class="realtime-manage__user-name-icon"
+                      :style="`color: ${geoLocation.color}`"
+                    >
                       {{ geoLocation.username }}
                     </div>
                   </div>
@@ -303,6 +306,7 @@ import { sortDropdown } from "../common/helpers";
 import { Sort } from "../common/models/sort.enum";
 import { WorkPlaceType } from "../workplace/models/workplace.model";
 import { CurrentUserLocationModel } from "./models/current-user-location.model";
+import inactiveDriverIcon from "@/assets/icons/ic_inactive_driver.svg";
 //#endregion
 
 //#region props
@@ -346,6 +350,7 @@ const driverLocations = ref<
     longitude: number;
     userId: number;
     username: string;
+    color: string;
   }[]
 >([]);
 
@@ -425,11 +430,16 @@ const fetchWorkplaceTrackingInformation = async (): Promise<void> => {
 
   driverLocations.value = cloneDeep(data.value).map((currentUserLocation) => {
     return {
-      icon: driverIcon,
+      icon: isActive(currentUserLocation.lastUpdateTime)
+        ? driverIcon
+        : inactiveDriverIcon,
       latitude: currentUserLocation.latitude,
       longitude: currentUserLocation.longitude,
       userId: currentUserLocation.userId,
-      username: currentUserLocation.userName
+      username: currentUserLocation.userName,
+      color: isActive(currentUserLocation.lastUpdateTime)
+        ? "#2F6BFF"
+        : "#999999"
     };
   });
 
@@ -442,6 +452,23 @@ const fetchWorkplaceTrackingInformation = async (): Promise<void> => {
       });
     }, 100);
   }
+};
+
+const isActive = (time: Date): boolean => {
+  if (!time) return false;
+  const lastActiveTimeMillisecond = Date.parse(
+    new Date(time).toLocaleString("th-TH", {
+      timeZone: "Asia/Jakarta"
+    })
+  );
+
+  const currentTimeMillisecond = Date.parse(
+    new Date().toLocaleString("th-TH", {
+      timeZone: "Asia/Jakarta"
+    })
+  );
+
+  return currentTimeMillisecond - lastActiveTimeMillisecond > 3600000;
 };
 
 const handleClickExpandSearchBox = (): void => {
@@ -507,11 +534,16 @@ const changeUserVisibleState = (
     .filter((userLocation) => userLocation.isVisible)
     .map((currentUserLocation) => {
       return {
-        icon: driverIcon,
+        icon: isActive(currentUserLocation.lastUpdateTime)
+          ? driverIcon
+          : inactiveDriverIcon,
         latitude: currentUserLocation.latitude,
         longitude: currentUserLocation.longitude,
         userId: currentUserLocation.userId,
-        username: currentUserLocation.userName
+        username: currentUserLocation.userName,
+        color: isActive(currentUserLocation.lastUpdateTime)
+          ? "#2F6BFF"
+          : "#999999"
       };
     });
 };
@@ -979,7 +1011,8 @@ watch(refreshTime, () => {
     font-weight: 700;
     font-size: 16px;
     line-height: 19px;
-    color: $blue-500;
+    text-shadow: 2px 0 #fff, -2px 0 #fff, 0 2px #fff, 0 -2px #fff, 1px 1px #fff,
+      -1px -1px #fff, 1px -1px #fff, -1px 1px #fff;
   }
 }
 </style>
