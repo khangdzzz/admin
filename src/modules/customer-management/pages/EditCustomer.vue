@@ -14,7 +14,6 @@
                 :form-data="formData.singleInput"
                 @on-focus="handleOnSingleInputFocus"
                 @on-blur="handleOnSingleInputBlur"
-                @change="handleOnChange"
               />
             </div>
             <div
@@ -24,7 +23,6 @@
                 :form-data="formData.duoInputs"
                 @on-focus="handleOnDuoInputsFocus"
                 @on-blur="handleOnDuoInputsBlur"
-                @change="handleOnChange"
               />
             </div>
           </a-form>
