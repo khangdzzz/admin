@@ -110,7 +110,7 @@ export const formData = (): FormData => {
         label: "common_postal_code_label",
         name: "postalCode",
         disabled: false,
-        required: true,
+        required: false,
         key: 5,
         isFocus: false,
         actionBtn: {
@@ -128,17 +128,10 @@ export const formData = (): FormData => {
         label: "address",
         name: "address",
         disabled: false,
-        required: true,
+        required: false,
         key: 6,
         isFocus: false,
         rules: [
-          {
-            required: true,
-            message: i18n.global.t("please_enter_input", currentLanguage, {
-              fieldName: i18n.global.t("address", currentLanguage).toLowerCase()
-            }),
-            trigger: ["blur", "change"]
-          },
           {
             max: 255,
             message: i18n.global.t("max_length_input", currentLanguage, {
