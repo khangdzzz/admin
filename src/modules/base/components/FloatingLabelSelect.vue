@@ -28,7 +28,6 @@
         :value="value"
         :options="options"
         show-search
-        :open="isFocused"
         @change="dataChange"
         @search="handleSearch"
         :filter-option="filterOption"
@@ -153,7 +152,7 @@ const handleSearch = (value: string): void => {
 .floating-label-select {
   position: relative;
   cursor: text;
-  background-color: $white;
+  background-color: $white !important;
   border-radius: 6px !important;
   border: 1px solid $neutral-200;
 
