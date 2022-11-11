@@ -250,6 +250,7 @@ import { commonStore } from "@/stores";
 import { Rule } from "ant-design-vue/lib/form";
 import { inject, onMounted, reactive, ref, watch } from "vue";
 import { TypeOptions, UserRoleOptions } from "../models/create-new-staff.model";
+import { workPlaceOption } from "../models/staff.model";
 import radioOptions from "./create-new-staff-variables";
 
 interface FormState {
@@ -381,7 +382,7 @@ const filterWorkPlaceByType = async (role: any): Promise<void> => {
           role.optionalType?.includes(item.workPlaceType)) &&
         item.tenantId === userStore.user?.tenantId
     );
-    optionValue.workPlaceOptions = filter;
+    optionValue.workPlaceOptions = softWorkPlace(filter);
   }
   if (userStore.user?.userType === UserType.CollectionBaseAdmin) {
     const filter = await listWorkPlace.value?.filter(
@@ -393,9 +394,24 @@ const filterWorkPlaceByType = async (role: any): Promise<void> => {
         item.tenantId === userStore.user?.tenantId &&
         userStore.user?.workplaces?.includes(Number(item.value))
     );
-    optionValue.workPlaceOptions = filter;
+    optionValue.workPlaceOptions = softWorkPlace(filter);
   }
 };
+
+const softWorkPlace = (filter: workPlaceOption[]) : workPlaceOption[] => {
+  return filter.sort((a, b) => {
+      const labelA = a.label.toLowerCase();
+      const labelB = b.label.toLowerCase();
+      if (labelA < labelB) {
+        return -1;
+      }
+      if (labelA > labelB) {
+        return 1;
+      }
+  
+      return 0;
+    });
+}
 
 const handleClearInput = (): void => {
   createStaffRef.value.resetFields();

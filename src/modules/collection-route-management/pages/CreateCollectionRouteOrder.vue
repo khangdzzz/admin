@@ -185,7 +185,6 @@ import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import { CollectionPoint } from "@/modules/collection-route-management/models/collection-route.model";
 import { WorkPlaceType } from "@/modules/workplace/models/workplace.model";
-import { sortDropdown } from "@/modules/common/helpers";
 import { routeNames, router } from "@/routes";
 import { service } from "@/services";
 import { makeUniqueName } from "@/utils/string.helper";
@@ -334,12 +333,10 @@ const fetchCollectionBase = async (): Promise<void> => {
     WorkPlaceType.PARTNER
   ]);
   if (res) {
-    dynamicValidateForm.formData[1].options = sortDropdown(
-      res?.map((item) => ({
+    dynamicValidateForm.formData[1].options = res?.map((item) => ({
         value: item.id || 0,
         label: item.name
       }))
-    );
   }
 };
 
