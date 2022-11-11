@@ -139,12 +139,9 @@
                     </div>
                   </template>
                   <template v-if="column.key === 'userName'">
-                    <a
-                      :href="`${userTrackingPath}/${record.userId}`"
-                      target="blank"
-                      class="realtime-manage__href-name"
-                      >{{ record.userName }}</a
-                    >
+                    <div class="realtime-manage__href-name">
+                      {{ record.userName }}
+                    </div>
                   </template>
                 </template>
               </a-table>

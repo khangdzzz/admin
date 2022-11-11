@@ -111,12 +111,9 @@
                   </template>
                   <template #bodyCell="{ column, record }">
                     <template v-if="column.key === 'name'">
-                      <a
-                        :href="`${collectionPointDetailPath}/${record.id}`"
-                        target="blank"
-                        class="driver-tracking-location__href-name"
-                        >{{ record.name }}</a
-                      >
+                      <div class="driver-tracking-location__href-name">
+                        {{ record.name }}
+                      </div>
                     </template>
                   </template>
                 </a-table>
