@@ -11,8 +11,8 @@ export const formData = (): FormData => {
       {
         inputType: "AInput",
         value: "",
-        placeHolder: "name",
-        label: "name",
+        placeHolder: "collection_base_lbl_name",
+        label: "collection_base_lbl_name",
         name: "name",
         disabled: false,
         required: true,
@@ -22,7 +22,9 @@ export const formData = (): FormData => {
           {
             required: true,
             message: i18n.global.t("please_enter_input", currentLanguage, {
-              fieldName: i18n.global.t("name", currentLanguage).toLowerCase()
+              fieldName: i18n.global
+                .t("collection_base_lbl_name", currentLanguage)
+                .toLowerCase()
             }),
             trigger: "blur"
           },
@@ -69,8 +71,8 @@ export const formData = (): FormData => {
       {
         inputType: "AInput",
         value: "",
-        placeHolder: "name_kana",
-        label: "name_kana",
+        placeHolder: "collection_base_lbl_name_kana",
+        label: "collection_base_lbl_name_kana",
         name: "kana",
         disabled: false,
         required: false,

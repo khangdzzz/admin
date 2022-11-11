@@ -168,7 +168,7 @@ const pageOption = reactive<Pagination<CollectionBase>>({
 let sourceData: CollectionBase[] = [];
 const columns = [
   {
-    title: i18n.global.t("collection_name"),
+    title: i18n.global.t("collection_base_lbl_name"),
     dataIndex: "name",
     key: "name"
   },
