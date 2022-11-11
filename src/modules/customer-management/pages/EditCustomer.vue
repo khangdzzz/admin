@@ -143,7 +143,7 @@ let validatePostalCode = (value: string, ignoreNotExist: boolean): string => {
 };
 
 const validateMaxLength = (value: string, maxLength): string => {
-  if (value?.length > 255) {
+  if (value?.length > maxLength) {
     return i18n.global.t("max_length_input", { maxLength });
   }
   return "";
@@ -337,7 +337,7 @@ const formData = reactive<FormData>({
       rules: [
         {
           validator: (rule: Rule, value: string): Promise<void> => {
-            const maxExternalCodeLength = 50;
+            const maxExternalCodeLength = 16;
             const error = validateMaxLength(value, maxExternalCodeLength);
             if (error) {
               return Promise.reject(error);
@@ -575,7 +575,7 @@ const onCheckValidFields = async (): Promise<void> => {
     if (singleInput[6].value)
       await validator.validateEmail({}, singleInput[6].value?.toString());
     const representativeError = validateMaxLength(
-      duoInputs[1].value?.toString(),
+      duoInputs[0].value?.toString(),
       50
     );
     const externalCodeError = validateMaxLength(
