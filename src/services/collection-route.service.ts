@@ -160,7 +160,7 @@ export async function getCollectionRouteById(
 }
 export async function getWorkplace(
   workplaceTypes: number[],
-  isFilterByRole = false
+  isFilterByRole: boolean
 ): Promise<CollectionBaseResponseDto[] | undefined> {
   const params = {
     workplace_type__in: workplaceTypes.join(","),

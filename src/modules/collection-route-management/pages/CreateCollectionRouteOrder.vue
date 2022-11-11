@@ -189,6 +189,8 @@ import { routeNames, router } from "@/routes";
 import { service } from "@/services";
 import { makeUniqueName } from "@/utils/string.helper";
 import { cloneDeep } from "lodash";
+import { commonStore } from "@/stores";
+import { UserType } from "@/modules/base/models/user-type.enum";
 import {
   computed,
   inject,
@@ -208,6 +210,7 @@ export interface Form {
 //#endregion
 
 //#region variables
+const userStore = commonStore();
 const isExitsField = ref<string[]>([]);
 let handleIsExistName = async (): Promise<void> => {
   if (isExitsField.value.includes("name")) {
@@ -327,11 +330,14 @@ const fetchListCollectionPoint = async (): Promise<void> => {
     }));
   }
 };
+const isCollectionBaseAdmin = computed((): boolean => {
+  return userStore.user?.userType === UserType.CollectionBaseAdmin;
+});
 const fetchCollectionBase = async (): Promise<void> => {
-  const res = await service.collectionRoute.getWorkplace([
-    WorkPlaceType.COLLECTION_BASE,
-    WorkPlaceType.PARTNER
-  ]);
+  const res = await service.collectionRoute.getWorkplace(
+    [WorkPlaceType.COLLECTION_BASE, WorkPlaceType.PARTNER],
+    isCollectionBaseAdmin.value
+  );
   if (res) {
     dynamicValidateForm.formData[1].options = res?.map((item) => ({
         value: item.id || 0,
