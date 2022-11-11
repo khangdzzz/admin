@@ -4,13 +4,18 @@
       class="floating-label-select"
       :is-focused="isFocused || !!value"
       :label="!noLabel ? $t(isFocused || !!value ? label : placeHolder) : ''"
-      :placeholder="!value ? placeholder : ''"
       :control-name="controlName"
       :required="required"
       @click="focus(`${label}-input`)"
       :prefix="prefix"
       :style="size === 'small' ? 'height: 40px' : 'height: 60px'"
     >
+      <div
+        class="floating-label-select__placeholder"
+        v-if="!searchValue && !value && noLabel"
+      >
+        {{ $t(placeHolder) }}
+      </div>
       <a-select
         :id="`${label}-input`"
         :class="[
@@ -25,6 +30,7 @@
         show-search
         :open="isFocused"
         @change="dataChange"
+        @search="handleSearch"
         :filter-option="filterOption"
       >
         <template #suffixIcon>
@@ -101,10 +107,6 @@ defineProps({
   size: {
     type: String,
     default: "medium"
-  },
-  placeholder: {
-    type: String,
-    default: ""
   }
 });
 //#endregion
@@ -115,6 +117,7 @@ const emit = defineEmits<{
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (e: "update:value", data: string): void;
 }>();
+const searchValue = ref("");
 //#endregion
 
 //#region hooks
@@ -124,12 +127,18 @@ const emit = defineEmits<{
 const focus = (id: string): void => {
   document.getElementById(id)?.focus();
 };
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const filterOption = (input: string, option: any): boolean => {
   return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
 };
+
 const dataChange = (value: string): void => {
   emit("update:value", value || "");
+};
+
+const handleSearch = (value: string): void => {
+  searchValue.value = value;
 };
 //#endregion
 
@@ -144,6 +153,9 @@ const dataChange = (value: string): void => {
 .floating-label-select {
   position: relative;
   cursor: text;
+  background-color: $white;
+  border-radius: 6px !important;
+  border: 1px solid $neutral-200;
 
   &__dropdown {
     position: absolute;
@@ -199,6 +211,22 @@ const dataChange = (value: string): void => {
     font-size: 16px;
     line-height: 20px;
     color: $neutral-600;
+
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  &__placeholder {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 16px;
+    color: $neutral-600;
   }
 }
 
@@ -219,6 +247,10 @@ const dataChange = (value: string): void => {
     color: $red-500 !important;
     margin-bottom: 20px;
     margin-top: 8px;
+  }
+
+  .ant-select-selection-item {
+    color: $neutral-600 !important;
   }
 }
 </style>
@@ -241,6 +273,9 @@ const dataChange = (value: string): void => {
       > div
       > .floating-label-select__input-value) {
     height: 64px !important;
+    &:not(:last-child) {
+      border-bottom: 1px solid $neutral-100;
+    }
   }
 }
 

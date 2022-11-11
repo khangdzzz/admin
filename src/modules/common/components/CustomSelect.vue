@@ -3,7 +3,8 @@
     <div
       :class="[
         'custom-select__label fill-width fill-height d-flex align-center justify-space-between px-12',
-        isOpenOptionsList ? 'custom-select__label-focused' : ''
+        isOpenOptionsList ? 'custom-select__label-focused' : '',
+        disabled ? 'custom-select__label-disabled' : ''
       ]"
       @click="handleClickCustomSelectLabel"
     >
@@ -47,7 +48,7 @@
           type="primary"
           :disabled="disabled"
           @click="handleApplySelectedItem"
-          >Apply</a-button
+          >{{ $t("custom_select_apply") }}</a-button
         >
       </div>
     </div>
@@ -119,7 +120,7 @@ const handleClickOutside = (): void => {
 };
 
 const handleClickCustomSelectLabel = (): void => {
-  isOpenOptionsList.value = true;
+  if (!props.disabled) isOpenOptionsList.value = true;
 };
 
 const handleClickSelectItem = (option: Option): void => {
@@ -152,7 +153,7 @@ const displayLabel = computed(() => {
   position: relative;
   &__label {
     background: $white;
-    border-radius: 10px;
+    border-radius: 6px;
     transition: border 150ms;
     border: 1px solid $neutral-200;
     cursor: pointer;
@@ -170,6 +171,16 @@ const displayLabel = computed(() => {
 
   &__label-focused {
     box-shadow: 0 0 0 2px #07a0b833;
+  }
+
+  &__label-disabled {
+    background-color: #d7d7d7;
+    cursor: not-allowed;
+    color: $white;
+
+    &:hover {
+      border: 1px solid $neutral-200;
+    }
   }
 
   &__options-list {

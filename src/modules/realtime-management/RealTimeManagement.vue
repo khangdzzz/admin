@@ -58,7 +58,7 @@
                 >
                   <template #prefix>
                     <div
-                      class="d-flex align-center justify-center fill-height"
+                      class="realtime-manage__magnifying-glass d-flex align-center justify-center fill-height"
                       style="width: 40px"
                       @click="!data.length ? '' : handleClickExpandSearchBox()"
                     >
@@ -173,8 +173,12 @@
         <div class="realtime-manage__map-wrapper">
           <a-card class="realtime-manage__map-card">
             <div
-              class="realtime-manage__map-disable-layout d-flex align-center justify-center"
+              class="realtime-manage__map-disable-layout"
               :style="calculatedHeightForMap"
+              v-if="!selectedCollectionBase"
+            ></div>
+            <div
+              class="realtime-manage__map-disable-layout-text"
               v-if="!selectedCollectionBase"
             >
               {{ $t("please_select_workplace") }}
@@ -186,6 +190,24 @@
                 {{ $t("user_location") }}
               </div>
               <div class="d-flex align-center gap-30">
+                <div class="d-flex align-center gap-30">
+                  <div class="d-flex gap-30">
+                    <div
+                      class="d-flex gap-8 align-center justify-center"
+                      v-for="(dot, index) in mapDots"
+                      :key="dot.title + '' + index"
+                    >
+                      <div
+                        class="realtime-manage__dot-size"
+                        :style="`background-color: ${dot.color}`"
+                      ></div>
+                      <div class="realtime-manage__map-status-text">
+                        {{ dot.title }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 <div class="realtime-manage__floating-selector">
                   <FloatingLabelSelect
                     place-holder="staff_workplace"
@@ -193,8 +215,8 @@
                     :required="false"
                     control-name="workPlace"
                     :options="listCollectionBase"
+                    :placeholder="$t('staff_workplace')"
                     :no-label="true"
-                    :placeholder="$t('workplace')"
                     size="small"
                     v-model:value="selectedCollectionBase"
                   >
@@ -241,6 +263,9 @@
                         class="realtime-management__user-location-pin__icon"
                         :src="geoLocation.icon"
                     /></a>
+                    <div class="realtime-manage__user-name-icon">
+                      {{ geoLocation.username }}
+                    </div>
                   </div>
                 </template>
               </ol-overlay>
@@ -317,13 +342,24 @@ const listCollectionBase = ref<
   { value: string | boolean | number | undefined; label: string }[]
 >([]);
 const driverLocations = ref<
-  { icon: string; latitude: number; longitude: number; userId: number }[]
+  {
+    icon: string;
+    latitude: number;
+    longitude: number;
+    userId: number;
+    username: string;
+  }[]
 >([]);
 
 const interval = ref();
 const sortUsername = ref(Sort.None);
 const sortLastActiveTime = ref(Sort.None);
-
+const mapDots = ref<
+  {
+    title: string;
+    color: string;
+  }[]
+>([]);
 //#endregion
 
 //#region hooks
@@ -348,6 +384,19 @@ const initialize = async (): Promise<void> => {
   isLoading.value = false;
 };
 
+const generateMapDots = (): void => {
+  mapDots.value = [
+    {
+      title: i18n.global.t("status_active"),
+      color: "#2f6bff"
+    },
+    {
+      title: i18n.global.t("inactive_more_than_1_hour"),
+      color: "#999999"
+    }
+  ];
+};
+
 const fetchCollectionBase = async (): Promise<void> => {
   const res = await service.collectionRoute.getWorkplace([
     WorkPlaceType.COLLECTION_BASE,
@@ -359,7 +408,8 @@ const fetchCollectionBase = async (): Promise<void> => {
         const { name, id } = collectionBase;
         return {
           value: id,
-          label: name
+          label: name,
+          content: i18n.global.t("collection_base")
         };
       })
     );
@@ -380,7 +430,8 @@ const fetchWorkplaceTrackingInformation = async (): Promise<void> => {
       icon: driverIcon,
       latitude: currentUserLocation.latitude,
       longitude: currentUserLocation.longitude,
-      userId: currentUserLocation.userId
+      userId: currentUserLocation.userId,
+      username: currentUserLocation.userName
     };
   });
 
@@ -461,7 +512,8 @@ const changeUserVisibleState = (
         icon: driverIcon,
         latitude: currentUserLocation.latitude,
         longitude: currentUserLocation.longitude,
-        userId: currentUserLocation.userId
+        userId: currentUserLocation.userId,
+        username: currentUserLocation.userName
       };
     });
 };
@@ -484,7 +536,8 @@ const onSearchChange = (): void => {
         icon: driverIcon,
         latitude: currentUserLocation.latitude,
         longitude: currentUserLocation.longitude,
-        userId: currentUserLocation.userId
+        userId: currentUserLocation.userId,
+        username: currentUserLocation.userName
       };
     });
 };
@@ -574,6 +627,7 @@ watch(selectedCollectionBase, async () => {
   if (selectedCollectionBase.value) {
     isLoading.value = true;
     await fetchWorkplaceTrackingInformation();
+    generateMapDots();
     isLoading.value = false;
   }
 });
@@ -630,7 +684,7 @@ watch(refreshTime, () => {
   }
 
   &__table-card-title-wrapper {
-    border-bottom: 1px solid $neutral-200;
+    border-bottom: 1px solid $grey-3;
     height: 60px;
   }
 
@@ -642,13 +696,17 @@ watch(refreshTime, () => {
     color: $neutral-600;
   }
 
+  &__magnifying-glass {
+    color: $neutral-400;
+  }
+
   &__table-card-search-input {
     position: absolute;
     right: 15px;
     top: 10px;
     transition: width 300ms ease-out;
     height: 40px;
-    border-radius: 10px;
+    border-radius: 6px;
 
     &__disabled {
       .ant-input-affix-wrapper {
@@ -667,7 +725,7 @@ watch(refreshTime, () => {
     .ant-input-affix-wrapper {
       padding: 0 8px 0 0 !important;
       height: 100%;
-      border-radius: 10px;
+      border-radius: 6px;
       border: 1px solid $neutral-200;
       overflow: hidden;
 
@@ -699,6 +757,7 @@ watch(refreshTime, () => {
 
   &__map-title-wrapper {
     height: 60px;
+    border-bottom: 1px solid $grey-3;
   }
 
   &__map-title {
@@ -795,12 +854,14 @@ watch(refreshTime, () => {
 }
 
 :deep() {
-  .realtime-management__user-location-pin {
-    position: relative;
-    &__icon {
-      position: absolute !important;
-      left: -25px !important;
-      top: -25px !important;
+  .realtime-management {
+    &__user-location-pin {
+      position: relative;
+      &__icon {
+        position: absolute !important;
+        left: -25px !important;
+        top: -25px !important;
+      }
     }
   }
 
@@ -864,6 +925,14 @@ watch(refreshTime, () => {
       z-index: 1;
       bottom: 0px;
       opacity: 0.5;
+    }
+
+    &__map-disable-layout-text {
+      position: absolute;
+      z-index: 2;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
 
       font-style: normal;
       font-weight: 600;
@@ -900,6 +969,21 @@ watch(refreshTime, () => {
         height: 60px !important;
       }
     }
+  }
+
+  &__user-name-icon {
+    position: absolute !important;
+    left: 50% !important;
+    top: -45px !important;
+    right: 0 !important;
+    min-width: max-content;
+    transform: translateX(-50%);
+
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 19px;
+    color: $blue-500;
   }
 }
 </style>
