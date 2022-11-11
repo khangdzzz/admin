@@ -119,14 +119,6 @@ const validator = {
     return "";
   },
   validatePostalCode: (_rule: Rule, value: string): Promise<void> => {
-    if (!value) {
-      return Promise.reject(
-        i18n.global.t("please_enter_input", {
-          fieldName: i18n.global.t("common_postal_code_label").toLowerCase()
-        })
-      );
-    }
-
     const regex = /^[0-9]*$/;
     if (value && !regex.test(value)) {
       return Promise.reject(i18n.global.t("field_allow_number_only"));

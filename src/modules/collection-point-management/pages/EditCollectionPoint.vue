@@ -475,7 +475,11 @@ const focusCurrentLocation = (): void => {
 
 const isEnableSearchAddress = (): boolean => {
   if (data[4]?.actionBtn) {
-    if (!data[4].value || (data[4].value && isNaN(+data[4].value))) {
+    if (
+      !data[4].value ||
+      (data[4].value && isNaN(+data[4].value)) ||
+      data[4].value.toString().length > 8
+    ) {
       data[4].actionBtn.disabled = true;
       return true;
     }
