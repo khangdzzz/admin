@@ -398,10 +398,10 @@ const generateMapDots = (): void => {
 };
 
 const fetchCollectionBase = async (): Promise<void> => {
-  const res = await service.collectionRoute.getWorkplace([
-    WorkPlaceType.COLLECTION_BASE,
-    WorkPlaceType.PARTNER
-  ]);
+  const res = await service.collectionRoute.getWorkplace(
+    [WorkPlaceType.COLLECTION_BASE, WorkPlaceType.PARTNER],
+    true
+  );
   if (res) {
     listCollectionBase.value = sortDropdown(
       (res || []).map((collectionBase) => {

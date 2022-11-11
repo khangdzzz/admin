@@ -514,9 +514,11 @@ const isAllowSubmit = computed(() => {
     checkMaxLength(data[1].value.toString(), 50) && data[1].value;
   const isValidShortName =
     checkMaxLength(data[2].value.toString(), 50) && data[2].value;
-  const isValidPostalCode = data[4].value && !isNaN(+data[4].value);
+  const isValidPostalCode =
+    !data[4].value || (data[4].value && !isNaN(+data[4].value));
   const isValidAddress =
-    checkMaxLength(data[5].value.toString(), 255) && data[5].value;
+    !data[5].value ||
+    (checkMaxLength(data[5].value.toString(), 255) && data[5].value);
   const isValidExternalCode =
     !data[8].value ||
     (data[8].value && checkMaxLength(data[8].value.toString(), 16));
