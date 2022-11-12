@@ -1,6 +1,8 @@
 export interface UserLocationHistoryDto {
   collect_route: {
     list_coordinates: string;
+    start_point_workplace?: PointWorkplace;
+    end_point_workplace?: PointWorkplace;
   };
   collect_order: {
     collect_points: {
@@ -21,4 +23,9 @@ export interface UserLocationHistoryDto {
     max_weight: number;
     user_name: string;
   }[];
+}
+
+interface PointWorkplace {
+  latitude: number;
+  longitude: number;
 }

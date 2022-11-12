@@ -116,6 +116,31 @@ export async function getUserLocationDetail(
   }
   const lastHistory = res.results[0];
   const collectedPoint = lastHistory?.list_collected_points || [];
+  const collectRoute = {
+    listCoordinates: JSON.parse(
+      res.collect_route.list_coordinates || "[]"
+    ) as number[][]
+  };
+  if (
+    res?.collect_route?.start_point_workplace?.latitude &&
+    res?.collect_route?.start_point_workplace?.longitude
+  ) {
+    collectRoute["startPoint"] = [
+      res?.collect_route?.start_point_workplace?.latitude,
+      res?.collect_route?.start_point_workplace?.longitude
+    ];
+  }
+
+  if (
+    res?.collect_route?.end_point_workplace?.latitude &&
+    res?.collect_route?.end_point_workplace?.longitude
+  ) {
+    collectRoute["endPoint"] = [
+      res?.collect_route?.end_point_workplace?.latitude,
+      res?.collect_route?.end_point_workplace?.longitude
+    ];
+  }
+
   return {
     collectOrder: {
       collectPoints: res.collect_order.collect_points.map((point) => {
@@ -125,11 +150,7 @@ export async function getUserLocationDetail(
         };
       })
     },
-    collectRoute: {
-      listCoordinates: JSON.parse(
-        res.collect_route.list_coordinates || "[]"
-      ) as number[][]
-    },
+    collectRoute,
     history: (res.results || []).map((history) => {
       return {
         latitude: history.latitude,

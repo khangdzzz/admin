@@ -1,6 +1,8 @@
 export interface UserLocationHistoryModel {
   collectRoute: {
     listCoordinates: number[][];
+    startPoint?: number[];
+    endPoint?: number[];
   };
   collectOrder: {
     collectPoints: {
