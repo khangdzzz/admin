@@ -246,7 +246,7 @@ const convertJpNumber = (value: string): string => {
     search = "０１２３４５６７８９．　",
     replace = "0123456789. "
   ): string => {
-    if (!text) return "";
+    if (!text || typeof text !== "string") return text;
     // Make the search string a regex.
     var regex = RegExp("[" + search + "]", "g");
     var t = text.replace(regex, function (chr) {
