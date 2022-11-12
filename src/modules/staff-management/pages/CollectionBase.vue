@@ -167,7 +167,7 @@ const pageOption = reactive<Pagination<CollectionBase>>({
   total: 0
 });
 let sourceData: CollectionBase[] = [];
-const columns = collectionBaseColumns;
+const columns = collectionBaseColumns();
 
 //#endregion
 
