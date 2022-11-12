@@ -61,6 +61,7 @@ import { ICONS } from "@/modules/workplace/models/workplace.config";
 import { WorkPlaceType } from "@/modules/workplace/models/workplace.model";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
+import utils from "@/utils";
 import { computed, defineComponent, inject, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import {
@@ -114,13 +115,15 @@ export default defineComponent({
             WorkPlaceType.PARTNER
           ];
           if (!res || !res.results) return;
-          workPlaces.value = res.results.filter(
-            (x) =>
-              x.latitude &&
-              x.longitude &&
-              x.workPlaceType &&
-              x.workPlaceType in validTypes
-          );
+          workPlaces.value = res.results
+            .filter(
+              (x) =>
+                x.latitude &&
+                x.longitude &&
+                x.workPlaceType &&
+                x.workPlaceType in validTypes
+            )
+            .sort(utils.collection.sortByName);
           fetchedWorkplaces.value = true;
         })
         .finally(() => (loading.value = false));
