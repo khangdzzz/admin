@@ -283,6 +283,7 @@ import CloseIcon from "@/assets/icons/IcCloseIcon.vue";
 import MagnifyingGlass from "@/assets/icons/IcMagnifyingGlass.vue";
 import Refresh from "@/assets/icons/IcRefresh.vue";
 import driverIcon from "@/assets/icons/ic_driver.svg";
+import inactiveDriverIcon from "@/assets/icons/ic_inactive_driver.svg";
 import { i18n } from "@/i18n";
 import FloatingLabelSelect from "@/modules/base/components/FloatingLabelSelect.vue";
 import NoData from "@/modules/base/components/NoData.vue";
@@ -306,7 +307,6 @@ import { sortDropdown } from "../common/helpers";
 import { Sort } from "../common/models/sort.enum";
 import { WorkPlaceType } from "../workplace/models/workplace.model";
 import { CurrentUserLocationModel } from "./models/current-user-location.model";
-import inactiveDriverIcon from "@/assets/icons/ic_inactive_driver.svg";
 //#endregion
 
 //#region props
@@ -456,19 +456,20 @@ const fetchWorkplaceTrackingInformation = async (): Promise<void> => {
 
 const isActive = (time: Date): boolean => {
   if (!time) return false;
+  const currentTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const lastActiveTimeMillisecond = Date.parse(
     new Date(time).toLocaleString("th-TH", {
-      timeZone: "Asia/Jakarta"
+      timeZone: currentTimezone
     })
   );
 
   const currentTimeMillisecond = Date.parse(
     new Date().toLocaleString("th-TH", {
-      timeZone: "Asia/Jakarta"
+      timeZone: currentTimezone
     })
   );
 
-  return currentTimeMillisecond - lastActiveTimeMillisecond > 3600000;
+  return currentTimeMillisecond - lastActiveTimeMillisecond < 3600000;
 };
 
 const handleClickExpandSearchBox = (): void => {
