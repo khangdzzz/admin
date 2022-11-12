@@ -172,14 +172,17 @@ import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
 import { commonStore } from "@/stores";
 import { NULL_VALUE_DISPLAY } from "@/utils/constants";
+import emitter, { EMITTER_EVENTS } from "@/utils/emiiter";
 import { makeUniqueName } from "@/utils/string.helper";
 import { message } from "ant-design-vue";
 import { Rule } from "ant-design-vue/lib/form";
 import {
   computed,
   inject,
+  nextTick,
   onBeforeUnmount,
   onMounted,
+  onUnmounted,
   reactive,
   ref,
   watch
@@ -213,11 +216,15 @@ const existFields = ref<string[]>([]);
 //#endregion
 
 //#region hooks
-onBeforeUnmount(() => {
-  clearInputs();
-});
-
 onMounted(() => {
+  emitter.on(EMITTER_EVENTS.TOGGLE_SIDE_BAR, () => {
+    nextTick(() => {
+      setTimeout(() => {
+        refreshMap();
+      }, 300);
+    });
+  });
+
   if (contact[0].actionBtn) {
     contact[0].actionBtn.name = "search_address";
     contact[0].actionBtn.click = handleSearchAddress;
@@ -268,6 +275,16 @@ onMounted(() => {
   });
 
   focusCurrentLocation();
+});
+
+onBeforeUnmount(() => {
+  clearInputs();
+});
+
+onUnmounted(() => {
+  emitter.off(EMITTER_EVENTS.TOGGLE_SIDE_BAR, () => {
+    refreshMap();
+  });
 });
 //#endregion
 
@@ -483,6 +500,15 @@ const isEnableSearchAddress = (): boolean => {
   return false;
 };
 
+const refreshMap = (): void => {
+  if (!map.value) return;
+  const mapRef = map.value as {
+    updateSize: () => void;
+  };
+  if (mapRef) {
+    mapRef.updateSize();
+  }
+};
 //#endregion
 
 //#region computed
