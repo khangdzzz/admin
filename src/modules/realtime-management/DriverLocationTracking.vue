@@ -170,7 +170,7 @@
                   {{ $t("route") }}
                 </div>
                 <div class="driver-tracking-location__user-info-data">
-                  {{ routeName }}
+                  {{ routeName || NULL_VALUE_DISPLAY }}
                 </div>
               </div>
               <div>
@@ -321,6 +321,7 @@ import {
   watch
 } from "vue";
 import { Sort } from "../common/models/sort.enum";
+import { NULL_VALUE_DISPLAY } from "@/utils/constants";
 //#endregion
 
 //#region props
