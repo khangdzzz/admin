@@ -176,22 +176,22 @@ const containerDetail = ref<Container | undefined>();
 
 const columns: TableColumnType<Container>[] = [
   {
-    title: i18n.global.t("container_container_name"),
+    title: "container_container_name",
     dataIndex: "containerName",
     key: "name"
   },
   {
-    title: i18n.global.t("container_container_type"),
+    title: "container_container_type",
     dataIndex: "containerType",
     key: "type"
   },
   {
-    title: i18n.global.t("container_weight"),
+    title: "container_weight",
     dataIndex: "weight",
     key: "weight"
   },
   {
-    title: i18n.global.t("container_capacity"),
+    title: "container_capacity",
     dataIndex: "capacity",
     key: "capacity"
   },
