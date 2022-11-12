@@ -167,12 +167,20 @@ export async function createVehicle(
     }
   });
   if (error || !res) {
+    const parsedError = error?.response?.data as {
+      details: { msg: string; loc: string[] }[];
+    };
+    if (
+      parsedError.details.some((e) => e.msg.includes("error_vehicle_unique"))
+    ) {
+      return {
+        error: "error_unique_constraint",
+        errorParams: parsedError.details.flatMap((e) => e.loc)
+      };
+    }
     return {
-      error: (error?.response?.data as { details: { msg: string }[] })
-        .details[0].msg,
-      errorParams: (
-        error?.response?.data as { details: { msg: string; loc: string[] }[] }
-      ).details[0].loc
+      error: parsedError.details[0].msg,
+      errorParams: parsedError.details[0].loc
     };
   }
 
@@ -239,12 +247,21 @@ export async function updateVehicle(
     }
   });
   if (error || !res) {
+    const parsedError = error?.response?.data as {
+      details: { msg: string; loc: string[] }[];
+    };
+    if (
+      parsedError.details.some((e) => e.msg.includes("error_vehicle_unique"))
+    ) {
+      return {
+        error: "error_unique_constraint",
+        errorParams: parsedError.details.flatMap((e) => e.loc)
+      };
+    }
+
     return {
-      error: (error?.response?.data as { details: { msg: string }[] })
-        .details[0].msg,
-      errorParams: (
-        error?.response?.data as { details: { msg: string; loc: string[] }[] }
-      ).details[0].loc
+      error: parsedError.details[0].msg,
+      errorParams: parsedError.details[0].loc
     };
   }
 
