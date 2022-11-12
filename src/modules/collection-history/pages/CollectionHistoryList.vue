@@ -45,6 +45,7 @@
         :pagination="false"
         :row-key="(record) => record.id"
         v-if="!isLoading && data && data.length > 0"
+        @resizeColumn="handleResizeColumn"
       >
         <template #summary>
           <a-table-summary fixed="top">
@@ -294,7 +295,9 @@ const floatParser = (float: number | undefined): string => {
   if (!float) return "0";
   return parseFloat(float.toString()).toFixed(2);
 };
-
+const handleResizeColumn = (w: number, col: { width: number }): void => {
+  col.width = w;
+};
 //#endregion
 
 //#region computed

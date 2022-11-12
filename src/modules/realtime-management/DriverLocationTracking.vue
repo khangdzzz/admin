@@ -592,13 +592,6 @@ const calculatedHeightForMap = computed((): string | undefined => {
 
   return undefined;
 });
-const collectionPointDetailPath = computed((): string => {
-  const rootPath = router.currentRoute.value.fullPath.replace(
-    router.currentRoute.value.path,
-    ""
-  );
-  return `${rootPath}/collection-point-management/detail`;
-});
 //#endregion
 
 //#region reactive
