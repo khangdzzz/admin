@@ -278,8 +278,8 @@
                       </ol-geom-line-string>
                       <ol-style>
                         <ol-style-stroke
-                          :color="'#82A6FF'"
-                          :width="4"
+                          :color="'#2F6BFF'"
+                          :width="10"
                         ></ol-style-stroke>
                       </ol-style>
                     </ol-feature>
