@@ -300,6 +300,8 @@ import CloseIcon from "@/assets/icons/IcCloseIcon.vue";
 import MagnifyingGlass from "@/assets/icons/IcMagnifyingGlass.vue";
 import Refresh from "@/assets/icons/IcRefresh.vue";
 import driverIcon from "@/assets/icons/ic_driver.svg";
+import startPointLocation from "@/assets/icons/ic_start_point_location.svg";
+import endPointLocation from "@/assets/icons/ic_end_point_location.svg";
 import icColectedCollectionPoint from "@/assets/icons/ic_route_collected_collection_point.svg";
 import icCollectionPoint from "@/assets/icons/ic_route_collection_point.svg";
 import { i18n } from "@/i18n";
@@ -350,7 +352,6 @@ const geoLocations = ref<
     longitude: number;
     icon: string;
     color: string;
-    isUser: boolean;
   }[]
 >([]);
 const userTrackingData = ref<number[][]>([]);
@@ -454,18 +455,39 @@ const fetchUserTrackingDetail = async (userId: number): Promise<void> => {
   });
   data.value = [...backupData];
 
+  const defaultGeos = [
+    {
+      id: 0,
+      icon: driverIcon,
+      title: history.userName,
+      latitude: history.currentLat,
+      longitude: history.currentLong,
+      color: "#2F6BFF"
+    }
+  ];
+  if (history.collectRoute.startPoint) {
+    defaultGeos.push({
+      id: 1,
+      icon: startPointLocation,
+      title: "",
+      latitude: history.collectRoute.startPoint[0],
+      longitude: history.collectRoute.startPoint[1],
+      color: "#F54E4E"
+    });
+  }
+  if (history.collectRoute.endPoint) {
+    defaultGeos.push({
+      id: 1,
+      icon: endPointLocation,
+      title: "",
+      latitude: history.collectRoute.endPoint[0],
+      longitude: history.collectRoute.endPoint[1],
+      color: "#F54E4E"
+    });
+  }
+
   geoLocations.value = [
-    ...[
-      {
-        id: 0,
-        icon: driverIcon,
-        title: history.userName,
-        latitude: history.currentLat,
-        longitude: history.currentLong,
-        color: "#2F6BFF",
-        isUser: true
-      }
-    ],
+    ...defaultGeos,
     ...history.collectOrder.collectPoints.map((cp) => {
       const { id, name: title, latitude, longitude } = cp;
       return {
@@ -474,8 +496,7 @@ const fetchUserTrackingDetail = async (userId: number): Promise<void> => {
         latitude,
         longitude,
         icon: cp.isCollected ? icColectedCollectionPoint : icCollectionPoint,
-        color: cp.isCollected ? "#999999" : "#07A0B8",
-        isUser: false
+        color: cp.isCollected ? "#999999" : "#07A0B8"
       };
     })
   ];
