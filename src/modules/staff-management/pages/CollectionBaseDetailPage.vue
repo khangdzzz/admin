@@ -140,17 +140,18 @@
 <script setup lang="ts">
 import locationIcon from "@/assets/icons/ic_collection_base.png";
 
-import ListSearchHeader from "@/modules/base/components/ListSearchHeader.vue";
-import { i18n } from "@/i18n";
-import { router } from "@/routes";
-import { routeNames } from "@/routes/route-names";
-import { message } from "ant-design-vue";
-import { inject, onMounted, ref } from "vue";
-import { service } from "@/services";
 import IcTrash from "@/assets/icons/IcTrash.vue";
+import { i18n } from "@/i18n";
+import ListSearchHeader from "@/modules/base/components/ListSearchHeader.vue";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
+import { router } from "@/routes";
+import { routeNames } from "@/routes/route-names";
+import { service } from "@/services";
 import { NULL_VALUE_DISPLAY } from "@/utils/constants";
+import emitter, { EMITTER_EVENTS } from "@/utils/emiiter";
+import { message } from "ant-design-vue";
+import { inject, nextTick, onMounted, onUnmounted, ref } from "vue";
 //#region import
 //#endregion
 
@@ -175,6 +176,14 @@ const messenger: (param: MessengerParamModel) => void =
 
 //#region hooks
 onMounted(async (): Promise<void> => {
+  emitter.on(EMITTER_EVENTS.TOGGLE_SIDE_BAR, () => {
+    nextTick(() => {
+      setTimeout(() => {
+        refreshMap();
+      }, 300);
+    });
+  });
+
   if (router.currentRoute.value.params?.id) {
     isLoading.value = true;
     const detail = await service.collectionBase.getCollectionBaseById(
@@ -231,6 +240,13 @@ onMounted(async (): Promise<void> => {
     isLoading.value = false;
   }
 });
+
+onUnmounted(() => {
+  emitter.off(EMITTER_EVENTS.TOGGLE_SIDE_BAR, () => {
+    refreshMap();
+  });
+});
+
 //#endregion
 
 //#region function
@@ -319,6 +335,16 @@ const focusCurrentLocation = (): void => {
       maximumAge: Infinity
     }
   );
+};
+
+const refreshMap = (): void => {
+  if (!map.value) return;
+  const mapRef = map.value as {
+    updateSize: () => void;
+  };
+  if (mapRef) {
+    mapRef.updateSize();
+  }
 };
 //#endregion
 

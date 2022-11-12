@@ -201,7 +201,7 @@ export default defineComponent({
         nextTick(() => {
           setTimeout(() => {
             refreshMap();
-          }, 200);
+          }, 300);
         });
       });
       watch(

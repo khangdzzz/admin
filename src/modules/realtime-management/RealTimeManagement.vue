@@ -293,11 +293,14 @@ import ThePagination from "@/modules/common/components/ThePagination.vue";
 import { listOfUserColumns } from "@/modules/realtime-management/models/table-columns";
 import { router } from "@/routes";
 import { service } from "@/services";
+import emitter, { EMITTER_EVENTS } from "@/utils/emiiter";
 import { cloneDeep } from "lodash";
 import {
   computed,
+  nextTick,
   onBeforeUnmount,
   onMounted,
+  onUnmounted,
   reactive,
   ref,
   watch
@@ -372,7 +375,21 @@ onMounted(() => {
     innerHeight.value = window.innerHeight;
   });
 
+  emitter.on(EMITTER_EVENTS.TOGGLE_SIDE_BAR, () => {
+    nextTick(() => {
+      setTimeout(() => {
+        refreshMap();
+      }, 300);
+    });
+  });
+
   initialize();
+});
+
+onUnmounted(() => {
+  emitter.off(EMITTER_EVENTS.TOGGLE_SIDE_BAR, () => {
+    refreshMap();
+  });
 });
 
 onBeforeUnmount(() => {
@@ -602,6 +619,16 @@ const calculateNextSortStatus = (currentSort: Sort): Sort => {
       return Sort.None;
     default:
       return Sort.Asc;
+  }
+};
+
+const refreshMap = (): void => {
+  if (!map.value) return;
+  const mapRef = map.value as {
+    updateSize: () => void;
+  };
+  if (mapRef) {
+    mapRef.updateSize();
   }
 };
 //#endregion

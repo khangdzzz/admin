@@ -144,12 +144,13 @@ import { i18n } from "@/i18n";
 import ListSearchHeader from "@/modules/base/components/ListSearchHeader.vue";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
+import { routeNames, router } from "@/routes";
 import { service } from "@/services";
-import { message } from "ant-design-vue";
-import { inject, onMounted, ref } from "vue";
-import { useRoute } from "vue-router";
-import { router, routeNames } from "@/routes";
 import { NULL_VALUE_DISPLAY } from "@/utils/constants";
+import emitter, { EMITTER_EVENTS } from "@/utils/emiiter";
+import { message } from "ant-design-vue";
+import { inject, nextTick, onMounted, onUnmounted, ref } from "vue";
+import { useRoute } from "vue-router";
 //#region import
 //#endregion
 
@@ -177,7 +178,21 @@ const { id } = route.params;
 
 //#region hooks
 onMounted(() => {
+  emitter.on(EMITTER_EVENTS.TOGGLE_SIDE_BAR, () => {
+    nextTick(() => {
+      setTimeout(() => {
+        refreshMap();
+      }, 300);
+    });
+  });
+
   init();
+});
+
+onUnmounted(() => {
+  emitter.off(EMITTER_EVENTS.TOGGLE_SIDE_BAR, () => {
+    refreshMap();
+  });
 });
 //#endregion
 
@@ -319,6 +334,16 @@ const focusCurrentLocation = (): void => {
       maximumAge: Infinity
     }
   );
+};
+
+const refreshMap = (): void => {
+  if (!map.value) return;
+  const mapRef = map.value as {
+    updateSize: () => void;
+  };
+  if (mapRef) {
+    mapRef.updateSize();
+  }
 };
 //#endregion
 

@@ -300,10 +300,10 @@ import CloseIcon from "@/assets/icons/IcCloseIcon.vue";
 import MagnifyingGlass from "@/assets/icons/IcMagnifyingGlass.vue";
 import Refresh from "@/assets/icons/IcRefresh.vue";
 import driverIcon from "@/assets/icons/ic_driver.svg";
-import startPointLocation from "@/assets/icons/ic_start_point_location.svg";
 import endPointLocation from "@/assets/icons/ic_end_point_location.svg";
 import icColectedCollectionPoint from "@/assets/icons/ic_route_collected_collection_point.svg";
 import icCollectionPoint from "@/assets/icons/ic_route_collection_point.svg";
+import startPointLocation from "@/assets/icons/ic_start_point_location.svg";
 import { i18n } from "@/i18n";
 import NoData from "@/modules/base/components/NoData.vue";
 import CustomSelect from "@/modules/common/components/CustomSelect.vue";
@@ -311,17 +311,20 @@ import SortView from "@/modules/common/components/SortView.vue";
 import { listOfCollectionPointColumns } from "@/modules/realtime-management/models/table-columns";
 import { router } from "@/routes";
 import { service } from "@/services";
+import { NULL_VALUE_DISPLAY } from "@/utils/constants";
+import emitter, { EMITTER_EVENTS } from "@/utils/emiiter";
 import { format } from "date-fns";
 import {
   computed,
+  nextTick,
   onBeforeUnmount,
   onMounted,
+  onUnmounted,
   reactive,
   ref,
   watch
 } from "vue";
 import { Sort } from "../common/models/sort.enum";
-import { NULL_VALUE_DISPLAY } from "@/utils/constants";
 //#endregion
 
 //#region props
@@ -392,7 +395,21 @@ onMounted(() => {
     innerHeight.value = window.innerHeight;
   });
 
+  emitter.on(EMITTER_EVENTS.TOGGLE_SIDE_BAR, () => {
+    nextTick(() => {
+      setTimeout(() => {
+        refreshMap();
+      }, 300);
+    });
+  });
+
   fetchUserTrackingDetail(userId);
+});
+
+onUnmounted(() => {
+  emitter.off(EMITTER_EVENTS.TOGGLE_SIDE_BAR, () => {
+    refreshMap();
+  });
 });
 //#endregion
 
@@ -593,6 +610,16 @@ const calculatedHeightForMap = computed((): string | undefined => {
 
   return undefined;
 });
+
+const refreshMap = (): void => {
+  if (!map.value) return;
+  const mapRef = map.value as {
+    updateSize: () => void;
+  };
+  if (mapRef) {
+    mapRef.updateSize();
+  }
+};
 //#endregion
 
 //#region reactive

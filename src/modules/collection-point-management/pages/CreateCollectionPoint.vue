@@ -148,14 +148,17 @@ import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
 import { NULL_VALUE_DISPLAY } from "@/utils/constants";
+import emitter, { EMITTER_EVENTS } from "@/utils/emiiter";
 import { makeUniqueName } from "@/utils/string.helper";
 import { message } from "ant-design-vue";
 import { Rule } from "ant-design-vue/lib/form";
 import {
   computed,
   inject,
+  nextTick,
   onBeforeUnmount,
   onMounted,
+  onUnmounted,
   reactive,
   ref,
   watch
@@ -194,6 +197,14 @@ onBeforeUnmount(() => {
 });
 
 onMounted(async () => {
+  emitter.on(EMITTER_EVENTS.TOGGLE_SIDE_BAR, () => {
+    nextTick(() => {
+      setTimeout(() => {
+        refreshMap();
+      }, 300);
+    });
+  });
+
   if (data[4].actionBtn) {
     data[4].actionBtn.name = "search_address";
     data[4].actionBtn.click = handleSearchAddress;
@@ -247,6 +258,12 @@ onMounted(async () => {
   isLoading.value = true;
   await initialize();
   isLoading.value = false;
+});
+
+onUnmounted(() => {
+  emitter.off(EMITTER_EVENTS.TOGGLE_SIDE_BAR, () => {
+    refreshMap();
+  });
 });
 //#endregion
 
@@ -491,6 +508,16 @@ const isAllowSubmit = computed(() => {
     isValidExternalCode
   );
 });
+
+const refreshMap = (): void => {
+  if (!map.value) return;
+  const mapRef = map.value as {
+    updateSize: () => void;
+  };
+  if (mapRef) {
+    mapRef.updateSize();
+  }
+};
 //#endregion
 
 //#region reactive
