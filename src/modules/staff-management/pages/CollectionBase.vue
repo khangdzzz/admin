@@ -138,6 +138,7 @@ import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import { debounce } from "lodash";
 import { NULL_VALUE_DISPLAY } from "@/utils/constants";
+import { collectionBaseColumns } from "./collection-base.columns";
 //#endregion
 
 //#region props
@@ -166,34 +167,7 @@ const pageOption = reactive<Pagination<CollectionBase>>({
   total: 0
 });
 let sourceData: CollectionBase[] = [];
-const columns = [
-  {
-    title: i18n.global.t("collection_base_lbl_name"),
-    dataIndex: "name",
-    key: "name"
-  },
-  {
-    title: i18n.global.t("common_postal_code_label"),
-    dataIndex: "postalCode",
-    key: "postal_code"
-  },
-  {
-    title: i18n.global.t("collection_address"),
-    dataIndex: "address",
-    key: "address"
-  },
-  {
-    title: i18n.global.t("common_phone_field_name"),
-    dataIndex: "telephone",
-    key: "telephone"
-  },
-  {
-    title: "",
-    dataIndex: "action",
-    key: "action",
-    width: "200px"
-  }
-];
+const columns = collectionBaseColumns;
 
 //#endregion
 

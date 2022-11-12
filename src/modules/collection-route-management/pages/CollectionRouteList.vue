@@ -185,27 +185,27 @@ const pageOption = reactive<Pagination<CollectionRoute>>({
 
 const columns: TableColumnType<CollectionRoute>[] = [
   {
-    title: i18n.global.t("collection_route_name"),
+    title: "collection_route_name",
     dataIndex: "name",
     key: "name"
   },
   {
-    title: i18n.global.t("collection_route_workplace"),
+    title: "collection_route_workplace",
     dataIndex: "workPlace",
     key: "workPlace"
   },
   {
-    title: i18n.global.t("collection_route_number_of_stores"),
+    title: "collection_route_number_of_stores",
     dataIndex: "numberOfStore",
     key: "numberOfStore"
   },
   {
-    title: i18n.global.t("collection_route_last_update"),
+    title: "collection_route_last_update",
     dataIndex: "lastUpdate",
     key: "lastUpdate"
   },
   {
-    title: i18n.global.t("collection_route_navigation_id"),
+    title: "collection_route_navigation_id",
     dataIndex: "navigationId",
     key: "navigationId"
   },
@@ -437,7 +437,11 @@ const onDeleteCollectionRoute = async (deleteIds: number[]): Promise<void> => {
   searchString.value = "";
 };
 
-const redirectRouteDetail = (event: MouseEvent, id: number, routeId: number): void => {
+const redirectRouteDetail = (
+  event: MouseEvent,
+  id: number,
+  routeId: number
+): void => {
   if (event.stopPropagation) {
     event.stopPropagation();
   }
