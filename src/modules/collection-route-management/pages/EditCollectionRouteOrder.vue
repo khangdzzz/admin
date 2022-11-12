@@ -204,6 +204,7 @@ import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { CollectionPoint } from "@/modules/collection-route-management/models/collection-route.model";
 import { cloneDeep } from "lodash";
 import { commonStore } from "@/stores";
+import utils from "@/utils";
 export interface Form {
   note: string;
 }
@@ -333,11 +334,13 @@ const { id } = route.params;
 const fetchListCollectionPoint = async (): Promise<void> => {
   const res = await service.collectionRoute.getCollectionPoint();
   if (res) {
-    listCollectionPoint.value = res?.map((item) => ({
-      id: item.id,
-      name: item.name,
-      customerName: item.customer___name
-    }));
+    listCollectionPoint.value = res
+      ?.sort(utils.collection.sortByName)
+      ?.map((item) => ({
+        id: item.id,
+        name: item.name,
+        customerName: item.customer___name
+      }));
   }
 };
 const fetchData = async (): Promise<void> => {
@@ -376,10 +379,12 @@ const fetchCollectionBase = async (): Promise<void> => {
     isCollectionBaseAdmin.value
   );
   if (res) {
-    dynamicValidateForm.formData[1].options = res?.map((item) => ({
-      value: item.id || 0,
-      label: item.name
-    }))
+    dynamicValidateForm.formData[1].options = res
+      ?.sort(utils.collection.sortByName)
+      ?.map((item) => ({
+        value: item.id || 0,
+        label: item.name
+      }));
   }
 };
 

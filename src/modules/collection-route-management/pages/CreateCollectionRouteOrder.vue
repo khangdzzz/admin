@@ -201,6 +201,8 @@ import {
   watch
 } from "vue";
 import draggable from "vuedraggable";
+import { string } from "vue-types";
+import utils from "@/utils";
 export interface Form {
   note: string;
 }
@@ -323,11 +325,13 @@ onBeforeUnmount(() => {
 const fetchListCollectionPoint = async (): Promise<void> => {
   const res = await service.collectionRoute.getCollectionPoint();
   if (res) {
-    listCollectionPoint.value = res?.map((item) => ({
-      id: item.id,
-      name: item.name,
-      customerName: item.customer___name
-    }));
+    listCollectionPoint.value = res
+      ?.sort(utils.collection.sortByName)
+      ?.map((item) => ({
+        id: item.id,
+        name: item.name,
+        customerName: item.customer___name
+      }));
   }
 };
 const isCollectionBaseAdmin = computed((): boolean => {
@@ -339,10 +343,12 @@ const fetchCollectionBase = async (): Promise<void> => {
     isCollectionBaseAdmin.value
   );
   if (res) {
-    dynamicValidateForm.formData[1].options = res?.map((item) => ({
+    dynamicValidateForm.formData[1].options = res
+      ?.sort(utils.collection.sortByName)
+      ?.map((item) => ({
         value: item.id || 0,
         label: item.name
-      }))
+      }));
   }
 };
 
