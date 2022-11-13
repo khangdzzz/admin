@@ -4,7 +4,7 @@ export interface CurrentUserLocationResponseDto {
   user_name: string;
   user_email: string;
   tenant_id: number;
-  last_update_time: Date;
+  last_update_time: string;
   vehicle_id: number;
   vehicle_name: string;
   number_plate: string;

@@ -471,21 +471,12 @@ const fetchWorkplaceTrackingInformation = async (): Promise<void> => {
   }
 };
 
-const isActive = (time: Date): boolean => {
+const isActive = (time: string): boolean => {
   if (!time) return false;
-  const currentTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const lastActiveTimeMillisecond = Date.parse(
-    new Date(time).toLocaleString("th-TH", {
-      timeZone: currentTimezone
-    })
+    formatDateTime(time, "yyyy/MM/dd hh:mm:ss")
   );
-
-  const currentTimeMillisecond = Date.parse(
-    new Date().toLocaleString("th-TH", {
-      timeZone: currentTimezone
-    })
-  );
-
+  const currentTimeMillisecond = Date.now();
   return currentTimeMillisecond - lastActiveTimeMillisecond < 3600000;
 };
 
