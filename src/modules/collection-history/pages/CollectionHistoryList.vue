@@ -1,31 +1,15 @@
 <template>
   <div class="fill-height collection-history">
-    <ListSearchHeader
-      class="collection-history__search-header"
-      ref="searchHeader"
-      :title="$t('menu_lbl_collection_history')"
-      :colTitle="3"
-      :colAction="21"
-      :hint-title="$t('collection_history_hint_title')"
-      :hint-message="$t('collection_history_hint_message')"
-      v-model:model-value.sync="searchValue"
-      @onChange="handleSearchChange"
-    >
+    <ListSearchHeader class="collection-history__search-header" ref="searchHeader"
+      :title="$t('menu_lbl_collection_history')" :colTitle="3" :colAction="21"
+      :hint-title="$t('collection_history_hint_title')" :hint-message="$t('collection_history_hint_message')"
+      v-model:model-value.sync="searchValue" @onChange="handleSearchChange">
       <template #action>
         <div class="d-flex gap-15">
-          <a-select
-            v-model:value="workPlace"
-            placeholder="Select a workplace"
-            class="custome-select"
-            :options="options"
-            ><template #suffixIcon>
-              <img
-                src="@/assets/icons/ic_dropdown.svg"
-                width="20"
-                height="20"
-                style="padding: 4px"
-              /> </template
-          ></a-select>
+          <a-select v-model:value="workPlace" placeholder="Select a workplace" class="custome-select"
+            :options="options"><template #suffixIcon>
+              <img src="@/assets/icons/ic_dropdown.svg" width="20" height="20" style="padding: 4px" /> </template>
+          </a-select>
           <CustomerDatePicker />
           <a-button type="primary" ghost class="btn-action">
             <template #icon>
@@ -37,20 +21,16 @@
       </template>
     </ListSearchHeader>
     <div class="mx-30">
-      <a-table
-        :row-selection="rowSelection"
-        :columns="columns"
-        :data-source="data"
-        :scroll="{ x: 500, y: calculatedHeightForTable }"
-        :pagination="false"
-        :row-key="(record) => record.id"
-        v-if="!isLoading && data && data.length > 0"
-        @resizeColumn="handleResizeColumn"
-      >
+      <a-table :row-selection="rowSelection" :columns="columns" :data-source="data"
+        :scroll="{ x: 500, y: calculatedHeightForTable }" :pagination="false" :row-key="(record) => record.id"
+        v-if="!isLoading && data && data.length > 0" @resizeColumn="handleResizeColumn">
         <template #summary>
           <a-table-summary fixed="top">
             <a-table-summary-row>
               <a-table-summary-cell :index="i" v-for="(item, i) in 20" :key="i">
+                <div v-if="item === 2" style="text-align: left; font-weight: 700;">
+                  Total
+                </div>
                 <div v-if="item === 9" style="text-align: right">
                   {{ floatParser(summary.sumApportionment) }}
                 </div>
@@ -68,22 +48,15 @@
           </a-table-summary>
         </template>
         <template #headerCell="{ column }">
-          <div
-            @click="changeSort(sort.sortA, column.key)"
-            v-if="column.dataIndex !== 'action'"
-          >
+          <div @click="changeSort(sort.sortA, column.key)" v-if="column.dataIndex !== 'action'">
             <span class="header-title">{{ column.title }}</span>
             <SortView class="mx-12" :sort="column.key" />
           </div>
         </template>
         <template #bodyCell="{ column, record }">
           <div v-if="column.dataIndex === 'action' && record.remarks">
-            <a-tooltip
-              placement="bottomRight"
-              overlayClassName="collection-history__tooltip"
-              trigger="click"
-              class="collection-history__tooltip-icon"
-            >
+            <a-tooltip placement="bottomRight" overlayClassName="collection-history__tooltip" trigger="click"
+              class="collection-history__tooltip-icon">
               <template #title>
                 <div class="collection-history__remark-title">
                   {{ $t("collection_history_remarks") }}:
@@ -95,44 +68,27 @@
               <IcMessagePopup color="#07A0B8" />
             </a-tooltip>
           </div>
-          <div
-            v-if="column.dataIndex === 'buyOrSell'"
-            :class="[
-              record.buyOrSell
-                ? 'collection-history__table-sell'
-                : 'collection-history__table-buy',
-              'collection-history__table-buy-or-sell d-flex align-center justify-center'
-            ]"
-          >
+          <div v-if="column.dataIndex === 'buyOrSell'" :class="[
+            record.buyOrSell
+              ? 'collection-history__table-sell'
+              : 'collection-history__table-buy',
+            'collection-history__table-buy-or-sell d-flex align-center justify-center'
+          ]">
             {{
-              record.buyOrSell
-                ? $t("collection_history_sell")
-                : $t("collection_history_buy")
+                record.buyOrSell
+                  ? $t("collection_history_sell")
+                  : $t("collection_history_buy")
             }}
           </div>
-          <div
-            v-if="column.dataIndex === 'unit'"
-            class="collection-history__table-unit"
-          >
+          <div v-if="column.dataIndex === 'unit'" class="collection-history__table-unit">
             {{ record.unit }}
           </div>
         </template>
       </a-table>
-      <ThePagination
-        :isShowPagination="!isLoading && data && !!data.length"
-        :currentPage="pageOption.currentPage"
-        :pageSize="pageOption.pageSize"
-        :total="pageOption.total"
-        :isShowPrevBtn="isShowPrevBtn()"
-        :isShowNextBtn="isShowNextBtn()"
-        @onShowSizeChange="onShowSizeChange"
-        @onChange="onChange"
-      />
-      <NoData
-        :value="searchValue"
-        :is-loading="isLoading"
-        v-if="isLoading || !data || !data.length"
-      />
+      <ThePagination :isShowPagination="!isLoading && data && !!data.length" :currentPage="pageOption.currentPage"
+        :pageSize="pageOption.pageSize" :total="pageOption.total" :isShowPrevBtn="isShowPrevBtn()"
+        :isShowNextBtn="isShowNextBtn()" @onShowSizeChange="onShowSizeChange" @onChange="onChange" />
+      <NoData :value="searchValue" :is-loading="isLoading" v-if="isLoading || !data || !data.length" />
     </div>
   </div>
 </template>
@@ -327,6 +283,7 @@ watch(searchValue, onSearchChange);
 <style lang="scss" scoped>
 .collection-history {
   height: 100%;
+
   &__title {
     font-family: "Roboto";
     font-style: normal;
@@ -384,6 +341,7 @@ watch(searchValue, onSearchChange);
   .collection-history {
     &__form-card {
       width: 180px;
+
       .ant-card-body {
         padding: 0 !important;
       }
@@ -430,6 +388,7 @@ watch(searchValue, onSearchChange);
 .collection-history {
   &__tooltip {
     max-width: 346px;
+
     .ant-tooltip-placement-bottomRight {
       .ant-tooltip-arrow {
         right: 3px !important;
@@ -439,11 +398,13 @@ watch(searchValue, onSearchChange);
 
   &__tooltip-icon {
     cursor: pointer;
+
     &:focus {
       outline: none !important;
     }
   }
 }
+
 .ant-tooltip-inner {
   &:has(.collection-history__remark-title) {
     position: absolute !important;
