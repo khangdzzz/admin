@@ -472,7 +472,7 @@ const fetchUserTrackingDetail = async (userId: number): Promise<void> => {
   capacity.value = `${history.maxWeight || 0} kg`;
   loadignWeight.value = `${history.loadingWeight || 0} kg`;
   lastActiveTime.value = history.lastActiveTime;
-  lastUpdateTime.value = format(Date.now(), "yyyy/MM/dd hh:mm:ss");
+  lastUpdateTime.value = format(Date.now(), "yyyy/MM/dd HH:mm:ss");
   userName.value = history.userName;
   backupData = history.collectOrder.collectPoints.map((cp) => {
     return cp.name;
@@ -586,7 +586,7 @@ const immediatelyRefresh = async (): Promise<void> => {
 const isActive = (time: string): boolean => {
   if (!time) return false;
   const lastActiveTimeMillisecond = Date.parse(
-    formatDateTime(time, "yyyy/MM/dd hh:mm:ss")
+    formatDateTime(time, "yyyy/MM/dd HH:mm:ss")
   );
   const currentTimeMillisecond = Date.now();
   return currentTimeMillisecond - lastActiveTimeMillisecond < 3600000;

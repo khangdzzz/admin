@@ -135,7 +135,7 @@
                   </template>
                   <template v-if="column.key === 'lastUpdateTime'">
                     <div>
-                      {{ formatDateTime(text, "yyyy/MM/dd hh:mm:ss") }}
+                      {{ formatDateTime(text, "yyyy/MM/dd HH:mm:ss") }}
                     </div>
                   </template>
                   <template v-if="column.key === 'userName'">
@@ -474,7 +474,7 @@ const fetchWorkplaceTrackingInformation = async (): Promise<void> => {
 const isActive = (time: string): boolean => {
   if (!time) return false;
   const lastActiveTimeMillisecond = Date.parse(
-    formatDateTime(time, "yyyy/MM/dd hh:mm:ss")
+    formatDateTime(time, "yyyy/MM/dd HH:mm:ss")
   );
   const currentTimeMillisecond = Date.now();
   return currentTimeMillisecond - lastActiveTimeMillisecond < 3600000;
