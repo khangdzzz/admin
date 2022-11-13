@@ -1,14 +1,12 @@
-import { i18n } from "@/i18n";
-
 export const listOfUserColumns = [
   {
-    title: i18n.global.t("username"),
+    title: "username",
     dataIndex: "userName",
     key: "userName",
     width: "180px"
   },
   {
-    title: i18n.global.t("last_active_time"),
+    title: "last_active_time",
     dataIndex: "lastUpdateTime",
     key: "lastUpdateTime",
     width: "190px"
@@ -22,7 +20,7 @@ export const listOfUserColumns = [
 
 export const listOfCollectionPointColumns = [
   {
-    title: i18n.global.t("name"),
+    title: "name",
     dataIndex: "name",
     key: "name"
   }
