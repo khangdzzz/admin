@@ -321,6 +321,8 @@ watch(searchValue, onSearchChange);
   }
 
   &__remark-title {
+    width: 100%;
+    max-width: 330px;
     font-style: normal;
     font-weight: 700;
     font-size: 14px;
@@ -329,6 +331,8 @@ watch(searchValue, onSearchChange);
   }
 
   &__remark-content {
+    width: 100%;
+    max-width: 330px;
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -388,6 +392,7 @@ watch(searchValue, onSearchChange);
 .collection-history {
   &__tooltip {
     max-width: 346px;
+    width: 100%;
 
     .ant-tooltip-placement-bottomRight {
       .ant-tooltip-arrow {
