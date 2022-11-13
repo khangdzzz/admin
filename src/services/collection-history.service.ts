@@ -1,5 +1,6 @@
 import { CollectionHistoryModel } from "@/modules/collection-history/models/collection-history.model";
 import { Pagination } from "@/modules/common/models";
+import { NULL_VALUE_DISPLAY } from "@/utils/constants";
 import { transformRequest } from "./base.service";
 import { CollectionHistoryResponseDto } from "./dtos/collection-history/collection-history.dto";
 import { PaginationDto } from "./dtos/common/pagination.dto";
@@ -20,7 +21,8 @@ export async function getListCollectionHistory(
   const params = {
     page,
     page_size: size,
-    __all__: searchKeyword ? `${toUrlEncodedString(searchKeyword)}` : undefined
+    __all__: searchKeyword ? `${toUrlEncodedString(searchKeyword)}` : undefined,
+    order_by: '-id'
   };
 
   const [error, res] = await transformRequest<
@@ -81,13 +83,13 @@ export async function getListCollectionHistory(
       sumPackageWeight += packing_weight;
       return {
         id,
-        userName: user___name,
-        tenantId: tenant_id,
-        collectDate: collect_date,
-        collectPointId: collect_point_id,
-        vehicleName: vehicle___name,
-        collectItemName: collect_item___name,
-        customerName: customer___name,
+        userName: user___name || NULL_VALUE_DISPLAY,
+        tenantId: tenant_id || NULL_VALUE_DISPLAY,
+        collectDate: collect_date || NULL_VALUE_DISPLAY,
+        collectPointId: collect_point_id || NULL_VALUE_DISPLAY,
+        vehicleName: vehicle___name || NULL_VALUE_DISPLAY,
+        collectItemName: collect_item___name || NULL_VALUE_DISPLAY,
+        customerName: customer___name || NULL_VALUE_DISPLAY,
         weight,
         isConfirm: is_confirm,
         packingWeight: packing_weight,
