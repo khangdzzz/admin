@@ -75,7 +75,8 @@ export async function getListCollectionHistory(
         transportation_price,
         disposal_price,
         commission_price,
-        other_price
+        other_price,
+        collect_item_unit___alias_name
       } = item;
       sumApportionment += temp_quantity;
       sumWeight += weight;
@@ -84,11 +85,11 @@ export async function getListCollectionHistory(
       return {
         id,
         userName: user___name || NULL_VALUE_DISPLAY,
-        tenantId: tenant_id || NULL_VALUE_DISPLAY,
+        tenantId: tenant_id,
         collectDate: collect_date || NULL_VALUE_DISPLAY,
         collectPointId: collect_point_id || NULL_VALUE_DISPLAY,
         vehicleName: vehicle___name || NULL_VALUE_DISPLAY,
-        collectItemName: collect_item___name || NULL_VALUE_DISPLAY,
+        collectItemName: collect_item_unit___alias_name || NULL_VALUE_DISPLAY,
         customerName: customer___name || NULL_VALUE_DISPLAY,
         weight,
         isConfirm: is_confirm,
