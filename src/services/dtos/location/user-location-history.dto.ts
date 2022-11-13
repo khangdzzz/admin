@@ -4,14 +4,12 @@ export interface UserLocationHistoryDto {
     start_point_workplace?: PointWorkplace;
     end_point_workplace?: PointWorkplace;
   };
-  collect_order: {
-    collect_points: {
-      name: string;
-      latitude: number;
-      longitude: number;
-      id: number;
-    }[];
-  };
+  collect_points: {
+    name: string;
+    latitude: number;
+    longitude: number;
+    id: number;
+  }[];
   results: {
     latitude: number;
     longitude: number;

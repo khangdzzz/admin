@@ -145,7 +145,7 @@ export async function getUserLocationDetail(
 
   return {
     collectOrder: {
-      collectPoints: res.collect_order.collect_points.map((point) => {
+      collectPoints: res.collect_points.map((point) => {
         return {
           ...point,
           isCollected: collectedPoint.some((p) => p === point.id)
@@ -176,7 +176,9 @@ export async function getUserLocationDetail(
   };
 }
 
-export async function getCollectOrderReferences(collectOrderId: number) {
+export async function getCollectOrderReferences(
+  collectOrderId: number
+): Promise<LocationCollectRouteReferences[] | undefined> {
   const [err, res] = await transformRequest<{
     results: LocationCollectRouteReferences[];
   }>({
@@ -192,7 +194,7 @@ export async function getCollectOrderReferences(collectOrderId: number) {
 export async function getLocationHistory(params: {
   user_id: number;
   last_update_time: string;
-}) {
+}): Promise<UserLocationHistoryDto | undefined> {
   const [err, res] = await transformRequest<UserLocationHistoryDto>({
     url: `/location/history`,
     method: "get",

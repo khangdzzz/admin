@@ -303,6 +303,7 @@ import CloseIcon from "@/assets/icons/IcCloseIcon.vue";
 import MagnifyingGlass from "@/assets/icons/IcMagnifyingGlass.vue";
 import Refresh from "@/assets/icons/IcRefresh.vue";
 import driverIcon from "@/assets/icons/ic_driver.svg";
+import inactiveDriverIcon from "@/assets/icons/ic_inactive_driver.svg";
 import endPointLocation from "@/assets/icons/ic_end_point_location.svg";
 import icColectedCollectionPoint from "@/assets/icons/ic_route_collected_collection_point.svg";
 import icCollectionPoint from "@/assets/icons/ic_route_collection_point.svg";
@@ -327,6 +328,7 @@ import {
   ref,
   watch
 } from "vue";
+import { formatDateTime } from "../base/components/validator/dateFormat";
 import { Sort } from "../common/models/sort.enum";
 //#endregion
 
@@ -480,11 +482,11 @@ const fetchUserTrackingDetail = async (userId: number): Promise<void> => {
   const defaultGeos = [
     {
       id: 0,
-      icon: driverIcon,
+      icon: isActive(history.lastActiveTime) ? driverIcon : inactiveDriverIcon,
       title: history.userName,
       latitude: history.currentLat,
       longitude: history.currentLong,
-      color: "#2F6BFF"
+      color: isActive(history.lastActiveTime) ? "#2F6BFF" : "#999999"
     }
   ];
   if (history.collectRoute.startPoint) {
@@ -579,6 +581,15 @@ const calculateNextSortStatus = (currentSort: Sort): Sort => {
 
 const immediatelyRefresh = async (): Promise<void> => {
   await fetchUserTrackingDetail(+userId);
+};
+
+const isActive = (time: string): boolean => {
+  if (!time) return false;
+  const lastActiveTimeMillisecond = Date.parse(
+    formatDateTime(time, "yyyy/MM/dd hh:mm:ss")
+  );
+  const currentTimeMillisecond = Date.now();
+  return currentTimeMillisecond - lastActiveTimeMillisecond < 3600000;
 };
 //#endregion
 
