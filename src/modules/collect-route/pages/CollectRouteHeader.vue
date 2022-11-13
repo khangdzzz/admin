@@ -3,7 +3,7 @@
 <template>
     <div class="flex justify-between mb-5">
         <div class="flex items-center gap-5">
-            <img v-if="allowBack" src="@/assets/icons/ic_back.svg" @click="emit('back')" />
+            <img class="cursor-pointer" v-if="allowBack" src="@/assets/icons/ic_back.svg" @click="emit('back')" />
             <div class="font-bold text-2.5xl text-neutral-600">
                 {{ title }}
             </div>

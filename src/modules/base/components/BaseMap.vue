@@ -7,7 +7,7 @@
         <ol-source-osm />
       </ol-tile-layer>
 
-      <ol-vector-layer>
+      <ol-vector-layer :zIndex="99">
         <ol-source-vector>
           <ol-feature v-for="(marker, i) in markers" :key="i">
             <ol-geom-point :coordinates="marker.coordinate"></ol-geom-point>
@@ -16,7 +16,8 @@
             </ol-style>
             <ol-overlay :position="marker.coordinate">
               <template v-slot="slotProps">
-                <div class="relative w-[73px] left-8 -top-8 text-primary-400 font-bold text-base" v-if="slotProps">
+                <div class="relative w-[73px] left-8 -top-8 text-primary-400 font-bold text-base text--shadow-white"
+                  v-if="slotProps">
                   {{ marker.name }}
                 </div>
               </template>
