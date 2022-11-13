@@ -326,6 +326,13 @@
   "collection_history_remarks": "Remarks",
   "collection_history_hint_message": "ユーザー名, 参照先, 車両, 取引先, 回収地点, 回収品目",
   "collection_history_hint_title": "検索条件:",
+  "reference_data": "参照データ",
+  "hide_or_show": "表示・非表示",
+  "show_data": "データを見る",
+  "select": "選択",
+  "list_data": "データ",
+  "date": "日付",
+  "user": "ユーザー",
   "custom_select_apply": "適用",
   "inactive_more_than_1_hour": "非アクティブ（1時間以上停止）",
   "last_update_time": "最後更新日時:"

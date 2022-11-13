@@ -331,6 +331,13 @@
   "collection_history_remarks": "Remarks",
   "collection_history_hint_message": "Username, Workplace, Vehicle, Customer, Collection point, Collection item",
   "collection_history_hint_title": "Search by:",
+  "reference_data": "Reference data",
+  "hide_or_show": "Hide/ Show",
+  "show_data": "Show data",
+  "select": "Select",
+  "list_data": "List data",
+  "date": "Date",
+  "user": "User",
   "custom_select_apply": "Apply",
   "inactive_more_than_1_hour": "Inactive more than 1 hour",
   "last_update_time": "Last update time:"

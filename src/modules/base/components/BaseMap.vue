@@ -1,18 +1,7 @@
 <template>
   <div class="relative">
-    <ol-map
-      class="w-full h-full"
-      :loadTilesWhileAnimating="true"
-      :loadTilesWhileInteracting="true"
-      ref="map"
-    >
-      <ol-view
-        ref="view"
-        :center="center"
-        :rotation="rotation"
-        :zoom="zoom"
-        :projection="projection"
-      />
+    <ol-map class="w-full h-full" :loadTilesWhileAnimating="true" :loadTilesWhileInteracting="true" ref="map">
+      <ol-view ref="view" :center="center" :rotation="rotation" :zoom="zoom" :projection="projection" />
 
       <ol-tile-layer>
         <ol-source-osm />
@@ -27,10 +16,7 @@
             </ol-style>
             <ol-overlay :position="marker.coordinate">
               <template v-slot="slotProps">
-                <div
-                  class="relative w-[73px] left-8 -top-8 text-primary-400 font-bold text-base"
-                  v-if="slotProps"
-                >
+                <div class="relative w-[73px] left-8 -top-8 text-primary-400 font-bold text-base" v-if="slotProps">
                   {{ marker.name }}
                 </div>
               </template>
@@ -39,17 +25,12 @@
         </ol-source-vector>
       </ol-vector-layer>
 
-      <ol-vector-layer :zIndex="i" v-for="i in 2" :key="i">
+      <ol-vector-layer :zIndex="line.index" v-for="line in polylines" :key="line.index">
         <ol-source-vector>
           <ol-feature>
-            <ol-geom-line-string
-              :coordinates="validLinePoints"
-            ></ol-geom-line-string>
+            <ol-geom-line-string :coordinates="line.coordinates"></ol-geom-line-string>
             <ol-style>
-              <ol-style-stroke
-                :color="i === 1 ? olStrokeColor : olFillColor"
-                :width="(3 - i) * 4"
-              ></ol-style-stroke>
+              <ol-style-stroke :color="line.color" :width="line.width" :lineDash="line.lineDash"></ol-style-stroke>
             </ol-style>
           </ol-feature>
         </ol-source-vector>
@@ -57,23 +38,15 @@
 
       <ol-vector-layer :zIndex="0" :key="drawKey" v-if="drawable && drawEnable">
         <ol-source-vector :projection="projection">
-          <ol-interaction-draw
-            type="LineString"
-            @drawend="drawend"
-            @drawstart="drawstart"
-          >
+          <ol-interaction-draw type="LineString" @drawend="drawend" @drawstart="drawstart">
           </ol-interaction-draw>
         </ol-source-vector>
       </ol-vector-layer>
     </ol-map>
-    <div
-      v-if="drawable"
-      class="absolute bottom-[10px] right-[10px] btn"
-      :class="[reDraw ? 'btn--text-blue-500' : 'bg-blue-500']"
-      @click="handleDraw"
-    >
+    <div v-if="drawable" class="absolute bottom-[10px] right-[10px] btn"
+      :class="[reDraw ? 'btn--text-blue-500' : 'bg-blue-500']" @click="handleDraw">
       <IcDraw :type="reDraw ? '' : 'draw'" /><span>{{
-        reDraw ? $t("redraw_route") : $t("draw_route")
+          reDraw ? $t("redraw_route") : $t("draw_route")
       }}</span>
     </div>
   </div>
@@ -177,6 +150,16 @@ export default defineComponent({
     },
     loading: {
       type: Boolean
+    },
+    polylines: {
+      type: Array as () => {
+        index: number;
+        color: string;
+        coordinates: number[][];
+        width: number;
+        lineDash?: number[];
+      }[],
+      default: () => []
     }
   },
   setup(props, { emit }) {
@@ -237,14 +220,13 @@ export default defineComponent({
     userPin() {
       return userPin;
     },
-    validLinePoints() {
-      return this.correctFormatCoords(
-        this.linePoints.filter((x) => x[0] && x[1])
-      );
-    },
     pointMaps() {
       const markerPoints = this.markers.map((x) => x.coordinate);
-      return [...markerPoints, ...this.validLinePoints];
+      const polylinePoints = this.polylines
+        .map((x) => x.coordinates)
+        .flat()
+        .filter((x) => x.length);
+      return [...markerPoints, ...polylinePoints];
     }
   },
   methods: {
@@ -288,7 +270,11 @@ export default defineComponent({
       this.$nextTick(() => {
         if (!this.pointMaps.length) return;
         if (this.pointMaps.length === 1) {
-          this.$emit("update:center", this.pointMaps[0]);
+          if (JSON.stringify(this.center) == JSON.stringify(this.pointMaps[0]))
+            this.$emit("update:center", [20.99695916557617, 105.80201513074952]);
+          this.$nextTick(() => {
+            this.$emit("update:center", this.pointMaps[0]);
+          })
           return;
         }
         const mapRef = this.$refs["map"] as MapRef;

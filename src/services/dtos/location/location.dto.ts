@@ -23,3 +23,10 @@ export interface GetLatLongResponseDTO {
   lon: string;
   display_name: string;
 }
+
+export interface LocationCollectRouteReferences {
+  last_update_time: string;
+  user_email: string;
+  user_id: number;
+  user_name: string;
+}

@@ -22,10 +22,10 @@ export default defineComponent({
 .wrapper {
     height: 60px !important;
     background: $neutral-50 !important;
-    border: 1px solid $neutral-50 !important;
+    border: 1px solid $neutral-100 !important;
     border-radius: 10px !important;
-    border-color: $neutral-50 !important;
-
+    border-color: $neutral-100 !important;
+    overflow: hidden;
     &.focused {
         border-color: $primary-400;
         box-shadow: 0 0 0 2px rgb(7 160 184 / 20%);
