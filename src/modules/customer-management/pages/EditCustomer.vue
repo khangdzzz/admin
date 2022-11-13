@@ -36,7 +36,7 @@
             >{{ $t("btn_cancel") }}</a-button
           >
           <a-button
-            :disabled="isSubmitDisable"
+            :disabled="isSubmitDisable || existFields.length"
             type="primary"
             class="edit-customer__btn-style"
             @click="handleClickSave"

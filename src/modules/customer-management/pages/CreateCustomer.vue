@@ -38,7 +38,7 @@
           type="primary"
           class="create-customer__btn-style"
           :loading="isSubmitting"
-          :disabled="isSubmitDisable"
+          :disabled="isSubmitDisable || existFields.length"
           @click="handleClickSubmit"
           >{{ $t("btn_submit") }}</a-button
         >

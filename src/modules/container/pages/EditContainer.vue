@@ -33,7 +33,7 @@
             <a-button
               type="primary"
               class="btn"
-              :disabled="!isAllowSubmit"
+              :disabled="!isAllowSubmit || isExist"
               :loading="isSubmitting"
               @click="updateContainer"
               >{{ $t("btn_save") }}</a-button
@@ -205,12 +205,12 @@ onMounted(() => {
 const fetchContainerType = async (): Promise<void> => {
   const res = await service.container.getListContainerType(1, "full");
   if (res && res.results) {
-    containerTypes.value = sortDropdown(res?.results.map(
-      ({ id, name }: { id: number; name: string }) => ({
+    containerTypes.value = sortDropdown(
+      res?.results.map(({ id, name }: { id: number; name: string }) => ({
         value: id || "",
         label: name
-      })
-    ));
+      }))
+    );
   }
 };
 
@@ -231,7 +231,7 @@ const handleValidateFields = (
   maxLength: number,
   isRequire: boolean
 ): boolean => {
-  const valueLength = value.toString()?.length || 0;
+  const valueLength = value?.toString()?.length || 0;
   if (valueLength > maxLength) {
     return false;
   }

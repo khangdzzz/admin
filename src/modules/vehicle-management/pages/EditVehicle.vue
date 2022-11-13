@@ -78,7 +78,7 @@
               type="primary"
               class="btn"
               :loading="isLoadingBtn"
-              :disabled="!isValidated"
+              :disabled="!isValidated || existFields.length"
               @click="updateVehicle"
               >{{ $t("btn_save") }}</a-button
             >

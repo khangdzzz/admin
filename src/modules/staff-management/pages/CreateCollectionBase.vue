@@ -148,7 +148,7 @@
       <a-button
         type="primary"
         class="create-collection-base__btn-style"
-        :disabled="isButtonDisabled"
+        :disabled="isButtonDisabled || existFields.length"
         :loading="isSubmitting"
         @click="handleSubmit"
         >{{ $t("btn_submit") }}</a-button
