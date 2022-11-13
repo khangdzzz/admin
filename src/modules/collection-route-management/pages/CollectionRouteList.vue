@@ -112,7 +112,7 @@
             </a-button>
           </template>
           <template v-if="column.key === 'lastUpdate'">
-            {{ formatDateTime(text, "yyyy/MM/dd hh:mm:ss") }}
+            {{ formatDateTime(text, "yyyy/MM/dd HH:mm:ss") }}
           </template>
           <template v-if="column.dataIndex === 'action'">
             <center>

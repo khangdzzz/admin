@@ -171,7 +171,7 @@ export async function getUserLocationDetail(
     currentLong: lastHistory.longitude,
     lastActiveTime: formatDateTime(
       lastHistory.last_update_time,
-      "yyyy/MM/dd hh:mm:ss"
+      "yyyy/MM/dd HH:mm:ss"
     )
   };
 }
