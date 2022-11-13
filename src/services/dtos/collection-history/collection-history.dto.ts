@@ -35,4 +35,5 @@ export interface CollectionHistoryResponseDto {
   disposal_price: number;
   commission_price: number;
   other_price: number;
+  collect_item_unit___alias_name: string;
 }
