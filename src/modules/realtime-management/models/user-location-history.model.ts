@@ -27,4 +27,5 @@ export interface UserLocationHistoryModel {
   userName: string;
   currentLat: number;
   currentLong: number;
+  lastActiveTime: string;
 }

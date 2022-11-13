@@ -327,5 +327,6 @@
   "collection_history_hint_message": "ユーザー名, 参照先, 車両, 取引先, 回収地点, 回収品目",
   "collection_history_hint_title": "検索条件:",
   "custom_select_apply": "適用",
-  "inactive_more_than_1_hour": "非アクティブ（1時間以上停止）"
+  "inactive_more_than_1_hour": "非アクティブ（1時間以上停止）",
+  "last_update_time": "最後更新日時:"
 }

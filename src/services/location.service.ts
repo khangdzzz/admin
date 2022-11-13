@@ -1,3 +1,4 @@
+import { formatDateTime } from "@/modules/base/components/validator/dateFormat";
 import { ServiceResponse } from "@/modules/common/models";
 import { UserLocationHistoryModel } from "@/modules/realtime-management/models/user-location-history.model";
 import { CurrentUserLocationModel } from "../modules/realtime-management/models/current-user-location.model";
@@ -166,6 +167,10 @@ export async function getUserLocationDetail(
     loadingWeight: lastHistory?.current_weight,
     userName: lastHistory?.user_name,
     currentLat: lastHistory.latitude,
-    currentLong: lastHistory.longitude
+    currentLong: lastHistory.longitude,
+    lastActiveTime: formatDateTime(
+      lastHistory.last_update_time,
+      "yyyy/MM/dd hh:mm:ss"
+    )
   };
 }
