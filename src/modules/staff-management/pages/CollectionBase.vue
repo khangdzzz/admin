@@ -408,7 +408,7 @@ const tableMaxHeight = computed(() => {
   const tableHeaderHeight = 58;
   const tableFooterHeight = 52;
   const pageHeaderHeight = 120;
-  const marginBottom = 30;
+  const marginBottom = 20;
 
   return (
     innerHeight.value -
@@ -431,7 +431,6 @@ watch(searchString, onSearchChange);
 
 <style lang="scss" scoped>
 .table-container {
-  height: 100%;
   flex-grow: 1;
 }
 

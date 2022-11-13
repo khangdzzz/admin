@@ -311,7 +311,7 @@ const tableMaxHeight = computed(() => {
   const tableHeaderHeight = 58;
   const tableFooterHeight = 52;
   const pageHeaderHeight = 120;
-  const marginBottom = 30;
+  const marginBottom = 20;
 
   return (
     innerHeight.value -
