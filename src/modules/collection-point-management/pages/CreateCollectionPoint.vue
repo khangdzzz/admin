@@ -147,6 +147,7 @@ import { FormData } from "@/modules/staff-management/models/collection-base.mode
 import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
+import utils from "@/utils";
 import { NULL_VALUE_DISPLAY } from "@/utils/constants";
 import emitter, { EMITTER_EVENTS } from "@/utils/emiiter";
 import { makeUniqueName } from "@/utils/string.helper";
@@ -416,13 +417,15 @@ const fetchListCustomer = async (): Promise<void> => {
   const res = await service.customerManagement.fetchListCustomer(0, "full");
 
   if (res && res.results) {
-    customerOptions.value = res.results.map((res) => {
-      return {
-        value: res.id,
-        content: i18n.global.t("customer"),
-        label: res.name
-      };
-    });
+    customerOptions.value = res.results
+      .sort(utils.collection.sortByName)
+      .map((res) => {
+        return {
+          value: res.id,
+          content: i18n.global.t("customer"),
+          label: res.name
+        };
+      });
 
     data[0].options = customerOptions.value;
   }
