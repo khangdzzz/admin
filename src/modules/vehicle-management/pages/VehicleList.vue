@@ -55,7 +55,7 @@
         :data-source="data"
         :pagination="false"
         v-if="!isLoading && data && data.length > 0"
-        :scroll="{ y: 700 }"
+        :scroll="{ y: tableMaxHeight }"
       >
         <template #headerCell="{ column }">
           <template v-if="column.key === 'vehicle_type'">
@@ -177,23 +177,31 @@
 import IcTrash from "@/assets/icons/IcTrash.vue";
 import { i18n } from "@/i18n";
 import ListSearchHeader from "@/modules/base/components/ListSearchHeader.vue";
+import NoData from "@/modules/base/components/NoData.vue";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import HeaderRef from "@/modules/base/models/search-header.model";
+import SortView from "@/modules/common/components/SortView.vue";
+import ThePagination from "@/modules/common/components/ThePagination.vue";
 import { Pagination } from "@/modules/common/models/pagination.model";
 import { Sort } from "@/modules/common/models/sort.enum";
 import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
+import { NULL_VALUE_DISPLAY } from "@/utils/constants";
 import { TableColumnType } from "ant-design-vue/lib/components";
 import { debounce } from "lodash";
-import { computed, inject, onMounted, reactive, ref, watch } from "vue";
+import {
+  computed,
+  inject,
+  onMounted,
+  onUnmounted,
+  reactive,
+  ref,
+  watch
+} from "vue";
 import { ResVehicle, Vehicle, VehicleDetail } from "../models/vehicle.model";
 import VehicleDetailModal from "./VehicleDetailModal.vue";
-import NoData from "@/modules/base/components/NoData.vue";
-import SortView from "@/modules/common/components/SortView.vue";
-import ThePagination from "@/modules/common/components/ThePagination.vue";
-import { NULL_VALUE_DISPLAY } from "@/utils/constants";
 //#endregion===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆
 
 //#===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜Props
@@ -201,23 +209,15 @@ import { NULL_VALUE_DISPLAY } from "@/utils/constants";
 
 //#===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎Variables
 const sortType = ref<Sort>(Sort.None);
-
 const sortName = ref<Sort>(Sort.None);
-
 const sortPlateNumber = ref<Sort>(Sort.None);
-
 const sortWorkPlace = ref<Sort>(Sort.None);
-
 const sortCapacity = ref<Sort>(Sort.None);
-
 const vehicleDetail = ref<Vehicle>();
-
 const sortPermission = ref<Sort>(Sort.None);
-
 const selectedKeys = ref<number[]>([]);
-
 const vehicleId = ref<string | undefined>(undefined);
-
+const innerHeight = ref<number>(0);
 const columns: TableColumnType<VehicleDetail>[] = [
   {
     title: "vehicle_type",
@@ -270,7 +270,16 @@ const pageOption = reactive<Pagination<ResVehicle>>({
 
 //#===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌Hooks
 onMounted(() => {
+  innerHeight.value = window.innerHeight;
+  window.addEventListener("resize", () => {
+    innerHeight.value = window.innerHeight;
+  });
   fetchVehicleList();
+});
+onUnmounted(() => {
+  window.removeEventListener("resize", () => {
+    innerHeight.value = window.innerHeight;
+  });
 });
 //#endregion===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌
 
@@ -509,7 +518,20 @@ const getVehicleDetail = async (id: string): Promise<void> => {
 //#endregion===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊
 
 //#===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏Computed
+const tableMaxHeight = computed(() => {
+  const tableHeaderHeight = 58;
+  const tableFooterHeight = 52;
+  const pageHeaderHeight = 120;
+  const marginBottom = 20;
 
+  return (
+    innerHeight.value -
+    tableHeaderHeight -
+    tableFooterHeight -
+    pageHeaderHeight -
+    marginBottom
+  );
+});
 //#endregion===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏
 
 //#===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍Emits

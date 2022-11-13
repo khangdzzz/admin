@@ -56,7 +56,7 @@
         :data-source="data"
         :pagination="false"
         v-if="!isLoading && data && data.length > 0"
-        :scroll="{ y: 700 }"
+        :scroll="{ y: tableMaxHeight }"
       >
         <template #headerCell="{ column }">
           <template v-if="column.key === 'employeeCode'">
@@ -166,7 +166,15 @@ import { routeNames, router } from "@/routes";
 import { service } from "@/services";
 import { NULL_VALUE_DISPLAY } from "@/utils/constants";
 import { debounce } from "lodash";
-import { computed, inject, onMounted, reactive, ref, watch } from "vue";
+import {
+  computed,
+  inject,
+  onMounted,
+  onUnmounted,
+  reactive,
+  ref,
+  watch
+} from "vue";
 
 //#endregion
 
@@ -182,13 +190,13 @@ const messenger: (param: MessengerParamModel) => void =
 const searchString = ref<string>("");
 const isLoading = ref<boolean>(false);
 const searchHeader = ref<HeaderRef | null>(null);
-
 const sortEmployeeCode = ref<Sort>(Sort.None);
 const sortStaffName = ref<Sort>(Sort.None);
 const sortEmail = ref<Sort>(Sort.None);
 const sortUserRole = ref<Sort>(Sort.None);
 const sortWorkPlace = ref<Sort>(Sort.None);
 const sortLastLoginTime = ref<Sort>(Sort.None);
+const innerHeight = ref<number>(0);
 
 const columns = [
   {
@@ -241,7 +249,17 @@ const pageOption = reactive<Pagination<Staff>>({
 
 //#region hooks
 onMounted(() => {
+  innerHeight.value = window.innerHeight;
+  window.addEventListener("resize", () => {
+    innerHeight.value = window.innerHeight;
+  });
   fetchListStaff();
+});
+
+onUnmounted(() => {
+  window.removeEventListener("resize", () => {
+    innerHeight.value = window.innerHeight;
+  });
 });
 //#endregion
 
@@ -495,6 +513,21 @@ const rowSelection = computed(() => {
     },
     columnWidth: "50px"
   };
+});
+
+const tableMaxHeight = computed(() => {
+  const tableHeaderHeight = 58;
+  const tableFooterHeight = 52;
+  const pageHeaderHeight = 120;
+  const marginBottom = 20;
+
+  return (
+    innerHeight.value -
+    tableHeaderHeight -
+    tableFooterHeight -
+    pageHeaderHeight -
+    marginBottom
+  );
 });
 //#endregion
 

@@ -147,7 +147,7 @@
               </a-table>
               <ThePagination
                 :isShowPagination="
-                  !isLoading && data.length > pageOption.pageSize
+                  false && !isLoading && data.length > pageOption.pageSize
                 "
                 :currentPage="pageOption.currentPage"
                 :pageSize="pageOption.pageSize"
@@ -628,7 +628,7 @@ const refreshMap = (): void => {
 const calculatedTableScrollHeight = computed(() => {
   const pageTitleAndPadding = 128;
   const tableHeader = 58;
-  const tablePagination = data.value.length > pageOption.pageSize ? 60 : 0;
+  const tablePagination = 0; //data.value.length > pageOption.pageSize ? 60 : 0;
   const tableWrapperTitle = 60;
 
   return (
@@ -717,6 +717,8 @@ watch(refreshTime, () => {
 
   &__table-wrapper {
     width: 450px;
+    overflow: hidden;
+    border-radius: 10px !important;
   }
 
   &__body {
@@ -800,6 +802,8 @@ watch(refreshTime, () => {
 
   &__map-wrapper {
     flex-grow: 1;
+    border-radius: 10px !important;
+    overflow: hidden;
   }
 
   &__map-title-wrapper {
