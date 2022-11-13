@@ -93,27 +93,20 @@ export default defineComponent({
     const linePointsDraw = computed(() => [
       {
         index: 1,
-        color: "#BFD2FE",
-        width: 8,
+        color: "#2F6BFF",
+        width: 10,
         coordinates: correctFormatCoords(linePoints.value),
         show: true
       },
-      {
-        index: 2,
-        color: "#82A6FF",
-        width: 4,
-        coordinates: correctFormatCoords(linePoints.value),
-        show: true
-      }
     ]);
 
     const historyPoinstDraw = computed(() => [
       {
         index: 3,
-        color: "#999999",
+        color: "#777777",
         coordinates: correctFormatCoords(historyPoints.value),
         lineDash: [0.5, 12],
-        width: 8,
+        width: 7,
         show: showReferenceData.value
       }
     ]);
