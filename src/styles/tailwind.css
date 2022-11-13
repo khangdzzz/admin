@@ -15,6 +15,9 @@
     border-radius: 10px;
     padding: 15px 10px;
   }
+  .btn--primary-400 {
+    @apply btn--text bg-primary-400 text-white;
+  }
   .btn--text {
     @apply border justify-center flex text-lg font-bold h-12 cursor-pointer items-center;
     border-style: solid;
@@ -34,5 +37,8 @@
   }
   .btn--disabled {
     @apply btn bg-neutral-200 text-white pointer-events-none cursor-not-allowed;
+  }
+  .btn--small {
+    @apply h-8 text-base leading-4;
   }
 }

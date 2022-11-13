@@ -1,5 +1,9 @@
 <template>
-  <div v-if="!noDivider" class="bg-neutral-200 h-[1px] my-5"></div>
+  <template v-if="!noDivider">
+    <div class="bg-grey-3 h-[1px] my-5"></div>
+    <CollectRouteReferenceData />
+    <div class="bg-grey-3 h-[1px] my-5"></div>
+  </template>
   <div class="mb-[10px] text-neutral-600 text-base font-bold capitalize">
     {{ $t("route") }}
   </div>
@@ -11,7 +15,12 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import CollectRouteReferenceData from "./CollectRouteReferenceData.vue";
+
 export default defineComponent({
-  props: ["value", "loading", "noDivider"]
+  props: ["value", "loading", "noDivider"],
+  components: {
+    CollectRouteReferenceData
+  }
 });
 </script>

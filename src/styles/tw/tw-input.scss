@@ -1,0 +1,66 @@
+.tw {
+  .ant-input,
+  .ant-select,
+  .ant-select-selector {
+    height: 60px;
+    background: $neutral-50;
+    border: 1px solid $neutral-50;
+    border-radius: 10px;
+    border-color: $neutral-50;
+    color: $neutral-400;
+
+    &:focus {
+      box-shadow: none;
+    }
+  }
+
+  .ant-select-selection-item {
+    color: $neutral-400;
+  }
+
+  .floating {
+    &.ant-input {
+      height: 16px;
+      top: 29px;
+    }
+
+    .ant-select-selection-item {
+      line-height: 16px;
+      height: 16px;
+      top: 29px;
+    }
+  }
+  .size {
+    &--default {
+      border-radius: 6px;
+      .ant-input-prefix {
+        margin-right: 10px;
+        svg {
+          fill: $neutral-400;
+        }
+      }
+      .ant-input,
+      .ant-select,
+      .ant-select-selector {
+        height: 30px;
+        background: $white;
+        border-color: $neutral-200;
+      }
+      ::-webkit-input-placeholder {
+        /* Edge */
+        color: $neutral-400;
+        font-size: 1rem;
+      }
+
+      :-ms-input-placeholder {
+        color: $neutral-400;
+        font-size: 1rem;
+      }
+
+      ::placeholder {
+        color: $neutral-400;
+        font-size: 1rem;
+      }
+    }
+  }
+}

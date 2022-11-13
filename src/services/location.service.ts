@@ -7,6 +7,7 @@ import { PaginationDto } from "./dtos/common/pagination.dto";
 import { CurrentUserLocationResponseDto } from "./dtos/location/current-user-location-response.dto";
 import {
   GetLatLongResponseDTO,
+  LocationCollectRouteReferences,
   PostalAddressResponseDTO
 } from "./dtos/location/location.dto";
 import { UserLocationHistoryDto } from "./dtos/location/user-location-history.dto";
@@ -173,4 +174,32 @@ export async function getUserLocationDetail(
       "yyyy/MM/dd hh:mm:ss"
     )
   };
+}
+
+export async function getCollectOrderReferences(collectOrderId: number) {
+  const [err, res] = await transformRequest<{
+    results: LocationCollectRouteReferences[];
+  }>({
+    url: `/location/collect_order_references/${collectOrderId}`,
+    method: "get"
+  });
+  if (!res || err) {
+    return undefined;
+  }
+  return res.results;
+}
+
+export async function getLocationHistory(params: {
+  user_id: number;
+  last_update_time: string;
+}) {
+  const [err, res] = await transformRequest<UserLocationHistoryDto>({
+    url: `/location/history`,
+    method: "get",
+    params
+  });
+  if (!res || err) {
+    return undefined;
+  }
+  return res;
 }

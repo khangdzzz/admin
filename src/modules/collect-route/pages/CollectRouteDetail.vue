@@ -1,41 +1,22 @@
 <template>
   <div class="tw">
-    <a-spin
-      :spinning="loading"
-      :tip="$t('common_loading')"
-      class="w-full h-full"
-    >
+    <a-spin :spinning="loading" :tip="$t('common_loading')" class="w-full h-full">
       <div class="flex flex-col h-full p-[30px] bg-primary-50">
-        <CollectRouteHeader
-          :allowBack="allowBack"
-          :title="pageTitle"
-          :disabled="!readOnlyPage"
-          @back="handleCancel"
-          @delete="handleDelete"
-          @edit="handleEdit"
-        />
+        <CollectRouteHeader :allowBack="allowBack" :title="pageTitle" :disabled="!readOnlyPage" @back="handleCancel"
+          @delete="handleDelete" @edit="handleEdit" />
         <div class="card grid grid-cols-2 gap-5">
           <a-form @validate="validate">
             <BaseForm v-model="formFields" :loading="loading" />
           </a-form>
-          <BaseMap
-            ref="map"
-            v-model:linePoints="linePoints"
-            :loading="loading"
-            v-model:center="center"
-            :markers="markers"
-            v-model:drawable="drawable"
-          />
+          <BaseMap ref="map" v-model:linePoints="linePoints" :loading="loading" v-model:center="center"
+            :markers="markers" :polylines="polylines" v-model:drawable="drawable" />
         </div>
         <div class="mt-5 flex justify-center gap-5" v-if="!readOnlyPage">
           <div class="btn--text-primary-400 w-[180px]" @click="handleCancel">
             {{ $t("btn_cancel") }}
           </div>
-          <div
-            class="btn w-[180px]"
-            :class="[disableSubmit ? 'btn--disabled' : 'bg-primary-400']"
-            @click="handleSubmit"
-          >
+          <div class="btn w-[180px]" :class="[disableSubmit ? 'btn--disabled' : 'bg-primary-400']"
+            @click="handleSubmit">
             {{ $t("btn_submit") }}
           </div>
         </div>
@@ -61,6 +42,7 @@ import { ICONS } from "@/modules/workplace/models/workplace.config";
 import { WorkPlaceType } from "@/modules/workplace/models/workplace.model";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
+import emitter, { EMITTER_EVENTS } from "@/utils/emiiter";
 import utils from "@/utils";
 import { computed, defineComponent, inject, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
@@ -99,6 +81,48 @@ export default defineComponent({
     const collect_points = ref<CollectionPoint[]>([]);
     const map = ref(null);
     const linePoints = ref<number[][]>([]);
+    const historyPoints = ref<number[][]>([]);
+    const showReferenceData = ref(false);
+
+    const correctFormatCoords = (value: number[][]): number[][] => {
+      return value
+        .map((point) => [point[1], point[0]])
+        .filter((x) => x[0] && x[1]);
+    };
+
+    const linePointsDraw = computed(() => [
+      {
+        index: 1,
+        color: "#BFD2FE",
+        width: 8,
+        coordinates: correctFormatCoords(linePoints.value),
+        show: true
+      },
+      {
+        index: 2,
+        color: "#82A6FF",
+        width: 4,
+        coordinates: correctFormatCoords(linePoints.value),
+        show: true
+      }
+    ]);
+
+    const historyPoinstDraw = computed(() => [
+      {
+        index: 3,
+        color: "#999999",
+        coordinates: correctFormatCoords(historyPoints.value),
+        lineDash: [0.5, 12],
+        width: 8,
+        show: showReferenceData.value
+      }
+    ]);
+
+    const polylines = computed(() =>
+      [...linePointsDraw.value, ...historyPoinstDraw.value].filter(
+        (x) => x.show
+      )
+    );
 
     const fitMap = (): void => {
       if (map.value) (map.value as { fitMap: () => void }).fitMap();
@@ -147,7 +171,11 @@ export default defineComponent({
         value: "",
         options: [],
         fieldNames: { label: "name", value: "id" },
-        change: fitMap
+        change: fitMap,
+        autocomplete: true,
+        filterOption: (input: string, option: workPlace) => {
+          return option.name.toLowerCase().includes(input.toLowerCase())
+        }
       },
       end_point_id: {
         label: t("end_point"),
@@ -155,7 +183,11 @@ export default defineComponent({
         value: "",
         options: [],
         fieldNames: { label: "name", value: "id" },
-        change: fitMap
+        change: fitMap,
+        autocomplete: true,
+        filterOption: (input: string, option: workPlace) => {
+          return option.name.toLowerCase().includes(input.toLowerCase())
+        }
       },
       list_coordinates: {
         label: t("route"),
@@ -165,6 +197,20 @@ export default defineComponent({
       }
     });
     onMounted(() => {
+      emitter.on(
+        EMITTER_EVENTS.SELECT_COLLECT_ROUTE_REFERENCE_DATA,
+        async (value) => {
+          historyPoints.value = value as number[][]
+          fitMap();
+        }
+      );
+      emitter.on(
+        EMITTER_EVENTS.SHOW_COLLECT_ROUTE_REFERENCE_DATA,
+        (value): void => {
+          showReferenceData.value = Boolean(value);
+          fitMap();
+        }
+      );
       watch(
         workPlaces,
         () => {
@@ -180,6 +226,9 @@ export default defineComponent({
         () => {
           if (pageMode.value !== "detail") {
             getListWorkplaces();
+          } else {
+            showReferenceData.value = false;
+            historyPoints.value = [];
           }
           setTimeout(() => {
             if (map.value) {
@@ -242,8 +291,14 @@ export default defineComponent({
       fetchedWorkplaces,
       getListWorkplaces,
       fitMap,
-      prevRoute
+      prevRoute,
+      polylines
     };
+  },
+  unmounted() {
+    emitter.off(EMITTER_EVENTS.SELECT_COLLECT_ROUTE_REFERENCE_DATA, () => {
+      console.log("destroy emitter");
+    });
   },
   computed: {
     collectionPoint() {
@@ -354,6 +409,9 @@ export default defineComponent({
     this.loading = false;
   },
   methods: {
+    correctFormatCoords(value: number[][]) {
+      return value.map((point) => [point[1], point[0]]);
+    },
     initFormData(data) {
       this.formFields = useForm(this.formFields, data);
     },

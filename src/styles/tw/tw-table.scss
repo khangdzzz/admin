@@ -1,0 +1,27 @@
+.tw {
+  .ant-table-column-sorters {
+    justify-content: flex-start;
+  }
+  .ant-table-column-title {
+    flex: 0;
+  }
+  .ant-table-cell {
+    border-right: none !important;
+    border-bottom: 1px solid $grey-3 !important;
+    padding: 25px 15px;
+  }
+  th {
+    font-size: 14px;
+    line-height: 18px;
+    color: $neutral-400;
+    font-weight: bold;
+    .ant-table-column-sorter {
+      color: $neutral-600;
+    }
+  }
+  td {
+    font-size: 16px;
+    line-height: 20px;
+    color: $neutral-600;
+  }
+}

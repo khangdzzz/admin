@@ -45,7 +45,7 @@ interface MyAxiosRequestConfig extends AxiosRequestConfig {
   _retry?: boolean;
 }
 const handleRequestError = async (error: AxiosError): Promise<void> => {
-  const config: MyAxiosRequestConfig = error.config;
+  const config: MyAxiosRequestConfig = error.config || {};
   if (error.code == "ERR_NETWORK" && !config._retry) {
     config._retry = true;
     service.auth.refreshToken((session): void => {

@@ -1,0 +1,22 @@
+.tw {
+  .ant-modal-header {
+    border-bottom: none;
+    padding: 30px 20px;
+  }
+  .ant-modal-body {
+    padding: 0 20px;
+  }
+  .ant-modal-footer {
+    border-top: none;
+    padding: 30px 20px;
+  }
+  .ant-modal-close {
+    top: 10px;
+    right: 10px;
+  }
+  .ant-modal-close-x {
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+  }
+}

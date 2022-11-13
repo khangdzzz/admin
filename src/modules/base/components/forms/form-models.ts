@@ -19,5 +19,7 @@ export type IFormField<T, OptionType> = {
     readonly?: boolean;
     noDivider?: boolean;
     change?: (value) => void;
+    autocomplete?: boolean;
+    filterOption?: (input: string, option: any) => boolean;
   };
 };
