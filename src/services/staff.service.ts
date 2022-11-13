@@ -209,7 +209,7 @@ export async function createStaff(
         .details[0].msg,
       errorParams: (
         error?.response?.data as { details: { msg: string; loc: string[] }[] }
-      ).details[0].loc
+      ).details[0]?.loc?.filter((e) => e === "email")
     };
   }
 

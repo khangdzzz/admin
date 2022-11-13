@@ -188,7 +188,7 @@
               class="create-staff__btn-style create-staff__submit-btn"
               type="primary"
               :loading="isLoading"
-              :disabled="!isValidated"
+              :disabled="!isValidated || existFields.length"
               @click="handleSubmit"
             >
               {{ $t("btn_submit") }}
@@ -281,7 +281,7 @@ interface selects {
 //#endregion
 
 //#region variables
-const isExitsField = ref<string[]>([]);
+const existFields = ref<string[]>([]);
 const isValidated = ref<boolean>(false);
 const isFetching = ref<boolean>(false);
 const isLoading = ref<boolean>(false);
@@ -325,7 +325,7 @@ const optionValue = reactive<{
 });
 
 let validateEmail = async (rule: Rule, value: string): Promise<void> => {
-  if (isExitsField.value.includes("email")) {
+  if (existFields.value.includes("email")) {
     return Promise.reject(
       i18n.global.t("error_unique_constraint", {
         fieldName: i18n.global.t("email")
@@ -398,20 +398,20 @@ const filterWorkPlaceByType = async (role: any): Promise<void> => {
   }
 };
 
-const softWorkPlace = (filter: workPlaceOption[]) : workPlaceOption[] => {
+const softWorkPlace = (filter: workPlaceOption[]): workPlaceOption[] => {
   return filter.sort((a, b) => {
-      const labelA = a.label.toLowerCase();
-      const labelB = b.label.toLowerCase();
-      if (labelA < labelB) {
-        return -1;
-      }
-      if (labelA > labelB) {
-        return 1;
-      }
-  
-      return 0;
-    });
-}
+    const labelA = a.label.toLowerCase();
+    const labelB = b.label.toLowerCase();
+    if (labelA < labelB) {
+      return -1;
+    }
+    if (labelA > labelB) {
+      return 1;
+    }
+
+    return 0;
+  });
+};
 
 const handleClearInput = (): void => {
   createStaffRef.value.resetFields();
@@ -478,7 +478,7 @@ const handleSubmit = async (): Promise<void> => {
   } else {
     if ((error as string) === "error_unique_constraint") {
       if (errorParams) {
-        isExitsField.value = errorParams;
+        existFields.value = errorParams;
       }
       createStaffRef.value.validate();
     } else {

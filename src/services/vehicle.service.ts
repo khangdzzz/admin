@@ -175,7 +175,9 @@ export async function createVehicle(
     ) {
       return {
         error: "error_unique_constraint",
-        errorParams: parsedError.details.flatMap((e) => e.loc)
+        errorParams: parsedError.details
+          .flatMap((e) => e.loc)
+          .filter((e) => ["plate_number", "name"].includes(e))
       };
     }
     return {
@@ -255,7 +257,9 @@ export async function updateVehicle(
     ) {
       return {
         error: "error_unique_constraint",
-        errorParams: parsedError.details.flatMap((e) => e.loc)
+        errorParams: parsedError.details
+          .flatMap((e) => e.loc)
+          .filter((e) => ["plate_number", "name"].includes(e))
       };
     }
 

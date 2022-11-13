@@ -32,7 +32,7 @@
           <a-button
             class="create-container__btn-style create-container__submit-btn"
             type="primary"
-            :disabled="!isAllowSubmit"
+            :disabled="!isAllowSubmit || isExist"
             :loading="isLoading"
             @click="handleSubmit"
           >

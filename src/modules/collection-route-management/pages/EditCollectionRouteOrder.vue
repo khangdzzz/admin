@@ -167,7 +167,7 @@
         <a-button
           type="primary"
           class="edit-collection-point__btn-style"
-          :disabled="isDisableSubmit"
+          :disabled="isDisableSubmit || existFields.length"
           :loading="isSubmitting"
           @click="handleClickSubmit"
           >{{ $t("btn_save") }}</a-button
@@ -179,32 +179,32 @@
 
 <script setup lang="ts">
 //#region import
-import { UserType } from "@/modules/base/models/user-type.enum";
-import { i18n } from "@/i18n";
-import IcSwap from "@/assets/icons/IcSwap.vue";
 import IcRequired from "@/assets/icons/IcRequired.vue";
+import IcSwap from "@/assets/icons/IcSwap.vue";
+import { i18n } from "@/i18n";
 import CustomForm from "@/modules/base/components/CustomForm.vue";
+import MessengerParamModel from "@/modules/base/models/messenger-param.model";
+import { MessengerType } from "@/modules/base/models/messenger-type.enum";
+import { UserType } from "@/modules/base/models/user-type.enum";
+import { CollectionPoint } from "@/modules/collection-route-management/models/collection-route.model";
+import { WorkPlaceType } from "@/modules/workplace/models/workplace.model";
+import { routeNames, router } from "@/routes";
+import { service } from "@/services";
+import { commonStore } from "@/stores";
+import utils from "@/utils";
+import { makeUniqueName } from "@/utils/string.helper";
+import { cloneDeep } from "lodash";
 import {
   computed,
-  reactive,
-  ref,
   inject,
   onBeforeUnmount,
   onMounted,
+  reactive,
+  ref,
   watch
 } from "vue";
-import { WorkPlaceType } from "@/modules/workplace/models/workplace.model";
-import { MessengerType } from "@/modules/base/models/messenger-type.enum";
-import { routeNames, router } from "@/routes";
-import draggable from "vuedraggable";
-import { service } from "@/services";
 import { useRoute } from "vue-router";
-import { makeUniqueName } from "@/utils/string.helper";
-import MessengerParamModel from "@/modules/base/models/messenger-param.model";
-import { CollectionPoint } from "@/modules/collection-route-management/models/collection-route.model";
-import { cloneDeep } from "lodash";
-import { commonStore } from "@/stores";
-import utils from "@/utils";
+import draggable from "vuedraggable";
 export interface Form {
   note: string;
 }
@@ -215,9 +215,9 @@ export interface Form {
 
 //#region variables
 const userStore = commonStore();
-const isExitsField = ref<string[]>([]);
+const existFields = ref<string[]>([]);
 let handleIsExistName = async (): Promise<void> => {
-  if (isExitsField.value.includes("name")) {
+  if (existFields.value.includes("name")) {
     return Promise.reject(
       i18n.global.t("error_unique_constraint", {
         fieldName: i18n.global.t("collection_route_route_name")
@@ -427,6 +427,9 @@ const onHandleRemoveCollectionPointById = (id: number): void => {
 };
 const handleOnFocus = (index: number | boolean | Event): void => {
   dynamicValidateForm.formData[Number(index)].isFocus = true;
+  if (index === 0) {
+    existFields.value = [];
+  }
 };
 
 const handleOnBlur = (
@@ -434,6 +437,9 @@ const handleOnBlur = (
   index: string | number | Event
 ): void => {
   dynamicValidateForm.formData[Number(index)].isFocus = false;
+  if (index === 0) {
+    existFields.value = [];
+  }
 };
 const handleClickCancel = (): void => {
   router.push({ name: routeNames.listCollectionRoute });
@@ -475,7 +481,7 @@ const handleClickSubmit = async (): Promise<void> => {
   } else {
     if ((error as string) === "error_unique_constraint") {
       if (errorParams) {
-        isExitsField.value = errorParams;
+        existFields.value = errorParams;
       }
       editCollectionRouteOrder.value.validate();
     } else {

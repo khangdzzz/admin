@@ -83,7 +83,7 @@
               type="primary"
               class="btn"
               :loading="isLoading"
-              :disabled="!(isValidated && ownerType)"
+              :disabled="!isValidated || !ownerType || existFields.length"
               @click="onCreate"
               >{{ $t("btn_submit") }}</a-button
             >
