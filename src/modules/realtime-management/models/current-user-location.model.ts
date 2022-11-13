@@ -4,7 +4,7 @@ export interface CurrentUserLocationModel {
   userName: string;
   userEmail: string;
   tenantId: number;
-  lastUpdateTime: Date;
+  lastUpdateTime: string;
   vehicleId: number;
   vehicleName: string;
   numberPlate: string;
