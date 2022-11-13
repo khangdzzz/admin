@@ -4,6 +4,9 @@
       <div class="d-flex justify-space-between align-center mb-20">
         <div class="driver-tracking-location__title">
           {{ $t("realtime_management") }}
+          <div class="driver-tracking-location__title__sub-title">
+            {{ $t("last_update_time") }} {{ lastUpdateTime }}
+          </div>
         </div>
         <div class="d-flex gap-15">
           <div>
@@ -159,10 +162,10 @@
             >
               <div>
                 <div class="driver-tracking-location__user-info-title">
-                  {{ $t("time") }}
+                  {{ $t("last_active_time") }}
                 </div>
                 <div class="driver-tracking-location__user-info-data">
-                  {{ lastUpdateTime }}
+                  {{ lastActiveTime }}
                 </div>
               </div>
               <div>
@@ -365,6 +368,7 @@ const capacity = ref<string>("");
 const loadignWeight = ref<string>("");
 const userName = ref<string>("");
 const lastUpdateTime = ref<string>("");
+const lastActiveTime = ref<string>("");
 const center = ref<number[]>([40, 40]);
 const projection = ref<string>("EPSG:4326");
 const zoom = ref<number>(14);
@@ -465,6 +469,7 @@ const fetchUserTrackingDetail = async (userId: number): Promise<void> => {
   routeName.value = history.routeName;
   capacity.value = `${history.maxWeight || 0} kg`;
   loadignWeight.value = `${history.loadingWeight || 0} kg`;
+  lastActiveTime.value = history.lastActiveTime;
   lastUpdateTime.value = format(Date.now(), "yyyy/MM/dd hh:mm:ss");
   userName.value = history.userName;
   backupData = history.collectOrder.collectPoints.map((cp) => {
@@ -662,12 +667,37 @@ watch(refreshTime, () => {
 
 <style lang="scss" scoped>
 .driver-tracking-location {
+  &__last-update-time-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    height: 48px;
+    &__info-title {
+      font-style: normal;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 18px;
+      color: $neutral-400;
+    }
+
+    &__info-data {
+      font-style: normal;
+      font-weight: 600;
+      font-size: 16px;
+      line-height: 20px;
+      color: $neutral-600;
+    }
+  }
+
   &__title {
     font-style: normal;
     font-weight: 700;
     font-size: 28px;
     line-height: 36px;
     color: $neutral-600;
+    &__sub-title {
+      font-size: 14px;
+    }
   }
 
   &__refresh-option {

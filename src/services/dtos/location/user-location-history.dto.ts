@@ -22,6 +22,7 @@ export interface UserLocationHistoryDto {
     route_order_name: string;
     max_weight: number;
     user_name: string;
+    last_update_time: string;
   }[];
 }
 
