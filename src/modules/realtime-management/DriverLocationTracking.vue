@@ -103,7 +103,7 @@
                   <template #headerCell="{ column }">
                     <template v-if="column.key === 'name'">
                       <div class="header-title">
-                        <span class="header-title">{{ column.title }}</span>
+                        <span class="header-title">{{ $t(column.title) }}</span>
                         <SortView
                           class="mx-12"
                           :sort="sortName"
