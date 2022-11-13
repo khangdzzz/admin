@@ -592,14 +592,30 @@ const changeSortUsername = (): void => {
   const backupSortUsername = sortUsername.value;
   resetSort();
   sortUsername.value = calculateNextSortStatus(backupSortUsername);
-  initialize();
+  if (sortUsername.value === Sort.None) {
+    data.value = cloneDeep(backupData);
+    return;
+  }
+  data.value = cloneDeep(backupData).sort((pr, nx): number => {
+    if (sortUsername.value === Sort.Asc)
+      return pr.userName.localeCompare(nx.userName);
+    return nx.userName.localeCompare(pr.userName);
+  });
 };
 
 const changeSortLastActiveTime = (): void => {
   const backupSortLastActiveTime = sortLastActiveTime.value;
   resetSort();
   sortLastActiveTime.value = calculateNextSortStatus(backupSortLastActiveTime);
-  initialize();
+  if (sortLastActiveTime.value === Sort.None) {
+    data.value = cloneDeep(backupData);
+    return;
+  }
+  data.value = cloneDeep(backupData).sort((pr, nx): number => {
+    if (sortLastActiveTime.value === Sort.Asc)
+      return pr.lastUpdateTime.localeCompare(nx.lastUpdateTime);
+    return nx.lastUpdateTime.localeCompare(pr.lastUpdateTime);
+  });
 };
 
 const calculateNextSortStatus = (currentSort: Sort): Sort => {
