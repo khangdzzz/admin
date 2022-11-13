@@ -115,7 +115,7 @@
                   <template #bodyCell="{ column, record }">
                     <template v-if="column.key === 'name'">
                       <div class="driver-tracking-location__href-name">
-                        {{ record.name }}
+                        {{ record }}
                       </div>
                     </template>
                   </template>
@@ -349,8 +349,8 @@ const pageOption = reactive({
   pageSize: 20,
   total: 1
 });
-const data = ref<{ name: string; id: number }[]>([]);
-let backupData: { name: string; id: number }[] = [];
+const data = ref<string[]>([]);
+let backupData: string[] = [];
 const geoLocations = ref<
   {
     id: number;
@@ -473,8 +473,7 @@ const fetchUserTrackingDetail = async (userId: number): Promise<void> => {
   lastUpdateTime.value = format(Date.now(), "yyyy/MM/dd hh:mm:ss");
   userName.value = history.userName;
   backupData = history.collectOrder.collectPoints.map((cp) => {
-    const { name, id } = cp;
-    return { name, id };
+    return cp.name;
   });
   data.value = [...backupData];
 
@@ -544,7 +543,7 @@ const onSearchChange = (): void => {
     ...backupData.filter(
       (dt) =>
         !searchString.value ||
-        dt.name.toLowerCase().includes(searchString.value.toLowerCase())
+        dt.toLowerCase().includes(searchString.value.toLowerCase())
     )
   ];
   switch (sortName.value) {
