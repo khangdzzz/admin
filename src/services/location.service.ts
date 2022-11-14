@@ -120,7 +120,7 @@ export async function getUserLocationDetail(
   const collectedPoint = lastHistory?.list_collected_points || [];
   const collectRoute = {
     listCoordinates: JSON.parse(
-      res.collect_route.list_coordinates || "[]"
+      res.collect_route?.list_coordinates || "[]"
     ) as number[][]
   };
   if (
