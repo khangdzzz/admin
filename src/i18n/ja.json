@@ -341,5 +341,8 @@
   "list_order_create_route": "道順作成",
   "collection_point_name": "地点名",
   "common_lbl_data_selected": "{number}件を選択しました",
-  "common_lbl_multiple_data_selected": "{number}件を選択しました"
+  "common_lbl_multiple_data_selected": "{number}件を選択しました",
+  "collection_item_management_lbl_page_title": "回収品目管理",
+  "collect_item_management_lbl_category": "カテゴリー",
+  "common_lbl_updated_at": "最終更新"
 }

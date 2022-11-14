@@ -2,7 +2,7 @@
   <div class="d-flex flex-column fill-height">
     <!-- Todo: need to define page title key and update here -->
     <ListSearchHeader
-      :title="$t('collection_item_management')"
+      :title="$t('collection_item_management_lbl_page_title')"
       v-model:model-value.sync="searchString"
     >
       <template #action>
@@ -116,7 +116,7 @@ const columns = ref<TableColumnsType>([
     resizable: true
   },
   {
-    title: "collect_item_category___name",
+    title: "collect_item_management_lbl_category",
     dataIndex: "collect_item_category___name",
     key: "collect_item_category___name",
     width: -1,
@@ -130,7 +130,7 @@ const columns = ref<TableColumnsType>([
     resizable: true
   },
   {
-    title: "updated_at",
+    title: "common_lbl_updated_at",
     dataIndex: "updated_at",
     key: "updated_at",
     width: -1,
@@ -366,22 +366,6 @@ watch(searchString, onSearchChange);
 
   .ant-table-row {
     cursor: pointer;
-  }
-}
-.has-value,
-.null-value {
-  @include text(400, 16px, 20px);
-  color: $neutral-600;
-}
-</style>
-
-<style lang="scss">
-.tableContainer {
-  .ant-checkbox-inner {
-    &::after {
-      top: 45%;
-      left: 30%;
-    }
   }
 }
 </style>

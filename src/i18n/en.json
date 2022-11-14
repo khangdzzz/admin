@@ -47,7 +47,6 @@
   "container_type": "Container type",
   "add_container_type": "Add Container type",
   "name": "Name",
-  "category":"Category",
   "name_kana": "Name (Kana)",
   "next_btn": "Next",
   "previous_btn": "Previous",
@@ -348,7 +347,7 @@
   "collection_point_name": "Name",
   "common_lbl_data_selected": "{number} data is selected",
   "common_lbl_multiple_data_selected": "{number} data are selected",
-  "collection_item_management": "Collection Item Management",
-  "collect_item_category___name": "Category",
-  "updated_at": "Last Update"
+  "collection_item_management_lbl_page_title": "Collection item management",
+  "collect_item_management_lbl_category": "Category",
+  "common_lbl_updated_at": "Last Update"
 }
