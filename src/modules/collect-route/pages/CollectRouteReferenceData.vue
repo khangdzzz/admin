@@ -1,6 +1,6 @@
 <template>
   <div class="flex justify-between mb-5">
-    <div class="text-base font-bold text-neutral-600">{{ $t("btn_submit") }}</div>
+    <div class="text-base font-bold text-neutral-600">{{ $t("reference_data") }}</div>
     <div class="flex items-center">
       <div class="text-base text-neutral-800 mr-[10px]">{{ $t("hide_or_show") }}</div>
       <a-switch @change="handleChange" v-model:checked="checked" />
