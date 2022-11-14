@@ -47,6 +47,7 @@
   "container_type": "Container type",
   "add_container_type": "Add Container type",
   "name": "Name",
+  "category":"Category",
   "name_kana": "Name (Kana)",
   "next_btn": "Next",
   "previous_btn": "Previous",

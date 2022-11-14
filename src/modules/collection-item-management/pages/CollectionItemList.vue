@@ -368,4 +368,20 @@ watch(searchString, onSearchChange);
     cursor: pointer;
   }
 }
+.has-value,
+.null-value {
+  @include text(400, 16px, 20px);
+  color: $neutral-600;
+}
+</style>
+
+<style lang="scss">
+.tableContainer {
+  .ant-checkbox-inner {
+    &::after {
+      top: 45%;
+      left: 30%;
+    }
+  }
+}
 </style>
