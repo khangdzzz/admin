@@ -1,35 +1,69 @@
 <template>
-  <a-form-item :key="name" v-for="(field, name) in currentValue" :has-feedback="hasFeedBack" :name="name">
+  <a-form-item
+    :key="name"
+    v-for="(field, name) in currentValue"
+    :has-feedback="hasFeedBack"
+    :name="name"
+  >
     <template v-if="isAnt(field.component)">
       <!-- <a-skeleton-input v-if="loading" style="width: 100%" :size="size" /> -->
       <div class="h-[60px] border-b border-b-neutral-200" v-if="field.readonly">
         <div class="text-neutral-400 text-sm leading-[18px] mb-2">
           {{ field.label }}
         </div>
-        <div class="text-neutral-600 text-lg leading-[22px] h-[22px] font-bold truncate">
+        <div
+          class="text-neutral-600 text-lg leading-[22px] h-[22px] font-bold truncate"
+        >
           {{ getFieldText(field) }}
         </div>
       </div>
-      <FloatLabel v-else v-click-outside="() => (field.isFocused = false)" :class="{ disabled: field.disabled }"
-        :isFocused="field.isFocused" :isFloating="field.isFocused || !!field.value" :label="field.label"
-        :disabled="field.disabled" @click="handleClickLable(field, `field-${name}`)">
-        <component :ref="`field-${name}`" :is="field.component" v-model:value="field.value" :type="field.type"
-          :show-search="field.autocomplete" :filter-option="field.filterOption" :field-names="field.fieldNames"
-          :loading="loading" :options="field.options" :class="[
+      <FloatLabel
+        v-else
+        v-click-outside="() => (field.isFocused = false)"
+        :class="{ disabled: field.disabled }"
+        :isFocused="field.isFocused"
+        :isFloating="field.isFocused || !!field.value"
+        :label="field.label"
+        :disabled="field.disabled"
+        @click="handleClickLable(field, `field-${name}`)"
+      >
+        <component
+          :ref="`field-${name}`"
+          :is="field.component"
+          v-model:value="field.value"
+          :type="field.type"
+          :show-search="field.autocomplete"
+          :filter-option="field.filterOption"
+          :field-names="field.fieldNames"
+          :loading="loading"
+          :options="field.options"
+          :class="[
             field.class,
             field.isFocused || !!field.value ? 'floating' : ''
-          ]" :disabled="field.disabled" @focusin="field.isFocused = true" @focusout="field.isFocused = false"
-          @change="(value) => handleChange(field, value)">
+          ]"
+          :disabled="field.disabled"
+          @focusin="field.isFocused = true"
+          @focusout="field.isFocused = false"
+          @change="(value) => handleChange(field, value)"
+        >
           <template v-if="field.component === FormItems.SELECT" #suffixIcon>
-            <caret-down-outlined class="ant-select-suffix" :style="{ color: '#3C3C3C' }" />
+            <caret-down-outlined
+              class="ant-select-suffix"
+              :style="{ color: '#3C3C3C' }"
+            />
           </template>
         </component>
-
       </FloatLabel>
     </template>
     <template v-else>
-      <component :no-divider="field.noDivider" :is="field.component" v-model:value="field.value"
-        :autocomplete="field.autocomplete" :disabled="field.readonly || field.disabled" :loading="loading" />
+      <component
+        :no-divider="field.noDivider"
+        :is="field.component"
+        v-model:value="field.value"
+        :autocomplete="field.autocomplete"
+        :disabled="field.readonly || field.disabled"
+        :loading="loading"
+      />
     </template>
   </a-form-item>
 </template>
@@ -38,7 +72,7 @@ import CollectionRouteNote from "@/modules/collect-route/pages/CollectionRouteNo
 import { defineComponent } from "vue";
 import { FormItems } from "@/modules/base/components/forms/form-models";
 import FloatLabel from "@/modules/base/components/forms/FloatLabel.vue";
-import { CaretDownOutlined } from '@ant-design/icons-vue';
+import { CaretDownOutlined } from "@ant-design/icons-vue";
 
 interface IField {
   component: string;
@@ -90,7 +124,7 @@ export default defineComponent({
   },
   computed: {
     FormItems() {
-      return FormItems
+      return FormItems;
     },
     currentValue: {
       get() {
@@ -139,8 +173,8 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+$input-height: 18px;
 :deep() {
-
   .ant-input,
   .ant-select,
   .ant-select-selector {
@@ -158,7 +192,6 @@ export default defineComponent({
   }
 
   .disabled {
-
     .ant-input,
     .ant-select,
     .ant-select-selector,
@@ -172,15 +205,14 @@ export default defineComponent({
   }
 
   .floating {
-
     &.ant-input {
-      height: 16px !important;
+      height: $input-height !important;
       top: 29px;
     }
 
     .ant-select-selection-item {
-      line-height: 16px;
-      height: 16px;
+      line-height: $input-height;
+      height: $input-height;
       top: 29px;
     }
 
