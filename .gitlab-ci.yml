@@ -27,7 +27,7 @@ Test:
     - ecommit2fe
 
 # Just for Dev Env
-Build Dev:
+Build QA:
   stage: build
   only:
     - develop
@@ -43,11 +43,11 @@ Build Dev:
     - ecommit2fe
   when: manual
 
-Deploy Dev:
+Deploy QA:
   stage: deploy
   only:
     - develop
-  needs: [Build Dev]
+  needs: [Build QA]
   script:
     - aws s3 rm s3://eco-value.jp/assets/ --recursive
     - aws s3 sync ./dist/ s3://eco-value.jp
@@ -59,109 +59,34 @@ Deploy Dev:
   when: manual
 
 # Just for Uat Env
-Build Uat:
+
+Build UAT:
   stage: build
   only:
     - /^release.*$/
   needs: [Test]
   script:
-    - echo "Build Uat Env"
+    - npm install && npm run build-uat-only
+  artifacts:
+    paths:
+      - dist
+  variables:
+    GIT_Build_PATH: "$CI_BUILDS_DIR/$CI_CONCURRENT_ID/$CI_PROJECT_PATH"
   tags:
     - ecommit2fe
   when: manual
 
-Deploy Uat:
+Deploy UAT:
   stage: deploy
   only:
     - /^release.*$/
-  needs: [Build Uat]
+  needs: [Build UAT]
   script:
-    - echo "Deploy Uat Env"
+    - aws s3 rm s3://qa.eco-value.jp/assets/ --recursive
+    - aws s3 sync ./dist/ s3://qa.eco-value.jp
+    - aws cloudfront create-invalidation --distribution-id E1OYMW78KG68YQ --paths "/*"
+  variables:
+    GIT_Build_PATH: "$CI_BUILDS_DIR/$CI_CONCURRENT_ID/$CI_PROJECT_PATH"
   tags:
     - ecommit2fe
   when: manual
-# trigger_b:
-#   stage: triggers
-#   trigger:
-#     include: cicd/uat/.gitlab-ci.yml
-#   rules:
-#     - changes:
-#         - release/*
-#   - developtags:
-#     - ecommit2fe
-
-# stages:
-#   - before_script
-#   - test
-#   - build_source
-#   - deploy_dev
-#   - deploy_uat
-# Before_Script:
-#   stage: before_script
-#   script:
-#     - echo $CI_COMMIT_TAG
-#   tags:
-#     - ecommit2fe
-#   variables:
-#     GIT_CLONE_PATH: "$CI_BUILDS_DIR/$CI_CONCURRENT_ID/$CI_PROJECT_PATH"
-#   only:
-#     refs:
-#       - main
-# Test:
-#   stage: test
-#   rules:
-#     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-#       when: manual
-#       allow_failure: false
-#   script:
-#     - echo "TESTING $USER "
-#   tags:
-#     - ecommit2fe
-#       #    only:
-#       #      refs:
-#       #        - devops
-# Build:
-#   stage: build_source
-#   script:
-#     - npm install && npm run build-only
-#   artifacts:
-#     paths:
-#       - dist
-#   tags:
-#     - ecommit2fe
-#   variables:
-#     GIT_Build_PATH: "$CI_BUILDS_DIR/$CI_CONCURRENT_ID/$CI_PROJECT_PATH"
-#   rules:
-#     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-#       when: manual
-#       allow_failure: false
-
-# DeployDev:
-#   stage: deploy_dev
-#   script:
-#     - aws s3 rm s3://eco-value.jp/assets/ --recursive
-#     - aws s3 sync ./dist/ s3://eco-value.jp
-#     - aws cloudfront create-invalidation --distribution-id E1MEU6Y19FXVBO --paths "/*"
-#   tags:
-#     - ecommit2fe
-#   variables:
-#     GIT_Build_PATH: "$CI_BUILDS_DIR/$CI_CONCURRENT_ID/$CI_PROJECT_PATH"
-#   rules:
-#     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-#       when: manual
-#       allow_failure: false
-# DeployUAT:
-#   stage: deploy_uat
-#   script:
-#     - npm install && build-uat-only
-#     - aws s3 rm s3://qa.eco-value.jp/assets/ --recursive
-#     - aws s3 sync ./dist/ s3://qa.eco-value.jp
-#     - aws cloudfront create-invalidation --distribution-id E1OYMW78KG68YQ --paths "/*"
-#   tags:
-#     - ecommit2fe
-#   variables:
-#     GIT_Build_PATH: "$CI_BUILDS_DIR/$CI_CONCURRENT_ID/$CI_PROJECT_PATH"
-#   rules:
-#     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-#       when: manual
-#       allow_failure: false
