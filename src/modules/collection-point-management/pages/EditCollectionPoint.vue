@@ -313,7 +313,7 @@ const handleSubmit = async (): Promise<void> => {
     name: makeUniqueName(data[1].value.toString()) || null,
     short_name: makeUniqueName(data[2].value.toString()) || "",
     name_kana: makeUniqueName(data[3].value.toString()) || "",
-    postcode: makeUniqueName(data[4].value.toString()) || "",
+    postcode: makeUniqueName(data[4].value.toString()) || null,
     address: makeUniqueName(data[5].value.toString()) || "",
     telephone: makeUniqueName(data[6].value.toString()) || null,
     mail: makeUniqueName(data[7].value.toString()) || null,

@@ -50,7 +50,7 @@ export interface CollectionPointRequestDTO {
   name: string | null;
   short_name: string;
   name_kana: string;
-  postcode: string;
+  postcode: string | null;
   address: string;
   telephone: string | null;
   mail: string | null;
