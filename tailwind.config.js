@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  important:".tw",
+  important: ".tw",
   content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
   theme: {
     extend: {
@@ -25,7 +25,8 @@ module.exports = {
         "red-500": "#f54e4e",
         "primary-200": "#96dde9",
         "primary-100": "#e6f6f9",
-        "blue-500": "#2F6BFF"
+        "blue-500": "#2F6BFF",
+        line: "#e8e8e8"
       },
       fontSize: {
         "2.5xl": ["1.75rem", "2.25rem"],
