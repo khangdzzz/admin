@@ -340,5 +340,7 @@
   "user": "User",
   "custom_select_apply": "Apply",
   "inactive_more_than_1_hour": "Inactive more than 1 hour",
-  "last_update_time": "Last update time:"
+  "last_update_time": "Last update time:",
+  "create_route": "Create route",
+  "navigation_route_id": "Navigation route ID"
 }

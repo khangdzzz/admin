@@ -335,5 +335,7 @@
   "user": "ユーザー",
   "custom_select_apply": "適用",
   "inactive_more_than_1_hour": "非アクティブ（1時間以上停止）",
-  "last_update_time": "最後更新日時:"
+  "last_update_time": "最後更新日時:",
+  "create_route": "道順作成",
+  "navigation_route_id": "道順ID"
 }
