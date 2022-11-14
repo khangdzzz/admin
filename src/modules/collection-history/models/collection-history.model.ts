@@ -17,6 +17,7 @@ export interface CollectionHistoryModel {
   vehiclePlateNumber?: number;
   collectItemName: string;
   collectPointId: string;
+  collectPointShortName: string;
   customerId?: string;
   packingWeight: number;
   weight: number;

@@ -21,7 +21,7 @@ export const columns = ref<TableColumnsType>([
   },
   {
     title: i18n.global.t("collection_history_collection_point"),
-    dataIndex: "collectPointId",
+    dataIndex: "collectPointShortName",
     key: "collectPointId",
     fixed: true,
     width: 160,

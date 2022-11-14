@@ -438,9 +438,12 @@ const fetchCollectionBase = async (): Promise<void> => {
 
 const fetchWorkplaceTrackingInformation = async (): Promise<void> => {
   isLoading.value = true;
-  data.value = await service.location.getListCurrentUserLocations(
+  const rs = await service.location.getListCurrentUserLocations(
     selectedCollectionBase.value
   );
+  data.value = rs.sort((pr, nx): number => {
+    return nx.lastUpdateTime.localeCompare(pr.lastUpdateTime);
+  });
   await fetchCollectionBase();
   isLoading.value = false;
   backupData = [...data.value];
