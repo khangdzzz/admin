@@ -64,7 +64,7 @@
         </div>
         <a-divider class="mt-10 mb-15" style="border-color: #e8e8e8" />
         <div :class="[CollectionRouteDetail.title, 'mb-8']">
-          {{ $t("collection_route_navigation_id") }}
+          {{ $t("navigation_route_id") }}
         </div>
         <div :class="[CollectionRouteDetail.value]">
           <span
@@ -86,7 +86,7 @@
                 class="btn-navigation-icon"
               />
             </template>
-            Create
+            {{ $t("create_route") }}
           </a-button>
         </div>
         <a-divider class="mt-10 mb-15" style="border-color: #e8e8e8" />
@@ -279,7 +279,7 @@ const onDeleteCollectionRoute = async (deleteIds: number[]): Promise<void> => {
   width: 100%;
 }
 .btn-create-navigation-link {
-  width: 89px;
+  min-width: 105px;
   height: 32px;
   border-radius: 6px;
   font-weight: 600;
