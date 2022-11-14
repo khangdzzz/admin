@@ -1,0 +1,39 @@
+variables:
+  REPO_NAME: git@git.techvify.com.vn:evp/phase2/ecommit2-fe.git
+stages:
+  - before_script
+  - test
+  - build
+  - deploy
+
+Before_Script:
+  stage: before_script
+  script:
+    - echo $CI_COMMIT_TAG
+  tags:
+    - ecommit2fe
+  variables:
+    GIT_CLONE_PATH: "$CI_BUILDS_DIR/$CI_CONCURRENT_ID/$CI_PROJECT_PATH"
+
+Test Uat:
+  stage: test
+  script:
+    - echo "Test Uat Env"
+  tags:
+    - ecommit2fe
+
+Build Uat:
+  stage: build
+  needs: [Test Uat]
+  script:
+    - echo "Build Uat Env"
+  tags:
+    - ecommit2fe
+
+Deploy Uat:
+  stage: deploy
+  needs: [Deploy Uat]
+  script:
+    - echo "Deploy Uat Env"
+  tags:
+    - ecommit2fe
