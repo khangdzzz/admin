@@ -5,7 +5,8 @@ stages:
   - before_script
   - test
   - build_source
-  - deploy
+  - deploy_dev
+  - deploy_uat
 Before_Script:
   stage: before_script
   script:
@@ -46,12 +47,27 @@ Build:
       when: manual
       allow_failure: false
 
-Deploy:
-  stage: deploy
+DeployDev:
+  stage: deploy_dev
   script:
     - aws s3 rm s3://eco-value.jp/assets/ --recursive
     - aws s3 sync ./dist/ s3://eco-value.jp
     - aws cloudfront create-invalidation --distribution-id E1MEU6Y19FXVBO --paths "/*"
+  tags:
+    - ecommit2fe
+  variables:
+    GIT_Build_PATH: "$CI_BUILDS_DIR/$CI_CONCURRENT_ID/$CI_PROJECT_PATH"
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+      when: manual
+      allow_failure: false
+DeployUAT:
+  stage: deploy_uat
+  script:
+    - npm install && build-uat-only
+    - aws s3 rm s3://qa.eco-value.jp/assets/ --recursive
+    - aws s3 sync ./dist/ s3://qa.eco-value.jp
+    - aws cloudfront create-invalidation --distribution-id E1OYMW78KG68YQ --paths "/*"
   tags:
     - ecommit2fe
   variables:
