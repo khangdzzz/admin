@@ -1,6 +1,6 @@
 import { CollectionHistoryModel } from "@/modules/collection-history/models/collection-history.model";
 import { Pagination } from "@/modules/common/models";
-import { NULL_VALUE_DISPLAY } from "@/utils/constants";
+import { NULL_VALUE_DISPLAY } from "@/modules/common/constants/table.constant";
 import { transformRequest } from "./base.service";
 import { CollectionHistoryResponseDto } from "./dtos/collection-history/collection-history.dto";
 import { PaginationDto } from "./dtos/common/pagination.dto";

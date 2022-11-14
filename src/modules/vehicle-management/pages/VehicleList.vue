@@ -188,7 +188,7 @@ import { Sort } from "@/modules/common/models/sort.enum";
 import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
-import { NULL_VALUE_DISPLAY } from "@/utils/constants";
+import { NULL_VALUE_DISPLAY } from "@/modules/common/constants/table.constant";
 import { TableColumnType } from "ant-design-vue/lib/components";
 import { debounce } from "lodash";
 import {

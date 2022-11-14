@@ -147,7 +147,7 @@ import type { TableColumnType } from "ant-design-vue";
 import { debounce } from "lodash";
 import { computed, inject, onMounted, reactive, ref, watch } from "vue";
 import { CollectionPointModel } from "../models/collection-point.model";
-import { NULL_VALUE_DISPLAY } from "@/utils/constants";
+import { NULL_VALUE_DISPLAY } from "@/modules/common/constants/table.constant";
 
 //#endregion===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆
 

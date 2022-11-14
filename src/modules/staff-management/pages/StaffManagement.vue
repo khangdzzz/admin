@@ -164,7 +164,7 @@ import { Sort } from "@/modules/common/models/sort.enum";
 import { Staff } from "@/modules/staff-management/models";
 import { routeNames, router } from "@/routes";
 import { service } from "@/services";
-import { NULL_VALUE_DISPLAY } from "@/utils/constants";
+import { NULL_VALUE_DISPLAY } from "@/modules/common/constants/table.constant";
 import { debounce } from "lodash";
 import {
   computed,

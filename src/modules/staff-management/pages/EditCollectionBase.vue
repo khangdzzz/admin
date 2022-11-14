@@ -165,6 +165,7 @@ import CustomForm from "@/modules/base/components/CustomForm.vue";
 import validator from "@/modules/base/components/validator/validator";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
+import { NULL_VALUE_DISPLAY } from "@/modules/common/constants/table.constant";
 import {
   CollectionBase,
   FormData
@@ -174,7 +175,6 @@ import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
 import { commonStore } from "@/stores";
-import { NULL_VALUE_DISPLAY } from "@/utils/constants";
 import emitter, { EMITTER_EVENTS } from "@/utils/emiiter";
 import { makeUniqueName } from "@/utils/string.helper";
 import { message } from "ant-design-vue";

@@ -18,7 +18,7 @@
             </CustomForm>
           </a-form>
         </div>
-        <a-row type="flex" justify="center" align="middle" gutter="20">
+        <a-row type="flex" justify="center" align="middle" :gutter="20">
           <a-col :span="12">
             <a-button
               type="primary"
@@ -52,12 +52,13 @@ import CustomForm from "@/modules/base/components/CustomForm.vue";
 import validator from "@/modules/base/components/validator/validator";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
-import { sortDropdown } from "@/modules/common/helpers";
 import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
+import { sortDropdown } from "@/utils/sortable.helper";
 import { makeUniqueName } from "@/utils/string.helper";
 import { Rule } from "ant-design-vue/lib/form";
+import ARow from "ant-design-vue/lib/grid/Row";
 import { computed, inject, onMounted, reactive, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { Container, ContainerSelection } from "../models/container.model";

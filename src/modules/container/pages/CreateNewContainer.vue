@@ -55,9 +55,9 @@ import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import { routeNames, router } from "@/routes";
 import { service } from "@/services";
+import { sortDropdown } from "@/utils/sortable.helper";
 import { Rule } from "ant-design-vue/lib/form";
 import { validateContainerName } from "../validators/container.validator";
-import { sortDropdown } from "@/modules/common/helpers";
 //#endregion
 
 //#region props

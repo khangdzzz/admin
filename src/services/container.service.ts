@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { calculateSortQuery } from "@/modules/common/helpers";
 import { Pagination, ServiceResponse } from "@/modules/common/models";
 import { Sort } from "@/modules/common/models/sort.enum";
 import { ContainerSelection, ContainerType } from "@/modules/container/models";
@@ -17,6 +16,7 @@ import { PaginationDto } from "./dtos/common/pagination.dto";
 import { ContainerTypeResponseDto } from "./dtos/container/create-container-type.dto";
 
 import { ContainerResponseDTO } from "@/services/dtos/container/container.dto";
+import { calculateSortQuery } from "@/utils/rest-client.helper";
 import { toUrlEncodedString } from "./utils/search-query.helper";
 
 interface sortContainerDto {

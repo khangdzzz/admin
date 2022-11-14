@@ -1,19 +1,15 @@
 import { Pagination, ServiceResponse } from "@/modules/common/models";
 import { Sort } from "@/modules/common/models/sort.enum";
-import { transformRequest } from "./base.service";
-import { PaginationDto } from "./dtos/common/pagination.dto";
-import {
-  //   CreateCustomerInputDto,
-  CustomerResponseDto
-} from "./dtos/customer-management/customer.dto";
-import { DEFAULT_SORT_ORDER } from "@/services/constants";
 import {
   CustomerDetail,
-  EditCustomerDto,
-  CustomerModel
+  CustomerModel,
+  EditCustomerDto
 } from "@/modules/customer-management/models/customer.model";
+import { DEFAULT_SORT_ORDER } from "@/services/constants";
+import { transformRequest } from "./base.service";
+import { PaginationDto } from "./dtos/common/pagination.dto";
+import { CustomerResponseDto } from "./dtos/customer-management/customer.dto";
 import { toUrlEncodedString } from "./utils/search-query.helper";
-// import { makeUniqueName } from "@/utils/string.helper";
 
 export async function fetchListCustomer(
   page: number,

@@ -1,4 +1,3 @@
-import { calculateSortQuery } from "@/modules/common/helpers";
 import { Pagination } from "@/modules/common/models";
 import { Sort } from "@/modules/common/models/sort.enum";
 import {
@@ -7,6 +6,7 @@ import {
   EditCollectionBaseDto
 } from "@/modules/staff-management/models/collection-base.model";
 import { DEFAULT_SORT_ORDER } from "@/services/constants";
+import { calculateSortQuery } from "@/utils/rest-client.helper";
 import { makeUniqueName } from "@/utils/string.helper";
 import { AxiosError } from "axios";
 import { transformRequest } from "./base.service";

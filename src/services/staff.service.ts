@@ -1,4 +1,3 @@
-import { calculateSortQuery } from "@/modules/common/helpers";
 import { Pagination, ServiceResponse } from "@/modules/common/models";
 import { Sort } from "@/modules/common/models/sort.enum";
 import { Staff } from "@/modules/staff-management/models";
@@ -7,6 +6,7 @@ import {
   workPlace,
   workPlaceDTO
 } from "@/modules/staff-management/models/staff.model";
+import { calculateSortQuery } from "@/utils/rest-client.helper";
 import { format } from "date-fns";
 import { transformRequest } from "./base.service";
 import { DEFAULT_SORT_ORDER } from "./constants";
