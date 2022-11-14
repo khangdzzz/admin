@@ -14,6 +14,7 @@ import * as collectionRoute from "./collection-route.service";
 import * as collectRoute from "./collect-route.service";
 import * as location from "./location.service";
 import * as collectionHistory from "./collection-history.service";
+import * as collectionItem from "./collection-item.service";
 export const service = {
   auth,
   localStorage,
@@ -30,5 +31,6 @@ export const service = {
   collectionRoute,
   location,
   collectRoute,
-  collectionHistory
+  collectionHistory,
+  collectionItem
 };

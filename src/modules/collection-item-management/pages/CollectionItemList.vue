@@ -1,82 +1,72 @@
 <template>
-  <div class="fill-height d-flex flex-column">
+  <div class="d-flex flex-column fill-height">
+    <!-- Todo: need to define page title key and update here -->
     <ListSearchHeader
-      ref="searchHeader"
       :title="$t('collection_item_management')"
-      :colTitle="3"
-      :colAction="21"
-      v-model:model-value.sync="searchValue"
-      @onChange="handleSearchChange"
+      v-model:model-value.sync="searchString"
     >
       <template #action>
-        <a-button type="primary" class="btn-add-new" @click="onCreate">
+        <a-button type="primary" class="btn-add-new" @click="onAddNewItem">
           <template #icon>
             <img src="@/assets/icons/ic_plus.svg" class="btn-icon" />
           </template>
-          {{ $t("add_new_type_btn") }}
+          {{ $t("add_btn") }}
         </a-button>
       </template>
     </ListSearchHeader>
-    <div :class="[collectionItem.tableContainer, 'mx-30 mb-30']">
-      <a-table
-        :row-selection="rowSelection"
-        :columns="columns"
-        :data-source="data"
-        :pagination="false"
-        v-if="!isLoading && data && data.length > 0"
-        :customRow="customRow"
-        :scroll="{ y: tableMaxHeight }"
-      >
-        <template #headerCell="{ column }">
-          <template v-if="column.key === 'name'">
-            <div @click="changeSortName()">
-              <span class="header-title">{{ column.title }}</span>
-              <SortView class="mx-12" :sort="sortName" />
-            </div>
+    <div class="table-container mx-30 mb-30">
+      <div v-if="!isLoading && data && data.length">
+        <a-table
+          :columns="columns"
+          :data-source="data"
+          :pagination="false"
+          :scroll="{ y: tableMaxHeight }"
+          :row-key="(record) => record.id"
+          :customRow="customRow"
+          @resizeColumn="handleResizeColumn"
+        >
+          <template #headerCell="{ column }">
+            <template v-if="column.key !== 'action'">
+              <div>
+                <span class="header-title">{{ $t(column.title) }}</span>
+                <SortView
+                  v-if="column.key"
+                  class="mx-12"
+                  :sort="sort[column.key]"
+                  @click="changeSort(column.key)"
+                />
+              </div>
+            </template>
           </template>
-          <template v-if="column.key === 'category'">
-            <div @click="changeSortCategory()">
-              <span class="header-title">{{ column.title }}</span>
-              <SortView class="mx-12" :sort="sortCategory" />
-            </div>
+          <template #bodyCell="{ column, record, text }">
+            <template v-if="column.key === 'action'">
+              <img
+                src="@/assets/icons/ic_btn_edit.svg"
+                class="action-icon"
+                @click="($event) => onEditItem($event, record.id)"
+              />
+              <img
+                src="@/assets/icons/ic_btn_delete.svg"
+                class="action-icon"
+                @click="($event) => onDeleteItem($event, record.id)"
+              />
+            </template>
+            <template v-else>
+              <span>{{ text || NULL_VALUE_DISPLAY }}</span>
+            </template>
           </template>
-
-        </template>
-
-        <template #bodyCell="{ column, record, text }">
-          <template
-            v-if="columns.includes(column) && column.dataIndex !== 'action'"
-          >
-            <span v-if="text" class="has-value">{{ text }} </span>
-            <span class="null-value" v-else>{{ NULL_VALUE_DISPLAY }}</span>
-          </template>
-
-          <template v-if="column.dataIndex === 'action'">
-            <img
-              src="@/assets/icons/ic_btn_edit.svg"
-              :class="[collectionItem.actionIcon, 'ml-0']"
-              @click="(event) => handleClickEdit(event, record.id)"
-            />
-            <img
-              src="@/assets/icons/ic_btn_delete.svg"
-              :class="[collectionItem.actionIcon]"
-              @click="(event) => deleteCollectionItem(event, record.id)"
-            />
-          </template>
-        </template>
-      </a-table>
-      <ThePagination
-        :isShowPagination="!isLoading && data && !!data.length"
-        :currentPage="pageOption.currentPage"
-        :pageSize="pageOption.pageSize"
-        :total="pageOption.total"
-        :isShowPrevBtn="isShowPrevBtn()"
-        :isShowNextBtn="isShowNextBtn()"
-        @onShowSizeChange="onShowSizeChange"
-        @onChange="onChange"
-      />
+        </a-table>
+        <ThePagination
+          :isShowPagination="!isLoading && data && !!data.length"
+          :currentPage="pageOption.currentPage"
+          :pageSize="pageOption.pageSize"
+          :total="pageOption.total"
+          @onShowSizeChange="onShowSizeChange"
+          @onChange="onChange"
+        />
+      </div>
       <NoData
-        :value="searchValue"
+        :value="searchString"
         :is-loading="isLoading"
         @onClick="handleBackToList"
         v-if="isLoading || !data || !data.length"
@@ -86,73 +76,216 @@
 </template>
 
 <script setup lang="ts">
-
+//#region import
 import { i18n } from "@/i18n";
 import ListSearchHeader from "@/modules/base/components/ListSearchHeader.vue";
 import NoData from "@/modules/base/components/NoData.vue";
-import HeaderRef from "@/modules/base/models/search-header.model";
+import MessengerParamModel from "@/modules/base/models/messenger-param.model";
+import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import SortView from "@/modules/common/components/SortView.vue";
 import ThePagination from "@/modules/common/components/ThePagination.vue";
+import { NULL_VALUE_DISPLAY } from "@/modules/common/constants/table.constant";
 import { Pagination } from "@/modules/common/models";
 import { Sort } from "@/modules/common/models/sort.enum";
-import { router } from "@/routes";
-import { routeNames } from "@/routes/route-names";
-import type { TableColumnType } from "ant-design-vue";
+import { routeNames, router } from "@/routes";
+import { service } from "@/services";
+import { TableColumnsType } from "ant-design-vue";
 import { debounce } from "lodash";
-import { computed,  onMounted, reactive, ref, watch } from "vue";
-import { NULL_VALUE_DISPLAY } from "@/utils/constants";
-import { CollectionItemModel } from "../models/collection-item.model";
+import { computed, inject, onMounted, reactive, ref, watch } from "vue";
+import { CollectionItem, CollectionItemModel } from "../models/collection-item.model";
 
-const sortName = ref<Sort>(Sort.None);
+//#endregion
+//#region props
+//#endregion
+interface sortColletionItemDto {
+  name: Sort;
+  collect_item_category___name: Sort;
+  external_code: Sort;
+  updated_at: Sort;
+}
 
-const sortCategory = ref<Sort>(Sort.None);
-
-const selectedKeys = ref<number[]>([]);
-
-const columns: TableColumnType<CollectionItemModel>[] = [
+//#region variables
+const searchString = ref<string>("");
+// Todo: need to define your columns here. Note: all columns that are not action column, must enable resizable
+const columns = ref<TableColumnsType>([
   {
-    title: i18n.global.t("name"),
+    title: "name",
     dataIndex: "name",
     key: "name",
+    width: -1,
+    resizable: true
   },
   {
-    title: i18n.global.t("category"),
-    dataIndex: "category",
-    key: "category",
-    width: "70%"
+    title: "collect_item_category___name",
+    dataIndex: "collect_item_category___name",
+    key: "collect_item_category___name",
+    width: -1,
+    resizable: true
   },
   {
+    title: "external_code",
+    dataIndex: "external_code",
+    key: "external_code",
+     width: -1,
+    resizable: true
+  },
+  {
+    title: "updated_at",
+    dataIndex: "updated_at",
+    key: "updated_at",
+    width: -1,
+    resizable: true
+  },
+  {
+    title: "",
     dataIndex: "action",
-    width: "130px"
+    key: "action",
+    width: "150px"
   }
-];
-
-const data = ref<CollectionItemModel[]>([]);
-const searchValue = ref<string>("");
-const searchHeader = ref<HeaderRef | null>(null);
+]);
+const data = ref<CollectionItem[]>([]);// Todo: must define data model and update here
+let sourceData: CollectionItem[] = [];
+const selectedKeys = ref<number[]>([]);
+const sort = ref({});
 const isLoading = ref<boolean>(false);
+const innerHeight = ref<number>(0);
 const pageOption = reactive<Pagination<CollectionItemModel>>({
   currentPage: 1,
   pageSize: 20,
   total: 0
 });
-const innerHeight = ref<number>(0);
-  let sourceData: CollectionItemModel[] = [];
-onMounted(() => {
-  innerHeight.value = window.innerHeight;
-  window.addEventListener("resize", () => {
-    innerHeight.value = window.innerHeight;
-  });
-  fetchCollectionItemList();
-});
 
-const resetSort = (): void => {
-  sortName.value = Sort.None;
-  sortCategory.value = Sort.None;
+const messenger: (param: MessengerParamModel) => void =
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  inject("messenger")!;
+//#endregion
+
+//#region hooks
+onMounted(() => {
+  const sortKey = columns.value.map((c) => c.key?.toString());
+  sortKey.forEach((key) => {
+    if (key && key !== "action") sort.value[key] = Sort.None;
+  });
+  fetchDataAsync();
+});
+//#endregion
+
+//#region function
+const fetchDataAsync = async (): Promise<void> => {
+  isLoading.value = true;
+  const res = await service.collectionItem.getListCollectionItems(
+    pageOption?.currentPage || 1,
+    pageOption?.pageSize ? pageOption?.pageSize : 20,
+    sort.value as sortColletionItemDto,
+    searchString.value
+  );
+
+  sourceData = (res?.results || []).map((item, index) => {
+    return { ...item, key: item.id || index + 1 };
+  });
+  data.value = [...sourceData];
+  
+  isLoading.value = false;
+  pageOption.currentPage = res?.currentPage;
+  pageOption.total = res?.total;
+  pageOption.totalPage = res?.totalPage;
+  
+};
+
+const onSearchChange = debounce((): void => {
+  pageOption.currentPage = 1;
+  selectedKeys.value = [];
+  fetchDataAsync();
+}, 500);
+
+const onShowSizeChange = (current: number, pageSize: number): void => {
+  pageOption.currentPage = current;
+  pageOption.pageSize = pageSize;
+  fetchDataAsync();
+};
+
+const onChange = (pageNumber: number): void => {
+  pageOption.currentPage = pageNumber;
+  fetchDataAsync();
+};
+
+const handleBackToList = (): void => {
+  if (searchString.value) {
+    isLoading.value = true;
+    searchString.value = "";
+  }
+};
+
+const onAddNewItem = (): void => {
+  // Todo: need to navigate to add new item screen
+};
+
+const deleteItems = (e: MouseEvent, ids: number[]): void => {
+  if (e && e.stopPropagation) e.stopPropagation();
+  messenger({
+    title: "popup_msg_confirm_delete",
+    message: "",
+    type: MessengerType.Confirm,
+    buttonOkTitle: "btn_delete",
+    callback: async (isConfirm: boolean): Promise<void> => {
+      if (!isConfirm) {
+        return;
+      }
+      onDeleteItems(ids);
+    }
+  });
+};
+
+const onDeleteItems = async (deleteIds: number[]): Promise<void> => {
+  if (!deleteIds.length) {
+    return;
+  }
+  isLoading.value = true;
+  // Todo: Call API to delete
+  const isSuccess = await service.collectionItem.deleteCollectionItem(
+    deleteIds
+  );
+  isLoading.value = false;
+  if (!isSuccess) {
+    messenger({
+      title: "popup_delete_fail_lbl_title",
+      message: "",
+      type: MessengerType.Error
+    });
+    return;
+  }
+  messenger({
+    title:
+      deleteIds.length > 1
+        ? i18n.global.t("common_msg_delete_multiple_successfully", {
+            number: deleteIds.length
+          })
+        : "common_msg_delete_successfully",
+    message: "",
+    type: MessengerType.Success,
+    callback: (isConfirm: boolean): void => {
+      isConfirm;
+      fetchDataAsync();
+    }
+  });
+  pageOption.currentPage = 1;
+  selectedKeys.value = [];
+  searchString.value = "";
+};
+
+const onEditItem = (e: MouseEvent, id: number): void => {
+  if (e && e.stopPropagation) e.stopPropagation();
+  // Todo: go edit item screen with id
+  id;
+};
+
+const onDeleteItem = (e: MouseEvent, id: number): void => {
+  if (e && e.stopPropagation) e.stopPropagation();
+  deleteItems(e, [id]);
 };
 
 const customRow = (
-  record: CollectionItemModel
+  record: CollectionItemModel // enter data type here
 ): { onClick: (_event: PointerEvent) => void } => {
   return {
     onClick: (_event: PointerEvent): void => {
@@ -167,6 +300,10 @@ const customRow = (
   };
 };
 
+const handleResizeColumn = (w: number, col: { width: number }): void => {
+  col.width = w;
+};
+
 const calculateNextSortStatus = (currentSort: Sort): Sort => {
   switch (currentSort) {
     case Sort.Asc:
@@ -178,112 +315,17 @@ const calculateNextSortStatus = (currentSort: Sort): Sort => {
   }
 };
 
+const changeSort = (key: string): void => {
+  Object.keys(sort.value).forEach((objKey) => {
+    sort.value[objKey] =
+      objKey !== key ? Sort.None : calculateNextSortStatus(sort.value[objKey]);
+  });
 
-const changeSortName = (): void => {
-  const backupSortName = sortName.value;
-  resetSort();
-  sortName.value = calculateNextSortStatus(backupSortName);
-  fetchCollectionItemList();
+  fetchDataAsync();
 };
+//#endregion
 
-const changeSortCategory = (): void => {
-  const backupSortCategory = sortCategory.value;
-  resetSort();
-  sortCategory.value = calculateNextSortStatus(backupSortCategory);
-  fetchCollectionItemList();
-};
-
-const onShowSizeChange = (current: number, pageSize: number): void => {
-  pageOption.currentPage = current;
-  pageOption.pageSize = pageSize;
-  fetchCollectionItemList();
-};
-
-const onChange = (pageNumber: number): void => {
-  pageOption.currentPage = pageNumber;
-  fetchCollectionItemList();
-};
-
-const isShowPrevBtn = (): boolean => {
-  const isFirtPage = pageOption.currentPage === 1;
-  if (totalPages() === 1 || isFirtPage) return false;
-
-  return true;
-};
-
-const isShowNextBtn = (): boolean => {
-  const isLastPage =
-    pageOption.currentPage ===
-    Math.ceil(Number(pageOption.total) / Number(pageOption?.pageSize));
-
-  if (totalPages() === 1 || isLastPage) return false;
-  return true;
-};
-
-const totalPages = (): number => {
-  return Math.ceil(Number(pageOption.total) / Number(pageOption.pageSize));
-};
-
-const rowSelection = computed(() => {
-  return {
-    selectedRowKeys: selectedKeys.value,
-    onChange: (keys: number[]): void => {
-      selectedKeys.value = keys;
-    },
-    columnWidth: "50px"
-  };
-});
-
-const fetchCollectionItemList = async (): Promise<void> => {
-
-  let result = [
-    {
-      name: "Clothing",
-      category: "Clothing & Accessories"
-    },
-    {
-      name: "Shoes",
-      category: "Clothing & Accessories"
-    },
-    {
-      name: "Bags",
-      category: "Clothing & Accessories"
-    },
-  ]
-    sourceData = result
-    data.value = [...sourceData];
-    pageOption.currentPage = 1; 
-    pageOption.pageSize = 20;
-    pageOption.total = 3;
-    pageOption.totalPage = 1;
-};
-
-const onSearchChange = debounce((): void => {
-  pageOption.currentPage = 1;
-  selectedKeys.value = [];
-  fetchCollectionItemList();
-}, 500);
-
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-const handleClickEdit = ($event: MouseEvent, id: string): void => {};
-
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-const deleteCollectionItem = ($event: MouseEvent, id?: number): void => {};
-
-
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-const onCreate = (): void => {};
-
-const handleSearchChange = (currentSearchValue: string): void => {
-  searchValue.value = currentSearchValue;
-};
-
-const handleBackToList = (): void => {
-  if (searchHeader.value) {
-    isLoading.value = true;
-    searchHeader.value.clearInput();
-  }
-};
+//#region computed
 const tableMaxHeight = computed(() => {
   const tableHeaderHeight = 58;
   const tableFooterHeight = 52;
@@ -298,134 +340,32 @@ const tableMaxHeight = computed(() => {
     marginBottom
   );
 });
+//#endregion
 
-watch(searchValue, onSearchChange);
-
+//#region reactive
+watch(searchString, onSearchChange);
+//#endregion
 </script>
 
-<style lang="scss" module="collectionItem">
-@mixin size-btn($width, $height) {
-  min-width: $width;
-  height: $height;
-}
-
-@mixin text($fontWeight, $fontSize, $lineHeight) {
-  font-weight: $fontWeight;
-  font-size: $fontSize;
-  line-height: $lineHeight;
-}
-
-.tableContainer {
+<style lang="scss" scoped>
+.table-container {
   flex-grow: 1;
-
-  .actionIcon {
-    margin-left: 30px;
-    cursor: pointer;
-  }
-  .ant-table-cell {
-    text-align: center;
-  }
-
-  .pagination {
-    text-align: end;
-    background-color: #fff;
-    height: 60px;
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-    .btnPagination {
-      @include size-btn(82px, 40px);
-      border-color: #eaeaea;
-      background-color: #fff;
-
-      .btnIconPrev {
-        margin-right: 8px;
-      }
-
-      .btnIconNext {
-        margin-left: 8px;
-      }
-    }
-
-    .action {
-      @include text(700, 14px, 18px);
-      text-align: center;
-      color: $neutral-600;
-    }
-  }
-}
-</style>
-
-<style scoped lang="scss">
-.border {
-  border: 1px solid #eaeaea;
-  border-radius: 6px;
+  height: calc(100% - 98px - 30px);
 }
 
-@mixin permission($background, $borderColor, $color) {
-  padding: 3px 10px;
-  background: $background;
-  border: 1px solid $borderColor;
-  border-radius: 22px;
-  span {
-    @include text(400, 16px, 16px);
-    color: $color;
-  }
-}
-
-.permisson-no {
-  @include permission(#feeded, rgba(245, 78, 78, 0.5), $red-1);
-}
-
-.permisson-yes {
-  @include permission(#f0f8fa, rgba(7, 160, 184, 0.5), $primary);
-}
-
-@mixin size-btn($width, $height) {
-  min-width: $width;
-  height: $height;
-}
-
-@mixin pagination-item($color) {
-  background-color: $color;
-  @extend .border;
-}
-
-@mixin text($fontWeight, $fontSize, $lineHeight) {
-  font-weight: $fontWeight;
-  font-size: $fontSize;
-  line-height: $lineHeight;
-}
-
-//extend
-.flex-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.action-icon {
+  margin-left: 30px;
+  cursor: pointer;
 }
 
 :deep() {
   .ant-table-tbody > tr.ant-table-row-selected > td {
-    background: $grey-2;
+    background: grey-2;
     border-color: rgba(0, 0, 0, 0.03);
   }
+
   .ant-table-row {
     cursor: pointer;
-  }
-}
-.has-value,
-.null-value {
-  @include text(400, 16px, 20px);
-  color: $neutral-600;
-}
-</style>
-
-<style lang="scss">
-.tableContainer {
-  .ant-checkbox-inner {
-    &::after {
-      top: 45%;
-      left: 30%;
-    }
   }
 }
 </style>

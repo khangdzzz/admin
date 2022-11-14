@@ -284,22 +284,6 @@ const routes: RouteRecordRaw[] = [
             "@/modules/collection-item-management/pages/CollectionItemList.vue"
           )
       },
-      // {
-      //   path: "create",
-      //   name: routeNames.createCollectionItem,
-      //   component: () =>
-      //     import(
-      //       "@/modules/collection-point-management/pages/CreateCollectionPoint.vue"
-      //     )
-      // },
-      // {
-      //   path: "edit/:id",
-      //   name: routeNames.editCollectionPoint,
-      //   component: () =>
-      //     import(
-      //       "@/modules/collection-point-management/pages/EditCollectionPoint.vue"
-      //     )
-      // }
     ]
   },
   {

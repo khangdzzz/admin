@@ -1,22 +1,11 @@
-export interface CollectionItemModel {
-  key?: number;
-  id?: number;
-  name: string;
-  category?: string;
-  externalCode?: string;
-  lastUpdate?: string;
-}
-
-
-export interface CollectionItem {
-  key?: number;
-  id?: number;
-  created_at?: Date;
+export interface CollectionItemResponseDTO {
+	created_at?: Date;
   created_by?: number | string;
   updated_at?: Date;
   updated_by?: number | string | null;
   deleted_at?: Date | null;
   deleted_by?: number | string | null;
+  id: number;
   tenant_id: number;
 	collect_item_category_id: number;
   name: string;
@@ -25,3 +14,4 @@ export interface CollectionItem {
 	tag_id: string;
   collect_item_category___name: string;
 }
+  
