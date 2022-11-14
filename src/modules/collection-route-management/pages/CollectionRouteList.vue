@@ -108,7 +108,7 @@
                   class="btn-navigation-icon"
                 />
               </template>
-              Create
+              {{ $t("list_order_create_route") }}
             </a-button>
           </template>
           <template v-if="column.key === 'lastUpdate'">
@@ -205,7 +205,7 @@ const columns: TableColumnType<CollectionRoute>[] = [
     key: "lastUpdate"
   },
   {
-    title: "collection_route_navigation_id",
+    title: "navigation_route_id",
     dataIndex: "navigationId",
     key: "navigationId"
   },
@@ -518,7 +518,7 @@ watch(searchString, onSearchChange);
 }
 
 .btn-create-navigation-link {
-  width: 89px;
+  min-width: 89px;
   height: 32px;
   border-radius: 6px;
   font-weight: 600;
