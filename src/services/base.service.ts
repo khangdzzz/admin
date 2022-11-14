@@ -1,3 +1,4 @@
+import { timeout } from "@/modules/common/helpers";
 import axios, {
   AxiosError,
   AxiosResponse,
@@ -47,14 +48,18 @@ interface MyAxiosRequestConfig extends AxiosRequestConfig {
 const handleRequestError = async (error: AxiosError): Promise<void> => {
   const config: MyAxiosRequestConfig = error.config || {};
   if (error.code == "ERR_NETWORK" && !config._retry) {
+    const controller = new AbortController();
+    const { signal } = controller;
     config._retry = true;
     service.auth.refreshToken((session): void => {
       if (session) {
         const idToken = session.getIdToken().getJwtToken();
         service.localStorage.setAccessToken(idToken);
+        controller.abort();
         axiosIntance(config);
       }
     });
+    await timeout(5000, signal);
   }
   return Promise.reject(error);
 };
