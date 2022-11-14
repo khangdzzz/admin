@@ -16,6 +16,7 @@ export interface CollectionHistoryResponseDto {
   vehicle___plate_number: number;
   collect_item___name: string;
   collect_point_id: string;
+  collect_point___short_name: string;
   customer_id: string;
   packing_weight: number;
   weight: number;

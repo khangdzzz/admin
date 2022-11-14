@@ -22,7 +22,7 @@ export async function getListCollectionHistory(
     page,
     page_size: size,
     __all__: searchKeyword ? `${toUrlEncodedString(searchKeyword)}` : undefined,
-    order_by: '-id'
+    order_by: "-id"
   };
 
   const [error, res] = await transformRequest<
@@ -59,7 +59,7 @@ export async function getListCollectionHistory(
         user___name,
         is_confirm,
         collect_point_id,
-        collect_item___name,
+        collect_point___short_name,
         vehicle___name,
         customer___name,
         weight,
@@ -88,6 +88,7 @@ export async function getListCollectionHistory(
         tenantId: tenant_id,
         collectDate: collect_date || NULL_VALUE_DISPLAY,
         collectPointId: collect_point_id || NULL_VALUE_DISPLAY,
+        collectPointShortName: collect_point___short_name || NULL_VALUE_DISPLAY,
         vehicleName: vehicle___name || NULL_VALUE_DISPLAY,
         collectItemName: collect_item_unit___alias_name || NULL_VALUE_DISPLAY,
         customerName: customer___name || NULL_VALUE_DISPLAY,
