@@ -267,6 +267,42 @@ const routes: RouteRecordRaw[] = [
     ]
   },
   {
+    path: "/collection-item-management",
+    beforeEnter: requireLoginGuard,
+    meta: {
+      layout: ScreenLayout.DEFAULT_LAYOUT
+    },
+    redirect: {
+      name: routeNames.collectionItemManagement
+    },
+    children: [
+      {
+        path: "list",
+        name: routeNames.collectionItemManagement,
+        component: () =>
+          import(
+            "@/modules/collection-item-management/pages/CollectionItemList.vue"
+          )
+      },
+      // {
+      //   path: "create",
+      //   name: routeNames.createCollectionItem,
+      //   component: () =>
+      //     import(
+      //       "@/modules/collection-point-management/pages/CreateCollectionPoint.vue"
+      //     )
+      // },
+      // {
+      //   path: "edit/:id",
+      //   name: routeNames.editCollectionPoint,
+      //   component: () =>
+      //     import(
+      //       "@/modules/collection-point-management/pages/EditCollectionPoint.vue"
+      //     )
+      // }
+    ]
+  },
+  {
     path: "/container",
     name: routeNames.container,
     beforeEnter: requireLoginGuard,

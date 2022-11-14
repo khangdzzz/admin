@@ -236,7 +236,7 @@ const sideMenuItems: SideMenuItems[] = [
           },
           {
             title: "menu_lbl_collection_management",
-            pathName: routeNames.collectionManagement,
+            pathName: routeNames.collectionItemManagement,
             qaAttr: "qa_menu_collection_management",
             requireUserType: [
               UserType.TenantAdmin,

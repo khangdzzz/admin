@@ -47,6 +47,7 @@
   "container_type": "Container type",
   "add_container_type": "Add Container type",
   "name": "Name",
+  "category":"Category",
   "name_kana": "Name (Kana)",
   "next_btn": "Next",
   "previous_btn": "Previous",
@@ -346,5 +347,6 @@
   "list_order_create_route": "Create",
   "collection_point_name": "Name",
   "common_lbl_data_selected": "{number} data is selected",
-  "common_lbl_multiple_data_selected": "{number} data are selected"
+  "common_lbl_multiple_data_selected": "{number} data are selected",
+  "collection_item_management": "Collection Item Management"
 }
