@@ -39,7 +39,7 @@
     @apply btn bg-neutral-200 text-white pointer-events-none cursor-not-allowed;
   }
   .btn--small {
-    @apply h-8 text-base leading-4;
+    @apply h-8 text-base leading-4 rounded-md;
   }
   .text--shadow-white {
     text-shadow: 2px 0 #fff, -2px 0 #fff, 0 2px #fff, 0 -2px #fff, 1px 1px #fff,
