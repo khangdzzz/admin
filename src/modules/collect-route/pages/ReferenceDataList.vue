@@ -1,9 +1,9 @@
 <template>
-  <a-table bordered :columns="columns" :data-source="data" :pagination="false" :scroll="{
+  <a-table :showSorterTooltip="false" bordered :columns="columns" :data-source="data" :pagination="false" :scroll="{
     y: scrollY
   }" :customRow="customRow" :row-class-name="
-  (_record, index) =>
-    index === selectedIndex
+  (_record) =>
+    _record.id === selectedId
       ? 'cursor-pointer row--selected'
       : 'cursor-pointer'
 ">
@@ -40,7 +40,7 @@ const props = withDefaults(defineProps<Props>(), {
 //#endregion
 
 //#region variables
-const selectedIndex = ref<number | null>(null);
+const selectedId = ref<string | null>(null);
 const data = computed(() => props.data);
 const scrollY = ref(props.scrollY);
 const columns = ref([
@@ -49,13 +49,13 @@ const columns = ref([
     key: "last_update_time",
     title: t("date"),
     width: 140,
-    sorter: (a: LocationCollectRouteReferences, b: LocationCollectRouteReferences): boolean => a.last_update_time > b.last_update_time
+    sorter: (a: LocationCollectRouteReferences, b: LocationCollectRouteReferences): boolean => a.last_update_time < b.last_update_time
   },
   {
     dataIndex: "user",
     key: "user",
     title: t("user"),
-    sorter: (a: LocationCollectRouteReferences, b: LocationCollectRouteReferences): boolean => a.user_name > b.user_name
+    sorter: (a: LocationCollectRouteReferences, b: LocationCollectRouteReferences): boolean => a.user_name < b.user_name
   }
 ]);
 //#endregion
@@ -66,12 +66,11 @@ const columns = ref([
 //#region function
 const customRow = (
   record: LocationCollectRouteReferences,
-  index: number
 ): { onClick: (_event: PointerEvent) => void } => {
   return {
     onClick: (_event: PointerEvent): void => {
       _event;
-      selectedIndex.value = index;
+      selectedId.value = record.id;
       emit("selectRow", record);
     }
   };

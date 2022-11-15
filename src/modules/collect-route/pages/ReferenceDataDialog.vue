@@ -1,5 +1,5 @@
 <template>
-  <a-modal wrapClassName="tw" v-model:visible="visible" :width="660">
+  <a-modal wrapClassName="tw" v-model:visible="visible" :width="660" :keyboard="false" :maskClosable="false">
     <template #title>
       <div class="text-center text-[22px] font-bold text-neutral-600">
         {{ $t("reference_data") }}

@@ -20,6 +20,8 @@ import emitter, { EMITTER_EVENTS } from "@/utils/emiiter";
 import { getCollectOrderReferences } from "@/services/location.service"
 import { useRoute } from "vue-router";
 import { LocationCollectRouteReferences } from "@/services/dtos/location/location.dto"
+import { orderBy } from "lodash"
+import { v4 as uuidv4 } from "uuid";
 
 //#endregion
 //#region props
@@ -36,7 +38,7 @@ onMounted(async () => {
   const collectRouteId = useRoute().params.id
   if (collectRouteId) {
     const results = await getCollectOrderReferences(+collectRouteId)
-    if (results) items.value = results
+    if (results) items.value = orderBy(results.map(x => ({ ...x, id: uuidv4() })), 'last_update_time', "desc")
   }
 })
 //#endregion

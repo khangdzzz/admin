@@ -24,4 +24,20 @@
     line-height: 20px;
     color: $neutral-600;
   }
+  .ant-table-column-sorter {
+    margin-left: 10px;
+  }
+  .ant-table-column-sorter-inner {
+    &:has(.anticon.active) {
+      .active {
+        color: transparent;
+      }
+    }
+  }
+  [class*="ant-table-column-sorter"] {
+    font-size: 15px;
+    &.active {
+      color: $neutral-600;
+    }
+  }
 }
