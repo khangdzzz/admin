@@ -118,7 +118,7 @@ const validator = {
     }
     return "";
   },
-  validatePostalCode: (_rule: Rule, value: string): Promise<void> => {
+  validatePostalCodePromise: (_rule: Rule, value: string): Promise<void> => {
     const regex = /^[0-9]*$/;
     if (value && !regex.test(value)) {
       return Promise.reject(i18n.global.t("field_allow_number_only"));
@@ -130,6 +130,17 @@ const validator = {
       );
     }
     return Promise.resolve();
+  },
+  validatePostalCode: (value: string): string => {
+    const regex = /^[0-9]*$/;
+    if (value && !regex.test(value)) {
+      return i18n.global.t("field_allow_number_only");
+    }
+
+    if (value.length > 8) {
+      return i18n.global.t("max_length_input", { maxLength: 8 });
+    }
+    return "";
   }
 };
 

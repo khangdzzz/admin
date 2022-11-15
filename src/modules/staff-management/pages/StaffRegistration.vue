@@ -72,6 +72,7 @@
               ></FloatingLabelInput>
             </div>
             <FloatingLabelInput
+              id="staff-registration__edt-staff-email"
               place-holder="staff_email"
               label="staff_email"
               control-name="email"
@@ -83,6 +84,7 @@
                   trigger: ['blur', 'change']
                 }
               ]"
+              @focusout="onEmailFocusOut"
             ></FloatingLabelInput>
             <FloatingLabelInput
               place-holder="common_phone_field_label"
@@ -553,6 +555,12 @@ const handleSelectWorkPlace = (): void => {
   } else {
     modeSelectWorkPlace.value = "single";
   }
+};
+
+const onEmailFocusOut = (): void => {
+  existFields.value = [];
+  document.getElementById("staff_email-input")?.focus();
+  document.getElementById("staff_email-input")?.blur();
 };
 //#endregion
 

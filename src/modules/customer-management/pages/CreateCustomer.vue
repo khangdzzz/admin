@@ -130,7 +130,7 @@ onMounted(() => {
           })
         );
       }
-      return validator.validatePostalCode(rule, value);
+      return validator.validatePostalCodePromise(rule, value);
     },
     trigger: ["blur", "change"]
   });

@@ -75,10 +75,7 @@
                     <ol-feature ref="positionFeature">
                       <ol-geom-point :coordinates="geoLocation"></ol-geom-point>
                       <ol-style>
-                        <ol-style-icon
-                          :src="locationIcon"
-                          :scale="0.7"
-                        ></ol-style-icon>
+                        <ol-style-icon :src="locationIcon"></ol-style-icon>
                       </ol-style>
                     </ol-feature>
                   </ol-source-vector>
@@ -274,7 +271,7 @@ onMounted(async () => {
           })
         );
 
-      return validator.validatePostalCode(rule, value);
+      return validator.validatePostalCodePromise(rule, value);
     },
     trigger: ["blur", "change"]
   });
@@ -531,7 +528,7 @@ const drawend = (event: { target: { sketchCoords_: number[] } }): void => {
 const copyLocationToClipboard = (): void => {
   if (geoLocations.value.length) {
     navigator.clipboard.writeText(
-      `${geoLocations.value[0][0]}, ${geoLocations.value[0][1]}`
+      `${geoLocations.value[0][1]}, ${geoLocations.value[0][0]}`
     );
     message.success(i18n.global.t("common_msg_copied_to_clipboard"));
   }
@@ -596,9 +593,11 @@ const isButtonDisabled = computed((): boolean => {
     !validator.checkEmailFormat(contact[3].value.toString(), false) ||
     !validator.checkPhoneFormat(contact[2].value.toString(), false) ||
     !collectionBaseType.value ||
-    !contact[0].value ||
     isNaN(Number(contact[0].value)) ||
-    !contact[1].value
+    !contact[0].value ||
+    !!validator.validatePostalCode(contact[0].value?.toString()) ||
+    !contact[1].value ||
+    contact[1].value.toString().length > 255
   );
 });
 //#endregion

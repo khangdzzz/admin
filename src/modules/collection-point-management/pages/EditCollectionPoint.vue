@@ -240,7 +240,7 @@ onMounted(async () => {
           })
         );
 
-      return validator.validatePostalCode(rule, value);
+      return validator.validatePostalCodePromise(rule, value);
     },
     trigger: ["blur", "change"]
   });
@@ -411,7 +411,7 @@ const drawend = (event: { target: { sketchCoords_: number[] } }): void => {
 const copyLocationToClipboard = (): void => {
   if (geoLocations.value.length) {
     navigator.clipboard.writeText(
-      `${geoLocations.value[0][0]}, ${geoLocations.value[0][1]}`
+      `${geoLocations.value[0][1]}, ${geoLocations.value[0][0]}`
     );
     message.success(i18n.global.t("common_msg_copied_to_clipboard"));
   }
@@ -532,7 +532,10 @@ const isAllowSubmit = computed(() => {
   const isValidShortName =
     checkMaxLength(data[2].value.toString(), 50) && data[2].value;
   const isValidPostalCode =
-    !data[4].value || (data[4].value && !isNaN(+data[4].value));
+    !data[4].value ||
+    (data[4].value &&
+      !isNaN(+data[4].value) &&
+      data[4].value.toString().length < 9);
   const isValidAddress =
     !data[5].value ||
     (checkMaxLength(data[5].value.toString(), 255) && data[5].value);
