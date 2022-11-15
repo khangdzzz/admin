@@ -432,6 +432,7 @@ watch(searchString, onSearchChange);
 <style lang="scss" scoped>
 .table-container {
   flex-grow: 1;
+  height: calc(100% - 98px - 30px);
 }
 
 .action-icon {
