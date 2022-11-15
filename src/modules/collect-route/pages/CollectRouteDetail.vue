@@ -1,23 +1,43 @@
 <template>
   <div class="tw">
-    <a-spin :spinning="loading" :tip="$t('common_loading')" class="w-full h-full">
+    <a-spin
+      :spinning="loading"
+      :tip="$t('common_loading')"
+      class="w-full h-full"
+    >
       <div class="flex flex-col h-full p-[30px] bg-primary-50">
-        <CollectRouteHeader :allowBack="allowBack" :title="pageTitle" :disabled="!readOnlyPage" @back="handleCancel"
-          @delete="handleDelete" @edit="handleEdit" />
+        <CollectRouteHeader
+          :allowBack="allowBack"
+          :title="pageTitle"
+          :disabled="!readOnlyPage"
+          @back="handleCancel"
+          @delete="handleDelete"
+          @edit="handleEdit"
+        />
         <div class="card grid grid-cols-2 gap-5">
           <a-form @validate="validate">
             <BaseForm v-model="formFields" :loading="loading" />
           </a-form>
-          <BaseMap ref="map" v-model:linePoints="linePoints" :loading="loading" v-model:center="center"
-            :markers="markers" :polylines="polylines" v-model:drawable="drawable" />
+          <BaseMap
+            ref="map"
+            v-model:linePoints="linePoints"
+            :loading="loading"
+            v-model:center="center"
+            :markers="markers"
+            :polylines="polylines"
+            v-model:drawable="drawable"
+          />
         </div>
         <div class="mt-5 flex justify-center gap-5" v-if="!readOnlyPage">
           <div class="btn--text-primary-400 w-[180px]" @click="handleCancel">
             {{ $t("btn_cancel") }}
           </div>
-          <div class="btn w-[180px]" :class="[disableSubmit ? 'btn--disabled' : 'bg-primary-400']"
-            @click="handleSubmit">
-            {{ $t("btn_submit") }}
+          <div
+            class="btn w-[180px]"
+            :class="[disableSubmit ? 'btn--disabled' : 'bg-primary-400']"
+            @click="handleSubmit"
+          >
+            {{ pageMode === "edit" ? $t("btn_save") : $t("btn_submit") }}
           </div>
         </div>
       </div>
@@ -97,7 +117,7 @@ export default defineComponent({
         width: 10,
         coordinates: correctFormatCoords(linePoints.value),
         show: true
-      },
+      }
     ]);
 
     const historyPoinstDraw = computed(() => [
@@ -167,7 +187,7 @@ export default defineComponent({
         change: fitMap,
         autocomplete: true,
         filterOption: (input: string, option: workPlace) => {
-          return option.name.toLowerCase().includes(input.toLowerCase())
+          return option.name.toLowerCase().includes(input.toLowerCase());
         }
       },
       end_point_id: {
@@ -179,7 +199,7 @@ export default defineComponent({
         change: fitMap,
         autocomplete: true,
         filterOption: (input: string, option: workPlace) => {
-          return option.name.toLowerCase().includes(input.toLowerCase())
+          return option.name.toLowerCase().includes(input.toLowerCase());
         }
       },
       list_coordinates: {
@@ -193,7 +213,7 @@ export default defineComponent({
       emitter.on(
         EMITTER_EVENTS.SELECT_COLLECT_ROUTE_REFERENCE_DATA,
         async (value) => {
-          historyPoints.value = value as number[][]
+          historyPoints.value = value as number[][];
           fitMap();
         }
       );
