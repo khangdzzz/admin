@@ -240,7 +240,7 @@ onMounted(() => {
       if (existFields.value.includes("name")) {
         return Promise.reject(
           i18n.global.t("error_unique_constraint", {
-            fieldName: i18n.global.t("name")
+            fieldName: i18n.global.t("collection_base_lbl_name")
           })
         );
       }
@@ -285,6 +285,8 @@ onMounted(() => {
     },
     trigger: ["blur", "change"]
   });
+
+  contact[1].id = "create-collection-base_address";
 
   focusCurrentLocation();
 });
@@ -451,7 +453,10 @@ const getLatLongFromAddress = async (address: string): Promise<void> => {
         maxZoom: 14
       }
     );
-    contact[1].value = address;
+    setTimeout(() => {
+      document.getElementById("create-collection-base_address")?.focus();
+      document.getElementById("create-collection-base_address")?.blur();
+    }, 100);
   }
 };
 

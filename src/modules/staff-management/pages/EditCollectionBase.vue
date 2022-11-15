@@ -170,6 +170,7 @@ import { formData as reactiveFormData } from "@/modules/staff-management/pages/c
 import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
+import { localStorageKeys } from "@/services/local-storage-keys";
 import { commonStore } from "@/stores";
 import { NULL_VALUE_DISPLAY } from "@/utils/constants";
 import emitter, { EMITTER_EVENTS } from "@/utils/emiiter";
@@ -194,6 +195,8 @@ import {
 //#endregion
 
 //#region variables
+const currentLanguage =
+  localStorage.getItem(localStorageKeys.currentLanguage) || "en";
 const userStore = commonStore();
 const isLoading = ref<boolean>(false);
 const formData = reactive<FormData>(reactiveFormData());
@@ -239,7 +242,7 @@ onMounted(async () => {
       if (existFields.value.includes("name")) {
         return Promise.reject(
           i18n.global.t("error_unique_constraint", {
-            fieldName: i18n.global.t("name")
+            fieldName: i18n.global.t("collection_base_lbl_name")
           })
         );
       }
@@ -264,6 +267,15 @@ onMounted(async () => {
   contact[0].id = "edit-collection-base_postal-code";
   contact[0].rules?.push({
     validator: (rule: Rule, value: string): Promise<void> => {
+      if (!value) {
+        return Promise.reject(
+          i18n.global.t("please_enter_input", currentLanguage, {
+            fieldName: i18n.global
+              .t("common_postal_code_label", currentLanguage)
+              .toLowerCase()
+          })
+        );
+      }
       if (isPostalCodeHasError.value)
         return Promise.reject(
           i18n.global.t("cannot_find_address_from_field_name", {
@@ -275,6 +287,8 @@ onMounted(async () => {
     },
     trigger: ["blur", "change"]
   });
+
+  contact[1].id = "edit-collection-base_address";
 
   isLoading.value = true;
   await initialize();
@@ -509,6 +523,11 @@ const getLatLongFromAddress = async (address: string): Promise<void> => {
       }
     );
     contact[1].value = address;
+
+    setTimeout(() => {
+      document.getElementById("edit-collection-base_address")?.focus();
+      document.getElementById("edit-collection-base_address")?.blur();
+    }, 100);
   }
 };
 

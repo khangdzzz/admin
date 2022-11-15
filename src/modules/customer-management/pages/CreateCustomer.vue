@@ -286,7 +286,8 @@ const handleClickSubmit = async (): Promise<void> => {
 const isNotValidToSubmit = computed(() => {
   const isNotValidName = singleInput[0].value.toString().length > 50;
   const isNotValidPostalCode =
-    singleInput[3].value.toString().length && isNaN(+singleInput[3].value);
+    (singleInput[3].value && isNaN(+singleInput[3].value)) ||
+    singleInput[3].value.toString().length > 8;
   const isNotValidPhoneNumber =
     (singleInput[5].value.toString().length &&
       !/^[+]?[0-9]{8,15}$/.test(singleInput[5].value.toString())) ||
@@ -322,7 +323,8 @@ const isEnableSearchAddress = (): boolean => {
   if (singleInput[3]?.actionBtn) {
     if (
       !singleInput[3].value ||
-      (singleInput[3].value && isNaN(+singleInput[3].value))
+      (singleInput[3].value && isNaN(+singleInput[3].value)) ||
+      singleInput[3].value.toString().length > 8
     ) {
       singleInput[3].actionBtn.disabled = true;
       return true;
