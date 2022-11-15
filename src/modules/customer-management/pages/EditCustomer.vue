@@ -537,7 +537,7 @@ const handleClickSave = async (): Promise<void> => {
       type: MessengerType.Success,
       callback: (isConfirm: boolean) => {
         isConfirm;
-        router.push({ name: routeNames.customerList });
+        router.go(-1);
       }
     });
   } else {
