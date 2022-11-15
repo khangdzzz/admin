@@ -1,6 +1,6 @@
 <template>
   <template v-if="!noDivider">
-    <div class="bg-grey-3 h-[1px] my-5"></div>
+    <div class="bg-grey-3 h-[1px] mb-5"></div>
     <CollectRouteReferenceData />
     <div class="bg-grey-3 h-[1px] my-5"></div>
   </template>

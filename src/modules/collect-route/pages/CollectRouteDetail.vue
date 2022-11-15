@@ -143,23 +143,27 @@ export default defineComponent({
     const getListWorkplaces = (): void => {
       if (fetchedWorkplaces.value) return;
       loading.value = true;
+      const user_info = localStorage.getItem("USER_INFO_KEY");
+      const userWorkplaces = user_info
+        ? JSON.parse(user_info)
+          ? JSON.parse(user_info).workplaces
+          : []
+        : [];
+      const validTypes = [
+        WorkPlaceType.COLLECTION_BASE,
+        WorkPlaceType.DISPOSAL,
+        WorkPlaceType.PARTNER
+      ];
       service.staff
-        .getListWorkPlace()
+        .searchWorkplaces({
+          id__in: userWorkplaces.join(","),
+          workplace_type__in: validTypes.join(","),
+          page_size: "full"
+        })
         .then((res) => {
-          const validTypes = [
-            WorkPlaceType.COLLECTION_BASE,
-            WorkPlaceType.DISPOSAL,
-            WorkPlaceType.PARTNER
-          ];
-          if (!res || !res.results) return;
-          workPlaces.value = res.results
-            .filter(
-              (x) =>
-                x.latitude &&
-                x.longitude &&
-                x.workPlaceType &&
-                x.workPlaceType in validTypes
-            )
+          if (!res) return;
+          workPlaces.value = res
+            .filter((x) => x.latitude && x.longitude)
             .sort(utils.collection.sortByName);
           fetchedWorkplaces.value = true;
         })

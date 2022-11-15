@@ -277,3 +277,15 @@ export async function getStaffDetail(
     }
   };
 }
+
+export async function searchWorkplaces(
+  params
+): Promise<workPlace[] | undefined> {
+  const [err, res] = await transformRequest<workPlace[]>({
+    url: `workplace/options?page_size=full`,
+    method: "get",
+    params
+  });
+  if (err) return undefined;
+  return res;
+}

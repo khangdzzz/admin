@@ -174,6 +174,10 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 $input-height: 18px;
+
+.ant-form-item {
+  margin-bottom: 20px;
+}
 :deep() {
   .ant-input,
   .ant-select,
