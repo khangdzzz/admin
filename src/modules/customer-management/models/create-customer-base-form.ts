@@ -100,6 +100,7 @@ export const formData = (): FormData => {
         parent: "singleInput"
       },
       {
+        id: "create-customer_address",
         inputType: "AInput",
         value: "",
         placeHolder: "address",

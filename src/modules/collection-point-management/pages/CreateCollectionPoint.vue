@@ -227,6 +227,8 @@ onMounted(async () => {
     trigger: ["blur", "change"]
   });
 
+  data[5].id = "create-collection-point_edt-address";
+
   data[1].rules?.push({
     validator: (): Promise<void> => {
       if (isExitsField.value.includes("name")) {
@@ -376,6 +378,10 @@ const getLatLongFromAddress = async (address: string): Promise<void> => {
       }
     );
     data[5].value = address;
+    setTimeout(() => {
+      document.getElementById("create-collection-point_edt-address")?.focus();
+      document.getElementById("create-collection-point_edt-address")?.blur();
+    }, 100);
     if (isPostalCodeHasError.value) {
       isPostalCodeHasError.value = false;
       createCollectionPointRef.value.clearValidate();

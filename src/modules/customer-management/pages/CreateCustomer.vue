@@ -209,6 +209,10 @@ const handleSearchAddress = async (): Promise<void> => {
   } else {
     singleInput[4].value = res?.full_address;
     isPostalCodeHasError.value = !res?.full_address;
+    setTimeout(() => {
+      document.getElementById("create-customer_address")?.focus();
+      document.getElementById("create-customer_address")?.blur();
+    }, 100);
   }
   singleInput[3].loading = false;
   document.getElementById("create-customer_postal-code")?.focus();
