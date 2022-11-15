@@ -237,6 +237,7 @@ const formData = reactive<FormData>({
       parent: "singleInput"
     },
     {
+      id: "edit-customer_address",
       inputType: "AInput",
       value: "",
       placeHolder: "address",
@@ -500,6 +501,10 @@ const handleSearchAddress = async (): Promise<void> => {
   } else {
     singleInput[4].value = res?.full_address;
     isPostalCodeHasError.value = !res?.full_address;
+    setTimeout(() => {
+      document.getElementById("edit-customer_address")?.focus();
+      document.getElementById("edit-customer_address")?.blur();
+    }, 100);
   }
   singleInput[3].loading = false;
 

@@ -245,6 +245,8 @@ onMounted(async () => {
     trigger: ["blur", "change"]
   });
 
+  data[5].id = "edit-collection-point_edt-address";
+
   data[1].rules?.push({
     validator: (): Promise<void> => {
       if (isExitsField.value.includes("name")) {
@@ -389,6 +391,10 @@ const getLatLongFromAddress = async (address: string): Promise<void> => {
       }
     );
     data[5].value = address;
+    setTimeout(() => {
+      document.getElementById("edit-collection-point_edt-address")?.focus();
+      document.getElementById("edit-collection-point_edt-address")?.blur();
+    }, 100);
   }
 };
 
