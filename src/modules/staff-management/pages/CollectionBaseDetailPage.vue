@@ -257,7 +257,7 @@ const goToCollectionBaseListPage = (): void => {
 const copyLocationToClipboard = (): void => {
   if (geoLocations.value.length) {
     navigator.clipboard.writeText(
-      `${geoLocations.value[0][0]}, ${geoLocations.value[0][1]}`
+      `${geoLocations.value[0][1]}, ${geoLocations.value[0][0]}`
     );
     message.success(i18n.global.t("common_msg_copied_to_clipboard"));
   }

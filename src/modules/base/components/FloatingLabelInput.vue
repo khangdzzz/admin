@@ -13,7 +13,7 @@
         :id="`${label}-input`"
         class="floating-label-input__input"
         @focusin="isFocused = true"
-        @focusout="isFocused = false"
+        @focusout="onFocusout"
         :bordered="false"
         :value="value"
         @change="dataChange"
@@ -71,6 +71,7 @@ const isFocused = ref(false);
 const emit = defineEmits<{
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (e: "update:value", data: string): void;
+  (e: "focusout"): void;
 }>();
 //#endregion
 
@@ -83,6 +84,10 @@ const focus = (id: string): void => {
 };
 const dataChange = (e: { target: { value: string | undefined } }): void => {
   emit("update:value", e?.target?.value || "");
+};
+const onFocusout = (): void => {
+  isFocused.value = false;
+  emit("focusout");
 };
 //#endregion
 

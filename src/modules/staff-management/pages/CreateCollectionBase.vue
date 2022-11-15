@@ -170,6 +170,7 @@ import { formData as reactiveFormData } from "@/modules/staff-management/pages/c
 import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
+import { localStorageKeys } from "@/services/local-storage-keys";
 import { commonStore } from "@/stores";
 import { NULL_VALUE_DISPLAY } from "@/utils/constants";
 import emitter, { EMITTER_EVENTS } from "@/utils/emiiter";
@@ -194,6 +195,8 @@ import {
 //#endregion
 
 //#region variables
+const currentLanguage =
+  localStorage.getItem(localStorageKeys.currentLanguage) || "en";
 const userStore = commonStore();
 const formData = reactive<FormData>(reactiveFormData());
 const collectionBaseType = ref<number>(1);
@@ -263,13 +266,22 @@ onMounted(() => {
   contact[0].id = "create-collection-base_postal-code";
   contact[0].rules?.push({
     validator: (rule: Rule, value: string): Promise<void> => {
+      if (!value) {
+        return Promise.reject(
+          i18n.global.t("please_enter_input", currentLanguage, {
+            fieldName: i18n.global
+              .t("common_postal_code_label", currentLanguage)
+              .toLowerCase()
+          })
+        );
+      }
       if (isPostalCodeHasError.value)
         return Promise.reject(
           i18n.global.t("cannot_find_address_from_field_name", {
             fieldName: i18n.global.t("common_postal_code_label").toLowerCase()
           })
         );
-      return validator.validatePostalCode(rule, value);
+      return validator.validatePostalCodePromise(rule, value);
     },
     trigger: ["blur", "change"]
   });
@@ -461,7 +473,7 @@ const drawend = (event: { target: { sketchCoords_: number[] } }): void => {
 const copyLocationToClipboard = (): void => {
   if (geoLocations.value.length) {
     navigator.clipboard.writeText(
-      `${geoLocations.value[0][0]}, ${geoLocations.value[0][1]}`
+      `${geoLocations.value[0][1]}, ${geoLocations.value[0][0]}`
     );
     message.success(i18n.global.t("common_msg_copied_to_clipboard"));
   }
@@ -512,10 +524,14 @@ const refreshMap = (): void => {
 //#endregion
 
 //#region computed
-const isButtonDisabled = computed((): boolean => {
+const isButtonDisabled = computed((): boolean | string => {
   return (
     !handleValidateFields(name[0].value.toString(), 50, true) ||
     !handleValidateFields(name[1].value.toString(), 50, true) ||
+    !contact[0].value ||
+    validator.validatePostalCode(contact[0].value?.toString()) ||
+    !contact[1].value ||
+    contact[1].value.toString().length > 255 ||
     !validator.checkEmailFormat(contact[3].value.toString(), false) ||
     !validator.checkPhoneFormat(contact[2].value.toString(), false) ||
     !collectionBaseType.value ||

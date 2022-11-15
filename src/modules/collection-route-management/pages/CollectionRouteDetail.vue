@@ -259,6 +259,7 @@ const onDeleteCollectionRoute = async (deleteIds: number[]): Promise<void> => {
     @include titleValue(400, 14px, 18px, $text-1);
   }
   .value {
+    overflow-wrap: break-word;
     @include titleValue(600, 18px, 22px, $neutral-600);
   }
   .link {
