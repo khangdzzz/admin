@@ -157,8 +157,6 @@
         :currentPage="pageOption.currentPage"
         :pageSize="pageOption.pageSize"
         :total="pageOption.total"
-        :isShowPrevBtn="isShowPrevBtn()"
-        :isShowNextBtn="isShowNextBtn()"
         @onShowSizeChange="onShowSizeChange"
         @onChange="onChange"
       />
@@ -183,12 +181,12 @@ import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import HeaderRef from "@/modules/base/models/search-header.model";
 import SortView from "@/modules/common/components/SortView.vue";
 import ThePagination from "@/modules/common/components/ThePagination.vue";
+import { NULL_VALUE_DISPLAY } from "@/modules/common/constants/table.constant";
 import { Pagination } from "@/modules/common/models/pagination.model";
 import { Sort } from "@/modules/common/models/sort.enum";
 import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
-import { NULL_VALUE_DISPLAY } from "@/modules/common/constants/table.constant";
 import { TableColumnType } from "ant-design-vue/lib/components";
 import { debounce } from "lodash";
 import {
@@ -355,26 +353,6 @@ const onShowSizeChange = (current: number, pageSize: number): void => {
 const onChange = (pageNumber: number): void => {
   pageOption.currentPage = pageNumber;
   fetchVehicleList();
-};
-
-const isShowPrevBtn = (): boolean => {
-  const isFirtPage = pageOption.currentPage === 1;
-  if (totalPages() === 1 || isFirtPage) return false;
-
-  return true;
-};
-
-const isShowNextBtn = (): boolean => {
-  const isLastPage =
-    pageOption.currentPage ===
-    Math.ceil(Number(pageOption.total) / Number(pageOption?.pageSize));
-
-  if (totalPages() === 1 || isLastPage) return false;
-  return true;
-};
-
-const totalPages = (): number => {
-  return Math.ceil(Number(pageOption.total) / Number(pageOption.pageSize));
 };
 
 const setVehicleId = (id: string): void => {

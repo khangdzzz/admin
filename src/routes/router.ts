@@ -14,9 +14,9 @@ const routes: RouteRecordRaw[] = [
   {
     path: "/demo",
     name: routeNames.demo,
-    component: () => import("@/modules/common/pages/DemoPage.vue"),
+    component: () => import("@/modules/base/pages/SampleListPage.vue"),
     meta: {
-      layout: ScreenLayout.AUTH_LAYOUT
+      layout: ScreenLayout.DEFAULT_LAYOUT
     }
   },
   {

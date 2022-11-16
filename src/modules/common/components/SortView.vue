@@ -42,6 +42,7 @@ defineProps({
 
 <style lang="scss" scoped>
 .sort-view {
+  cursor: pointer;
   display: inline-block;
   vertical-align: middle;
   height: 24px;
