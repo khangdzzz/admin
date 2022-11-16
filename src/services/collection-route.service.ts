@@ -3,10 +3,10 @@ import {
   CreateCollectionRouteModel,
   CreateCollectionRouteResponseDto
 } from "@/modules/collection-route-management/models/collection-route.model";
-import { calculateSortQuery } from "@/modules/common/helpers";
 import { Pagination, ServiceResponse } from "@/modules/common/models";
 import { Sort } from "@/modules/common/models/sort.enum";
 import { TypeWorkPlace } from "@/modules/staff-management/models/create-new-staff.model";
+import { calculateSortQuery } from "@/utils/rest-client.helper";
 import { AxiosError } from "axios";
 import { transformRequest } from "./base.service";
 import { DEFAULT_SORT_ORDER } from "./constants";

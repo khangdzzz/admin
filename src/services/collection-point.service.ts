@@ -1,9 +1,9 @@
 // import { CollectionBase } from "@/modules/staff-management/models/collection-base.model";
 import { CollectionPointModel } from "@/modules/collection-point-management/models/collection-point.model";
-import { calculateSortQuery } from "@/modules/common/helpers";
 import { Pagination, ServiceResponse } from "@/modules/common/models";
 import { Sort } from "@/modules/common/models/sort.enum";
 import { DEFAULT_SORT_ORDER } from "@/services/constants";
+import { calculateSortQuery } from "@/utils/rest-client.helper";
 import { transformRequest } from "./base.service";
 import {
   CollectionPoint,

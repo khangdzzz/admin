@@ -294,6 +294,7 @@ import { listOfUserColumns } from "@/modules/realtime-management/models/table-co
 import { router } from "@/routes";
 import { service } from "@/services";
 import emitter, { EMITTER_EVENTS } from "@/utils/emiiter";
+import { sortDropdown } from "@/utils/sortable.helper";
 import { cloneDeep } from "lodash";
 import {
   computed,
@@ -306,7 +307,6 @@ import {
   watch
 } from "vue";
 import { formatDateTime } from "../base/components/validator/dateFormat";
-import { sortDropdown } from "../common/helpers";
 import { Sort } from "../common/models/sort.enum";
 import { WorkPlaceType } from "../workplace/models/workplace.model";
 import { CurrentUserLocationModel } from "./models/current-user-location.model";

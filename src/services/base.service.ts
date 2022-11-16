@@ -1,4 +1,4 @@
-import { timeout } from "@/modules/common/helpers";
+import { timeout } from "@/utils/promise.helper";
 import axios, {
   AxiosError,
   AxiosResponse,

@@ -68,12 +68,10 @@
 <script setup lang="ts">
 //#===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆import
 import { i18n } from "@/i18n";
+import { Base64 } from "js-base64";
 import QRCode from "qrcode";
 import { onMounted, PropType, reactive, ref, toRefs } from "vue";
 import { Container } from "../models/container.model";
-import { Base64 } from "js-base64";
-import { localStorageKeys } from "@/services/local-storage-keys";
-import { UserInfo } from "@/modules/auth/models";
 
 //#endregion===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆
 
@@ -136,14 +134,12 @@ const { information } = toRefs(form);
 
 //#===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌Hooks
 onMounted(async () => {
-  const userInfoString = localStorage.getItem(localStorageKeys.userInfo);
-  if (userInfoString) {
-    const userInfo = JSON.parse(userInfoString) as UserInfo;
+  if (detail) {
     const qrValue = {
       sys: "EVP",
       type: "container",
       id: detail.id,
-      tenant_id: userInfo.tenantId
+      tenant_id: detail.tenantId
     };
 
     const data = Base64.encode(JSON.stringify(qrValue));

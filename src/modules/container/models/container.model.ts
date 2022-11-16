@@ -6,6 +6,7 @@ export interface Container {
   containerTypeId: number;
   weight: number | null;
   capacity: number | null;
+  tenantId?: number;
 }
 
 export interface EditContainerDto {

@@ -135,7 +135,7 @@ import { service } from "@/services";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { i18n } from "@/i18n";
-import { NULL_VALUE_DISPLAY } from "@/utils/constants";
+import { NULL_VALUE_DISPLAY } from "@/modules/common/constants/table.constant";
 
 //#endregion
 
