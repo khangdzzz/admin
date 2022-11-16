@@ -243,7 +243,6 @@ onMounted(() => {
     &--save {
       width: 175px !important;
       height: 48px !important;
-      height: 18px;
       font-family: "Roboto";
       font-style: normal;
       font-weight: 600;
