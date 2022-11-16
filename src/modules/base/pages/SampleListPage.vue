@@ -354,7 +354,7 @@ watch(searchString, onSearchChange);
 
 :deep() {
   .ant-table-tbody > tr.ant-table-row-selected > td {
-    background: grey-2;
+    background: $grey-2;
     border-color: rgba(0, 0, 0, 0.03);
   }
 
