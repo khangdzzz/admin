@@ -18,12 +18,12 @@ import { VehicleResponseDto } from "./dtos/vehicle-management/vehicle-type.dto";
 import { toUrlEncodedString } from "./utils/search-query.helper";
 
 interface sortVehicleDto {
-  sortType: Sort;
-  sortName: Sort;
-  sortPlateNumber: Sort;
-  sortWorkPlace: Sort;
-  sortCapacity: Sort;
-  sortPermission: Sort;
+  vehicle_type___name: Sort;
+  name: Sort;
+  plate_number: Sort;
+  workplace___name: Sort;
+  max_capacity: Sort;
+  permission_flag: Sort;
 }
 
 const data: VehicleDetail[] = [];
@@ -34,39 +34,8 @@ export async function getListVehicle(
   sort: sortVehicleDto,
   searchKeyword: string | null | undefined = ""
 ): Promise<PaginationDto<ResVehicle> | undefined> {
-  const {
-    sortType,
-    sortName,
-    sortPlateNumber,
-    sortWorkPlace,
-    sortCapacity,
-    sortPermission
-  } = sort;
-
-  const orderSortType = calculateSortQuery("vehicle_type___name", sortType);
-  const orderSortName = calculateSortQuery("name", sortName);
-  const orderSortPlateNumber = calculateSortQuery(
-    "plate_number",
-    sortPlateNumber
-  );
-  const orderSortWorkPlace = calculateSortQuery(
-    "workplace___name",
-    sortWorkPlace
-  );
-  const orderSortCapacity = calculateSortQuery("max_capacity", sortCapacity);
-  const orderSortPermission = calculateSortQuery(
-    "permission_flag",
-    sortPermission
-  );
-
-  const order_by = [
-    orderSortType,
-    orderSortName,
-    orderSortPlateNumber,
-    orderSortWorkPlace,
-    orderSortCapacity,
-    orderSortPermission
-  ]
+  const order_by = Object.keys(sort)
+    .map((k) => calculateSortQuery(k, sort[k]))
     .filter((item) => !!item)
     .toString();
 

@@ -1,20 +1,17 @@
 <template>
-  <div class="fill-height d-flex flex-column">
+  <div class="d-flex flex-column fill-height">
+    <!-- Todo: need to define page title key and update here -->
     <ListSearchHeader
-      ref="searchHeader"
       :title="$t('vehicle')"
-      :colTitle="3"
-      :colAction="21"
-      v-model:model-value.sync="searchValue"
-      @onChange="handleSearchChange"
+      v-model:model-value.sync="searchString"
     >
       <template #action>
         <a-button
           class="btn-action color-btn-delete"
-          ghost
           type="primary"
+          @click="($event: MouseEvent) => deleteItems($event, selectedKeys)"
+          ghost
           v-if="selectedKeys.length > 0"
-          @click="deleteVehicle(undefined)"
         >
           <template #icon>
             <IcTrash class="btn-icon" :color="'#F54E4E'" />
@@ -33,7 +30,7 @@
           </template>
           {{ $t("export_btn") }}
         </a-button>
-        <a-button type="primary" class="btn-add-new" @click="onCreate">
+        <a-button type="primary" class="btn-add-new" @click="onAddNewItem">
           <template #icon>
             <img src="@/assets/icons/ic_plus.svg" class="btn-icon" />
           </template>
@@ -41,128 +38,83 @@
         </a-button>
       </template>
     </ListSearchHeader>
-    <div :class="[vehicleList.tableContainer, 'mx-30 mb-30']">
+    <div class="table-container mx-30 mb-30">
+      <div v-if="!isLoading && data && data.length">
+        <a-table
+          :columns="columns"
+          :data-source="data"
+          :pagination="false"
+          :scroll="{ y: tableMaxHeight, x: 500 }"
+          :row-key="(record) => record.id"
+          :row-selection="rowSelection"
+          @resizeColumn="handleResizeColumn"
+        >
+          <template #headerCell="{ column }">
+            <template v-if="column.key !== 'action'">
+              <div>
+                <span class="header-title">{{ $t(column.title) }}</span>
+                <SortView
+                  v-if="column.key"
+                  class="mx-12"
+                  :sort="sort[column.key]"
+                  @click="changeSort(column.key)"
+                />
+              </div>
+            </template>
+          </template>
+          <template #bodyCell="{ column, record, text }">
+            <template v-if="column.dataIndex === 'permission_flag'">
+              <a-tag
+                :class="[
+                  !!record.permission_flag ? 'permisson-yes' : 'permisson-no',
+                  'd-flex justify-center align-center'
+                ]"
+              >
+                {{ !!record.permission_flag ? $t("yes") : $t("no") }}
+              </a-tag>
+            </template>
+            <template v-else-if="column.key === 'action'">
+              <router-link
+                :to="{
+                  name: routeNames.editVehicle,
+                  params: { id: record.id }
+                }"
+              >
+                <img src="@/assets/icons/ic_btn_edit.svg" class="action-icon" />
+              </router-link>
+              <img
+                src="@/assets/icons/ic_btn_delete.svg"
+                class="action-icon"
+                @click="($event) => onDeleteItem($event, record.id)"
+              />
+              <img
+                src="@/assets/icons/ic_btn_qrcode.svg"
+                class="action-icon"
+                @click="getVehicleDetail(record.id)"
+              />
+            </template>
+            <template v-else>
+              <span>{{ text || NULL_VALUE_DISPLAY }}</span>
+            </template>
+          </template>
+        </a-table>
+        <ThePagination
+          :isShowPagination="!isLoading && data && !!data.length"
+          :currentPage="pageOption.currentPage"
+          :pageSize="pageOption.pageSize"
+          :total="pageOption.total"
+          @onShowSizeChange="onShowSizeChange"
+          @onChange="onChange"
+        />
+      </div>
       <NoData
-        :value="searchValue"
+        :value="searchString"
         :is-loading="isLoading"
         @onClick="handleBackToList"
         v-if="isLoading || !data || !data.length"
       />
-
-      <a-table
-        :row-selection="rowSelection"
-        :columns="columns"
-        :data-source="data"
-        :pagination="false"
-        v-if="!isLoading && data && data.length > 0"
-        :scroll="{ y: tableMaxHeight }"
-      >
-        <template #headerCell="{ column }">
-          <template v-if="column.key === 'vehicle_type'">
-            <div :class="[vehicleList.headerTitle]" @click="changeSortType()">
-              <span>{{ $t(column.title) }}</span>
-              <SortView class="mx-12" :sort="sortType" />
-            </div>
-          </template>
-          <template v-if="column.key === 'name'">
-            <div :class="[vehicleList.headerTitle]" @click="changeSortName()">
-              <span>{{ $t(column.title) }}</span>
-              <SortView class="mx-12" :sort="sortName" />
-            </div>
-          </template>
-
-          <template v-if="column.key === 'plate_number'">
-            <div
-              :class="[vehicleList.headerTitle]"
-              @click="changeSortPlateNumber()"
-            >
-              <span>{{ $t(column.title) }}</span>
-              <SortView class="mx-12" :sort="sortPlateNumber" />
-            </div>
-          </template>
-          <template v-if="column.key === 'workplace_name'">
-            <div
-              :class="[vehicleList.headerTitle]"
-              @click="changeSortWorkPlace()"
-            >
-              <span>{{ $t(column.title) }}</span>
-              <SortView class="mx-12" :sort="sortWorkPlace" />
-            </div>
-          </template>
-
-          <template v-if="column.key === 'max_capacity'">
-            <div
-              :class="[vehicleList.headerTitle]"
-              @click="changeSortCapacity()"
-            >
-              <span>{{ $t(column.title) }}</span>
-              <SortView class="mx-12" :sort="sortCapacity" />
-            </div>
-          </template>
-
-          <template v-if="column.key === 'permission_flag'">
-            <div
-              :class="[vehicleList.headerTitle]"
-              @click="changeSortPermission()"
-            >
-              <span>{{ $t(column.title) }}</span>
-              <SortView class="mx-12" :sort="sortPermission" />
-            </div>
-          </template>
-        </template>
-
-        <template #bodyCell="{ column, record, text }">
-          <template v-if="dataIndexColumns.includes(column.dataIndex)">
-            <span v-if="text" class="has-value">{{ text }} </span>
-            <span class="null-value" v-else>{{ NULL_VALUE_DISPLAY }}</span>
-          </template>
-
-          <template v-if="column.dataIndex === 'permission_flag'">
-            <a-tag
-              :class="[
-                !!record.permission_flag ? 'permisson-yes' : 'permisson-no',
-                'd-flex justify-center align-center'
-              ]"
-            >
-              {{ !!record.permission_flag ? $t("yes") : $t("no") }}
-            </a-tag>
-          </template>
-          <template v-if="column.dataIndex === 'action'">
-            <router-link
-              :to="{
-                name: routeNames.editVehicle,
-                params: { id: record.id }
-              }"
-            >
-              <img
-                src="@/assets/icons/ic_btn_edit.svg"
-                :class="[vehicleList.actionIcon]"
-              />
-            </router-link>
-            <img
-              src="@/assets/icons/ic_btn_delete.svg"
-              :class="[vehicleList.actionIcon]"
-              @click="deleteVehicle(record.id)"
-            />
-            <img
-              src="@/assets/icons/ic_btn_qrcode.svg"
-              :class="[vehicleList.actionIcon]"
-              @click="getVehicleDetail(record.id)"
-            />
-          </template>
-        </template>
-      </a-table>
-      <ThePagination
-        :isShowPagination="!isLoading && data && !!data.length"
-        :currentPage="pageOption.currentPage"
-        :pageSize="pageOption.pageSize"
-        :total="pageOption.total"
-        @onShowSizeChange="onShowSizeChange"
-        @onChange="onChange"
-      />
     </div>
   </div>
-
   <VehicleDetailModal
     v-if="!!vehicleId"
     :currentVehicle="vehicleDetail"
@@ -171,228 +123,129 @@
 </template>
 
 <script setup lang="ts">
-//#===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆import
+//#region import
 import IcTrash from "@/assets/icons/IcTrash.vue";
 import { i18n } from "@/i18n";
 import ListSearchHeader from "@/modules/base/components/ListSearchHeader.vue";
 import NoData from "@/modules/base/components/NoData.vue";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
-import HeaderRef from "@/modules/base/models/search-header.model";
 import SortView from "@/modules/common/components/SortView.vue";
 import ThePagination from "@/modules/common/components/ThePagination.vue";
 import { NULL_VALUE_DISPLAY } from "@/modules/common/constants/table.constant";
-import { Pagination } from "@/modules/common/models/pagination.model";
+import { Pagination } from "@/modules/common/models";
 import { Sort } from "@/modules/common/models/sort.enum";
-import { router } from "@/routes";
-import { routeNames } from "@/routes/route-names";
+import { routeNames, router } from "@/routes";
 import { service } from "@/services";
-import { TableColumnType } from "ant-design-vue/lib/components";
+import { TableColumnsType } from "ant-design-vue";
 import { debounce } from "lodash";
-import {
-  computed,
-  inject,
-  onMounted,
-  onUnmounted,
-  reactive,
-  ref,
-  watch
-} from "vue";
-import { ResVehicle, Vehicle, VehicleDetail } from "../models/vehicle.model";
+import { computed, inject, onMounted, reactive, ref, watch } from "vue";
+import { ResVehicle, Vehicle } from "../models/vehicle.model";
 import VehicleDetailModal from "./VehicleDetailModal.vue";
-//#endregion===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆
+//#endregion
+//#region props
+//#endregion
+interface sortVehicleDto {
+  vehicle_type___name: Sort;
+  name: Sort;
+  plate_number: Sort;
+  workplace___name: Sort;
+  max_capacity: Sort;
+  permission_flag: Sort;
+}
 
-//#===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜Props
-//#endregion===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜Props
-
-//#===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎Variables
-const sortType = ref<Sort>(Sort.None);
-const sortName = ref<Sort>(Sort.None);
-const sortPlateNumber = ref<Sort>(Sort.None);
-const sortWorkPlace = ref<Sort>(Sort.None);
-const sortCapacity = ref<Sort>(Sort.None);
-const vehicleDetail = ref<Vehicle>();
-const sortPermission = ref<Sort>(Sort.None);
-const selectedKeys = ref<number[]>([]);
-const vehicleId = ref<string | undefined>(undefined);
-const innerHeight = ref<number>(0);
-const columns: TableColumnType<VehicleDetail>[] = [
+//#region variables
+const searchString = ref<string>("");
+// Todo: need to define your columns here. Note: all columns that are not action column, must enable resizable
+const columns = ref<TableColumnsType>([
   {
     title: "vehicle_type",
     dataIndex: "vehicle_type___name",
-    key: "vehicle_type"
+    key: "vehicle_type___name",
+    width: -1,
+    resizable: true
   },
   {
     title: "vehicle_name",
     dataIndex: "name",
-    key: "name"
+    key: "name",
+    width: -1,
+    resizable: true
   },
   {
     title: "number_plate",
     dataIndex: "plate_number",
-    key: "plate_number"
+    key: "plate_number",
+    width: -1,
+    resizable: true
   },
   {
     title: "work_place",
     dataIndex: "workplace___name",
-    key: "workplace_name"
+    key: "workplace___name",
+    width: -1,
+    resizable: true
   },
   {
     title: "capacity",
     dataIndex: "max_capacity",
-    key: "max_capacity"
+    key: "max_capacity",
+    width: "140px"
   },
   {
     title: "permission",
     dataIndex: "permission_flag",
-    key: "permission_flag"
+    key: "permission_flag",
+    width: "96px"
   },
   {
+    title: "",
     dataIndex: "action",
-    width: "180px"
+    key: "action",
+    width: "160px"
   }
-];
-const messenger: (param: MessengerParamModel) => void =
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  inject("messenger")!;
-const data = ref<ResVehicle[]>([]);
-const searchValue = ref<string>("");
-const searchHeader = ref<HeaderRef | null>(null);
+]);
+const data = ref<ResVehicle[]>([]); // Todo: must define data model and update here
+const selectedKeys = ref<number[]>([]);
+const sort = ref({});
 const isLoading = ref<boolean>(false);
+const innerHeight = ref<number>(0);
+const vehicleId = ref<string | undefined>(undefined);
+const vehicleDetail = ref<Vehicle>();
 const pageOption = reactive<Pagination<ResVehicle>>({
   currentPage: 1,
   pageSize: 20,
   total: 0
 });
-//#endregion===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎===🍎
+const messenger: (param: MessengerParamModel) => void =
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  inject("messenger")!;
+//#endregion
 
-//#===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌Hooks
+//#region hooks
 onMounted(() => {
   innerHeight.value = window.innerHeight;
   window.addEventListener("resize", () => {
     innerHeight.value = window.innerHeight;
   });
-  fetchVehicleList();
-});
-onUnmounted(() => {
-  window.removeEventListener("resize", () => {
-    innerHeight.value = window.innerHeight;
+
+  const sortKey = columns.value.map((c) => c.key?.toString());
+  sortKey.forEach((key) => {
+    if (key && key !== "action") sort.value[key] = Sort.None;
   });
+
+  fetchDataAsync();
 });
-//#endregion===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌===🦌
+//#endregion
 
-//#===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊Methods
-const resetSort = (): void => {
-  sortType.value = Sort.None;
-  sortName.value = Sort.None;
-  sortPlateNumber.value = Sort.None;
-  sortWorkPlace.value = Sort.None;
-  sortCapacity.value = Sort.None;
-  sortPermission.value = Sort.None;
-};
-
-const calculateNextSortStatus = (currentSort: Sort): Sort => {
-  switch (currentSort) {
-    case Sort.Asc:
-      return Sort.Desc;
-    case Sort.Desc:
-      return Sort.None;
-    default:
-      return Sort.Asc;
-  }
-};
-
-const changeSortType = (): void => {
-  const backupSortType = sortType.value;
-  resetSort();
-  sortType.value = calculateNextSortStatus(backupSortType);
-  fetchVehicleList();
-};
-
-const changeSortName = (): void => {
-  const backupSortName = sortName.value;
-  resetSort();
-  sortName.value = calculateNextSortStatus(backupSortName);
-  fetchVehicleList();
-};
-
-const changeSortCapacity = (): void => {
-  const backupSortCapacity = sortCapacity.value;
-  resetSort();
-  sortCapacity.value = calculateNextSortStatus(backupSortCapacity);
-  fetchVehicleList();
-};
-
-const changeSortPlateNumber = (): void => {
-  const backupSortPlateNumber = sortPlateNumber.value;
-  resetSort();
-  sortPlateNumber.value = calculateNextSortStatus(backupSortPlateNumber);
-  fetchVehicleList();
-};
-
-const changeSortWorkPlace = (): void => {
-  const backupSortWorkPlace = sortWorkPlace.value;
-  resetSort();
-  sortWorkPlace.value = calculateNextSortStatus(backupSortWorkPlace);
-  fetchVehicleList();
-};
-
-const changeSortPermission = (): void => {
-  const backupSortPermission = sortPermission.value;
-  resetSort();
-  sortPermission.value = calculateNextSortStatus(backupSortPermission);
-  fetchVehicleList();
-};
-
-const onShowSizeChange = (current: number, pageSize: number): void => {
-  pageOption.currentPage = current;
-  pageOption.pageSize = pageSize;
-  fetchVehicleList();
-};
-
-const onChange = (pageNumber: number): void => {
-  pageOption.currentPage = pageNumber;
-  fetchVehicleList();
-};
-
-const setVehicleId = (id: string): void => {
-  vehicleId.value = id;
-};
-
-const rowSelection = computed(() => {
-  return {
-    selectedRowKeys: selectedKeys.value,
-    onChange: (keys: number[]): void => {
-      selectedKeys.value = keys;
-    },
-    columnWidth: "50px"
-  };
-});
-
-const dataIndexColumns = computed(() => [
-  "vehicle_type___name",
-  "name",
-  "plate_number",
-  "workplace___name",
-  "max_capacity"
-]);
-
-const fetchVehicleList = async (): Promise<void> => {
-  const sort = {
-    sortType: sortType.value,
-    sortName: sortName.value,
-    sortPlateNumber: sortPlateNumber.value,
-    sortWorkPlace: sortWorkPlace.value,
-    sortCapacity: sortCapacity.value,
-    sortPermission: sortPermission.value
-  };
-
+//#region function
+const fetchDataAsync = async (): Promise<void> => {
   isLoading.value = true;
   const res = await service.vehicle.getListVehicle(
     Number(pageOption.currentPage),
     Number(pageOption.pageSize),
-    sort,
-    searchValue.value
+    sort.value as sortVehicleDto,
+    searchString.value
   );
   isLoading.value = false;
 
@@ -412,10 +265,33 @@ const fetchVehicleList = async (): Promise<void> => {
 const onSearchChange = debounce((): void => {
   pageOption.currentPage = 1;
   selectedKeys.value = [];
-  fetchVehicleList();
+  fetchDataAsync();
 }, 500);
 
-const deleteVehicle = (id?: number): void => {
+const onShowSizeChange = (current: number, pageSize: number): void => {
+  pageOption.currentPage = current;
+  pageOption.pageSize = pageSize;
+  fetchDataAsync();
+};
+
+const onChange = (pageNumber: number): void => {
+  pageOption.currentPage = pageNumber;
+  fetchDataAsync();
+};
+
+const handleBackToList = (): void => {
+  if (searchString.value) {
+    isLoading.value = true;
+    searchString.value = "";
+  }
+};
+
+const onAddNewItem = (): void => {
+  router.push({ name: routeNames.createVehicle });
+};
+
+const deleteItems = (e: MouseEvent, ids: number[]): void => {
+  if (e && e.stopPropagation) e.stopPropagation();
   messenger({
     title: "popup_msg_confirm_delete",
     message: "",
@@ -425,17 +301,12 @@ const deleteVehicle = (id?: number): void => {
       if (!isConfirm) {
         return;
       }
-
-      if (!selectedKeys.value?.length && !id) {
-        return;
-      }
-      const selectedVehicleIds = id ? [id] : selectedKeys.value;
-      onDeleteVehicle(selectedVehicleIds);
+      onDeleteItems(ids);
     }
   });
 };
 
-const onDeleteVehicle = async (deleteIds: number[]): Promise<void> => {
+const onDeleteItems = async (deleteIds: number[]): Promise<void> => {
   if (!deleteIds.length) {
     return;
   }
@@ -461,27 +332,17 @@ const onDeleteVehicle = async (deleteIds: number[]): Promise<void> => {
     type: MessengerType.Success,
     callback: (isConfirm: boolean): void => {
       isConfirm;
-      fetchVehicleList();
+      fetchDataAsync();
     }
   });
   pageOption.currentPage = 1;
   selectedKeys.value = [];
-  searchValue.value = "";
+  searchString.value = "";
 };
 
-const onCreate = (): void => {
-  router.push({ name: routeNames.createVehicle });
-};
-
-const handleSearchChange = (currentSearchValue: string): void => {
-  searchValue.value = currentSearchValue;
-};
-
-const handleBackToList = (): void => {
-  if (searchHeader.value) {
-    isLoading.value = true;
-    searchHeader.value.clearInput();
-  }
+const onDeleteItem = (e: MouseEvent, id: number): void => {
+  if (e && e.stopPropagation) e.stopPropagation();
+  deleteItems(e, [id]);
 };
 
 const getVehicleDetail = async (id: string): Promise<void> => {
@@ -493,9 +354,46 @@ const getVehicleDetail = async (id: string): Promise<void> => {
     setVehicleId(id);
   }
 };
-//#endregion===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊
 
-//#===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏Computed
+const setVehicleId = (id: string): void => {
+  vehicleId.value = id;
+};
+
+const rowSelection = computed(() => {
+  return {
+    selectedRowKeys: selectedKeys.value,
+    onChange: (keys: number[]): void => {
+      selectedKeys.value = keys;
+    },
+    columnWidth: "50px"
+  };
+});
+
+const handleResizeColumn = (w: number, col: { width: number }): void => {
+  col.width = w;
+};
+
+const calculateNextSortStatus = (currentSort: Sort): Sort => {
+  switch (currentSort) {
+    case Sort.Asc:
+      return Sort.Desc;
+    case Sort.Desc:
+      return Sort.None;
+    default:
+      return Sort.Asc;
+  }
+};
+
+const changeSort = (key: string): void => {
+  Object.keys(sort.value).forEach((objKey) => {
+    sort.value[objKey] =
+      objKey !== key ? Sort.None : calculateNextSortStatus(sort.value[objKey]);
+  });
+  fetchDataAsync();
+};
+//#endregion
+
+//#region computed
 const tableMaxHeight = computed(() => {
   const tableHeaderHeight = 58;
   const tableFooterHeight = 52;
@@ -510,105 +408,50 @@ const tableMaxHeight = computed(() => {
     marginBottom
   );
 });
-//#endregion===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏
+//#endregion
 
-//#===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍Emits
-//#endregion===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍
-
-//===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀Watchers
-watch(searchValue, onSearchChange);
-//#endregion===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀===👀
+//#region reactive
+watch(searchString, onSearchChange);
+//#endregion
 </script>
 
-<style lang="scss" module="vehicleList">
-@mixin size-btn($width, $height) {
-  min-width: $width;
-  height: $height;
-}
-
-@mixin text($fontWeight, $fontSize, $lineHeight) {
-  font-weight: $fontWeight;
-  font-size: $fontSize;
-  line-height: $lineHeight;
-}
-
-.tableContainer {
+<style lang="scss" scoped>
+.table-container {
   flex-grow: 1;
-  .headerTitle {
-    font-size: 14px;
+  height: calc(100% - 98px - 30px);
+
+  @mixin permission($background, $borderColor, $color, $width) {
+    background: $background;
+    border: 1px solid $borderColor;
+    border-radius: 22px;
+    width: $width;
+    height: 22px;
+    @include text(400, 16px, 100%);
+    color: $color;
   }
-  .actionIcon {
-    margin-left: 20px;
-    cursor: pointer;
+
+  .permisson-no {
+    @include permission(#feeded, rgba(245, 78, 78, 0.5), $red-1, 41px);
   }
-  .ant-table-cell {
-    text-align: center;
+
+  .permisson-yes {
+    @include permission(#f0f8fa, rgba(7, 160, 184, 0.5), $primary, 46px);
   }
 }
-</style>
 
-<style scoped lang="scss">
-.border {
-  border: 1px solid #eaeaea;
-  border-radius: 6px;
-}
-
-@mixin permission($background, $borderColor, $color, $width) {
-  background: $background;
-  border: 1px solid $borderColor;
-  border-radius: 22px;
-  width: $width;
-  height: 22px;
-  @include text(400, 16px, 100%);
-  color: $color;
-}
-
-.permisson-no {
-  @include permission(#feeded, rgba(245, 78, 78, 0.5), $red-1, 41px);
-}
-
-.permisson-yes {
-  @include permission(#f0f8fa, rgba(7, 160, 184, 0.5), $primary, 46px);
-}
-
-@mixin size-btn($width, $height) {
-  min-width: $width;
-  height: $height;
-}
-
-@mixin text($fontWeight, $fontSize, $lineHeight) {
-  font-weight: $fontWeight;
-  font-size: $fontSize;
-  line-height: $lineHeight;
-}
-
-//extend
-.flex-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.action-icon {
+  margin-left: 20px;
+  cursor: pointer;
 }
 
 :deep() {
   .ant-table-tbody > tr.ant-table-row-selected > td {
-    background: $grey-2;
+    background: grey-2;
     border-color: rgba(0, 0, 0, 0.03);
   }
-}
-.has-value,
-.null-value {
-  @include text(400, 16px, 20px);
-  color: $neutral-600;
-}
-</style>
 
-<style lang="scss">
-.tableContainer {
-  .ant-checkbox-inner {
-    &::after {
-      top: 45%;
-      left: 30%;
-    }
+  .ant-table-row {
+    cursor: pointer;
   }
 }
 </style>
