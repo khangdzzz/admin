@@ -87,10 +87,12 @@ export async function getListContainer(
     results: res.results.map((result) => {
       const {
         container_type___name: containerType,
+        container_type_id,
         capacity,
         name: containerName,
         id,
-        weight
+        weight,
+        tenant_id: tenantId
       } = result;
       return {
         containerName,
@@ -99,7 +101,8 @@ export async function getListContainer(
         id,
         key: id,
         weight,
-        containerTypeId: 0
+        containerTypeId: container_type_id,
+        tenantId
       };
     })
   };
