@@ -164,6 +164,7 @@ onMounted(() => {
 const fetchDataAsync = async (): Promise<void> => {
   isLoading.value = true;
   // Todo: fetch data from api
+  isLoading.value = false;
   data.value = [
     {
       id: 1,
@@ -177,9 +178,8 @@ const fetchDataAsync = async (): Promise<void> => {
     }
   ];
 
-  pageOption.total = data.value.length;
-  pageOption.currentPage = 1;
-  isLoading.value = false;
+  // pageOption.currentPage = res.current_page || 0;
+  // pageOption.total = res.count;
 };
 
 const onSearchChange = debounce((): void => {
@@ -272,14 +272,15 @@ const onDeleteItem = (e: MouseEvent, id: number): void => {
   deleteItems(e, [id]);
 };
 
+// Todo: remove this if don't need to click list item to show detail
 const customRow = (
-  record: any // enter data type here
+  record: any // Todo: enter data type here
 ): { onClick: (_event: PointerEvent) => void } => {
   return {
     onClick: (_event: PointerEvent): void => {
       _event;
       record;
-      // handle when press list item
+      // Todo: handle when press list item
     }
   };
 };
@@ -347,7 +348,7 @@ watch(searchString, onSearchChange);
 }
 
 .action-icon {
-  margin-left: 30px;
+  margin-left: 20px;
   cursor: pointer;
 }
 
