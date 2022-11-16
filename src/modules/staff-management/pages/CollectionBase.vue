@@ -105,8 +105,6 @@
         :currentPage="pageOption.currentPage"
         :pageSize="pageOption.pageSize"
         :total="pageOption.total"
-        :isShowPrevBtn="isShowPrevBtn()"
-        :isShowNextBtn="isShowNextBtn()"
         @onShowSizeChange="onShowSizeChange"
         @onChange="onChange"
       />
@@ -287,31 +285,11 @@ const onChange = (pageNumber: number): void => {
   initialize();
 };
 
-const isShowPrevBtn = (): boolean => {
-  const isFirstPage = pageOption.currentPage === 1;
-  if (totalPages() === 1 || isFirstPage) return false;
-
-  return true;
-};
-
 const onSearchChange = debounce((): void => {
   pageOption.currentPage = 1;
   selectedKeys.value = [];
   initialize();
 }, 500);
-
-const isShowNextBtn = (): boolean => {
-  const isLastPage =
-    pageOption.currentPage ===
-    Math.ceil(Number(pageOption.total) / Number(pageOption?.pageSize));
-
-  if (totalPages() === 1 || isLastPage) return false;
-  return true;
-};
-
-const totalPages = (): number => {
-  return Math.ceil(Number(pageOption.total) / Number(pageOption.pageSize));
-};
 
 const deleteCollectionBase = (e: MouseEvent, id?: number): void => {
   if (e && e.stopPropagation) e.stopPropagation();

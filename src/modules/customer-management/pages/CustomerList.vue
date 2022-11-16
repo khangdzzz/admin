@@ -128,8 +128,6 @@
         :currentPage="pageOption.currentPage"
         :pageSize="pageOption.pageSize"
         :total="pageOption.total"
-        :isShowPrevBtn="isShowPrevBtn()"
-        :isShowNextBtn="isShowNextBtn()"
         @onShowSizeChange="onShowSizeChange"
         @onChange="onChange"
       />
@@ -235,21 +233,6 @@ const onChange = (pageNumber: number): void => {
   pageOption.currentPage = pageNumber;
   initialize();
 };
-
-const isShowPrevBtn = (): boolean => {
-  const isFirtPage = pageOption.currentPage === 1;
-  if (totalPages() === 1 || isFirtPage) return false;
-  return true;
-};
-
-const isShowNextBtn = (): boolean => {
-  const isLastPage =
-    pageOption.currentPage ===
-    Math.ceil(Number(pageOption.total) / Number(pageOption?.pageSize));
-  if (totalPages() === 1 || isLastPage) return false;
-  return true;
-};
-
 const initialize = async (): Promise<void> => {
   const sort = {
     sortName: sortName.value,
@@ -328,10 +311,6 @@ const changeSortEmail = (): void => {
   resetSort();
   sortEmail.value = calculateNextSortStatus(changeSortEmail);
   initialize();
-};
-
-const totalPages = (): number => {
-  return Math.ceil(Number(pageOption.total) / Number(pageOption.pageSize));
 };
 
 const deleteCustomer = ($event: MouseEvent, id?: number): void => {

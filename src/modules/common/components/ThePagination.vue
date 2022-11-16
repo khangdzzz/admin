@@ -15,7 +15,7 @@
           :class="[CommonPagination.btnPagination, 'mt-10']"
           type="primary"
           ghost
-          v-if="item.type === 'prev' && isShowPrevBtn"
+          v-if="item.type === 'prev' && isShowPrev"
         >
           <img
             src="@/assets/icons/ic_prev.svg"
@@ -29,7 +29,7 @@
           :class="[CommonPagination.btnPagination, 'mt-10', 'mr-15']"
           type="primary"
           ghost
-          v-else-if="item.type === 'next' && isShowNextBtn"
+          v-else-if="item.type === 'next' && isShowNext"
         >
           <span :class="[CommonPagination.action]">{{ $t("next_btn") }}</span>
           <img
@@ -57,8 +57,11 @@
 <script setup lang="ts">
 //#===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆import
 //#endregion===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆===🍆
+
+import { computed } from "vue";
+
 //#===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜Props
-defineProps({
+const props = defineProps({
   isShowPagination: {
     type: Boolean,
     default: false
@@ -74,14 +77,6 @@ defineProps({
   total: {
     type: Number,
     default: 0
-  },
-  isShowPrevBtn: {
-    type: Boolean,
-    default: false
-  },
-  isShowNextBtn: {
-    type: Boolean,
-    default: false
   }
 });
 //#endregion===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜===👜Props
@@ -104,6 +99,25 @@ const onShowSizeChange = (current: number, pageSize: number): void => {
 //#endregion===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊===🌊
 
 //#===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏Computed
+const isShowPrev = computed((): boolean => {
+  const isFirstPage = props.currentPage === 1;
+  if (totalPages() === 1 || isFirstPage) return false;
+
+  return true;
+});
+
+const isShowNext = computed((): boolean => {
+  const isLastPage =
+    props.currentPage ===
+    Math.ceil(Number(props.total) / Number(props?.pageSize));
+
+  if (totalPages() === 1 || isLastPage) return false;
+  return true;
+});
+
+const totalPages = (): number => {
+  return Math.ceil(Number(props.total) / Number(props.pageSize));
+};
 //#endregion===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏===🍏
 
 //#===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍===🐍Emits
