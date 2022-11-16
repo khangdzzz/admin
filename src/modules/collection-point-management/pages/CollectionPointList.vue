@@ -172,7 +172,7 @@ const columns: TableColumnType<CollectionPointModel>[] = [
     key: "customer"
   },
   {
-    title: i18n.global.t("name"),
+    title: i18n.global.t("collection_point_name"),
     dataIndex: "name",
     key: "name"
   },
