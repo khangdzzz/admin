@@ -126,7 +126,8 @@ export async function getContainerById(
     container_type_id: containerTypeId,
     capacity,
     name: containerName,
-    weight
+    weight,
+    tenant_id: tenantId
   } = res;
   return {
     containerName,
@@ -135,7 +136,8 @@ export async function getContainerById(
     capacity,
     id,
     key: id,
-    weight
+    weight,
+    tenantId
   };
 }
 
