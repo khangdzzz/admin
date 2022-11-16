@@ -4,9 +4,11 @@ import LoadingSpinner from "@/modules/base/components/LoadingSpinner.vue";
 import DefaultLayout from "@/modules/base/layouts/DefaultLayout.vue";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { ScreenLayout } from "@/routes/screen-layouts";
+import "@/styles/tailwind.css";
 import Antd, { Spin } from "ant-design-vue";
 import "ant-design-vue/dist/antd.css";
 import "ant-design-vue/dist/antd.less";
+import vClickOutside from "click-outside-vue3";
 import mitt from "mitt";
 import { createPinia } from "pinia";
 import { createApp, h } from "vue";
@@ -14,8 +16,6 @@ import OpenLayersMap from "vue3-openlayers";
 import "vue3-openlayers/dist/vue3-openlayers.css";
 import { i18n } from "./i18n";
 import { router } from "./routes";
-import "@/styles/tailwind.css";
-import vClickOutside from "click-outside-vue3"
 
 const app = createApp(App);
 const pinia = createPinia();
@@ -45,4 +45,4 @@ app.provide("messenger", messenger);
 app.provide("emitter", emitter);
 app.use(vClickOutside);
 app.mount("#app");
-app.use(vClickOutside)
+app.use(vClickOutside);

@@ -137,7 +137,7 @@ import IcTrash from "@/assets/icons/IcTrash.vue";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import { debounce } from "lodash";
-import { NULL_VALUE_DISPLAY } from "@/utils/constants";
+import { NULL_VALUE_DISPLAY } from "@/modules/common/constants/table.constant";
 import { collectionBaseColumns } from "./collection-base.columns";
 //#endregion
 

@@ -1,4 +1,3 @@
-import { calculateSortQuery } from "@/modules/common/helpers";
 import { ServiceResponse } from "@/modules/common/models";
 import { Sort } from "@/modules/common/models/sort.enum";
 import { VehicleTypeModel } from "@/modules/vehicle-management/models";
@@ -10,6 +9,7 @@ import {
   VehicleSelection
 } from "@/modules/vehicle-management/models/vehicle.model";
 import { DEFAULT_SORT_ORDER } from "@/services/constants";
+import { calculateSortQuery } from "@/utils/rest-client.helper";
 import { makeUniqueName } from "@/utils/string.helper";
 import { transformRequest } from "./base.service";
 import { CollectionBaseResponseDto } from "./dtos/collection-base/collection-base.dto";

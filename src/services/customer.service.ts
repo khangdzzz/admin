@@ -1,19 +1,17 @@
-import {
-  CustomerModel,
-  Customer
-} from "@/modules/customer-management/models/customer.model";
+import { NULL_VALUE_DISPLAY } from "@/modules/common/constants/table.constant";
 import { Pagination, ServiceResponse } from "@/modules/common/models";
 import { Sort } from "@/modules/common/models/sort.enum";
+import {
+  Customer,
+  CustomerModel
+} from "@/modules/customer-management/models/customer.model";
+import { DEFAULT_SORT_ORDER } from "@/services/constants";
+import { calculateSortQuery } from "@/utils/rest-client.helper";
 import { transformRequest } from "./base.service";
 import { PaginationDto } from "./dtos/common/pagination.dto";
-import { CustomerResponseDto } from "./dtos/customer-management/customer.dto";
-import { DEFAULT_SORT_ORDER } from "@/services/constants";
-import { calculateSortQuery } from "@/modules/common/helpers";
 import { CreateCustomerDto } from "./dtos/customer-management/create-customer.dto";
-import { NULL_VALUE_DISPLAY } from "@/utils/constants";
+import { CustomerResponseDto } from "./dtos/customer-management/customer.dto";
 import { toUrlEncodedString } from "./utils/search-query.helper";
-
-// import { makeUniqueName } from "@/utils/string.helper";
 interface sortCustomerDto {
   sortName: Sort;
   sortAddress: Sort;

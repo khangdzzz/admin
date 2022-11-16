@@ -70,7 +70,7 @@ import QRCode from "qrcode";
 import { onMounted, PropType, reactive, ref, toRefs } from "vue";
 import { Vehicle } from "../models/vehicle.model";
 import { Base64 } from "js-base64";
-import { NULL_VALUE_DISPLAY } from "@/utils/constants";
+import { NULL_VALUE_DISPLAY } from "@/modules/common/constants/table.constant";
 
 interface Information {
   title: string;

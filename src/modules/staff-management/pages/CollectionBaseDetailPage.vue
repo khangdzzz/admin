@@ -148,7 +148,7 @@ import { MessengerType } from "@/modules/base/models/messenger-type.enum";
 import { router } from "@/routes";
 import { routeNames } from "@/routes/route-names";
 import { service } from "@/services";
-import { NULL_VALUE_DISPLAY } from "@/utils/constants";
+import { NULL_VALUE_DISPLAY } from "@/modules/common/constants/table.constant";
 import emitter, { EMITTER_EVENTS } from "@/utils/emiiter";
 import { message } from "ant-design-vue";
 import { inject, nextTick, onMounted, onUnmounted, ref } from "vue";
