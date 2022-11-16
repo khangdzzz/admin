@@ -25,6 +25,7 @@ export interface GetLatLongResponseDTO {
 }
 
 export interface LocationCollectRouteReferences {
+  id: string;
   last_update_time: string;
   user_email: string;
   user_id: number;
