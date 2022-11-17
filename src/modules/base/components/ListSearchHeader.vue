@@ -23,6 +23,7 @@
           </div>
         </template>
         <a-input
+          id="list-search-header_edt-search"
           v-if="enableSearch"
           :value="modelValue"
           :placeholder="$t('search_input')"

@@ -344,5 +344,6 @@
   "create_route": "Create route",
   "navigation_route_id": "Navigation route ID",
   "list_order_create_route": "Create",
-  "collection_point_name": "Name"
+  "collection_point_name": "Name",
+  "common_lbl_data_selected": "{number} data selected"
 }

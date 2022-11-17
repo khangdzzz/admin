@@ -28,6 +28,12 @@
     </ListSearchHeader>
     <div class="table-container mx-30 mb-30">
       <div v-if="!isLoading && data && data.length">
+        <div
+          v-if="selectedKeys.length > 0"
+          class="table-container__lbl-data-selected"
+        >
+          {{ $t("common_lbl_data_selected", { number: selectedKeys.length }) }}
+        </div>
         <a-table
           :columns="columns"
           :data-source="data"
@@ -62,10 +68,15 @@
                 src="@/assets/icons/ic_btn_delete.svg"
                 class="action-icon"
                 @click="($event) => onDeleteItem($event, record.id)"
+              /><img
+                src="@/assets/icons/ic_btn_qrcode.svg"
+                class="action-icon"
               />
             </template>
             <template v-else>
-              <span>{{ text || NULL_VALUE_DISPLAY }}</span>
+              <span class="table-container__list-item-text">{{
+                text || NULL_VALUE_DISPLAY
+              }}</span>
             </template>
           </template>
         </a-table>
@@ -99,7 +110,15 @@ import { Pagination } from "@/modules/common/models";
 import { Sort } from "@/modules/common/models/sort.enum";
 import { TableColumnsType } from "ant-design-vue";
 import { debounce } from "lodash";
-import { computed, inject, onMounted, reactive, ref, watch } from "vue";
+import {
+  computed,
+  inject,
+  onMounted,
+  onUnmounted,
+  reactive,
+  ref,
+  watch
+} from "vue";
 import ListSearchHeader from "../components/ListSearchHeader.vue";
 import NoData from "../components/NoData.vue";
 import MessengerParamModel from "../models/messenger-param.model";
@@ -130,7 +149,7 @@ const columns = ref<TableColumnsType>([
     title: "",
     dataIndex: "action",
     key: "action",
-    width: "150px"
+    width: "190px"
   }
 ]);
 const data = ref<any[]>([]); // Todo: must define data model and update here
@@ -151,12 +170,24 @@ const messenger: (param: MessengerParamModel) => void =
 
 //#region hooks
 onMounted(() => {
+  innerHeight.value = window.innerHeight;
+  window.addEventListener("resize", () => {
+    innerHeight.value = window.innerHeight;
+  });
+
   const sortKey = columns.value.map((c) => c.key?.toString());
   sortKey.forEach((key) => {
     if (key && key !== "action") sort.value[key] = Sort.None;
   });
 
   fetchDataAsync();
+});
+
+onUnmounted(() => {
+  innerHeight.value = window.innerHeight;
+  window.removeEventListener("resize", () => {
+    innerHeight.value = window.innerHeight;
+  });
 });
 //#endregion
 
@@ -165,21 +196,25 @@ const fetchDataAsync = async (): Promise<void> => {
   isLoading.value = true;
   // Todo: fetch data from api
   isLoading.value = false;
-  data.value = [
-    {
-      id: 1,
-      name: "Nghia",
-      email: "nghiahm@techvify.com.vn"
-    },
-    {
-      id: 2,
-      name: "Toan",
-      email: "toanmn@techvify.com.vn"
-    }
-  ];
+  const mockData: {
+    id: number;
+    name: string;
+    email: string;
+  }[] = [];
+  for (let i = 0; i < 50; i++) {
+    mockData.push({
+      id: i,
+      name: `Nghia ${i}`,
+      email: `nghiahm${i}@techvify.com.vn`
+    });
+  }
+  data.value = mockData;
 
   // pageOption.currentPage = res.current_page || 0;
   // pageOption.total = res.count;
+
+  pageOption.currentPage = 2;
+  pageOption.total = 120;
 };
 
 const onSearchChange = debounce((): void => {
@@ -321,14 +356,16 @@ const changeSort = (key: string): void => {
 
 //#region computed
 const tableMaxHeight = computed(() => {
+  const pageHeaderHeight = 98;
+  const labelSelectedItemHeight = selectedKeys.value.length ? 30 : 0;
   const tableHeaderHeight = 58;
-  const tableFooterHeight = 52;
-  const pageHeaderHeight = 120;
-  const marginBottom = 20;
+  const tableFooterHeight = 60;
+  const marginBottom = 30;
 
   return (
     innerHeight.value -
     tableHeaderHeight -
+    labelSelectedItemHeight -
     tableFooterHeight -
     pageHeaderHeight -
     marginBottom
@@ -345,10 +382,26 @@ watch(searchString, onSearchChange);
 .table-container {
   flex-grow: 1;
   height: calc(100% - 98px - 30px);
+  &__lbl-data-selected {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 20px;
+    color: $neutral-600;
+    margin-bottom: 10px;
+  }
+
+  &__list-item-text {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 20px;
+    color: $neutral-600;
+  }
 }
 
 .action-icon {
-  margin-left: 20px;
+  margin-left: 30px;
   cursor: pointer;
 }
 
@@ -360,6 +413,36 @@ watch(searchString, onSearchChange);
 
   .ant-table-row {
     cursor: pointer;
+  }
+
+  .ant-pagination-options {
+    .ant-pagination-options-size-changer {
+      .ant-select-selector {
+        width: auto !important;
+        padding: 6px !important;
+      }
+      .ant-select-selection-item {
+        .options-text {
+          span {
+            font-style: normal;
+            font-weight: 700;
+            font-size: 14px;
+            line-height: 18px;
+            color: $neutral-600;
+          }
+
+          img {
+            width: 16px;
+            height: 16px;
+            vertical-align: middle;
+          }
+        }
+      }
+
+      .ant-select-arrow {
+        display: none;
+      }
+    }
   }
 }
 </style>
