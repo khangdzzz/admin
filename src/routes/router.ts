@@ -157,7 +157,7 @@ const routes: RouteRecordRaw[] = [
         path: "vehicle",
         name: routeNames.vehicle,
         component: () =>
-          import("@/modules/vehicle-management/pages/VehicleList.vue")
+          import("@/modules/vehicle-management/pages/VehicleListPage.vue")
       },
       {
         path: "create-vehicle/",

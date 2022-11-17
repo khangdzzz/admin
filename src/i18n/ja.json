@@ -339,5 +339,6 @@
   "create_route": "道順作成",
   "navigation_route_id": "道順ID",
   "list_order_create_route": "道順作成",
-  "collection_point_name": "地点名"
+  "collection_point_name": "地点名",
+  "common_lbl_data_selected": "{number}件を選択しました"
 }

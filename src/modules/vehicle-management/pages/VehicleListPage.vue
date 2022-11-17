@@ -1,12 +1,12 @@
 <template>
   <div class="d-flex flex-column fill-height">
-    <!-- Todo: need to define page title key and update here -->
     <ListSearchHeader
       :title="$t('vehicle')"
       v-model:model-value.sync="searchString"
     >
       <template #action>
         <a-button
+          id="vehicle-list-page_btn-delete-multiple"
           class="btn-action color-btn-delete"
           type="primary"
           @click="($event: MouseEvent) => deleteItems($event, selectedKeys)"
@@ -18,19 +18,32 @@
           </template>
           {{ $t("delete_btn") }}
         </a-button>
-        <a-button class="btn-action" type="primary">
+        <a-button
+          id="vehicle-list-page_btn-import"
+          class="btn-action"
+          type="primary"
+        >
           <template #icon>
             <img src="@/assets/icons/ic_import.svg" class="btn-icon" />
           </template>
           {{ $t("import_btn") }}
         </a-button>
-        <a-button class="btn-action" type="primary">
+        <a-button
+          id="vehicle-list-page_btn-export"
+          class="btn-action"
+          type="primary"
+        >
           <template #icon>
             <img src="@/assets/icons/ic_export.svg" class="btn-icon" />
           </template>
           {{ $t("export_btn") }}
         </a-button>
-        <a-button type="primary" class="btn-add-new" @click="onAddNewItem">
+        <a-button
+          id="vehicle-list-page_btn-create-new"
+          type="primary"
+          class="btn-add-new"
+          @click="onAddNewItem"
+        >
           <template #icon>
             <img src="@/assets/icons/ic_plus.svg" class="btn-icon" />
           </template>
@@ -40,6 +53,12 @@
     </ListSearchHeader>
     <div class="table-container mx-30 mb-30">
       <div v-if="!isLoading && data && data.length">
+        <div
+          v-if="selectedKeys.length > 0"
+          class="table-container__lbl-data-selected"
+        >
+          {{ $t("common_lbl_data_selected", { number: selectedKeys.length }) }}
+        </div>
         <a-table
           :columns="columns"
           :data-source="data"
@@ -54,6 +73,7 @@
               <div>
                 <span class="header-title">{{ $t(column.title) }}</span>
                 <SortView
+                  :id="`vehicle-list-page_list-sort_${column.title}`"
                   v-if="column.key"
                   class="mx-12"
                   :sort="sort[column.key]"
@@ -62,7 +82,7 @@
               </div>
             </template>
           </template>
-          <template #bodyCell="{ column, record, text }">
+          <template #bodyCell="{ column, record, index, text }">
             <template v-if="column.dataIndex === 'permission_flag'">
               <a-tag
                 :class="[
@@ -75,6 +95,7 @@
             </template>
             <template v-else-if="column.key === 'action'">
               <router-link
+                :id="`vehicle-list-page_list-item-${index}_btn-edit`"
                 :to="{
                   name: routeNames.editVehicle,
                   params: { id: record.id }
@@ -83,18 +104,22 @@
                 <img src="@/assets/icons/ic_btn_edit.svg" class="action-icon" />
               </router-link>
               <img
+                :id="`vehicle-list-page_list-item-${index}_btn-delete`"
                 src="@/assets/icons/ic_btn_delete.svg"
                 class="action-icon"
                 @click="($event) => onDeleteItem($event, record.id)"
               />
               <img
+                :id="`vehicle-list-page_list-item-${index}_btn-detail`"
                 src="@/assets/icons/ic_btn_qrcode.svg"
                 class="action-icon"
                 @click="getVehicleDetail(record.id)"
               />
             </template>
             <template v-else>
-              <span>{{ text || NULL_VALUE_DISPLAY }}</span>
+              <span class="table-container__list-item-text">{{
+                text || NULL_VALUE_DISPLAY
+              }}</span>
             </template>
           </template>
         </a-table>
@@ -139,7 +164,15 @@ import { routeNames, router } from "@/routes";
 import { service } from "@/services";
 import { TableColumnsType } from "ant-design-vue";
 import { debounce } from "lodash";
-import { computed, inject, onMounted, reactive, ref, watch } from "vue";
+import {
+  computed,
+  inject,
+  onMounted,
+  onUnmounted,
+  reactive,
+  ref,
+  watch
+} from "vue";
 import { ResVehicle, Vehicle } from "../models/vehicle.model";
 import VehicleDetailModal from "./VehicleDetailModal.vue";
 //#endregion
@@ -202,7 +235,7 @@ const columns = ref<TableColumnsType>([
     title: "",
     dataIndex: "action",
     key: "action",
-    width: "160px"
+    width: "190px"
   }
 ]);
 const data = ref<ResVehicle[]>([]); // Todo: must define data model and update here
@@ -235,6 +268,13 @@ onMounted(() => {
   });
 
   fetchDataAsync();
+});
+
+onUnmounted(() => {
+  innerHeight.value = window.innerHeight;
+  window.removeEventListener("resize", () => {
+    innerHeight.value = window.innerHeight;
+  });
 });
 //#endregion
 
@@ -395,14 +435,16 @@ const changeSort = (key: string): void => {
 
 //#region computed
 const tableMaxHeight = computed(() => {
+  const pageHeaderHeight = 98;
+  const labelSelectedItemHeight = selectedKeys.value.length ? 30 : 0;
   const tableHeaderHeight = 58;
-  const tableFooterHeight = 52;
-  const pageHeaderHeight = 120;
-  const marginBottom = 20;
+  const tableFooterHeight = 60;
+  const marginBottom = 30;
 
   return (
     innerHeight.value -
     tableHeaderHeight -
+    labelSelectedItemHeight -
     tableFooterHeight -
     pageHeaderHeight -
     marginBottom
@@ -437,6 +479,23 @@ watch(searchString, onSearchChange);
   .permisson-yes {
     @include permission(#f0f8fa, rgba(7, 160, 184, 0.5), $primary, 46px);
   }
+
+  &__lbl-data-selected {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 20px;
+    color: $neutral-600;
+    margin-bottom: 10px;
+  }
+
+  &__list-item-text {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 20px;
+    color: $neutral-600;
+  }
 }
 
 .action-icon {
@@ -452,6 +511,36 @@ watch(searchString, onSearchChange);
 
   .ant-table-row {
     cursor: pointer;
+  }
+
+  .ant-pagination-options {
+    .ant-pagination-options-size-changer {
+      .ant-select-selector {
+        width: auto !important;
+        padding: 6px !important;
+      }
+      .ant-select-selection-item {
+        .options-text {
+          span {
+            font-style: normal;
+            font-weight: 700;
+            font-size: 14px;
+            line-height: 18px;
+            color: $neutral-600;
+          }
+
+          img {
+            width: 16px;
+            height: 16px;
+            vertical-align: middle;
+          }
+        }
+      }
+
+      .ant-select-arrow {
+        display: none;
+      }
+    }
   }
 }
 </style>

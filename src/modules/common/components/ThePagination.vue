@@ -12,6 +12,7 @@
     >
       <template #itemRender="item">
         <a-button
+          id="pagination_btn-prev"
           :class="[CommonPagination.btnPagination, 'mt-10']"
           type="primary"
           ghost
@@ -26,6 +27,7 @@
           }}</span>
         </a-button>
         <a-button
+          id="pagination_btn-next"
           :class="[CommonPagination.btnPagination, 'mt-10', 'mr-15']"
           type="primary"
           ghost
@@ -39,13 +41,14 @@
         </a-button>
 
         <component
+          :id="`pagination_page-${item.page}`"
           v-else-if="item.type !== 'prev' && item.type !== 'next'"
           :is="item.originalElement"
         ></component>
       </template>
 
       <template #buildOptionText="{ value }">
-        <div class="options-text">
+        <div id="pagination_page-size-selector" class="options-text">
           <span class="mr-13">{{ value }} </span>
           <img src="@/assets/icons/ic_arrow.svg" />
         </div>
