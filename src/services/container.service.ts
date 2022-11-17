@@ -19,11 +19,11 @@ import { ContainerResponseDTO } from "@/services/dtos/container/container.dto";
 import { calculateSortQuery } from "@/utils/rest-client.helper";
 import { toUrlEncodedString } from "./utils/search-query.helper";
 
-interface sortContainerDto {
-  sortType: Sort;
-  sortName: Sort;
-  sortWeight: Sort;
-  sortCapacity: Sort;
+interface SortContainerListDto {
+  container_type___name: Sort;
+  name: Sort;
+  weight: Sort;
+  capacity: Sort;
 }
 
 export function getMockCollectionBase(): ContainerSelection[] {
@@ -37,7 +37,7 @@ export function getMockCollectionBase(): ContainerSelection[] {
 export async function getListContainer(
   page?: number,
   size?: number,
-  sort?: sortContainerDto,
+  sort?: SortContainerListDto,
   searchKeyword: string | null | undefined = ""
 ): Promise<Pagination<Container> | undefined> {
   let params: {
@@ -51,17 +51,8 @@ export async function getListContainer(
     __all__: searchKeyword ? `${toUrlEncodedString(searchKeyword)}` : undefined
   };
   if (sort) {
-    const { sortType, sortName, sortWeight, sortCapacity } = sort;
-    const orderSortType = calculateSortQuery("container_type___name", sortType);
-    const orderSortName = calculateSortQuery("name", sortName);
-    const orderSortWeight = calculateSortQuery("weight", sortWeight);
-    const orderSortCapacity = calculateSortQuery("capacity", sortCapacity);
-    const order_by = [
-      orderSortType,
-      orderSortName,
-      orderSortWeight,
-      orderSortCapacity
-    ]
+    const order_by = Object.keys(sort)
+      .map((k) => calculateSortQuery(k, sort[k]))
       .filter((item) => !!item)
       .toString();
     params = {
