@@ -71,6 +71,7 @@ import {
   CollectRouteViewModel
 } from "../models/collect-route-model";
 import CollectRouteHeader from "./CollectRouteHeader.vue";
+import { UserType } from "@/modules/base/models/user-type.enum";
 
 enum PageMode {
   DETAIL = "detail",
@@ -149,6 +150,11 @@ export default defineComponent({
           ? JSON.parse(user_info).workplaces
           : []
         : [];
+      const userType = user_info
+        ? JSON.parse(user_info)
+          ? JSON.parse(user_info).userType
+          : ""
+        : "";
       const validTypes = [
         WorkPlaceType.COLLECTION_BASE,
         WorkPlaceType.DISPOSAL,
@@ -156,7 +162,8 @@ export default defineComponent({
       ];
       service.staff
         .searchWorkplaces({
-          id__in: userWorkplaces.join(","),
+          id__in:
+            userType === UserType.PartnerAdmin ? userWorkplaces.join(",") : null,
           workplace_type__in: validTypes.join(","),
           page_size: "full"
         })

@@ -4,10 +4,10 @@ import LoadingSpinner from "@/modules/base/components/LoadingSpinner.vue";
 import DefaultLayout from "@/modules/base/layouts/DefaultLayout.vue";
 import MessengerParamModel from "@/modules/base/models/messenger-param.model";
 import { ScreenLayout } from "@/routes/screen-layouts";
-import "@/styles/tailwind.css";
 import Antd, { Spin } from "ant-design-vue";
 import "ant-design-vue/dist/antd.css";
 import "ant-design-vue/dist/antd.less";
+import "@/styles/tailwind.css"; // Must be import after ant css
 import vClickOutside from "click-outside-vue3";
 import mitt from "mitt";
 import { createPinia } from "pinia";
