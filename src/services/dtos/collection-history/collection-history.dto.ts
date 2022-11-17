@@ -37,4 +37,5 @@ export interface CollectionHistoryResponseDto {
   commission_price: number;
   other_price: number;
   collect_item_unit___alias_name: string;
+  collect_item_unit___short_alias_name: string;
 }

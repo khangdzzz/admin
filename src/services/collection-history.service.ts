@@ -76,7 +76,8 @@ export async function getListCollectionHistory(
         disposal_price,
         commission_price,
         other_price,
-        collect_item_unit___alias_name
+        collect_item_unit___alias_name,
+        collect_item_unit___short_alias_name
       } = item;
       sumApportionment += temp_quantity;
       sumWeight += weight;
@@ -106,7 +107,8 @@ export async function getListCollectionHistory(
         transportationPrice: transportation_price,
         disposalPrice: disposal_price,
         commissionPrice: commission_price,
-        otherPrice: other_price
+        otherPrice: other_price,
+        collectItemShortAliasName: collect_item_unit___short_alias_name
       };
     }),
     sumApportionment,

@@ -29,8 +29,8 @@ export const columns = ref<TableColumnsType>([
   },
   {
     title: i18n.global.t("collection_history_collection_item"),
-    dataIndex: "collectItemName",
-    key: "collectItemName",
+    dataIndex: "collectItemShortAliasName",
+    key: "collect_item_unit___short_alias_name",
     fixed: true,
     width: 160,
     resizable: true

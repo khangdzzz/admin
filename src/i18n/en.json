@@ -343,5 +343,6 @@
   "last_update_time": "Last update time:",
   "create_route": "Create route",
   "navigation_route_id": "Navigation route ID",
-  "list_order_create_route": "Create"
+  "list_order_create_route": "Create",
+  "collection_point_name": "Name"
 }
