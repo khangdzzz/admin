@@ -338,5 +338,6 @@
   "last_update_time": "最後更新日時:",
   "create_route": "道順作成",
   "navigation_route_id": "道順ID",
-  "list_order_create_route": "道順作成"
+  "list_order_create_route": "道順作成",
+  "collection_point_name": "地点名"
 }
