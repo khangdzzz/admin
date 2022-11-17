@@ -418,6 +418,12 @@ watch(searchString, onSearchChange);
     border-color: rgba(0, 0, 0, 0.03);
   }
 
+  .ant-table-thead
+    > tr
+    > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
+    height: 24px !important;
+  }
+
   .ant-table-row {
     cursor: pointer;
   }
