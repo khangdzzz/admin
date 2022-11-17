@@ -57,7 +57,14 @@
           v-if="selectedKeys.length > 0"
           class="table-container__lbl-data-selected"
         >
-          {{ $t("common_lbl_data_selected", { number: selectedKeys.length }) }}
+          {{
+            $t(
+              selectedKeys.length <= 1
+                ? "common_lbl_data_selected"
+                : "common_lbl_multiple_data_selected",
+              { number: selectedKeys.length }
+            )
+          }}
         </div>
         <a-table
           :columns="columns"
@@ -511,6 +518,20 @@ watch(searchString, onSearchChange);
 
   .ant-table-row {
     cursor: pointer;
+  }
+
+  .ant-checkbox-inner {
+    width: 22px;
+    height: 22px;
+    border-radius: 4px !important;
+    border: 1px solid $neutral-200 !important;
+  }
+
+  .ant-checkbox-checked .ant-checkbox-inner {
+    width: 22px;
+    height: 22px;
+    border-radius: 4px !important;
+    border: 1px solid $primary !important;
   }
 
   .ant-pagination-options {
