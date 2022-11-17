@@ -506,7 +506,7 @@ watch(searchString, onSearchChange);
 }
 
 .action-icon {
-  margin-left: 20px;
+  margin-left: 30px;
   cursor: pointer;
 }
 
@@ -514,6 +514,12 @@ watch(searchString, onSearchChange);
   .ant-table-tbody > tr.ant-table-row-selected > td {
     background: $grey-2;
     border-color: rgba(0, 0, 0, 0.03);
+  }
+
+  .ant-table-thead
+    > tr
+    > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
+    height: 24px !important;
   }
 
   .ant-table-row {

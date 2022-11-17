@@ -148,21 +148,22 @@ const emit = defineEmits<{
 .pagination {
   text-align: end;
   background-color: #fff;
-  height: 60px;
+  height: 61px;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
+  padding-top: 1px !important;
   .btnPagination {
     @include size-btn(82px, 40px);
-    border-color: $grey-1;
+    border-color: $grey-3;
     background-color: #fff;
     border-radius: 6px;
 
     .btnIconPrev {
-      margin-right: 8px;
+      margin-right: 6px;
     }
 
     .btnIconNext {
-      margin-left: 8px;
+      margin-left: 6px;
     }
   }
 
@@ -181,7 +182,7 @@ const emit = defineEmits<{
     width: 40px;
     height: 40px;
     border-radius: 6px;
-    border: 1px solid $grey-1;
+    border: 1px solid $grey-3;
     padding: 2px;
 
     .ant-pagination-item-ellipsis {
@@ -191,7 +192,7 @@ const emit = defineEmits<{
     }
   }
   .ant-pagination-item {
-    border: 1px solid $grey-1;
+    border: 1px solid $grey-3;
   }
 }
 </style>
