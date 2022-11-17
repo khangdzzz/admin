@@ -67,9 +67,7 @@ export async function fetchListVehicleType(
     page,
     page_size: size,
 
-    name__like: searchKeyword
-      ? `%${toUrlEncodedString(searchKeyword)}%`
-      : undefined,
+    __all__: searchKeyword ? `${toUrlEncodedString(searchKeyword)}` : undefined,
     order_by:
       sort === Sort.None
         ? DEFAULT_SORT_ORDER

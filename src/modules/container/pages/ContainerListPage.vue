@@ -1,12 +1,12 @@
 <template>
   <div class="d-flex flex-column fill-height">
     <ListSearchHeader
-      :title="$t('vehicle')"
+      :title="$t('container_container')"
       v-model:model-value.sync="searchString"
     >
       <template #action>
         <a-button
-          id="vehicle-list-page_btn-delete-multiple"
+          id="container-list-page_list-search-header_btn-delete-multiple"
           class="btn-action color-btn-delete"
           type="primary"
           @click="($event: MouseEvent) => deleteItems($event, selectedKeys)"
@@ -18,36 +18,11 @@
           </template>
           {{ $t("delete_btn") }}
         </a-button>
-        <a-button
-          id="vehicle-list-page_btn-import"
-          class="btn-action"
-          type="primary"
-        >
-          <template #icon>
-            <img src="@/assets/icons/ic_import.svg" class="btn-icon" />
-          </template>
-          {{ $t("import_btn") }}
-        </a-button>
-        <a-button
-          id="vehicle-list-page_btn-export"
-          class="btn-action"
-          type="primary"
-        >
-          <template #icon>
-            <img src="@/assets/icons/ic_export.svg" class="btn-icon" />
-          </template>
-          {{ $t("export_btn") }}
-        </a-button>
-        <a-button
-          id="vehicle-list-page_btn-create-new"
-          type="primary"
-          class="btn-add-new"
-          @click="onAddNewItem"
-        >
+        <a-button type="primary" class="btn-add-new" @click="onAddNewItem">
           <template #icon>
             <img src="@/assets/icons/ic_plus.svg" class="btn-icon" />
           </template>
-          {{ $t("add_new_type_btn") }}
+          {{ $t("add_btn") }}
         </a-button>
       </template>
     </ListSearchHeader>
@@ -80,7 +55,7 @@
               <div>
                 <span class="header-title">{{ $t(column.title) }}</span>
                 <SortView
-                  :id="`vehicle-list-page_list-sort_${column.title}`"
+                  :id="`container-list-page_list-sort_${column.title}`"
                   v-if="column.key"
                   class="mx-12"
                   :sort="sort[column.key]"
@@ -90,37 +65,24 @@
             </template>
           </template>
           <template #bodyCell="{ column, record, index, text }">
-            <template v-if="column.dataIndex === 'permission_flag'">
-              <a-tag
-                :class="[
-                  !!record.permission_flag ? 'permisson-yes' : 'permisson-no',
-                  'd-flex justify-center align-center'
-                ]"
-              >
-                {{ !!record.permission_flag ? $t("yes") : $t("no") }}
-              </a-tag>
-            </template>
-            <template v-else-if="column.key === 'action'">
-              <router-link
-                :id="`vehicle-list-page_list-item-${index}_btn-edit`"
-                :to="{
-                  name: routeNames.editVehicle,
-                  params: { id: record.id }
-                }"
-              >
-                <img src="@/assets/icons/ic_btn_edit.svg" class="action-icon" />
-              </router-link>
+            <template v-if="column.key === 'action'">
               <img
-                :id="`vehicle-list-page_list-item-${index}_btn-delete`"
+                :id="`container-list-page_list-item-${index}_btn-edit`"
+                src="@/assets/icons/ic_btn_edit.svg"
+                class="action-icon"
+                @click="($event) => onEditItem($event, record.id)"
+              />
+              <img
+                :id="`container-list-page_list-item-${index}_btn-delete`"
                 src="@/assets/icons/ic_btn_delete.svg"
                 class="action-icon"
                 @click="($event) => onDeleteItem($event, record.id)"
               />
               <img
-                :id="`vehicle-list-page_list-item-${index}_btn-detail`"
+                :id="`container-list-page_list-item-${index}_btn-detail`"
                 src="@/assets/icons/ic_btn_qrcode.svg"
                 class="action-icon"
-                @click="getVehicleDetail(record.id)"
+                @click="showContainerDetail(record.id)"
               />
             </template>
             <template v-else>
@@ -147,10 +109,10 @@
       />
     </div>
   </div>
-  <VehicleDetailModal
-    v-if="!!vehicleId"
-    :currentVehicle="vehicleDetail"
-    @close="vehicleId = ''"
+  <ContainerDetailModal
+    v-if="!!containerDetail"
+    :detail="containerDetail"
+    @close="containerDetail = undefined"
   />
 </template>
 
@@ -180,63 +142,50 @@ import {
   ref,
   watch
 } from "vue";
-import { ResVehicle, Vehicle } from "../models/vehicle.model";
-import VehicleDetailModal from "./VehicleDetailModal.vue";
+import { Container } from "../models";
+import ContainerDetailModal from "./ContainerDetailModal.vue";
+
+interface SortContainerListDto {
+  container_type___name: Sort;
+  name: Sort;
+  weight: Sort;
+  capacity: Sort;
+}
+
 //#endregion
 //#region props
 //#endregion
-interface sortVehicleDto {
-  vehicle_type___name: Sort;
-  name: Sort;
-  plate_number: Sort;
-  workplace___name: Sort;
-  max_capacity: Sort;
-  permission_flag: Sort;
-}
 
 //#region variables
 const searchString = ref<string>("");
-// Todo: need to define your columns here. Note: all columns that are not action column, must enable resizable
 const columns = ref<TableColumnsType>([
   {
-    title: "vehicle_type",
-    dataIndex: "vehicle_type___name",
-    key: "vehicle_type___name",
-    width: -1,
-    resizable: true
-  },
-  {
-    title: "vehicle_name",
-    dataIndex: "name",
+    title: "container_container_name",
+    dataIndex: "containerName",
     key: "name",
     width: -1,
     resizable: true
   },
   {
-    title: "number_plate",
-    dataIndex: "plate_number",
-    key: "plate_number",
+    title: "container_container_type",
+    dataIndex: "containerType",
+    key: "container_type___name",
     width: -1,
     resizable: true
   },
   {
-    title: "work_place",
-    dataIndex: "workplace___name",
-    key: "workplace___name",
+    title: "container_weight",
+    dataIndex: "weight",
+    key: "weight",
     width: -1,
     resizable: true
   },
   {
-    title: "capacity",
-    dataIndex: "max_capacity",
-    key: "max_capacity",
-    width: "140px"
-  },
-  {
-    title: "permission",
-    dataIndex: "permission_flag",
-    key: "permission_flag",
-    width: "96px"
+    title: "container_capacity",
+    dataIndex: "capacity",
+    key: "capacity",
+    width: -1,
+    resizable: true
   },
   {
     title: "",
@@ -245,14 +194,13 @@ const columns = ref<TableColumnsType>([
     width: "190px"
   }
 ]);
-const data = ref<ResVehicle[]>([]); // Todo: must define data model and update here
+const data = ref<Container[]>([]);
+const containerDetail = ref<Container | undefined>();
 const selectedKeys = ref<number[]>([]);
 const sort = ref({});
 const isLoading = ref<boolean>(false);
 const innerHeight = ref<number>(0);
-const vehicleId = ref<string | undefined>(undefined);
-const vehicleDetail = ref<Vehicle>();
-const pageOption = reactive<Pagination<ResVehicle>>({
+const pageOption = reactive<Pagination<Container>>({
   currentPage: 1,
   pageSize: 20,
   total: 0
@@ -288,24 +236,18 @@ onUnmounted(() => {
 //#region function
 const fetchDataAsync = async (): Promise<void> => {
   isLoading.value = true;
-  const res = await service.vehicle.getListVehicle(
+  const res = await service.container.getListContainer(
     Number(pageOption.currentPage),
     Number(pageOption.pageSize),
-    sort.value as sortVehicleDto,
+    sort.value as SortContainerListDto,
     searchString.value
   );
   isLoading.value = false;
 
   if (res) {
-    data.value = res.results.map((item) => {
-      return {
-        ...item,
-        key: item.id
-      };
-    });
-
-    pageOption.currentPage = res.current_page || 0;
-    pageOption.total = res.count;
+    data.value = res.results || [];
+    pageOption.currentPage = res.currentPage;
+    pageOption.total = res.total;
   }
 };
 
@@ -334,7 +276,7 @@ const handleBackToList = (): void => {
 };
 
 const onAddNewItem = (): void => {
-  router.push({ name: routeNames.createVehicle });
+  router.push({ name: routeNames.createNewContainer });
 };
 
 const deleteItems = (e: MouseEvent, ids: number[]): void => {
@@ -358,7 +300,7 @@ const onDeleteItems = async (deleteIds: number[]): Promise<void> => {
     return;
   }
   isLoading.value = true;
-  const isSuccess = await service.vehicle.deleteVehicleById(deleteIds);
+  const isSuccess = await service.container.deleteContainer(deleteIds);
   isLoading.value = false;
   if (!isSuccess) {
     messenger({
@@ -387,23 +329,26 @@ const onDeleteItems = async (deleteIds: number[]): Promise<void> => {
   searchString.value = "";
 };
 
+const onEditItem = (e: MouseEvent, id: number): void => {
+  if (e && e.stopPropagation) e.stopPropagation();
+  router.push({
+    name: routeNames.editContainer,
+    params: { id: id }
+  });
+};
+
 const onDeleteItem = (e: MouseEvent, id: number): void => {
   if (e && e.stopPropagation) e.stopPropagation();
   deleteItems(e, [id]);
 };
 
-const getVehicleDetail = async (id: string): Promise<void> => {
+const showContainerDetail = async (id: number): Promise<void> => {
   isLoading.value = true;
-  const res = await service.vehicle.getVehicleDetail(id);
+  const res = await service.container.getContainerById(id);
   isLoading.value = false;
   if (res) {
-    vehicleDetail.value = res;
-    setVehicleId(id);
+    containerDetail.value = res;
   }
-};
-
-const setVehicleId = (id: string): void => {
-  vehicleId.value = id;
 };
 
 const rowSelection = computed(() => {
@@ -468,25 +413,6 @@ watch(searchString, onSearchChange);
 .table-container {
   flex-grow: 1;
   height: calc(100% - 98px - 30px);
-
-  @mixin permission($background, $borderColor, $color, $width) {
-    background: $background;
-    border: 1px solid $borderColor;
-    border-radius: 22px;
-    width: $width;
-    height: 22px;
-    @include text(400, 16px, 100%);
-    color: $color;
-  }
-
-  .permisson-no {
-    @include permission(#feeded, rgba(245, 78, 78, 0.5), $red-1, 41px);
-  }
-
-  .permisson-yes {
-    @include permission(#f0f8fa, rgba(7, 160, 184, 0.5), $primary, 46px);
-  }
-
   &__lbl-data-selected {
     font-style: normal;
     font-weight: 600;
@@ -520,6 +446,10 @@ watch(searchString, onSearchChange);
     > tr
     > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
     height: 24px !important;
+  }
+
+  .ant-table-row {
+    cursor: pointer;
   }
 
   .ant-checkbox-inner {

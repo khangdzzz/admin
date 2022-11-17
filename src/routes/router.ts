@@ -175,7 +175,7 @@ const routes: RouteRecordRaw[] = [
         path: "vehicle-type",
         name: routeNames.vehicleType,
         component: () =>
-          import("@/modules/vehicle-management/pages/VehicleType.vue")
+          import("@/modules/vehicle-management/pages/VehicleTypeListPage.vue")
       },
       {
         path: "create-new-vehicle-type",
@@ -286,7 +286,8 @@ const routes: RouteRecordRaw[] = [
       {
         name: routeNames.containerChild,
         path: "container",
-        component: () => import("@/modules/container/pages/TheContainer.vue")
+        component: () =>
+          import("@/modules/container/pages/ContainerListPage.vue")
       },
       {
         name: routeNames.editContainer,
@@ -297,7 +298,7 @@ const routes: RouteRecordRaw[] = [
         name: routeNames.containerType,
         path: "container-type",
         component: () =>
-          import("@/modules/container/pages/ContainerTypeList.vue")
+          import("@/modules/container/pages/ContainerTypeListPage.vue")
       },
       {
         name: routeNames.createContainerType,
